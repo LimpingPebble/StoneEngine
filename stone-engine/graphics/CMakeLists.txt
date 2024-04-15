@@ -1,5 +1,6 @@
-set (LIB_NAME Sound)
+set (LIB_NAME graphics)
 
 setup_files()
 
-add_library(${LIB_NAME} ${SRCS})
+add_library(${LIB_NAME} ${SRCS}
+        src/test.cpp)

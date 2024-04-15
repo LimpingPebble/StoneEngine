@@ -1,4 +1,4 @@
-set (LIB_NAME Sound)
+set (LIB_NAME scene)
 
 setup_files()
 

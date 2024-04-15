@@ -1,4 +1,4 @@
-set (LIB_NAME Sound)
+set (LIB_NAME logging)
 
 setup_files()
 

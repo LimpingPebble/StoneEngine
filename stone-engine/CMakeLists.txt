@@ -3,7 +3,7 @@ if (NOT SKIP_TESTS AND GTEST_FOUND)
     set(ENABLE_TESTS ON)
 endif ()
 
-if (VULKAN_FOUND AND GLFW_FOUND)
+if (VULKAN_FOUND)
     add_subdirectory(graphics)
 endif ()
 
@@ -15,7 +15,7 @@ if (GLM_FOUND)
     add_subdirectory(physics)
 endif ()
 
-if (GLM_FOUND AND GLFW_FOUND)
+if (GLM_FOUND)
     add_subdirectory(scene)
 endif ()
 

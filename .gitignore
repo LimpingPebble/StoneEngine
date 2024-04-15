@@ -33,7 +33,7 @@
 
 # CMake artifacts
 /cmake-build-*
-/build-*
+/build*
 
 # IDE directories
 /.idea
