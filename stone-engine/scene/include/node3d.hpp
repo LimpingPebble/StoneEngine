@@ -1,4 +1,4 @@
-// Copyright: Stone-Engine
+// Copyright 2024 Stone-Engine
 
 #pragma once
 
@@ -25,7 +25,7 @@ namespace STN
             virtual void update(float deltaTime) override;
             virtual void render() override;
 
-        private:
+        protected:
             Transform3D _transform;
         };
 

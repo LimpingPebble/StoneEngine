@@ -1,8 +1,9 @@
-// Copyright: Stone-Engine
+// Copyright 2024 Stone-Engine
 
 #pragma once
 
 #include "object.hpp"
+#include "render_types.hpp"
 #include <vector>
 #include <functional>
 
@@ -11,6 +12,8 @@ namespace STN
 
     namespace Scene
     {
+
+        class Scene;
 
         class Node : public Object
         {
@@ -29,9 +32,9 @@ namespace STN
             virtual void forEachChild(std::function<void(std::shared_ptr<Node>)> callback) const;
 
             virtual void update(float deltaTime);
-            virtual void render();
+            virtual void render(RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene);
 
-        private:
+        protected:
             std::vector<std::shared_ptr<Node>> _children;
             std::weak_ptr<Node> _parent;
         };

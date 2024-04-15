@@ -1,4 +1,4 @@
-// Copyright: Stone-Engine
+// Copyright 2024 Stone-Engine
 
 #pragma once
 
@@ -37,7 +37,7 @@ namespace STN
             /** Return the transform matrix if cached or calculate it */
             glm::mat3 getTransformMatrix() const;
 
-        private:
+        protected:
             glm::vec2 _position;
             float _rotation;
             glm::vec2 _scale;
@@ -71,7 +71,7 @@ namespace STN
             /** Return the transform matrix if cached or calculate it */
             glm::mat4 getTransformMatrix() const;
 
-        private:
+        protected:
             glm::vec3 _position;
             glm::vec3 _rotation;
             glm::vec3 _scale;

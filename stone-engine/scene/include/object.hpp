@@ -1,4 +1,4 @@
-// Copyright: Stone-Engine
+// Copyright 2024 Stone-Engine
 
 #pragma once
 
@@ -17,7 +17,7 @@ namespace STN
 
         uint32_t getId() const;
 
-    private:
+    protected:
         uint32_t _id;
     };
 
