@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "object.hpp"
-#include "render_types.hpp"
+#include "Object.hpp"
+#include "RenderTypes.hpp"
 #include <vector>
 #include <functional>
 

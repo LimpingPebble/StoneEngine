@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "node3d.hpp"
-#include "camera.hpp"
+#include "Node3D.hpp"
+#include "Camera.hpp"
 
 namespace STN
 {

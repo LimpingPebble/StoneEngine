@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "node.hpp"
-#include "transform.hpp"
+#include "Node.hpp"
+#include "Transform.hpp"
 
 namespace STN
 {
@@ -22,8 +22,8 @@ namespace STN
             Transform3D &getTransform();
             const Transform3D &getTransform() const;
 
-            virtual void update(float deltaTime) override;
-            virtual void render() override;
+            virtual void update(float deltaTime);
+            virtual void render(RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene);
 
         protected:
             Transform3D _transform;

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "node3d.hpp"
+#include "Node3D.hpp"
 
 namespace STN
 {
