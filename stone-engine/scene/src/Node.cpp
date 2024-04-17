@@ -25,6 +25,11 @@ namespace STN
         {
         }
 
+        const char *Node::getClassName() const
+        {
+            return "Node";
+        }
+
         void Node::setName(const std::string &name)
         {
             _name = name;
@@ -193,20 +198,41 @@ namespace STN
             }
         }
 
-        void Node::writeInStream(std::ostream &stream, std::string linePrefix, std::string firstPrefix, std::string lastPrefix) const
+        void Node::writeInStream(std::ostream &stream, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored) const
         {
-            stream << linePrefix << firstPrefix << TERM_COLOR_BOLDWHITE << getClassName() << TERM_COLOR_RESET << " (" << TERM_COLOR_BOLDGREEN << _name << TERM_COLOR_RESET << ")" << std::endl;
+            stream << linePrefix << firstPrefix;
+            if (colored)
+            {
+                stream << TERM_COLOR_BOLD TERM_COLOR_WHITE << _name << TERM_COLOR_RESET;
+                stream << " [" << _termClassColor() << getClassName() << TERM_COLOR_RESET << "] ";
+            }
+            else
+            {
+                stream << _name << " [" << getClassName() << "] ";
+            }
+            stream << debugDescription(colored) << std::endl;
             for (size_t i = 0; i < _children.size(); i++)
             {
                 if (i == _children.size() - 1)
                 {
-                    _children[i]->writeInStream(stream, linePrefix + lastPrefix, "└─", "  ");
+                    _children[i]->writeInStream(stream, linePrefix + lastPrefix, "└─", "  ", colored);
                 }
                 else
                 {
-                    _children[i]->writeInStream(stream, linePrefix + lastPrefix, "├─", "│ ");
+                    _children[i]->writeInStream(stream, linePrefix + lastPrefix, "├─", "│ ", colored);
                 }
             }
+        }
+
+        std::string Node::debugDescription(bool colored) const
+        {
+            (void)colored;
+            return "{}";
+        }
+
+        const char *Node::_termClassColor() const
+        {
+            return TERM_COLOR_BOLD TERM_COLOR_GRAY;
         }
 
     } // namespace Scene

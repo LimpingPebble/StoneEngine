@@ -6,14 +6,14 @@ namespace STN
 {
 
     Object::Object()
-    : std::enable_shared_from_this<Object>()
+        : std::enable_shared_from_this<Object>()
     {
         static uint32_t id = 0;
         _id = id++;
     }
 
     Object::Object(const Object &other)
-    : std::enable_shared_from_this<Object>()
+        : std::enable_shared_from_this<Object>()
     {
         _id = other._id;
     }
@@ -27,7 +27,7 @@ namespace STN
         return _id;
     }
 
-    std::string Object::getClassName() const
+    const char *Object::getClassName() const
     {
         return "Object";
     }

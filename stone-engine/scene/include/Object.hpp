@@ -19,7 +19,7 @@ namespace STN
 
         uint32_t getId() const;
 
-        virtual std::string getClassName() const;
+        virtual const char *getClassName() const;
 
     protected:
         uint32_t _id;

@@ -23,6 +23,8 @@ namespace STN
 
             virtual ~Node();
 
+            virtual const char* getClassName() const override;
+
             void setName(const std::string &name);
             const std::string &getName() const;
             std::string getGlobalName() const;
@@ -54,18 +56,23 @@ namespace STN
             virtual void update(float deltaTime);
             virtual void render(const RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene);
 
-            virtual void writeInStream(std::ostream &flux, std::string linePrefix, std::string firstPrefix, std::string lastPrefix) const;
+            virtual void writeInStream(std::ostream &flux, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored = true) const;
+            virtual std::string debugDescription(bool colored = true) const;
 
         protected:
             std::string _name;
             std::vector<std::shared_ptr<Node>> _children;
             std::weak_ptr<Node> _parent;
+
+            virtual const char* _termClassColor() const;
+
         };
 
     } // namespace Scene
 
 } // namespace STN
 
+// TODO: Put in utils module
 #define TERM_COLOR_RESET "\033[0m"
 #define TERM_COLOR_BLACK "\033[30m"
 #define TERM_COLOR_RED "\033[31m"
@@ -75,11 +82,5 @@ namespace STN
 #define TERM_COLOR_MAGENTA "\033[35m"
 #define TERM_COLOR_CYAN "\033[36m"
 #define TERM_COLOR_WHITE "\033[37m"
-#define TERM_COLOR_BOLDBLACK "\033[1m\033[30m"
-#define TERM_COLOR_BOLDRED "\033[1m\033[31m"
-#define TERM_COLOR_BOLDGREEN "\033[1m\033[32m"
-#define TERM_COLOR_BOLDYELLOW "\033[1m\033[33m"
-#define TERM_COLOR_BOLDBLUE "\033[1m\033[34m"
-#define TERM_COLOR_BOLDMAGENTA "\033[1m\033[35m"
-#define TERM_COLOR_BOLDCYAN "\033[1m\033[36m"
-#define TERM_COLOR_BOLDWHITE "\033[1m\033[37m"
+#define TERM_COLOR_GRAY "\033[90m"
+#define TERM_COLOR_BOLD "\033[1m"
