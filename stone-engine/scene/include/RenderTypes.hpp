@@ -19,6 +19,12 @@ namespace STN
             glm::vec2 texCoord;
         };
 
+        struct WeightVertex : Vertex
+        {
+            glm::ivec4 boneIDs;
+            glm::vec4 boneWeights;
+        };
+
         struct RenderUniforms
         {
             glm::mat4 projectionMatrix;
