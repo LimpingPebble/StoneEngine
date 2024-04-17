@@ -79,5 +79,7 @@ namespace STN
             glm::mat4 _transformMatrix;
             bool _transformMatrixDirty;
         };
-    }
-}
+
+    } // namespace Scene
+
+} // namespace STN
