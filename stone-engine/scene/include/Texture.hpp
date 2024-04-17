@@ -2,13 +2,14 @@
 
 #pragma once
 
+#include "Object.hpp"
 #include <glm/glm.hpp>
 #include <string>
 
 namespace STN
 {
 
-    class Texture
+    class Texture : public Object
     {
     public:
         Texture();

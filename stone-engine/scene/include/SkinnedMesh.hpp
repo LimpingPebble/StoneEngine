@@ -12,7 +12,7 @@ namespace STN
 
         class Skeleton;
 
-        class SkinnedMesh : public Node3D
+        class SkinnedMesh : public Node
         {
         public:
             SkinnedMesh();
