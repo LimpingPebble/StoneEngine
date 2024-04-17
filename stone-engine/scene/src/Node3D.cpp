@@ -52,38 +52,6 @@ namespace STN
             return _transform.getTransformMatrix();
         }
 
-        const glm::mat4 Node3D::getWorldTransformMatrix()
-        {
-            glm::mat4 transform = getTransformMatrix();
-            std::shared_ptr<Node> parent;
-            do {
-                parent = getParent();
-                if (!parent)
-                    break;
-                if (auto parent3D = std::dynamic_pointer_cast<Node3D>(parent))
-                {
-                    transform = parent3D->getTransformMatrix() * transform;
-                }
-            } while (parent);
-            return transform;
-        }
-
-        const glm::mat4 Node3D::getWorldTransformMatrix() const
-        {
-            glm::mat4 transform = getTransformMatrix();
-            std::shared_ptr<Node> parent;
-            do {
-                parent = getParent();
-                if (!parent)
-                    break;
-                if (auto parent3D = std::dynamic_pointer_cast<Node3D>(parent))
-                {
-                    transform = parent3D->getTransformMatrix() * transform;
-                }
-            } while (parent);
-            return transform;
-        }
-
         void Node3D::render(const RenderUniforms& uniforms, RenderStage stage, std::shared_ptr<Scene> scene)
         {
             RenderUniforms localUniforms = uniforms;

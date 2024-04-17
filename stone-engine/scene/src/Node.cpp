@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "Node.hpp"
+#include "Node3D.hpp"
 #include <cassert>
 
 namespace STN
@@ -168,6 +169,22 @@ namespace STN
             }
 
             return getChild(path);
+        }
+
+        const glm::mat4 Node::getWorldTransformMatrix()
+        {
+            glm::mat4 transform(1);
+            for (
+                std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node>(shared_from_this());
+                node != nullptr;
+                node = node->getParent())
+            {
+                if (auto node3D = std::dynamic_pointer_cast<Node3D>(node))
+                {
+                    transform = node3D->getTransformMatrix() * transform;
+                }
+            }
+            return transform;
         }
 
         void Node::withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const

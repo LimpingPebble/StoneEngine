@@ -64,12 +64,14 @@ namespace STN
                 return std::dynamic_pointer_cast<T>(getChildWithPath(path));
             }
 
+            const glm::mat4 getWorldTransformMatrix();
+
             void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
             virtual void update(float deltaTime);
             virtual void render(const RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene);
 
-            void writeInStream(std::ostream &flux, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored = true) const;
+            void writeInStream(std::ostream &flux, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "", bool colored = true) const;
             virtual std::string debugDescription(bool colored = true) const;
 
         protected:

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Node3D.hpp"
+#include "Node.hpp"
 
 namespace STN
 {
@@ -10,10 +10,10 @@ namespace STN
     namespace Scene
     {
 
-        class Camera : public Node3D
+        class Camera : public Node
         {
         public:
-            Camera();
+            Camera(const std::string &name = "camera");
             Camera(const Camera &other);
 
             virtual ~Camera();
@@ -23,14 +23,19 @@ namespace STN
 
         protected:
             glm::mat4 _projectionMatrix;
+
+            virtual const char *_termClassColor() const override;
         };
 
         class PerspectiveCamera : public Camera
         {
         public:
-            PerspectiveCamera();
+            PerspectiveCamera(const std::string &name = "perspective_camera");
             PerspectiveCamera(const PerspectiveCamera &other);
             virtual ~PerspectiveCamera();
+
+            virtual const char *getClassName() const override;
+            virtual std::string debugDescription(bool colored) const override;
 
             virtual void updateProjectionMatrix() override;
 
@@ -51,14 +56,19 @@ namespace STN
             float _aspect;
             float _near;
             float _far;
+
+            virtual const char *_termClassColor() const override;
         };
 
         class OrthographicCamera : public Camera
         {
         public:
-            OrthographicCamera();
+            OrthographicCamera(const std::string &name = "orthographic_camera");
             OrthographicCamera(const OrthographicCamera &other);
             virtual ~OrthographicCamera();
+
+            virtual const char *getClassName() const override;
+            virtual std::string debugDescription(bool colored) const override;
 
             virtual void updateProjectionMatrix() override;
 
@@ -87,6 +97,8 @@ namespace STN
             float _top;
             float _near;
             float _far;
+
+            virtual const char *_termClassColor() const override;
         };
 
     } // namespace Scene

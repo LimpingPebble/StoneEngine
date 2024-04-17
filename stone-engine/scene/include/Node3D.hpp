@@ -27,8 +27,6 @@ namespace STN
 
             const glm::mat4& getTransformMatrix();
             const glm::mat4 getTransformMatrix() const;
-            const glm::mat4 getWorldTransformMatrix();
-            const glm::mat4 getWorldTransformMatrix() const;
 
             virtual void render(const RenderUniforms& uniforms, RenderStage stage, std::shared_ptr<Scene> scene) override;
 
