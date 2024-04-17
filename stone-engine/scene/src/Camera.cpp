@@ -10,34 +10,27 @@ namespace STN
     {
 
         Camera::Camera(const std::string &name)
-            : Node(name), _projectionMatrix(1.0f)
+            : Node(name)
         {
         }
 
         Camera::Camera(const Camera &other)
             : Node(other)
         {
-            _projectionMatrix = other._projectionMatrix;
         }
 
         Camera::~Camera()
         {
         }
 
-        const glm::mat4 &Camera::getProjectionMatrix() const
-        {
-            return _projectionMatrix;
-        }
-
         const char *Camera::_termClassColor() const
         {
-            return "\033[1;36m";
+            return TERM_COLOR_BOLD TERM_COLOR_BLUE;
         }
 
         PerspectiveCamera::PerspectiveCamera(const std::string &name)
-            : Camera(name), _fov(45.0f), _aspect(1.0f), _near(0.1f), _far(100.0f)
+            : Camera(name), _fov(glm::radians(45.0f)), _aspect(1.0f), _near(0.1f), _far(100.0f)
         {
-            updateProjectionMatrix();
         }
 
         PerspectiveCamera::PerspectiveCamera(const PerspectiveCamera &other)
@@ -47,7 +40,6 @@ namespace STN
             _aspect = other._aspect;
             _near = other._near;
             _far = other._far;
-            updateProjectionMatrix();
         }
 
         PerspectiveCamera::~PerspectiveCamera()
@@ -70,9 +62,9 @@ namespace STN
             return str;
         }
 
-        void PerspectiveCamera::updateProjectionMatrix()
+        const glm::mat4 PerspectiveCamera::getProjectionMatrix() const
         {
-            _projectionMatrix = glm::perspective(glm::radians(_fov), _aspect, _near, _far);
+            return glm::perspective(_fov, _aspect, _near, _far);
         }
 
         float PerspectiveCamera::getFov() const
@@ -83,7 +75,6 @@ namespace STN
         void PerspectiveCamera::setFov(float fov)
         {
             _fov = fov;
-            updateProjectionMatrix();
         }
 
         float PerspectiveCamera::getAspect() const
@@ -94,7 +85,6 @@ namespace STN
         void PerspectiveCamera::setAspect(float aspect)
         {
             _aspect = aspect;
-            updateProjectionMatrix();
         }
 
         float PerspectiveCamera::getNear() const
@@ -105,7 +95,6 @@ namespace STN
         void PerspectiveCamera::setNear(float near)
         {
             _near = near;
-            updateProjectionMatrix();
         }
 
         float PerspectiveCamera::getFar() const
@@ -116,18 +105,11 @@ namespace STN
         void PerspectiveCamera::setFar(float far)
         {
             _far = far;
-            updateProjectionMatrix();
-        }
-
-        const char *PerspectiveCamera::_termClassColor() const
-        {
-            return "\033[1;35m";
         }
 
         OrthographicCamera::OrthographicCamera(const std::string &name)
             : Camera(name), _left(-1.0f), _right(1.0f), _bottom(-1.0f), _top(1.0f), _near(0.1f), _far(100.0f)
         {
-            updateProjectionMatrix();
         }
 
         OrthographicCamera::OrthographicCamera(const OrthographicCamera &other)
@@ -139,7 +121,6 @@ namespace STN
             _top = other._top;
             _near = other._near;
             _far = other._far;
-            updateProjectionMatrix();
         }
 
         OrthographicCamera::~OrthographicCamera()
@@ -164,9 +145,9 @@ namespace STN
             return str;
         }
 
-        void OrthographicCamera::updateProjectionMatrix()
+        const glm::mat4 OrthographicCamera::getProjectionMatrix() const
         {
-            _projectionMatrix = glm::ortho(_left, _right, _bottom, _top, _near, _far);
+            return glm::ortho(_left, _right, _bottom, _top, _near, _far);
         }
 
         float OrthographicCamera::getLeft() const
@@ -177,7 +158,6 @@ namespace STN
         void OrthographicCamera::setLeft(float left)
         {
             _left = left;
-            updateProjectionMatrix();
         }
 
         float OrthographicCamera::getRight() const
@@ -188,7 +168,6 @@ namespace STN
         void OrthographicCamera::setRight(float right)
         {
             _right = right;
-            updateProjectionMatrix();
         }
 
         float OrthographicCamera::getBottom() const
@@ -199,7 +178,6 @@ namespace STN
         void OrthographicCamera::setBottom(float bottom)
         {
             _bottom = bottom;
-            updateProjectionMatrix();
         }
 
         float OrthographicCamera::getTop() const
@@ -210,7 +188,6 @@ namespace STN
         void OrthographicCamera::setTop(float top)
         {
             _top = top;
-            updateProjectionMatrix();
         }
 
         float OrthographicCamera::getNear() const
@@ -221,7 +198,6 @@ namespace STN
         void OrthographicCamera::setNear(float near)
         {
             _near = near;
-            updateProjectionMatrix();
         }
 
         float OrthographicCamera::getFar() const
@@ -232,12 +208,6 @@ namespace STN
         void OrthographicCamera::setFar(float far)
         {
             _far = far;
-            updateProjectionMatrix();
-        }
-
-        const char *OrthographicCamera::_termClassColor() const
-        {
-            return "\033[1;34m";
         }
 
     } // namespace Scene

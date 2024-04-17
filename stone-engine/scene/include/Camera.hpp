@@ -18,11 +18,9 @@ namespace STN
 
             virtual ~Camera();
 
-            virtual void updateProjectionMatrix() = 0;
-            const glm::mat4 &getProjectionMatrix() const;
+            virtual const glm::mat4 getProjectionMatrix() const = 0;
 
         protected:
-            glm::mat4 _projectionMatrix;
 
             virtual const char *_termClassColor() const override;
         };
@@ -37,7 +35,7 @@ namespace STN
             virtual const char *getClassName() const override;
             virtual std::string debugDescription(bool colored) const override;
 
-            virtual void updateProjectionMatrix() override;
+            virtual const glm::mat4 getProjectionMatrix() const override;
 
             float getFov() const;
             void setFov(float fov);
@@ -56,8 +54,6 @@ namespace STN
             float _aspect;
             float _near;
             float _far;
-
-            virtual const char *_termClassColor() const override;
         };
 
         class OrthographicCamera : public Camera
@@ -70,7 +66,7 @@ namespace STN
             virtual const char *getClassName() const override;
             virtual std::string debugDescription(bool colored) const override;
 
-            virtual void updateProjectionMatrix() override;
+            virtual const glm::mat4 getProjectionMatrix() const override;
 
             float getLeft() const;
             void setLeft(float left);
@@ -97,8 +93,6 @@ namespace STN
             float _top;
             float _near;
             float _far;
-
-            virtual const char *_termClassColor() const override;
         };
 
     } // namespace Scene
