@@ -11,13 +11,13 @@ namespace STN
     namespace Scene
     {
         
-        class Node3D : public Node
+        class Pivot : public Node
         {
         public:
-            Node3D(const std::string &name = "node3d");
-            Node3D(const Node3D &other);
+            Pivot(const std::string &name = "pivot");
+            Pivot(const Pivot &other);
 
-            virtual ~Node3D();
+            virtual ~Pivot();
 
             virtual const char *getClassName() const override;
 

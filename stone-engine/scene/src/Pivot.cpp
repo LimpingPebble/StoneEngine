@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Node3D.hpp"
+#include "Pivot.hpp"
 
 namespace STN
 {
@@ -8,51 +8,51 @@ namespace STN
     namespace Scene
     {
         
-        Node3D::Node3D(const std::string &name)
+        Pivot::Pivot(const std::string &name)
             : Node(name), _transform()
         {
         }
 
-        Node3D::Node3D(const Node3D &other)
+        Pivot::Pivot(const Pivot &other)
             : Node(other), _transform(other._transform)
         {
         }
 
-        Node3D::~Node3D()
+        Pivot::~Pivot()
         {
         }
 
-        const char *Node3D::getClassName() const
+        const char *Pivot::getClassName() const
         {
-            return "Node3D";
+            return "Pivot";
         }
 
-        Transform3D &Node3D::getTransform()
-        {
-            return _transform;
-        }
-
-        const Transform3D &Node3D::getTransform() const
+        Transform3D &Pivot::getTransform()
         {
             return _transform;
         }
 
-        void Node3D::setTransform(const Transform3D &transform)
+        const Transform3D &Pivot::getTransform() const
+        {
+            return _transform;
+        }
+
+        void Pivot::setTransform(const Transform3D &transform)
         {
             _transform = transform;
         }
 
-        const glm::mat4& Node3D::getTransformMatrix()
+        const glm::mat4& Pivot::getTransformMatrix()
         {
             return _transform.getTransformMatrix();
         }
 
-        const glm::mat4 Node3D::getTransformMatrix() const
+        const glm::mat4 Pivot::getTransformMatrix() const
         {
             return _transform.getTransformMatrix();
         }
 
-        void Node3D::render(RenderContext& context)
+        void Pivot::render(RenderContext& context)
         {
             glm::mat4 previousModelMatrix = context.modelMatrix;
 
@@ -64,7 +64,7 @@ namespace STN
             context.modelMatrix = previousModelMatrix;
         }
 
-        std::string Node3D::debugDescription(bool colored) const
+        std::string Pivot::debugDescription(bool colored) const
         {
             (void)colored;
             std::string description;
@@ -92,7 +92,7 @@ namespace STN
             return "{" + description + "}";
         }
 
-        const char *Node3D::_termClassColor() const
+        const char *Pivot::_termClassColor() const
         {
             return TERM_COLOR_BOLD TERM_COLOR_CYAN;
         }

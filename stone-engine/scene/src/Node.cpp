@@ -1,7 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "Node.hpp"
-#include "Node3D.hpp"
+#include "Pivot.hpp"
 #include <cassert>
 
 namespace STN
@@ -179,9 +179,9 @@ namespace STN
                 node != nullptr;
                 node = node->getParent())
             {
-                if (auto node3D = std::dynamic_pointer_cast<Node3D>(node))
+                if (auto pivot = std::dynamic_pointer_cast<Pivot>(node))
                 {
-                    transform = node3D->getTransformMatrix() * transform;
+                    transform = pivot->getTransformMatrix() * transform;
                 }
             }
             return transform;
