@@ -25,11 +25,11 @@ namespace STN
             glm::vec4 boneWeights;
         };
 
-        struct RenderUniforms
+        struct RenderContext
         {
-            glm::mat4 projectionMatrix;
-            glm::mat4 viewMatrix;
-            glm::mat4 modelMatrix;
+            glm::mat4 projectionMatrix = glm::mat4(1.0f);
+            glm::mat4 viewMatrix = glm::mat4(1.0f);
+            glm::mat4 modelMatrix = glm::mat4(1.0f);
         };
 
         enum class RenderStage

@@ -8,7 +8,7 @@ namespace STN
     namespace Scene
     {
         
-        Node3D::Node3D(std::string name)
+        Node3D::Node3D(const std::string &name)
             : Node(name), _transform()
         {
         }
@@ -52,15 +52,16 @@ namespace STN
             return _transform.getTransformMatrix();
         }
 
-        void Node3D::render(const RenderUniforms& uniforms, RenderStage stage, std::shared_ptr<Scene> scene)
+        void Node3D::render(RenderContext& context, RenderStage stage, std::shared_ptr<Scene> scene)
         {
-            RenderUniforms localUniforms = uniforms;
+            glm::mat4 previousModelMatrix = context.modelMatrix;
 
-            localUniforms.modelMatrix = uniforms.modelMatrix * getTransformMatrix();
+            context.modelMatrix = context.modelMatrix * getTransformMatrix();
             for (auto child : getChildren())
             {
-                child->render(localUniforms, stage, scene);
+                child->render(context, stage, scene);
             }
+            context.modelMatrix = previousModelMatrix;
         }
 
         std::string Node3D::debugDescription(bool colored) const

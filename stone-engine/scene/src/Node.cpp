@@ -204,11 +204,11 @@ namespace STN
             }
         }
 
-        void Node::render(const RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene)
+        void Node::render(RenderContext &context, RenderStage stage, std::shared_ptr<Scene> scene)
         {
             for (auto &child : _children)
             {
-                child->render(uniforms, stage, scene);
+                child->render(context, stage, scene);
             }
         }
 

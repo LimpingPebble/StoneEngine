@@ -14,7 +14,7 @@ namespace STN
         class Node3D : public Node
         {
         public:
-            Node3D(std::string name = "node3d");
+            Node3D(const std::string &name = "node3d");
             Node3D(const Node3D &other);
 
             virtual ~Node3D();
@@ -28,7 +28,7 @@ namespace STN
             const glm::mat4& getTransformMatrix();
             const glm::mat4 getTransformMatrix() const;
 
-            virtual void render(const RenderUniforms& uniforms, RenderStage stage, std::shared_ptr<Scene> scene) override;
+            virtual void render(RenderContext& context, RenderStage stage, std::shared_ptr<Scene> scene) override;
 
             virtual std::string debugDescription(bool colored) const override;
 
