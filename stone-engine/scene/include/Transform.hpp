@@ -54,15 +54,19 @@ namespace STN
         virtual ~Transform3D();
 
         void setPosition(const glm::vec3 &position);
-        void setRotation(const glm::vec3 &rotation);
+        void setRotation(const glm::quat &rotation);
+        void setEulerAngles(const glm::vec3 &eulerAngles);
         void setScale(const glm::vec3 &scale);
 
         const glm::vec3 &getPosition() const;
-        const glm::vec3 &getRotation() const;
+        const glm::quat &getRotation() const;
+        const glm::vec3 getEulerAngles() const;
         const glm::vec3 &getScale() const;
 
         void translate(const glm::vec3 &translation);
-        void rotate(const glm::vec3 &rotation);
+        void rotate(const glm::quat &rotation);
+        void rotate(float angle, const glm::vec3 &axis);
+        void rotate(const glm::vec3 &eulerAngles);
         void scale(const glm::vec3 &scale);
 
         /** Update if needed and return the transform matrix */
@@ -72,13 +76,13 @@ namespace STN
 
     protected:
         glm::vec3 _position;
-        glm::vec3 _rotation;
+        glm::quat _rotation;
         glm::vec3 _scale;
 
         glm::mat4 _transformMatrix;
         bool _transformMatrixDirty;
 
-        void calculateTransformMatrix(glm::mat3& m) const;
+        void calculateTransformMatrix(glm::mat4& m) const;
     };
 
 } // namespace STN

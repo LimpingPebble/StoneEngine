@@ -126,4 +126,122 @@ namespace STN
         mat3ValueAt(m, 2, 2) = 1;
     }
 
+    Transform3D::Transform3D()
+        : _position(0.0f, 0.0f, 0.0f), _rotation(1.0f, 0.0f, 0.0f, 0.0f), _scale(1.0f, 1.0f, 1.0f), _transformMatrix(1.0f), _transformMatrixDirty(true)
+    {
+    }
+
+    Transform3D::Transform3D(const Transform3D &other)
+        : _position(other._position), _rotation(other._rotation), _scale(other._scale), _transformMatrix(other._transformMatrix), _transformMatrixDirty(other._transformMatrixDirty)
+    {
+    }
+
+    Transform3D::~Transform3D()
+    {
+    }
+
+    void Transform3D::setPosition(const glm::vec3 &position)
+    {
+        _position = position;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::setRotation(const glm::quat &rotation)
+    {
+        _rotation = rotation;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::setEulerAngles(const glm::vec3 &eulerAngles)
+    {
+        _rotation = glm::quat(eulerAngles);
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::setScale(const glm::vec3 &scale)
+    {
+        _scale = scale;
+        _transformMatrixDirty = true;
+    }
+
+    const glm::vec3 &Transform3D::getPosition() const
+    {
+        return _position;
+    }
+
+    const glm::quat &Transform3D::getRotation() const
+    {
+        return _rotation;
+    }
+
+    const glm::vec3 Transform3D::getEulerAngles() const
+    {
+        return glm::eulerAngles(_rotation);
+    }
+
+    const glm::vec3 &Transform3D::getScale() const
+    {
+        return _scale;
+    }
+
+    void Transform3D::translate(const glm::vec3 &translation)
+    {
+        _position += translation;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::rotate(const glm::quat &rotation)
+    {
+        _rotation = rotation * _rotation;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::rotate(float angle, const glm::vec3 &axis)
+    {
+        _rotation = glm::angleAxis(angle, axis) * _rotation;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::rotate(const glm::vec3 &eulerAngles)
+    {
+        _rotation = glm::quat(eulerAngles) * _rotation;
+        _transformMatrixDirty = true;
+    }
+
+    void Transform3D::scale(const glm::vec3 &scale)
+    {
+        _scale *= scale;
+        _transformMatrixDirty = true;
+    }
+
+    const glm::mat4 &Transform3D::getTransformMatrix()
+    {
+        if (_transformMatrixDirty)
+        {
+            calculateTransformMatrix(_transformMatrix);
+            _transformMatrixDirty = false;
+        }
+        return _transformMatrix;
+    }
+
+    glm::mat4 Transform3D::getTransformMatrix() const
+    {
+        if (!_transformMatrixDirty)
+        {
+            return _transformMatrix;
+        }
+
+        glm::mat4 transformMatrix;
+        calculateTransformMatrix(transformMatrix);
+        return transformMatrix;
+    }
+
+    void Transform3D::calculateTransformMatrix(glm::mat4 &m) const
+    {
+        m = glm::mat4(1.0f);
+        m = glm::translate(m, _position);
+        m = glm::rotate(m, _rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        m = glm::scale(m, _scale);
+    }
+
 } // namespace STN
