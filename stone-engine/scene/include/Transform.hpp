@@ -17,6 +17,8 @@ namespace STN
 
         virtual ~Transform2D();
 
+        Transform2D &operator=(const Transform2D &other);
+
         void setPosition(const glm::vec2 &position);
         void setRotation(float rotation);
         void setScale(const glm::vec2 &scale);
@@ -52,6 +54,8 @@ namespace STN
         Transform3D(const Transform3D &other);
 
         virtual ~Transform3D();
+
+        Transform3D &operator=(const Transform3D &other);
 
         void setPosition(const glm::vec3 &position);
         void setRotation(const glm::quat &rotation);

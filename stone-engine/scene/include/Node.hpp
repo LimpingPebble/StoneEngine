@@ -38,6 +38,7 @@ namespace STN
             bool isAncestorOf(std::shared_ptr<Node> node) const;
             bool isDescendantOf(std::shared_ptr<Node> node) const;
             const std::vector<std::shared_ptr<Node>> &getChildren() const;
+
             std::shared_ptr<Node> getChild(const std::string &name) const;
             /**
              * @brief Get a child node with a path
@@ -51,12 +52,24 @@ namespace STN
              */
             std::shared_ptr<Node> getChildWithPath(const std::string &path) const;
 
-            virtual void forEachChild(std::function<void(std::shared_ptr<Node>)> callback, bool recursively = true) const;
+            template <typename T>
+            std::shared_ptr<T> getChild(const std::string &name) const
+            {
+                return std::dynamic_pointer_cast<T>(getChild(name));
+            }
+
+            template <typename T>
+            std::shared_ptr<T> getChildWithPath(const std::string &path) const
+            {
+                return std::dynamic_pointer_cast<T>(getChildWithPath(path));
+            }
+
+            void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
             virtual void update(float deltaTime);
             virtual void render(const RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene);
 
-            virtual void writeInStream(std::ostream &flux, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored = true) const;
+            void writeInStream(std::ostream &flux, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored = true) const;
             virtual std::string debugDescription(bool colored = true) const;
 
         protected:

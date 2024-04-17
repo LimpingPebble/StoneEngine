@@ -31,6 +31,16 @@ namespace STN
     {
     }
 
+    Transform2D &Transform2D::operator=(const Transform2D &other)
+    {
+        _position = other._position;
+        _rotation = other._rotation;
+        _scale = other._scale;
+        _transformMatrix = other._transformMatrix;
+        _transformMatrixDirty = other._transformMatrixDirty;
+        return *this;
+    }
+
     void Transform2D::setPosition(const glm::vec2 &position)
     {
         _position = position;
@@ -138,6 +148,16 @@ namespace STN
 
     Transform3D::~Transform3D()
     {
+    }
+
+    Transform3D &Transform3D::operator=(const Transform3D &other)
+    {
+        _position = other._position;
+        _rotation = other._rotation;
+        _scale = other._scale;
+        _transformMatrix = other._transformMatrix;
+        _transformMatrixDirty = other._transformMatrixDirty;
+        return *this;
     }
 
     void Transform3D::setPosition(const glm::vec3 &position)

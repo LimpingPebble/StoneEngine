@@ -170,14 +170,11 @@ namespace STN
             return getChild(path);
         }
 
-        void Node::forEachChild(std::function<void(std::shared_ptr<Node>)> callback, bool recursively) const
+        void Node::withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const
         {
             for (auto &child : _children)
             {
-                if (recursively)
-                {
-                    child->forEachChild(callback);
-                }
+                child->withAllChildrenHierarchy(callback);
                 callback(child);
             }
         }
