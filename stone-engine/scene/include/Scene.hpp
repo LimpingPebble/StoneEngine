@@ -20,7 +20,7 @@ namespace STN
             virtual ~Scene();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored) const override;
+            virtual std::string debugDescription(bool colored = true) const override;
 
             void setCamera(std::shared_ptr<Camera> camera);
             std::shared_ptr<Camera> getCamera() const;
