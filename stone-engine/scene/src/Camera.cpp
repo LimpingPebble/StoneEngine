@@ -10,17 +10,51 @@ namespace STN
     {
 
         Camera::Camera(const std::string &name)
-            : Node(name)
+            : Node(name), _near(0.1f), _far(100.0f)
         {
         }
 
         Camera::Camera(const Camera &other)
-            : Node(other)
+            : Node(other), _near(other._near), _far(other._far)
         {
         }
 
         Camera::~Camera()
         {
+        }
+
+        const char *Camera::getClassName() const
+        {
+            return "Camera";
+        }
+
+        std::string Camera::debugDescription(bool colored) const
+        {
+            (void)colored;
+            std::string str = "{";
+            str += "near:" + std::to_string(_near) + ",";
+            str += "far:" + std::to_string(_far) + "}";
+            return str;
+        }
+
+        float Camera::getNear() const
+        {
+            return _near;
+        }
+
+        void Camera::setNear(float near)
+        {
+            _near = near;
+        }
+
+        float Camera::getFar() const
+        {
+            return _far;
+        }
+
+        void Camera::setFar(float far)
+        {
+            _far = far;
         }
 
         const char *Camera::_termClassColor() const
@@ -29,17 +63,13 @@ namespace STN
         }
 
         PerspectiveCamera::PerspectiveCamera(const std::string &name)
-            : Camera(name), _fov(glm::radians(45.0f)), _aspect(1.0f), _near(0.1f), _far(100.0f)
+            : Camera(name), _fov(glm::radians(45.0f)), _aspect(1.0f)
         {
         }
 
         PerspectiveCamera::PerspectiveCamera(const PerspectiveCamera &other)
-            : Camera(other)
+            : Camera(other), _fov(other._fov), _aspect(other._aspect)
         {
-            _fov = other._fov;
-            _aspect = other._aspect;
-            _near = other._near;
-            _far = other._far;
         }
 
         PerspectiveCamera::~PerspectiveCamera()
@@ -53,12 +83,10 @@ namespace STN
 
         std::string PerspectiveCamera::debugDescription(bool colored) const
         {
-            (void)colored;
-            std::string str = "{";
-            str += "fov:" + std::to_string(_fov) + ",";
-            str += "aspect:" + std::to_string(_aspect) + ",";
-            str += "near:" + std::to_string(_near) + ",";
-            str += "far:" + std::to_string(_far) + "}";
+            std::string str = Camera::debugDescription(colored);
+            str.pop_back();
+            str += ",fov:" + std::to_string(_fov) + ",";
+            str += "aspect:" + std::to_string(_aspect) + "}";
             return str;
         }
 
@@ -87,40 +115,14 @@ namespace STN
             _aspect = aspect;
         }
 
-        float PerspectiveCamera::getNear() const
-        {
-            return _near;
-        }
-
-        void PerspectiveCamera::setNear(float near)
-        {
-            _near = near;
-        }
-
-        float PerspectiveCamera::getFar() const
-        {
-            return _far;
-        }
-
-        void PerspectiveCamera::setFar(float far)
-        {
-            _far = far;
-        }
-
         OrthographicCamera::OrthographicCamera(const std::string &name)
-            : Camera(name), _left(-1.0f), _right(1.0f), _bottom(-1.0f), _top(1.0f), _near(0.1f), _far(100.0f)
+            : Camera(name), _size(10.0f)
         {
         }
 
         OrthographicCamera::OrthographicCamera(const OrthographicCamera &other)
-            : Camera(other)
+            : Camera(other), _size(other._size)
         {
-            _left = other._left;
-            _right = other._right;
-            _bottom = other._bottom;
-            _top = other._top;
-            _near = other._near;
-            _far = other._far;
         }
 
         OrthographicCamera::~OrthographicCamera()
@@ -134,80 +136,15 @@ namespace STN
 
         std::string OrthographicCamera::debugDescription(bool colored) const
         {
-            (void)colored;
-            std::string str = "{";
-            str += "left:" + std::to_string(_left) + ",";
-            str += "right:" + std::to_string(_right) + ",";
-            str += "bottom:" + std::to_string(_bottom) + ",";
-            str += "top:" + std::to_string(_top) + ",";
-            str += "near:" + std::to_string(_near) + ",";
-            str += "far:" + std::to_string(_far) + "}";
+            std::string str = Camera::debugDescription(colored);
+            str.pop_back();
+            str += ",size:[" + std::to_string(_size.x) + "," + std::to_string(_size.y) + "]}";
             return str;
         }
 
         const glm::mat4 OrthographicCamera::getProjectionMatrix() const
         {
-            return glm::ortho(_left, _right, _bottom, _top, _near, _far);
-        }
-
-        float OrthographicCamera::getLeft() const
-        {
-            return _left;
-        }
-
-        void OrthographicCamera::setLeft(float left)
-        {
-            _left = left;
-        }
-
-        float OrthographicCamera::getRight() const
-        {
-            return _right;
-        }
-
-        void OrthographicCamera::setRight(float right)
-        {
-            _right = right;
-        }
-
-        float OrthographicCamera::getBottom() const
-        {
-            return _bottom;
-        }
-
-        void OrthographicCamera::setBottom(float bottom)
-        {
-            _bottom = bottom;
-        }
-
-        float OrthographicCamera::getTop() const
-        {
-            return _top;
-        }
-
-        void OrthographicCamera::setTop(float top)
-        {
-            _top = top;
-        }
-
-        float OrthographicCamera::getNear() const
-        {
-            return _near;
-        }
-
-        void OrthographicCamera::setNear(float near)
-        {
-            _near = near;
-        }
-
-        float OrthographicCamera::getFar() const
-        {
-            return _far;
-        }
-
-        void OrthographicCamera::setFar(float far)
-        {
-            _far = far;
+            return glm::ortho(-_size.x / 2, _size.x / 2, -_size.y / 2, _size.y / 2, _near, _far);
         }
 
     } // namespace Scene

@@ -97,5 +97,6 @@ namespace STN
 #define TERM_COLOR_WHITE "\033[37m"
 #define TERM_COLOR_GRAY "\033[90m"
 #define TERM_COLOR_BLACK "\033[30m"
+#define TERM_COLOR_ORANGE "\033[38;5;208m"
 
 #define TERM_COLOR_BOLD "\033[1m"

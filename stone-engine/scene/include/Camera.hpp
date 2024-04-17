@@ -18,9 +18,20 @@ namespace STN
 
             virtual ~Camera();
 
+            virtual const char *getClassName() const override;
+            virtual std::string debugDescription(bool colored) const override;
+
             virtual const glm::mat4 getProjectionMatrix() const = 0;
 
+            float getNear() const;
+            void setNear(float near);
+
+            float getFar() const;
+            void setFar(float far);
+
         protected:
+            float _near;
+            float _far;
 
             virtual const char *_termClassColor() const override;
         };
@@ -43,17 +54,9 @@ namespace STN
             float getAspect() const;
             void setAspect(float aspect);
 
-            float getNear() const;
-            void setNear(float near);
-
-            float getFar() const;
-            void setFar(float far);
-
         protected:
             float _fov;
             float _aspect;
-            float _near;
-            float _far;
         };
 
         class OrthographicCamera : public Camera
@@ -68,31 +71,11 @@ namespace STN
 
             virtual const glm::mat4 getProjectionMatrix() const override;
 
-            float getLeft() const;
-            void setLeft(float left);
-
-            float getRight() const;
-            void setRight(float right);
-
-            float getBottom() const;
-            void setBottom(float bottom);
-
-            float getTop() const;
-            void setTop(float top);
-
-            float getNear() const;
-            void setNear(float near);
-
-            float getFar() const;
-            void setFar(float far);
+            glm::vec2 getSize() const;
+            void setSize(const glm::vec2 &size);
 
         protected:
-            float _left;
-            float _right;
-            float _bottom;
-            float _top;
-            float _near;
-            float _far;
+            glm::vec2 _size;
         };
 
     } // namespace Scene
