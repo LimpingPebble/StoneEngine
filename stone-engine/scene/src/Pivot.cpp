@@ -94,7 +94,7 @@ namespace STN
 
         const char *Pivot::_termClassColor() const
         {
-            return TERM_COLOR_BOLD TERM_COLOR_CYAN;
+            return TERM_COLOR_BOLD TERM_COLOR_RED;
         }
 
     } // namespace Scene
