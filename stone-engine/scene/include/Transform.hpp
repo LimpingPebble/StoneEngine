@@ -73,9 +73,7 @@ namespace STN
         void rotate(const glm::vec3 &eulerAngles);
         void scale(const glm::vec3 &scale);
 
-        /** Update if needed and return the transform matrix */
         const glm::mat4 &getTransformMatrix();
-        /** Return the transform matrix if cached or calculate it */
         glm::mat4 getTransformMatrix() const;
 
     protected:

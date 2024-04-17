@@ -28,7 +28,7 @@ namespace STN
             const glm::mat4& getTransformMatrix();
             const glm::mat4 getTransformMatrix() const;
 
-            virtual void render(RenderContext& context, RenderStage stage, std::shared_ptr<Scene> scene) override;
+            virtual void render(RenderContext& context) override;
 
             virtual std::string debugDescription(bool colored) const override;
 

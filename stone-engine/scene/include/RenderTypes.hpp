@@ -25,13 +25,6 @@ namespace STN
             glm::vec4 boneWeights;
         };
 
-        struct RenderContext
-        {
-            glm::mat4 projectionMatrix = glm::mat4(1.0f);
-            glm::mat4 viewMatrix = glm::mat4(1.0f);
-            glm::mat4 modelMatrix = glm::mat4(1.0f);
-        };
-
         enum class RenderStage
         {
             /** Render without color when calculating casted shadows */
@@ -46,6 +39,16 @@ namespace STN
             CustomStencil,
             /** Render post processing effects */
             PostProcessing,
+        };
+
+        struct RenderContext
+        {
+            glm::mat4 projectionMatrix = glm::mat4(1.0f);
+            glm::mat4 viewMatrix = glm::mat4(1.0f);
+            glm::mat4 modelMatrix = glm::mat4(1.0f);
+            RenderStage stage = RenderStage::Opaque;
+            std::shared_ptr<class Scene> scene;
+            void *graphicsContext = nullptr;
         };
 
     } // namespace Scene

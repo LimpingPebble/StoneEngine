@@ -52,14 +52,14 @@ namespace STN
             return _transform.getTransformMatrix();
         }
 
-        void Node3D::render(RenderContext& context, RenderStage stage, std::shared_ptr<Scene> scene)
+        void Node3D::render(RenderContext& context)
         {
             glm::mat4 previousModelMatrix = context.modelMatrix;
 
             context.modelMatrix = context.modelMatrix * getTransformMatrix();
             for (auto child : getChildren())
             {
-                child->render(context, stage, scene);
+                child->render(context);
             }
             context.modelMatrix = previousModelMatrix;
         }

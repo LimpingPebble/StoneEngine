@@ -65,13 +65,22 @@ namespace STN
                 context.projectionMatrix = camera->getProjectionMatrix();
             }
 
-            std::shared_ptr<Scene> scene = std::dynamic_pointer_cast<Scene>(shared_from_this());
+            context.scene = std::dynamic_pointer_cast<Scene>(shared_from_this());
 
-            Node::render(context, RenderStage::PreProcessing, scene);
-            Node::render(context, RenderStage::Opaque, scene);
-            Node::render(context, RenderStage::Transparent, scene);
-            Node::render(context, RenderStage::CustomStencil, scene);
-            Node::render(context, RenderStage::PostProcessing, scene);
+            context.stage = RenderStage::PreProcessing;
+            Node::render(context);
+
+            context.stage = RenderStage::Opaque;
+            Node::render(context);
+
+            context.stage = RenderStage::Transparent;
+            Node::render(context);
+
+            context.stage = RenderStage::CustomStencil;
+            Node::render(context);
+
+            context.stage = RenderStage::PostProcessing;
+            Node::render(context);
         }
 
         const char *Scene::_termClassColor() const

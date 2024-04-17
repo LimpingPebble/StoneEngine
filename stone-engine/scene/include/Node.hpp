@@ -69,7 +69,7 @@ namespace STN
             void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
             virtual void update(float deltaTime);
-            virtual void render(RenderContext &context, RenderStage stage, std::shared_ptr<Scene> scene);
+            virtual void render(RenderContext &context);
 
             void writeInStream(std::ostream &flux, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "", bool colored = true) const;
             virtual std::string debugDescription(bool colored = true) const;
