@@ -29,13 +29,13 @@ namespace STN
             return "SkinnedMesh";
         }
 
-        std::string SkinnedMesh::debugDescription(bool colored) const
+        std::string SkinnedMesh::debugDescription() const
         {
-            std::string str = Node::debugDescription(colored);
+            std::string str = Node::debugDescription();
             str.pop_back();
-            str += "vertices:" + std::to_string(_vertices.size()) + ",";
-            str += "indices:" + std::to_string(_indices.size()) + ",";
-            str += "skeleton:" + (_skeleton.expired() ? "null" : _skeleton.lock()->getGlobalName()) + "}";
+            str += ",vertices:" + std::to_string(_vertices.size());
+            str += ",indices:" + std::to_string(_indices.size());
+            str += ",skeleton:" + (_skeleton.expired() ? "nullptr" : _skeleton.lock()->getGlobalName()) + "}";
             return str;
         }
 

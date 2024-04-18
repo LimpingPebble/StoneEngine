@@ -23,7 +23,7 @@ namespace STN
             virtual ~SkinnedMesh();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             const std::vector<WeightVertex> &getVertices() const;
             const std::vector<uint32_t> &getIndices() const;

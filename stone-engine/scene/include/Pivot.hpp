@@ -32,7 +32,7 @@ namespace STN
 
             virtual void render(RenderContext &context) override;
 
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
         protected:
             Transform3D _transform;

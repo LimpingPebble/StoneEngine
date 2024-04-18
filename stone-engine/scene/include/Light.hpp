@@ -21,7 +21,7 @@ namespace STN
             virtual const char *getClassName() const override;
 
             virtual bool isCastingShadow() const;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
         protected:
             float _intensity;
@@ -40,7 +40,7 @@ namespace STN
 
             virtual const char *getClassName() const override;
 
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
         };
 
         class PointLight : public Light
@@ -53,7 +53,7 @@ namespace STN
 
             virtual const char *getClassName() const override;
 
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
         protected:
             glm::vec3 _attenuation;
@@ -69,7 +69,7 @@ namespace STN
             virtual ~CastingLight();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             virtual bool isCastingShadow() const override;
             void setCastingShadow(bool castShadow);
@@ -106,7 +106,7 @@ namespace STN
             virtual ~DirectionalLight();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             bool isInfinite() const;
             void setInfinite(bool infinite);
@@ -130,7 +130,7 @@ namespace STN
             virtual ~SpotLight();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             float getConeAngle() const;
             void setConeAngle(float coneAngle);

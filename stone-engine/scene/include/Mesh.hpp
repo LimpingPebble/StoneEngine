@@ -23,7 +23,7 @@ namespace STN
             virtual ~Mesh();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             const std::vector<Vertex> &getVertices() const;
             const std::vector<uint32_t> &getIndices() const;
@@ -50,7 +50,7 @@ namespace STN
             virtual ~InstancedMesh();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             void addInstance(const Transform3D &transform);
             void removeInstance(size_t index);

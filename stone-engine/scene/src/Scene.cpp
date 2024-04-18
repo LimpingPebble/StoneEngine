@@ -28,19 +28,12 @@ namespace STN
             return "Scene";
         }
 
-        std::string Scene::debugDescription(bool colored) const
+        std::string Scene::debugDescription() const
         {
-            (void)colored;
-            std::string str;
-            str += "{camera:";
-            if (_camera.expired())
-            {
-                str += "none";
-            }
-            else
-            {
-                str += _camera.lock()->getGlobalName();
-            }
+            std::string str = Node::debugDescription();
+            str.pop_back();
+            str += ",camera:";
+            str += (_camera.expired() ? "nullptr" : _camera.lock()->getGlobalName());
             str += "}";
             return str;
         }

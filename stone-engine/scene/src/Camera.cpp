@@ -28,12 +28,12 @@ namespace STN
             return "Camera";
         }
 
-        std::string Camera::debugDescription(bool colored) const
+        std::string Camera::debugDescription() const
         {
-            (void)colored;
-            std::string str = "{";
-            str += "near:" + std::to_string(_near) + ",";
-            str += "far:" + std::to_string(_far) + "}";
+            std::string str = Node::debugDescription();
+            str.pop_back();
+            str += ",near:" + std::to_string(_near);
+            str += ",far:" + std::to_string(_far) + "}";
             return str;
         }
 
@@ -81,12 +81,12 @@ namespace STN
             return "PerspectiveCamera";
         }
 
-        std::string PerspectiveCamera::debugDescription(bool colored) const
+        std::string PerspectiveCamera::debugDescription() const
         {
-            std::string str = Camera::debugDescription(colored);
+            std::string str = Camera::debugDescription();
             str.pop_back();
-            str += ",fov:" + std::to_string(_fov) + ",";
-            str += "aspect:" + std::to_string(_aspect) + "}";
+            str += ",fov:" + std::to_string(_fov);
+            str += ",aspect:" + std::to_string(_aspect) + "}";
             return str;
         }
 
@@ -134,9 +134,9 @@ namespace STN
             return "OrthographicCamera";
         }
 
-        std::string OrthographicCamera::debugDescription(bool colored) const
+        std::string OrthographicCamera::debugDescription() const
         {
-            std::string str = Camera::debugDescription(colored);
+            std::string str = Camera::debugDescription();
             str.pop_back();
             str += ",size:[" + std::to_string(_size.x) + "," + std::to_string(_size.y) + "]}";
             return str;

@@ -33,17 +33,14 @@ namespace STN
             return "Skeleton";
         }
 
-        std::string Skeleton::debugDescription(bool colored) const
+        std::string Skeleton::debugDescription() const
         {
-            std::string str = Node::debugDescription(colored);
+            std::string str = Node::debugDescription();
             str.pop_back();
-            str += "bones:[";
+            str += ",bones:[";
             for (const auto &bone : _bones)
             {
-                if (auto pivot = bone.pivot.lock())
-                {
-                    str += pivot->getGlobalName() + ",";
-                }
+                str += (bone.pivot.expired() ? "nullptr" : bone.pivot.lock()->getGlobalName()) + ",";
             }
             str.pop_back();
             str += "]}";

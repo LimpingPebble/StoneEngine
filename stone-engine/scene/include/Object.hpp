@@ -21,6 +21,8 @@ namespace STN
 
         virtual const char *getClassName() const;
 
+        virtual std::string debugDescription() const;
+
     protected:
         uint32_t _id;
     };

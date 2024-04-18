@@ -33,13 +33,13 @@ namespace STN
             return false;
         }
 
-        std::string Light::debugDescription(bool colored) const
+        std::string Light::debugDescription() const
         {
-            (void)colored;
-            std::string str = "{";
-            str += "intensity:" + std::to_string(_intensity) + ",";
-            str += "color:[" + std::to_string(_color.r) + "," + std::to_string(_color.g) + "," + std::to_string(_color.b) + "]";
-            return str + "}";
+            std::string str = Node::debugDescription();
+            str.pop_back();
+            str += ",intensity:" + std::to_string(_intensity);
+            str += ",color:[" + std::to_string(_color.r) + "," + std::to_string(_color.g) + "," + std::to_string(_color.b) + "]}";
+            return str;
         }
 
         const char *Light::_termClassColor() const
@@ -66,9 +66,9 @@ namespace STN
             return "AmbientLight";
         }
 
-        std::string AmbientLight::debugDescription(bool colored) const
+        std::string AmbientLight::debugDescription() const
         {
-            return Light::debugDescription(colored);
+            return Light::debugDescription();
         }
 
         PointLight::PointLight(const std::string &name)
@@ -90,9 +90,9 @@ namespace STN
             return "PointLight";
         }
 
-        std::string PointLight::debugDescription(bool colored) const
+        std::string PointLight::debugDescription() const
         {
-            std::string str = Light::debugDescription(colored);
+            std::string str = Light::debugDescription();
             str.pop_back();
             str += ",attenuation:[" + std::to_string(_attenuation.r) + "," + std::to_string(_attenuation.g) + "," + std::to_string(_attenuation.b) + "]";
             str += ",specular:[" + std::to_string(_specular.r) + "," + std::to_string(_specular.g) + "," + std::to_string(_specular.b) + "]";
@@ -118,9 +118,9 @@ namespace STN
             return "CastingLight";
         }
 
-        std::string CastingLight::debugDescription(bool colored) const
+        std::string CastingLight::debugDescription() const
         {
-            std::string str = Light::debugDescription(colored);
+            std::string str = Light::debugDescription();
             str.pop_back();
             str += ",castShadow:" + std::to_string(_castShadow);
             str += ",shadowClipNear:" + std::to_string(_shadowClipNear);
@@ -200,9 +200,9 @@ namespace STN
             return "DirectionalLight";
         }
 
-        std::string DirectionalLight::debugDescription(bool colored) const
+        std::string DirectionalLight::debugDescription() const
         {
-            return CastingLight::debugDescription(colored);
+            return CastingLight::debugDescription();
         }
 
         bool DirectionalLight::isInfinite() const
@@ -252,9 +252,9 @@ namespace STN
             return "SpotLight";
         }
 
-        std::string SpotLight::debugDescription(bool colored) const
+        std::string SpotLight::debugDescription() const
         {
-            std::string str = CastingLight::debugDescription(colored);
+            std::string str = CastingLight::debugDescription();
             str.pop_back();
             str += ",coneAngle:" + std::to_string(_coneAngle);
             str += ",coneAttenuation:" + std::to_string(_coneAttenuation);

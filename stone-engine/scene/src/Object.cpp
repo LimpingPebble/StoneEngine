@@ -32,4 +32,9 @@ namespace STN
         return "Object";
     }
 
+    std::string Object::debugDescription() const
+    {
+        return "{id:" + std::to_string(_id) + "}";
+    }
+
 }

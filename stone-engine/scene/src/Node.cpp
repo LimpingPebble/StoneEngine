@@ -247,7 +247,7 @@ namespace STN
             {
                 stream << _name << " [" << getClassName() << "] ";
             }
-            stream << debugDescription(colored) << std::endl;
+            stream << debugDescription() << std::endl;
             for (size_t i = 0; i < _children.size(); i++)
             {
                 if (i == _children.size() - 1)
@@ -261,10 +261,12 @@ namespace STN
             }
         }
 
-        std::string Node::debugDescription(bool colored) const
+        std::string Node::debugDescription() const
         {
-            (void)colored;
-            return "{}";
+            std::string str = Object::debugDescription();
+            str.pop_back();
+            str += ",name:\"" + _name + "\"}";
+            return str;
         }
 
         const char *Node::_termClassColor() const

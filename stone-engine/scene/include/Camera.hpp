@@ -19,7 +19,7 @@ namespace STN
             virtual ~Camera();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const = 0;
 
@@ -44,7 +44,7 @@ namespace STN
             virtual ~PerspectiveCamera();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const override;
 
@@ -67,7 +67,7 @@ namespace STN
             virtual ~OrthographicCamera();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const override;
 

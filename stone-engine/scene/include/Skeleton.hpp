@@ -31,7 +31,7 @@ namespace STN
             virtual ~Skeleton();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             const std::vector<Bone> &getBones() const;
             void addBone(std::shared_ptr<Pivot> pivot);

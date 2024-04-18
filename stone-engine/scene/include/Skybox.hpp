@@ -21,7 +21,7 @@ namespace STN
             virtual ~Skybox();
 
             virtual const char *getClassName() const override;
-            virtual std::string debugDescription(bool colored = true) const override;
+            virtual std::string debugDescription() const override;
 
             void setTexture(const std::shared_ptr<Texture> &texture, size_t index);
             std::shared_ptr<Texture> getTexture(size_t index) const;

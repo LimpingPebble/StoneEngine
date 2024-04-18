@@ -26,27 +26,16 @@ namespace STN
             return "Skybox";
         }
 
-        std::string Skybox::debugDescription(bool colored) const
+        std::string Skybox::debugDescription() const
         {
-            std::string str = Node::debugDescription(colored);
+            std::string str = Node::debugDescription();
             str.pop_back();
-            str += "textures:[";
+            str += ",textures:[";
             for (size_t i = 0; i < 6; i++)
             {
-                if (_textures[i])
-                {
-                    str += std::to_string(uint64_t(_textures[i].get()));
-                    // str += _textures[i]->debugDescription(colored);
-                }
-                else
-                {
-                    str += "nullptr";
-                }
-                if (i < 5)
-                {
-                    str += ",";
-                }
+                str += (_textures[i] ? /*std::to_string(_textures[i]->getId())*/ "_texture_id_" : "none") + std::string(",");
             }
+            str.pop_back();
             str += "]}";
             return str;
         }

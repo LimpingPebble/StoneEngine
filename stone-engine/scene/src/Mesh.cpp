@@ -27,11 +27,11 @@ namespace STN
             return "Mesh";
         }
 
-        std::string Mesh::debugDescription(bool colored) const
+        std::string Mesh::debugDescription() const
         {
-            std::string str = Node::debugDescription(colored);
+            std::string str = Node::debugDescription();
             str.pop_back();
-            str += "vertices:" + std::to_string(_vertices.size());
+            str += ",vertices:" + std::to_string(_vertices.size());
             str += ",indices:" + std::to_string(_indices.size()) + "}";
             return str;
         }
@@ -90,9 +90,9 @@ namespace STN
             return "InstancedMesh";
         }
 
-        std::string InstancedMesh::debugDescription(bool colored) const
+        std::string InstancedMesh::debugDescription() const
         {
-            std::string str = Mesh::debugDescription(colored);
+            std::string str = Mesh::debugDescription();
             str.pop_back();
             str += ",instances:" + std::to_string(_instancesTransforms.size()) + "}";
             return str;

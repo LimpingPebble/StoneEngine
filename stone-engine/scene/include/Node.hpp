@@ -74,7 +74,7 @@ namespace STN
             virtual void render(RenderContext &context);
 
             void writeInStream(std::ostream &flux, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "", bool colored = true) const;
-            virtual std::string debugDescription(bool colored = true) const;
+            virtual std::string debugDescription() const;
 
         protected:
             std::string _name;
