@@ -10,7 +10,7 @@ namespace STN
 
     namespace Scene
     {
-        
+
         class Pivot : public Node
         {
         public:
@@ -25,10 +25,12 @@ namespace STN
             const Transform3D &getTransform() const;
             void setTransform(const Transform3D &transform);
 
-            const glm::mat4& getTransformMatrix();
+            virtual void transformRelativeMatrix(glm::mat4 &relative) const override;
+
+            const glm::mat4 &getTransformMatrix();
             const glm::mat4 getTransformMatrix() const;
 
-            virtual void render(RenderContext& context) override;
+            virtual void render(RenderContext &context) override;
 
             virtual std::string debugDescription(bool colored = true) const override;
 

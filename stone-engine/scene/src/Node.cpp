@@ -171,18 +171,41 @@ namespace STN
             return getChild(path);
         }
 
-        const glm::mat4 Node::getWorldTransformMatrix()
+        void Node::transformRelativeMatrix(glm::mat4& relative) const
+        {
+            (void)relative;
+        }
+
+        const glm::mat4 Node::getWorldTransformMatrix() const
+        {
+            return getTransformMatrixRelativeToNode(nullptr);
+        }
+
+        const glm::mat4 Node::getTransformMatrixRelativeToNode(std::shared_ptr<Node> otherNode) const
         {
             glm::mat4 transform(1);
-            for (
-                std::shared_ptr<Node> node = std::dynamic_pointer_cast<Node>(shared_from_this());
-                node != nullptr;
-                node = node->getParent())
+            if (this == otherNode.get())
             {
-                if (auto pivot = std::dynamic_pointer_cast<Pivot>(node))
+                return transform;
+            }
+
+            transformRelativeMatrix(transform);
+
+            std::shared_ptr<Node> node = getParent();
+            while (true) {
+                if (node == nullptr)
                 {
-                    transform = pivot->getTransformMatrix() * transform;
+                    if (!otherNode)
+                        break;
+
+                    return glm::inverse(otherNode->getWorldTransformMatrix()) * transform;
                 }
+                if (node == otherNode)
+                {
+                    break;
+                }
+                node->transformRelativeMatrix(transform);
+                node = node->getParent();
             }
             return transform;
         }

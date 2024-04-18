@@ -42,6 +42,11 @@ namespace STN
             _transform = transform;
         }
 
+        void Pivot::transformRelativeMatrix(glm::mat4 &relative) const
+        {
+            relative = getTransformMatrix() * relative;
+        }
+
         const glm::mat4& Pivot::getTransformMatrix()
         {
             return _transform.getTransformMatrix();
@@ -66,30 +71,15 @@ namespace STN
 
         std::string Pivot::debugDescription(bool colored) const
         {
-            (void)colored;
-            std::string description;
-            bool needComma = false;
+            std::string str = Node::debugDescription(colored);
+            str.pop_back();
             const glm::vec3& pos = _transform.getPosition();
-            if (pos != glm::vec3(0.0f))
-            {
-                description += "position:{x:" + std::to_string(pos.x) + ",y:" + std::to_string(pos.y) + ",z:" + std::to_string(pos.z) + "}";
-                needComma = true;
-            }
+            str += "position:[" + std::to_string(pos.x) + "," + std::to_string(pos.y) + "," + std::to_string(pos.z) + "],";
             glm::vec3 rot = _transform.getEulerAngles();
-            if (rot != glm::vec3(0.0f))
-            {
-                if (needComma)
-                    description += ",";
-                description += "rotation:{rx:" + std::to_string(rot.x) + ",ry:" + std::to_string(rot.y) + ",rz:" + std::to_string(rot.z) + "}";
-            }
+            str += "rotation:[" + std::to_string(rot.x) + "," + std::to_string(rot.y) + "," + std::to_string(rot.z) + "],";
             const glm::vec3& scale = _transform.getScale();
-            if (scale != glm::vec3(1.0f))
-            {
-                if (needComma)
-                    description += ",";
-                description += "scale:{x:" + std::to_string(scale.x) + ",y:" + std::to_string(scale.y) + ",z:" + std::to_string(scale.z) + "}";
-            }
-            return "{" + description + "}";
+            str += "scale:[" + std::to_string(scale.x) + "," + std::to_string(scale.y) + "," + std::to_string(scale.z) + "]}";
+            return str;
         }
 
         const char *Pivot::_termClassColor() const

@@ -23,7 +23,7 @@ namespace STN
 
             virtual ~Node();
 
-            virtual const char* getClassName() const override;
+            virtual const char *getClassName() const override;
 
             void setName(const std::string &name);
             const std::string &getName() const;
@@ -64,7 +64,9 @@ namespace STN
                 return std::dynamic_pointer_cast<T>(getChildWithPath(path));
             }
 
-            const glm::mat4 getWorldTransformMatrix();
+            virtual void transformRelativeMatrix(glm::mat4 &relative) const;
+            const glm::mat4 getWorldTransformMatrix() const;
+            const glm::mat4 getTransformMatrixRelativeToNode(std::shared_ptr<Node> otherNode) const;
 
             void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
@@ -79,7 +81,7 @@ namespace STN
             std::vector<std::shared_ptr<Node>> _children;
             std::weak_ptr<Node> _parent;
 
-            virtual const char* _termClassColor() const;
+            virtual const char *_termClassColor() const;
         };
 
     } // namespace Scene
