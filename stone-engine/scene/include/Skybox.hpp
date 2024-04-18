@@ -7,10 +7,10 @@
 namespace STN
 {
 
+    class Texture;
+
     namespace Scene
     {
-
-        class Texture;
 
         class Skybox : public Node
         {

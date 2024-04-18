@@ -17,11 +17,15 @@ namespace STN
 
         virtual ~Texture();
 
-        void setSize(const glm::ivec2 &size);
-        glm::ivec2 getSize() const;
+        virtual const char *getClassName() const override;
+        virtual std::string debugDescription() const override;
+
+        const glm::ivec2 &getSize() const;
 
         void setFilePath(const std::string &texture);
         const std::string &getFilePath() const;
+
+        // [...]
 
     protected:
         glm::ivec2 _size;

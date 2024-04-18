@@ -33,7 +33,7 @@ namespace STN
             str += ",textures:[";
             for (size_t i = 0; i < 6; i++)
             {
-                str += (_textures[i] ? /*std::to_string(_textures[i]->getId())*/ "_texture_id_" : "none") + std::string(",");
+                str += (_textures[i] ? std::to_string(_textures[i]->getId()) : "none") + std::string(",");
             }
             str.pop_back();
             str += "]}";
