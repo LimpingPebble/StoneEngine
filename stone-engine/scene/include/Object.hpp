@@ -3,6 +3,8 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
+#include <string>
 
 namespace STN
 {
@@ -16,6 +18,10 @@ namespace STN
         virtual ~Object();
 
         uint32_t getId() const;
+
+        virtual const char *getClassName() const;
+
+        virtual std::string debugDescription() const;
 
     protected:
         uint32_t _id;

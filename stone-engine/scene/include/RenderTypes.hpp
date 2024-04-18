@@ -10,11 +10,19 @@ namespace STN
     namespace Scene
     {
 
-        struct RenderUniforms
+        struct Vertex
         {
-            glm::mat4 projectionMatrix;
-            glm::mat4 viewMatrix;
-            glm::mat4 modelMatrix;
+            glm::vec3 position;
+            glm::vec3 normal;
+            glm::vec3 tangent;
+            glm::vec3 bitangent;
+            glm::vec2 texCoord;
+        };
+
+        struct WeightVertex : Vertex
+        {
+            glm::ivec4 boneIDs;
+            glm::vec4 boneWeights;
         };
 
         enum class RenderStage
@@ -31,6 +39,16 @@ namespace STN
             CustomStencil,
             /** Render post processing effects */
             PostProcessing,
+        };
+
+        struct RenderContext
+        {
+            glm::mat4 projectionMatrix = glm::mat4(1.0f);
+            glm::mat4 viewMatrix = glm::mat4(1.0f);
+            glm::mat4 modelMatrix = glm::mat4(1.0f);
+            RenderStage stage = RenderStage::Opaque;
+            std::shared_ptr<class Scene> scene;
+            void *graphicsContext = nullptr;
         };
 
     } // namespace Scene

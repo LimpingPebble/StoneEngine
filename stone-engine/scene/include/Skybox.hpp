@@ -3,32 +3,31 @@
 #pragma once
 
 #include "Node.hpp"
-#include "Camera.hpp"
 
 namespace STN
 {
 
+    class Texture;
+
     namespace Scene
     {
 
-        class Scene : public Node
+        class Skybox : public Node
         {
         public:
-            Scene(const std::string &name = "scene");
-            Scene(const Scene &other);
+            Skybox(const std::string &name = "skybox");
+            Skybox(const Skybox &other);
 
-            virtual ~Scene();
+            virtual ~Skybox();
 
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
-            void setCamera(std::shared_ptr<Camera> camera);
-            std::shared_ptr<Camera> getCamera() const;
-
-            void render();
+            void setTexture(const std::shared_ptr<Texture> &texture, size_t index);
+            std::shared_ptr<Texture> getTexture(size_t index) const;
 
         protected:
-            std::weak_ptr<Camera> _camera;
+            std::array<std::shared_ptr<Texture>, 6> _textures;
 
             virtual const char *_termClassColor() const override;
         };
