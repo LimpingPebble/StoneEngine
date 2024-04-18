@@ -15,13 +15,13 @@ namespace STN
         public:
             Material();
             Material(const Material &other);
+
             virtual ~Material();
 
-            float red;
-            float green;
-            float blue;
-            float shininess;
-            // [...]
+            virtual const char *getClassName() const override;
+            virtual std::string debugDescription() const override;
+
+            std::shared_ptr<Object> graphicModuleData;
         };
 
     } // namespace Scene
