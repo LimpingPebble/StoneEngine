@@ -30,7 +30,8 @@ namespace STN
         std::string Mesh::debugDescription(bool colored) const
         {
             std::string str = Node::debugDescription(colored);
-            str += "{vertices:" + std::to_string(_vertices.size());
+            str.pop_back();
+            str += "vertices:" + std::to_string(_vertices.size());
             str += ",indices:" + std::to_string(_indices.size()) + "}";
             return str;
         }
@@ -67,7 +68,7 @@ namespace STN
 
         const char *Mesh::_termClassColor() const
         {
-            return TERM_COLOR_BOLD TERM_COLOR_CYAN;
+            return TERM_COLOR_BOLD TERM_COLOR_GREEN;
         }
 
         InstancedMesh::InstancedMesh(const std::string &name)
