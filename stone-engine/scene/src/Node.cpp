@@ -47,7 +47,7 @@ namespace STN
             {
                 return parent->getGlobalName() + "/" + getName();
             }
-            return getName();
+            return "/" + getName();
         }
 
         void Node::addChild(std::shared_ptr<Node> child)
