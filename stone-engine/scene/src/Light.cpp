@@ -28,11 +28,6 @@ namespace STN
             return "Light";
         }
 
-        bool Light::isCastingShadow() const
-        {
-            return false;
-        }
-
         std::string Light::debugDescription() const
         {
             std::string str = Node::debugDescription();
@@ -40,6 +35,11 @@ namespace STN
             str += ",intensity:" + std::to_string(_intensity);
             str += ",color:[" + std::to_string(_color.r) + "," + std::to_string(_color.g) + "," + std::to_string(_color.b) + "]}";
             return str;
+        }
+
+        bool Light::isCastingShadow() const
+        {
+            return false;
         }
 
         const char *Light::_termClassColor() const

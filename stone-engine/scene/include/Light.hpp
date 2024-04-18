@@ -19,9 +19,9 @@ namespace STN
             virtual ~Light();
 
             virtual const char *getClassName() const override;
+            virtual std::string debugDescription() const override;
 
             virtual bool isCastingShadow() const;
-            virtual std::string debugDescription() const override;
 
         protected:
             float _intensity;
@@ -39,7 +39,6 @@ namespace STN
             virtual ~AmbientLight();
 
             virtual const char *getClassName() const override;
-
             virtual std::string debugDescription() const override;
         };
 
@@ -52,7 +51,6 @@ namespace STN
             virtual ~PointLight();
 
             virtual const char *getClassName() const override;
-
             virtual std::string debugDescription() const override;
 
         protected:

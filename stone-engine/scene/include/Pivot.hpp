@@ -20,6 +20,7 @@ namespace STN
             virtual ~Pivot();
 
             virtual const char *getClassName() const override;
+            virtual std::string debugDescription() const override;
 
             Transform3D &getTransform();
             const Transform3D &getTransform() const;
@@ -32,7 +33,6 @@ namespace STN
 
             virtual void render(RenderContext &context) override;
 
-            virtual std::string debugDescription() const override;
 
         protected:
             Transform3D _transform;

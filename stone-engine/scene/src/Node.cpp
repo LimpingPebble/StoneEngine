@@ -31,6 +31,14 @@ namespace STN
             return "Node";
         }
 
+        std::string Node::debugDescription() const
+        {
+            std::string str = Object::debugDescription();
+            str.pop_back();
+            str += ",name:\"" + _name + "\"}";
+            return str;
+        }
+
         void Node::setName(const std::string &name)
         {
             _name = name;
@@ -259,14 +267,6 @@ namespace STN
                     _children[i]->writeInStream(stream, linePrefix + lastPrefix, "├─", "│ ", colored);
                 }
             }
-        }
-
-        std::string Node::debugDescription() const
-        {
-            std::string str = Object::debugDescription();
-            str.pop_back();
-            str += ",name:\"" + _name + "\"}";
-            return str;
         }
 
         const char *Node::_termClassColor() const

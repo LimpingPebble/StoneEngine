@@ -24,6 +24,7 @@ namespace STN
             virtual ~Node();
 
             virtual const char *getClassName() const override;
+            virtual std::string debugDescription() const;
 
             void setName(const std::string &name);
             const std::string &getName() const;
@@ -74,7 +75,6 @@ namespace STN
             virtual void render(RenderContext &context);
 
             void writeInStream(std::ostream &flux, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "", bool colored = true) const;
-            virtual std::string debugDescription() const;
 
         protected:
             std::string _name;

@@ -27,6 +27,19 @@ namespace STN
             return "Pivot";
         }
 
+        std::string Pivot::debugDescription() const
+        {
+            std::string str = Node::debugDescription();
+            str.pop_back();
+            const glm::vec3& pos = _transform.getPosition();
+            str += ",position:[" + std::to_string(pos.x) + "," + std::to_string(pos.y) + "," + std::to_string(pos.z) + "]";
+            glm::vec3 rot = _transform.getEulerAngles();
+            str += ",rotation:[" + std::to_string(rot.x) + "," + std::to_string(rot.y) + "," + std::to_string(rot.z) + "]";
+            const glm::vec3& scale = _transform.getScale();
+            str += ",scale:[" + std::to_string(scale.x) + "," + std::to_string(scale.y) + "," + std::to_string(scale.z) + "]}";
+            return str;
+        }
+
         Transform3D &Pivot::getTransform()
         {
             return _transform;
@@ -67,19 +80,6 @@ namespace STN
                 child->render(context);
             }
             context.modelMatrix = previousModelMatrix;
-        }
-
-        std::string Pivot::debugDescription() const
-        {
-            std::string str = Node::debugDescription();
-            str.pop_back();
-            const glm::vec3& pos = _transform.getPosition();
-            str += ",position:[" + std::to_string(pos.x) + "," + std::to_string(pos.y) + "," + std::to_string(pos.z) + "]";
-            glm::vec3 rot = _transform.getEulerAngles();
-            str += ",rotation:[" + std::to_string(rot.x) + "," + std::to_string(rot.y) + "," + std::to_string(rot.z) + "]";
-            const glm::vec3& scale = _transform.getScale();
-            str += ",scale:[" + std::to_string(scale.x) + "," + std::to_string(scale.y) + "," + std::to_string(scale.z) + "]}";
-            return str;
         }
 
         const char *Pivot::_termClassColor() const
