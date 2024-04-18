@@ -4,7 +4,7 @@
 
 #include "Node.hpp"
 #include "Transform.hpp"
-#include "RenderTypes.hpp"
+#include "Vertex.hpp"
 
 namespace STN
 {
