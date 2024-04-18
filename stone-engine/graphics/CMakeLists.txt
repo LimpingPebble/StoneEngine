@@ -1,6 +1,20 @@
-set (LIB_NAME graphics)
+set(LIB_NAME graphics)
 
 setup_files()
 
-add_library(${LIB_NAME} ${SRCS}
-        src/test.cpp)
+check_dependencies(${LIB_NAME}
+        TARGET_DEPS logging widgets
+        VARIABLE_DEPS Vulkan_LIBRARIES Vulkan_INCLUDE_DIRS
+        FATAL_ERROR
+)
+
+check_dependencies(sd)
+add_library(${LIB_NAME} ${SRCS})
+target_link_libraries(${LIB_NAME}
+        PUBLIC ${Vulkan_LIBRARIES}
+        INTERFACE logging
+        INTERFACE widgets
+)
+target_include_directories(${LIB_NAME}
+        PUBLIC ${Vulkan_INCLUDE_DIRS}
+)

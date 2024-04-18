@@ -9,11 +9,8 @@ set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
 
 # TODO: dependencies are not mandatory
-
-function (setup_files)
-    file (GLOB_RECURSE LOCAL_SRCS "*.cpp" "*.hpp" "*.cc" "*.hh" "*.c" "*.h")
-    set(SRCS ${LOCAL_SRCS} PARENT_SCOPE)
-endfunction()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+include(Helpers)
 
 include(FetchContent)
 
@@ -63,7 +60,7 @@ if (NOT GLM_FOUND)
     )
 
     FetchContent_MakeAvailable(glm)
-    set (GLM_FOUND ON)
+    set(GLM_FOUND ON)
 endif ()
 
 # Fetches GoogleTest only if needed
@@ -95,5 +92,25 @@ if (NOT glfw_POPULATED)
 
     add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
 endif ()
+
+# Setup Json
+FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json
+        GIT_TAG 9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03 # tag/v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
+# Setup Assimp
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY https://github.com/assimp/assimp
+        GIT_TAG 8b9ed34eaa3e6ad24254cb7e058fb9150f66b865 # tag/v5.4.0
+)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(assimp)
 
 add_subdirectory(stone-engine)
