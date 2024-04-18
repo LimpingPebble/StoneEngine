@@ -10,15 +10,26 @@ namespace STN
     namespace Scene
     {
 
+        class Texture;
+
         class Skybox : public Node
         {
         public:
-            Skybox();
+            Skybox(const std::string &name = "skybox");
             Skybox(const Skybox &other);
 
             virtual ~Skybox();
 
-            virtual void render(RenderUniforms &uniforms, RenderStage stage, std::shared_ptr<Scene> scene) override;
+            virtual const char *getClassName() const override;
+            virtual std::string debugDescription(bool colored = true) const override;
+
+            void setTexture(const std::shared_ptr<Texture> &texture, size_t index);
+            std::shared_ptr<Texture> getTexture(size_t index) const;
+
+        protected:
+            std::array<std::shared_ptr<Texture>, 6> _textures;
+
+            virtual const char *_termClassColor() const override;
         };
 
     } // namespace Scene
