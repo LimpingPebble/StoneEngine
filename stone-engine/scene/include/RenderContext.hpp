@@ -30,7 +30,6 @@ namespace STN
         glm::mat4 viewMatrix = glm::mat4(1.0f);
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         RenderStage stage = RenderStage::Opaque;
-        std::shared_ptr<class Scene> scene;
         void *graphicsContext = nullptr;
     };
 
