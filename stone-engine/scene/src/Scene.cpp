@@ -58,8 +58,6 @@ namespace STN
                 context.projectionMatrix = camera->getProjectionMatrix();
             }
 
-            context.scene = std::dynamic_pointer_cast<Scene>(shared_from_this());
-
             context.stage = RenderStage::PreProcessing;
             Node::render(context);
 

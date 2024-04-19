@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Node.hpp"
-#include "RenderTypes.hpp"
+#include "Vertex.hpp"
 
 namespace STN
 {
