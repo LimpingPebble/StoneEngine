@@ -1,9 +1,9 @@
 // Copyright 2024 Stone-Engine
 
-#include "Skybox.hpp"
-#include "Texture.hpp"
+#include "scene/Skybox.hpp"
+#include "scene/Texture.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -59,4 +59,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

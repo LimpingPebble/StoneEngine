@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "Mesh.hpp"
+#include "scene/Mesh.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -121,4 +121,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Object.hpp"
+#include "core/Object.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
     {
 
-        class Material : public Object
+        class Material : public Core::Object
         {
         public:
             Material();
@@ -26,4 +26,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

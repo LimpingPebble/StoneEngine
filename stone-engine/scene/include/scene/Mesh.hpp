@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include "Node.hpp"
-#include "Transform.hpp"
-#include "Vertex.hpp"
+#include "scene/Node.hpp"
+#include "scene/Transform.hpp"
+#include "scene/Vertex.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -64,4 +64,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

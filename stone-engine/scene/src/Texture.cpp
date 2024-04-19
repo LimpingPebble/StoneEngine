@@ -1,51 +1,56 @@
 // Copyright 2024 Stone-Engine
 
-#include "Texture.hpp"
+#include "scene/Texture.hpp"
 
-namespace STN
+namespace Stone
 {
 
-    Texture::Texture()
-        : Object(), _size(0, 0), _filePath()
+    namespace Scene
     {
-    }
 
-    Texture::Texture(const Texture &other)
-        : Object(other), _size(other._size), _filePath(other._filePath)
-    {
-    }
+        Texture::Texture()
+            : Object(), _size(0, 0), _filePath()
+        {
+        }
 
-    Texture::~Texture()
-    {
-    }
+        Texture::Texture(const Texture &other)
+            : Object(other), _size(other._size), _filePath(other._filePath)
+        {
+        }
 
-    const char *Texture::getClassName() const
-    {
-        return "Texture";
-    }
+        Texture::~Texture()
+        {
+        }
 
-    std::string Texture::debugDescription() const
-    {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",size:[" + std::to_string(_size.x) + "," + std::to_string(_size.y) + "]";
-        str += ",filePath:" + _filePath + "}";
-        return str;
-    }
+        const char *Texture::getClassName() const
+        {
+            return "Texture";
+        }
 
-    const glm::ivec2 &Texture::getSize() const
-    {
-        return _size;
-    }
+        std::string Texture::debugDescription() const
+        {
+            std::string str = Object::debugDescription();
+            str.pop_back();
+            str += ",size:[" + std::to_string(_size.x) + "," + std::to_string(_size.y) + "]";
+            str += ",filePath:" + _filePath + "}";
+            return str;
+        }
 
-    void Texture::setFilePath(const std::string &texture)
-    {
-        _filePath = texture;
-    }
+        const glm::ivec2 &Texture::getSize() const
+        {
+            return _size;
+        }
 
-    const std::string &Texture::getFilePath() const
-    {
-        return _filePath;
-    }
+        void Texture::setFilePath(const std::string &texture)
+        {
+            _filePath = texture;
+        }
 
-} // namespace STN
+        const std::string &Texture::getFilePath() const
+        {
+            return _filePath;
+        }
+
+    } // namespace Scene
+
+} // namespace Stone

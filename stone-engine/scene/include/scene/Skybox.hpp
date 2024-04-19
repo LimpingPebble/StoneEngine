@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Node.hpp"
+#include "scene/Node.hpp"
 
-namespace STN
+namespace Stone
 {
-
-    class Texture;
 
     namespace Scene
     {
+
+        class Texture;
 
         class Skybox : public Node
         {
@@ -34,4 +34,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

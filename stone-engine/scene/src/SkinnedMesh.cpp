@@ -1,10 +1,9 @@
 // Copyright 2024 Stone-Engine
 
-#include "SkinnedMesh.hpp"
-#include "Pivot.hpp"
-#include "Skeleton.hpp"
+#include "scene/SkinnedMesh.hpp"
+#include "scene/Skeleton.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -76,4 +75,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

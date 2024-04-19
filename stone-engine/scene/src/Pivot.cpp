@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "Pivot.hpp"
+#include "scene/Pivot.hpp"
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -89,4 +89,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

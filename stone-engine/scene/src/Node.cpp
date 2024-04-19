@@ -1,10 +1,9 @@
 // Copyright 2024 Stone-Engine
 
-#include "Node.hpp"
-#include "Pivot.hpp"
+#include "scene/Node.hpp"
 #include <cassert>
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -276,4 +275,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

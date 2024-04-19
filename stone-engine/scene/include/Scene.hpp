@@ -2,37 +2,21 @@
 
 #pragma once
 
-#include "Node.hpp"
-#include "Camera.hpp"
+#include "scene/Transform.hpp"
 
-namespace STN
-{
+#include "scene/Node.hpp"
+#include "scene/Pivot.hpp"
 
-    namespace Scene
-    {
+#include "scene/RenderContext.hpp"
+#include "scene/Camera.hpp"
+#include "scene/Scene.hpp"
 
-        class Scene : public Node
-        {
-        public:
-            Scene(const std::string &name = "scene");
-            Scene(const Scene &other);
+#include "scene/Vertex.hpp"
+#include "scene/Texture.hpp"
+#include "scene/Material.hpp"
+#include "scene/Mesh.hpp"
+#include "scene/Skeleton.hpp"
+#include "scene/SkinnedMesh.hpp"
 
-            virtual ~Scene();
-
-            virtual const char *getClassName() const override;
-            virtual std::string debugDescription() const override;
-
-            void setCamera(std::shared_ptr<Camera> camera);
-            std::shared_ptr<Camera> getCamera() const;
-
-            void render();
-
-        protected:
-            std::weak_ptr<Camera> _camera;
-
-            virtual const char *_termClassColor() const override;
-        };
-
-    } // namespace Scene
-
-} // namespace STN
+#include "scene/Light.hpp"
+#include "scene/Skybox.hpp"

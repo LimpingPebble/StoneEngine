@@ -1,9 +1,9 @@
 // Copyright 2024 Stone-Engine
 
-#include "Camera.hpp"
+#include "scene/Camera.hpp"
 #include <glm/ext.hpp>
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
@@ -149,4 +149,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone

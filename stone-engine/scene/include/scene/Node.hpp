@@ -2,21 +2,19 @@
 
 #pragma once
 
-#include "Object.hpp"
-#include "RenderContext.hpp"
-#include "TermColor.hpp"
+#include "core/Object.hpp"
+#include "scene/RenderContext.hpp"
+#include "logging/TermColor.hpp"
 #include <vector>
 #include <functional>
 
-namespace STN
+namespace Stone
 {
 
     namespace Scene
     {
 
-        class Scene;
-
-        class Node : public Object
+        class Node : public Core::Object
         {
         public:
             Node(const std::string &name = "node");
@@ -87,4 +85,4 @@ namespace STN
 
     } // namespace Scene
 
-} // namespace STN
+} // namespace Stone
