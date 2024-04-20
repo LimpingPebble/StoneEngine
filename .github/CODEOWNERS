@@ -1,6 +1,6 @@
 # Allow only members of the "CMake" team to modify CMakeFile.txt files
-CMakeFile.txt   @stone/CMake
+CMakeFile.txt   @cmake
 
-/Engine/Scene   @stone/scene
+/Engine/Scene   @scene
 
-/Engine/Render  @stone/render
+/Engine/Render  @render
