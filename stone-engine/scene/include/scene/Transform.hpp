@@ -12,13 +12,10 @@ namespace Stone
     namespace Scene
     {
 
-        class Transform2D
+        struct Transform2D
         {
-        public:
             Transform2D();
             Transform2D(const Transform2D &other);
-
-            virtual ~Transform2D();
 
             Transform2D &operator=(const Transform2D &other);
 
@@ -50,13 +47,10 @@ namespace Stone
             void calculateTransformMatrix(glm::mat3 &m) const;
         };
 
-        class Transform3D
+        struct Transform3D
         {
-        public:
             Transform3D();
             Transform3D(const Transform3D &other);
-
-            virtual ~Transform3D();
 
             Transform3D &operator=(const Transform3D &other);
 
