@@ -1,6 +1,6 @@
 # Allow only members of the "CMake" team to modify CMakeFile.txt files
-CMakeFile.txt   @cmake
+CMakeFile.txt   @LimpingPebble/CMake
 
-/Engine/Scene   @scene
+/Engine/Scene   @LimpingPebble/scene
 
-/Engine/Render  @render
+/Engine/Render  @LimpingPebble/render
