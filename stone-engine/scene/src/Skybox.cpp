@@ -10,6 +10,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(Skybox)
+
         Skybox::Skybox(const std::string &name)
             : RenderableNode(name), _textures()
         {
@@ -22,11 +24,6 @@ namespace Stone
 
         Skybox::~Skybox()
         {
-        }
-
-        const char *Skybox::getClassName() const
-        {
-            return "Skybox";
         }
 
         std::string Skybox::debugDescription() const

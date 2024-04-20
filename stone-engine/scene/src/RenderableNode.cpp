@@ -8,6 +8,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_ABSTRACT_NODE_IMPLEMENTATION(RenderableNode)
+
         RenderableNode::RenderableNode(const std::string &name)
             : Node(name), IRenderElement()
         {

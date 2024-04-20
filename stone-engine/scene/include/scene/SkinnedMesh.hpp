@@ -17,12 +17,13 @@ namespace Stone
         class SkinnedMesh : public RenderableNode
         {
         public:
+            STONE_NODE(SkinnedMesh);
+
             SkinnedMesh(const std::string &name = "skinned_mesh");
             SkinnedMesh(const SkinnedMesh &other);
 
             virtual ~SkinnedMesh();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;

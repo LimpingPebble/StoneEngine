@@ -16,6 +16,8 @@ namespace Stone
         class Skeleton : public Node
         {
         public:
+            STONE_NODE(Skeleton);
+
             struct Bone
             {
                 std::weak_ptr<Pivot> pivot;
@@ -30,7 +32,6 @@ namespace Stone
 
             virtual ~Skeleton();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             const std::vector<Bone> &getBones() const;

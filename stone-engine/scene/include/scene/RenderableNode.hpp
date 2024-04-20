@@ -14,6 +14,8 @@ namespace Stone
         class RenderableNode : public Node, public IRenderElement
         {
         public:
+            STONE_ABSTRACT_NODE(RenderableNode);
+
             RenderableNode(const std::string &name = "renderable_node");
             RenderableNode(const RenderableNode &other);
 

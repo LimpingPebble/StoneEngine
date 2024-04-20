@@ -9,6 +9,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(Mesh)
+
         Mesh::Mesh(const std::string &name)
             : RenderableNode(name), _vertices(), _indices(), _material(nullptr)
         {
@@ -21,11 +23,6 @@ namespace Stone
 
         Mesh::~Mesh()
         {
-        }
-
-        const char *Mesh::getClassName() const
-        {
-            return "Mesh";
         }
 
         std::string Mesh::debugDescription() const
@@ -77,6 +74,8 @@ namespace Stone
             return TERM_COLOR_BOLD TERM_COLOR_GREEN;
         }
 
+        STONE_NODE_IMPLEMENTATION(InstancedMesh)
+
         InstancedMesh::InstancedMesh(const std::string &name)
             : Mesh(name), _instancesTransforms()
         {
@@ -89,11 +88,6 @@ namespace Stone
 
         InstancedMesh::~InstancedMesh()
         {
-        }
-
-        const char *InstancedMesh::getClassName() const
-        {
-            return "InstancedMesh";
         }
 
         std::string InstancedMesh::debugDescription() const

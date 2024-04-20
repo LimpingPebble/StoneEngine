@@ -13,12 +13,13 @@ namespace Stone
         class Light : public Node
         {
         public:
+            STONE_ABSTRACT_NODE(Light);
+
             Light(const std::string &name = "light");
             Light(const Light &other);
 
             virtual ~Light();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual bool isCastingShadow() const;
@@ -33,24 +34,26 @@ namespace Stone
         class AmbientLight : public Light
         {
         public:
+            STONE_NODE(AmbientLight);
+
             AmbientLight(const std::string &name = "ambient_light");
             AmbientLight(const AmbientLight &other);
 
             virtual ~AmbientLight();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
         };
 
         class PointLight : public Light
         {
         public:
+            STONE_NODE(PointLight);
+
             PointLight(const std::string &name = "point_light");
             PointLight(const PointLight &other);
 
             virtual ~PointLight();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
         protected:
@@ -61,12 +64,13 @@ namespace Stone
         class CastingLight : public Light
         {
         public:
+            STONE_ABSTRACT_NODE(CastingLight);
+
             CastingLight(const std::string &name = "casting_light");
             CastingLight(const CastingLight &other);
 
             virtual ~CastingLight();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual bool isCastingShadow() const override;
@@ -98,12 +102,13 @@ namespace Stone
         class DirectionalLight : public CastingLight
         {
         public:
+            STONE_NODE(DirectionalLight);
+
             DirectionalLight(const std::string &name = "directional_light");
             DirectionalLight(const DirectionalLight &other);
 
             virtual ~DirectionalLight();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             bool isInfinite() const;
@@ -122,12 +127,13 @@ namespace Stone
         class SpotLight : public CastingLight
         {
         public:
+            STONE_NODE(SpotLight);
+
             SpotLight(const std::string &name = "spot_light");
             SpotLight(const SpotLight &other);
 
             virtual ~SpotLight();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             float getConeAngle() const;

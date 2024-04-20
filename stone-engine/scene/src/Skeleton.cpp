@@ -9,6 +9,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(Skeleton)
+
         Skeleton::Bone::Bone(std::shared_ptr<Pivot> pivot)
             : pivot(pivot), inverseBindMatrix(1.0f), restPose(pivot->getTransform())
         {
@@ -26,11 +28,6 @@ namespace Stone
 
         Skeleton::~Skeleton()
         {
-        }
-
-        const char *Skeleton::getClassName() const
-        {
-            return "Skeleton";
         }
 
         std::string Skeleton::debugDescription() const

@@ -5,6 +5,7 @@
 #include "core/Object.hpp"
 #include "scene/RenderContext.hpp"
 #include "logging/TermColor.hpp"
+#include "scene/NodeMacros.hpp"
 #include <vector>
 #include <functional>
 
@@ -17,12 +18,13 @@ namespace Stone
         class Node : public Core::Object
         {
         public:
+            STONE_NODE(Node);
+
             Node(const std::string &name = "node");
             Node(const Node &other);
 
             virtual ~Node();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const;
 
             void setName(const std::string &name);

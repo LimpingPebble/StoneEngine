@@ -10,6 +10,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(SkinnedMesh)
+
         SkinnedMesh::SkinnedMesh(const std::string &name)
             : RenderableNode(name), _vertices(), _indices(), _skeleton()
         {
@@ -22,11 +24,6 @@ namespace Stone
 
         SkinnedMesh::~SkinnedMesh()
         {
-        }
-
-        const char *SkinnedMesh::getClassName() const
-        {
-            return "SkinnedMesh";
         }
 
         std::string SkinnedMesh::debugDescription() const

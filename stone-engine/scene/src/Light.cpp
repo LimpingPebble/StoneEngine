@@ -9,6 +9,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_ABSTRACT_NODE_IMPLEMENTATION(Light);
+
         Light::Light(const std::string &name)
             : Node(name), _intensity(1.0f), _color(1.0f)
         {
@@ -21,11 +23,6 @@ namespace Stone
 
         Light::~Light()
         {
-        }
-
-        const char *Light::getClassName() const
-        {
-            return "Light";
         }
 
         std::string Light::debugDescription() const
@@ -47,6 +44,8 @@ namespace Stone
             return TERM_COLOR_BOLD TERM_COLOR_YELLOW;
         }
 
+        STONE_NODE_IMPLEMENTATION(AmbientLight);
+
         AmbientLight::AmbientLight(const std::string &name)
             : Light(name)
         {
@@ -61,15 +60,12 @@ namespace Stone
         {
         }
 
-        const char *AmbientLight::getClassName() const
-        {
-            return "AmbientLight";
-        }
-
         std::string AmbientLight::debugDescription() const
         {
             return Light::debugDescription();
         }
+
+        STONE_NODE_IMPLEMENTATION(PointLight);
 
         PointLight::PointLight(const std::string &name)
             : Light(name)
@@ -85,11 +81,6 @@ namespace Stone
         {
         }
 
-        const char *PointLight::getClassName() const
-        {
-            return "PointLight";
-        }
-
         std::string PointLight::debugDescription() const
         {
             std::string str = Light::debugDescription();
@@ -98,6 +89,8 @@ namespace Stone
             str += ",specular:[" + std::to_string(_specular.r) + "," + std::to_string(_specular.g) + "," + std::to_string(_specular.b) + "]";
             return str + "}";
         }
+
+        STONE_ABSTRACT_NODE_IMPLEMENTATION(CastingLight);
 
         CastingLight::CastingLight(const std::string &name)
             : Light(name), _castShadow(true), _shadowClipNear(0.1f), _shadowClipFar(100.0f), _shadowMapSize(1024)
@@ -111,11 +104,6 @@ namespace Stone
 
         CastingLight::~CastingLight()
         {
-        }
-
-        const char *CastingLight::getClassName() const
-        {
-            return "CastingLight";
         }
 
         std::string CastingLight::debugDescription() const
@@ -181,6 +169,8 @@ namespace Stone
             return TERM_COLOR_BOLD TERM_COLOR_ORANGE;
         }
 
+        STONE_NODE_IMPLEMENTATION(DirectionalLight);
+
         DirectionalLight::DirectionalLight(const std::string &name)
             : CastingLight(name)
         {
@@ -193,11 +183,6 @@ namespace Stone
 
         DirectionalLight::~DirectionalLight()
         {
-        }
-
-        const char *DirectionalLight::getClassName() const
-        {
-            return "DirectionalLight";
         }
 
         std::string DirectionalLight::debugDescription() const
@@ -231,6 +216,8 @@ namespace Stone
             _projectionMatrix = glm::ortho(-_shadowOrthoSize.x / 2.0f, _shadowOrthoSize.x / 2.0f, -_shadowOrthoSize.y / 2.0f, _shadowOrthoSize.y / 2.0f, _shadowClipNear, _shadowClipFar);
         }
 
+        STONE_NODE_IMPLEMENTATION(SpotLight);
+
         SpotLight::SpotLight(const std::string &name)
             : CastingLight(name), _coneAngle(glm::radians(45.0f)), _coneAttenuation(0.0f)
         {
@@ -245,11 +232,6 @@ namespace Stone
 
         SpotLight::~SpotLight()
         {
-        }
-
-        const char *SpotLight::getClassName() const
-        {
-            return "SpotLight";
         }
 
         std::string SpotLight::debugDescription() const

@@ -15,12 +15,13 @@ namespace Stone
         class Skybox : public RenderableNode
         {
         public:
+            STONE_NODE(Skybox);
+
             Skybox(const std::string &name = "skybox");
             Skybox(const Skybox &other);
 
             virtual ~Skybox();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
