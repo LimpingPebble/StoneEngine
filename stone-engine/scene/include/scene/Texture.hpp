@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core/Object.hpp"
+#include "scene/IRenderElement.hpp"
 #include <glm/glm.hpp>
 #include <string>
 
@@ -12,7 +13,7 @@ namespace Stone
     namespace Scene
     {
 
-        class Texture : public Core::Object
+        class Texture : public Core::Object, public IRenderElement
         {
         public:
             Texture();
@@ -22,6 +23,8 @@ namespace Stone
 
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
+
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
             const glm::ivec2 &getSize() const;
 

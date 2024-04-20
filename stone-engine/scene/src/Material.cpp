@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "scene/Material.hpp"
+#include "scene/ISceneRenderer.hpp"
 
 namespace Stone
 {
@@ -8,11 +9,13 @@ namespace Stone
     namespace Scene
     {
 
-        Material::Material() : Object()
+        Material::Material()
+            : Object(), IRenderElement()
         {
         }
 
-        Material::Material(const Material &other) : Object(other)
+        Material::Material(const Material &other)
+            : Object(other), IRenderElement(other)
         {
         }
 
@@ -31,6 +34,11 @@ namespace Stone
             str.pop_back();
             str += "}";
             return str;
+        }
+
+        void Material::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)
+        {
+            renderer->generateDataForMaterial(std::static_pointer_cast<Material>(shared_from_this()));
         }
 
     } // namespace Scene

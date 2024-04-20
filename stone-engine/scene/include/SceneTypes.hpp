@@ -28,6 +28,7 @@ namespace Stone
         struct Vertex;
         struct WeightVertex;
 
+        class RenderableNode;
         class Mesh;
         class InstancedMesh;
         class Skeleton;

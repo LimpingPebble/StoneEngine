@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core/Object.hpp"
+#include "scene/IRenderElement.hpp"
 
 namespace Stone
 {
@@ -10,7 +11,9 @@ namespace Stone
     namespace Scene
     {
 
-        class Material : public Core::Object
+        class Texture;
+
+        class Material : public Core::Object, public IRenderElement
         {
         public:
             Material();
@@ -21,7 +24,7 @@ namespace Stone
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
-            std::shared_ptr<Object> graphicModuleData;
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
         };
 
     } // namespace Scene

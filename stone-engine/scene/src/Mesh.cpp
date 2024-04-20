@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "scene/Mesh.hpp"
+#include "scene/ISceneRenderer.hpp"
 
 namespace Stone
 {
@@ -9,12 +10,12 @@ namespace Stone
     {
 
         Mesh::Mesh(const std::string &name)
-            : Node(name), _vertices(), _indices(), _material(nullptr)
+            : RenderableNode(name), _vertices(), _indices(), _material(nullptr)
         {
         }
 
         Mesh::Mesh(const Mesh &other)
-            : Node(other), _vertices(other._vertices), _indices(other._indices), _material(other._material)
+            : RenderableNode(other), _vertices(other._vertices), _indices(other._indices), _material(other._material)
         {
         }
 
@@ -29,11 +30,16 @@ namespace Stone
 
         std::string Mesh::debugDescription() const
         {
-            std::string str = Node::debugDescription();
+            std::string str = RenderableNode::debugDescription();
             str.pop_back();
             str += ",vertices:" + std::to_string(_vertices.size());
             str += ",indices:" + std::to_string(_indices.size()) + "}";
             return str;
+        }
+
+        void Mesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)
+        {
+            renderer->generateDataForMesh(std::static_pointer_cast<Mesh>(shared_from_this()));
         }
 
         const std::vector<Vertex> &Mesh::getVertices() const
@@ -72,12 +78,12 @@ namespace Stone
         }
 
         InstancedMesh::InstancedMesh(const std::string &name)
-        : Mesh(name), _instancesTransforms()
+            : Mesh(name), _instancesTransforms()
         {
         }
 
         InstancedMesh::InstancedMesh(const InstancedMesh &other)
-        : Mesh(other), _instancesTransforms(other._instancesTransforms)
+            : Mesh(other), _instancesTransforms(other._instancesTransforms)
         {
         }
 
@@ -96,6 +102,11 @@ namespace Stone
             str.pop_back();
             str += ",instances:" + std::to_string(_instancesTransforms.size()) + "}";
             return str;
+        }
+
+        void InstancedMesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)
+        {
+            renderer->generateDataForInstancedMesh(std::static_pointer_cast<InstancedMesh>(shared_from_this()));
         }
 
         void InstancedMesh::addInstance(const Transform3D &transform)

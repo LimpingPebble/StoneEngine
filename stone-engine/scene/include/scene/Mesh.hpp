@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
+#include "scene/RenderableNode.hpp"
 #include "scene/Transform.hpp"
 #include "scene/Vertex.hpp"
 
@@ -14,7 +14,7 @@ namespace Stone
 
         class Material;
 
-        class Mesh : public Node
+        class Mesh : public RenderableNode
         {
         public:
             Mesh(const std::string &name = "mesh");
@@ -24,6 +24,8 @@ namespace Stone
 
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
+
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer);
 
             const std::vector<Vertex> &getVertices() const;
             const std::vector<uint32_t> &getIndices() const;
@@ -51,6 +53,8 @@ namespace Stone
 
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
+
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
             void addInstance(const Transform3D &transform);
             void removeInstance(size_t index);

@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "scene/SkinnedMesh.hpp"
+#include "scene/ISceneRenderer.hpp"
 #include "scene/Skeleton.hpp"
 
 namespace Stone
@@ -10,12 +11,12 @@ namespace Stone
     {
 
         SkinnedMesh::SkinnedMesh(const std::string &name)
-        : Node(name), _vertices(), _indices()
+            : RenderableNode(name), _vertices(), _indices(), _skeleton()
         {
         }
 
         SkinnedMesh::SkinnedMesh(const SkinnedMesh &other)
-        : Node(other), _vertices(), _indices(), _skeleton(other._skeleton)
+            : RenderableNode(other), _vertices(other._vertices), _indices(other._indices), _skeleton(other._skeleton)
         {
         }
 
@@ -30,12 +31,17 @@ namespace Stone
 
         std::string SkinnedMesh::debugDescription() const
         {
-            std::string str = Node::debugDescription();
+            std::string str = RenderableNode::debugDescription();
             str.pop_back();
             str += ",vertices:" + std::to_string(_vertices.size());
             str += ",indices:" + std::to_string(_indices.size());
             str += ",skeleton:" + (_skeleton.expired() ? "nullptr" : _skeleton.lock()->getGlobalName()) + "}";
             return str;
+        }
+
+        void SkinnedMesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)
+        {
+            renderer->generateDataForSkinnedMesh(std::static_pointer_cast<SkinnedMesh>(shared_from_this()));
         }
 
         const std::vector<WeightVertex> &SkinnedMesh::getVertices() const

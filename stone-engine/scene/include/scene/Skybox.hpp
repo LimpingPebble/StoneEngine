@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
+#include "scene/RenderableNode.hpp"
 
 namespace Stone
 {
@@ -12,7 +12,7 @@ namespace Stone
 
         class Texture;
 
-        class Skybox : public Node
+        class Skybox : public RenderableNode
         {
         public:
             Skybox(const std::string &name = "skybox");
@@ -22,6 +22,8 @@ namespace Stone
 
             virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
+
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
             void setTexture(const std::shared_ptr<Texture> &texture, size_t index);
             std::shared_ptr<Texture> getTexture(size_t index) const;
