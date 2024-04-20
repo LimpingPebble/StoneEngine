@@ -7,6 +7,8 @@ namespace Stone
 
     namespace Scene
     {
+
+        STONE_NODE_IMPLEMENTATION(Pivot)
         
         Pivot::Pivot(const std::string &name)
             : Node(name), _transform()
@@ -20,11 +22,6 @@ namespace Stone
 
         Pivot::~Pivot()
         {
-        }
-
-        const char *Pivot::getClassName() const
-        {
-            return "Pivot";
         }
 
         std::string Pivot::debugDescription() const

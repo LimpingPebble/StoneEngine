@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
+#include "scene/RenderableNode.hpp"
 #include "scene/Vertex.hpp"
 
 namespace Stone
@@ -14,16 +14,19 @@ namespace Stone
         class Skeleton;
         class Pivot;
 
-        class SkinnedMesh : public Node
+        class SkinnedMesh : public RenderableNode
         {
         public:
+            STONE_NODE(SkinnedMesh);
+
             SkinnedMesh(const std::string &name = "skinned_mesh");
             SkinnedMesh(const SkinnedMesh &other);
 
             virtual ~SkinnedMesh();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
+
+            virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
             const std::vector<WeightVertex> &getVertices() const;
             const std::vector<uint32_t> &getIndices() const;

@@ -17,6 +17,8 @@
 #include "scene/Light.hpp"
 
 #include "scene/Vertex.hpp"
+
+#include "scene/RenderableNode.hpp"
 #include "scene/Mesh.hpp"
 #include "scene/Skeleton.hpp"
 #include "scene/SkinnedMesh.hpp"

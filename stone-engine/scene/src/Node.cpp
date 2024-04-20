@@ -9,6 +9,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(Node)
+
         Node::Node(const std::string &name)
             : Object(), _name(name), _children(), _parent()
         {
@@ -23,11 +25,6 @@ namespace Stone
 
         Node::~Node()
         {
-        }
-
-        const char *Node::getClassName() const
-        {
-            return "Node";
         }
 
         std::string Node::debugDescription() const
@@ -178,7 +175,7 @@ namespace Stone
             return getChild(path);
         }
 
-        void Node::transformRelativeMatrix(glm::mat4& relative) const
+        void Node::transformRelativeMatrix(glm::mat4 &relative) const
         {
             (void)relative;
         }
@@ -199,7 +196,8 @@ namespace Stone
             transformRelativeMatrix(transform);
 
             std::shared_ptr<Node> node = getParent();
-            while (true) {
+            while (true)
+            {
                 if (node == nullptr)
                 {
                     if (!otherNode)

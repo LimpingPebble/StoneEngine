@@ -13,12 +13,13 @@ namespace Stone
         class Camera : public Node
         {
         public:
+            STONE_ABSTRACT_NODE(Camera);
+
             Camera(const std::string &name = "camera");
             Camera(const Camera &other);
 
             virtual ~Camera();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const = 0;
@@ -39,11 +40,12 @@ namespace Stone
         class PerspectiveCamera : public Camera
         {
         public:
+            STONE_NODE(PerspectiveCamera);
+
             PerspectiveCamera(const std::string &name = "perspective_camera");
             PerspectiveCamera(const PerspectiveCamera &other);
             virtual ~PerspectiveCamera();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const override;
@@ -62,11 +64,12 @@ namespace Stone
         class OrthographicCamera : public Camera
         {
         public:
+            STONE_NODE(OrthographicCamera);
+
             OrthographicCamera(const std::string &name = "orthographic_camera");
             OrthographicCamera(const OrthographicCamera &other);
             virtual ~OrthographicCamera();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             virtual const glm::mat4 getProjectionMatrix() const override;

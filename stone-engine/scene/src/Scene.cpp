@@ -8,6 +8,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_NODE_IMPLEMENTATION(Scene)
+
         Scene::Scene(const std::string &name)
             : Node(name)
         {
@@ -21,11 +23,6 @@ namespace Stone
 
         Scene::~Scene()
         {
-        }
-
-        const char *Scene::getClassName() const
-        {
-            return "Scene";
         }
 
         std::string Scene::debugDescription() const

@@ -8,7 +8,8 @@ namespace Stone
     namespace Scene
     {
 
-        struct Transform;
+        struct Transform2D;
+        struct Transform3D;
 
         class Node;
         class Pivot;
@@ -24,8 +25,10 @@ namespace Stone
         class DirectionalLight;
         class SpotLight;
 
-        class Vertex;
-        class WeightVertex;
+        struct Vertex;
+        struct WeightVertex;
+
+        class RenderableNode;
         class Mesh;
         class InstancedMesh;
         class Skeleton;

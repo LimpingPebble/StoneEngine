@@ -14,12 +14,13 @@ namespace Stone
         class Scene : public Node
         {
         public:
+            STONE_NODE(Scene);
+
             Scene(const std::string &name = "scene");
             Scene(const Scene &other);
 
             virtual ~Scene();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             void setCamera(std::shared_ptr<Camera> camera);

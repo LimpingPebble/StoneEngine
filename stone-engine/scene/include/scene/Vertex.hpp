@@ -18,7 +18,7 @@ namespace Stone
             glm::vec3 normal;
             glm::vec3 tangent;
             glm::vec3 bitangent;
-            glm::vec2 texCoord;
+            glm::vec2 uv;
         };
 
         struct WeightVertex : Vertex

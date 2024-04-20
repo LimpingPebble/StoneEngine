@@ -14,12 +14,13 @@ namespace Stone
         class Pivot : public Node
         {
         public:
+            STONE_NODE(Pivot);
+
             Pivot(const std::string &name = "pivot");
             Pivot(const Pivot &other);
 
             virtual ~Pivot();
 
-            virtual const char *getClassName() const override;
             virtual std::string debugDescription() const override;
 
             Transform3D &getTransform();

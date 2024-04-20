@@ -9,6 +9,8 @@ namespace Stone
     namespace Scene
     {
 
+        STONE_ABSTRACT_NODE_IMPLEMENTATION(Camera)
+
         Camera::Camera(const std::string &name)
             : Node(name), _near(0.1f), _far(100.0f)
         {
@@ -21,11 +23,6 @@ namespace Stone
 
         Camera::~Camera()
         {
-        }
-
-        const char *Camera::getClassName() const
-        {
-            return "Camera";
         }
 
         std::string Camera::debugDescription() const
@@ -62,6 +59,8 @@ namespace Stone
             return TERM_COLOR_BOLD TERM_COLOR_BLUE;
         }
 
+        STONE_NODE_IMPLEMENTATION(PerspectiveCamera)
+
         PerspectiveCamera::PerspectiveCamera(const std::string &name)
             : Camera(name), _fov(glm::radians(45.0f)), _aspect(1.0f)
         {
@@ -74,11 +73,6 @@ namespace Stone
 
         PerspectiveCamera::~PerspectiveCamera()
         {
-        }
-
-        const char *PerspectiveCamera::getClassName() const
-        {
-            return "PerspectiveCamera";
         }
 
         std::string PerspectiveCamera::debugDescription() const
@@ -115,6 +109,8 @@ namespace Stone
             _aspect = aspect;
         }
 
+        STONE_NODE_IMPLEMENTATION(OrthographicCamera)
+
         OrthographicCamera::OrthographicCamera(const std::string &name)
             : Camera(name), _size(10.0f)
         {
@@ -127,11 +123,6 @@ namespace Stone
 
         OrthographicCamera::~OrthographicCamera()
         {
-        }
-
-        const char *OrthographicCamera::getClassName() const
-        {
-            return "OrthographicCamera";
         }
 
         std::string OrthographicCamera::debugDescription() const

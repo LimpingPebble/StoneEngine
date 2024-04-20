@@ -30,10 +30,6 @@ namespace Stone
         {
         }
 
-        Transform2D::~Transform2D()
-        {
-        }
-
         Transform2D &Transform2D::operator=(const Transform2D &other)
         {
             _position = other._position;
@@ -146,10 +142,6 @@ namespace Stone
 
         Transform3D::Transform3D(const Transform3D &other)
             : _position(other._position), _rotation(other._rotation), _scale(other._scale), _transformMatrix(other._transformMatrix), _transformMatrixDirty(other._transformMatrixDirty)
-        {
-        }
-
-        Transform3D::~Transform3D()
         {
         }
 
