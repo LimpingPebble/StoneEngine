@@ -11,12 +11,14 @@
 #include "scene/Camera.hpp"
 #include "scene/Scene.hpp"
 
-#include "scene/Vertex.hpp"
 #include "scene/Texture.hpp"
 #include "scene/Material.hpp"
+
+#include "scene/Light.hpp"
+
+#include "scene/Vertex.hpp"
 #include "scene/Mesh.hpp"
 #include "scene/Skeleton.hpp"
 #include "scene/SkinnedMesh.hpp"
 
-#include "scene/Light.hpp"
 #include "scene/Skybox.hpp"
