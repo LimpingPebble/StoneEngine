@@ -14,15 +14,21 @@ endef
 
 LIBS						=	graphics logging physics scene sound
 
+PRESET						=	debug
+LIST_PRESETS_TYPE			=	configure
+
 all:			$(LIBS)
 
 $(LIBS):		| init_configure
-	@${CMAKE} --build ${BUILD_DIR} -t $@
+	@${CMAKE} --preset ${PRESET}
 
 clean:
 	@rm -rf ${BUILD_DIR}
 
 init_configure:
-	@${CMAKE} -B ${BUILD_DIR} -S .
+	@${CMAKE} --preset ${PRESET}
+
+list-presets:
+	@${CMAKE} --list-presets=${LIST_PRESETS_TYPE}
 
 .PHONY:	clean all $(LIBS)
