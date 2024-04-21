@@ -1,0 +1,11 @@
+# Allow only members of the CMake team to modify cmake config files
+CMakeLists.txt      @LimpingPebble/CMake
+*.cmake             @LimpingPebble/CMake
+/cmake              @LimpingPebble/CMake
+/CMakePresets.json  @LimpingPebble/CMake
+
+# Allow only members of the scene team to modify the Scene module
+/Engine/Scene       @LimpingPebble/scene
+
+# Allow only members of the scene team to modify the Render module
+/Engine/Render      @LimpingPebble/render
