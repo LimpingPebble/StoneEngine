@@ -10,6 +10,10 @@ check_dependencies(
 
 add_library(${LIB_NAME} ${SRCS})
 target_link_libraries(${LIB_NAME}
-        INTERFACE scene
-        INTERFACE logging
+        PUBLIC scene
+        PUBLIC logging
+)
+target_include_directories(${LIB_NAME}
+        PUBLIC include
+        PRIVATE ${PROJECT_BINARY_DIR}/include
 )

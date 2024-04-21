@@ -10,7 +10,11 @@ check_dependencies(${LIB_NAME}
 add_library(${LIB_NAME} ${SRCS})
 target_link_libraries(${LIB_NAME}
         PUBLIC glfw
-        INTERFACE graphic
-        INTERFACE logging
-        INTERFACE scene
+        PUBLIC graphic
+        PUBLIC logging
+        PUBLIC scene
+)
+target_include_directories(${LIB_NAME}
+    PUBLIC include
+        PRIVATE ${PROJECT_BINARY_DIR}/include
 )

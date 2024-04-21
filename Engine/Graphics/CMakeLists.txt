@@ -12,8 +12,8 @@ check_dependencies(sd)
 add_library(${LIB_NAME} ${SRCS})
 target_link_libraries(${LIB_NAME}
         PUBLIC ${Vulkan_LIBRARIES}
-        INTERFACE logging
-        INTERFACE widgets
+        PUBLIC logging
+        PUBLIC widgets
 )
 target_include_directories(${LIB_NAME}
         PRIVATE ${PROJECT_BINARY_DIR}/include
