@@ -94,6 +94,8 @@ void testNode()
               << std::to_string(t[3][0]) << ","
               << std::to_string(t[3][1]) << ","
               << std::to_string(t[3][2]) << std::endl;
+
+    // getc(stdin);
 }
 
 void testNodeDynamic()

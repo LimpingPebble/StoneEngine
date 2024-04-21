@@ -7,15 +7,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 set(USE_SYSTEM_GLM ON CACHE BOOL "Uses glm from system libraries")
 set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
+set(USE_SYSTEM_PAUSE OFF CACHE BOOL "Enables the use of Windows' pause after ending console only programs. (Windows only)")
 
 # TODO: dependencies are not mandatory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 include(Helpers)
+include(OSDetection)
 
 include(FetchContent)
 
 # Require Vulkan
 find_package(Vulkan)
+find_package(Python REQUIRED COMPONENTS Interpreter)
+if (${Python_VERSION_MAJOR} STRLESS 3 AND ${Python_VERSION_MINOR} STRLESS 10)
+    message(FATAL_ERROR "Got bad version of python: ${Python_VERSION}")
+endif ()
 
 # Require ShaderC (google's shader compiler, compatible with GLSL or HLSL)
 FetchContent_Declare(
@@ -28,7 +34,7 @@ if (NOT shaderc_POPULATED)
     FetchContent_Populate(shaderc)
     set($ENV{GIT_SYNC_DEPS_QUIET} 1)
     execute_process(
-            COMMAND python3 utils/git-sync-deps
+            COMMAND ${Python_EXECUTABLE} utils/git-sync-deps
             WORKING_DIRECTORY ${shaderc_SOURCE_DIR}
             COMMAND_ERROR_IS_FATAL ANY
             OUTPUT_FILE git-sync-deps.out
@@ -100,6 +106,7 @@ FetchContent_Declare(
         GIT_TAG 9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03 # tag/v3.11.3
 )
 FetchContent_MakeAvailable(json)
+add_library(json ALIAS nlohmann_json)
 
 # Setup Assimp
 FetchContent_Declare(
@@ -114,3 +121,4 @@ set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(assimp)
 
 add_subdirectory(stone-engine)
+add_subdirectory(examples)

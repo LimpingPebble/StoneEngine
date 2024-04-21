@@ -16,10 +16,13 @@ LIBS						=	graphics logging physics scene sound
 
 all:			$(LIBS)
 
-$(LIBS):
+$(LIBS):		| init_configure
 	@${CMAKE} --build ${BUILD_DIR} -t $@
 
 clean:
 	@rm -rf ${BUILD_DIR}
 
-.PHONY:	clean all configure $(LIBS)
+init_configure:
+	@${CMAKE} -B ${BUILD_DIR} -S .
+
+.PHONY:	clean all $(LIBS)

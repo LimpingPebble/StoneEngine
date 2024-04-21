@@ -16,5 +16,6 @@ target_link_libraries(${LIB_NAME}
         INTERFACE widgets
 )
 target_include_directories(${LIB_NAME}
+        PRIVATE ${PROJECT_BINARY_DIR}/include
         PUBLIC ${Vulkan_INCLUDE_DIRS}
 )

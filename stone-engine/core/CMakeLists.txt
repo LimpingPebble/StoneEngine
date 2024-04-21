@@ -9,9 +9,9 @@ check_dependencies(${LIB_NAME}
 
 add_library(${LIB_NAME} ${SRCS})
 target_link_libraries(${LIB_NAME}
-        INTERFACE logging
+        PUBLIC logging
 )
-target_include_directories(
-        ${LIB_NAME}
-        INTERFACE include
+target_include_directories(${LIB_NAME}
+        PRIVATE ${PROJECT_BINARY_DIR}/include
+        PUBLIC include
 )
