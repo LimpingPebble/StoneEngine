@@ -120,5 +120,5 @@ set(ASSIMP_INJECT_DEBUG_POSTFIX OFF CACHE BOOL "" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(assimp)
 
-add_subdirectory(stone-engine)
+add_subdirectory(Engine)
 add_subdirectory(examples)
