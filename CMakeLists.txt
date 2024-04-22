@@ -98,6 +98,7 @@ if (NOT glfw_POPULATED)
 
     if (STONE_ENGINE_OS_NAME STREQUAL Linux)
         set(GLFW_BUILD_WAYLAND OFF CACHE INTERNAL "Enables the use of Wayland (Linux only)")
+        set(GLFW_BUILD_X11 ON CACHE INTERNAL "Enables the use of X11 (Linux only)")
     endif ()
 
     add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
