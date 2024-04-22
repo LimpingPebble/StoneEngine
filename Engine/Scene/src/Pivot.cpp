@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Pivot.hpp"
+#include "Scene/Pivot.hpp"
 
 namespace Stone
 {

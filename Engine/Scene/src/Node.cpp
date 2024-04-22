@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Node.hpp"
+#include "Scene/Node.hpp"
 #include <cassert>
 
 namespace Stone

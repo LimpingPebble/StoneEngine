@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "scene/RenderableNode.hpp"
-#include "scene/Transform.hpp"
-#include "scene/Vertex.hpp"
+#include "Scene/RenderableNode.hpp"
+#include "Scene/Transform.hpp"
+#include "Scene/Vertex.hpp"
 
 namespace Stone
 {

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "core/Object.hpp"
-#include "scene/IRenderElement.hpp"
+#include "Core/Object.hpp"
+#include "Scene/IRenderElement.hpp"
 #include <glm/glm.hpp>
 #include <string>
 

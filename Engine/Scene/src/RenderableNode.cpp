@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/RenderableNode.hpp"
+#include "Scene/RenderableNode.hpp"
 
 namespace Stone
 {

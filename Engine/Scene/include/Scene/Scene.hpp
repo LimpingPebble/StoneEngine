@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
-#include "scene/Camera.hpp"
+#include "Scene/Node.hpp"
+#include "Scene/Camera.hpp"
 
 namespace Stone
 {

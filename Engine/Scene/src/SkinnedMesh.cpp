@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/SkinnedMesh.hpp"
-#include "scene/ISceneRenderer.hpp"
-#include "scene/Skeleton.hpp"
+#include "Scene/SkinnedMesh.hpp"
+#include "Scene/ISceneRenderer.hpp"
+#include "Scene/Skeleton.hpp"
 
 namespace Stone
 {

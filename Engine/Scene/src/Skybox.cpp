@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Skybox.hpp"
-#include "scene/Texture.hpp"
-#include "scene/ISceneRenderer.hpp"
+#include "Scene/Skybox.hpp"
+#include "Scene/Texture.hpp"
+#include "Scene/ISceneRenderer.hpp"
 
 namespace Stone
 {

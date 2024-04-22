@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "core/Object.hpp"
+#include "Core/Object.hpp"
 
 namespace Stone
 {

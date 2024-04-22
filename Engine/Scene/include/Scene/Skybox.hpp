@@ -3,7 +3,7 @@
 #pragma once
 
 #include <array>
-#include "scene/RenderableNode.hpp"
+#include "Scene/RenderableNode.hpp"
 
 namespace Stone
 {

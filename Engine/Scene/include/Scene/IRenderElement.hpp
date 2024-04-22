@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "scene/RenderContext.hpp"
-#include "scene/Node.hpp"
+#include "Scene/RenderContext.hpp"
+#include "Scene/Node.hpp"
 
 namespace Stone
 {

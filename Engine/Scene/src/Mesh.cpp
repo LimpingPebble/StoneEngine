@@ -1,7 +1,7 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Mesh.hpp"
-#include "scene/ISceneRenderer.hpp"
+#include "Scene/Mesh.hpp"
+#include "Scene/ISceneRenderer.hpp"
 
 namespace Stone
 {

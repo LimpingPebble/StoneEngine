@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Camera.hpp"
+#include "Scene/Camera.hpp"
 #include <glm/ext.hpp>
 
 namespace Stone

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
-#include "scene/Transform.hpp"
+#include "Scene/Node.hpp"
+#include "Scene/Transform.hpp"
 
 namespace Stone
 {

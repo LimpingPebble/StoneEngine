@@ -1,7 +1,7 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Skeleton.hpp"
-#include "scene/Pivot.hpp"
+#include "Scene/Skeleton.hpp"
+#include "Scene/Pivot.hpp"
 
 namespace Stone
 {

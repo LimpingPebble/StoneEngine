@@ -13,7 +13,7 @@
 
 /* Cpp Implementations */
 
-#include "core/DynamicObjectFactory.hpp"
+#include "Core/DynamicObjectFactory.hpp"
 
 #define STONE_NODE_BASE_IMPLEMENTATION(NewClassName) \
     const char *NewClassName::getClassName() const   \

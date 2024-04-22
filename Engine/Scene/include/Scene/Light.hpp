@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "scene/Node.hpp"
+#include "Scene/Node.hpp"
 
 namespace Stone
 {

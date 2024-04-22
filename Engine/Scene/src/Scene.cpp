@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Scene.hpp"
+#include "Scene/Scene.hpp"
 
 namespace Stone
 {

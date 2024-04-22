@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "scene/Transform.hpp"
+#include "Scene/Transform.hpp"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/vec2.hpp>

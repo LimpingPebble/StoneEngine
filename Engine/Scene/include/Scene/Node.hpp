@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "core/Object.hpp"
-#include "scene/RenderContext.hpp"
-#include "logging/TermColor.hpp"
-#include "scene/NodeMacros.hpp"
+#include "Core/Object.hpp"
+#include "Scene/RenderContext.hpp"
+#include "Logging/TermColor.hpp"
+#include "Scene/NodeMacros.hpp"
 #include <vector>
 #include <functional>
 
