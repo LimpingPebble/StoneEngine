@@ -97,7 +97,7 @@ if (NOT glfw_POPULATED)
     set(GLFW_INSTALL OFF CACHE INTERNAL "Generate installation target")
 
     if (STONE_ENGINE_OS_NAME STREQUAL Linux)
-        set(GLFW_USE_WAYLAND OFF CACHE INTERNAL "Enables the use of Wayland (Linux only)")
+        set(GLFW_BUILD_WAYLAND OFF CACHE INTERNAL "Enables the use of Wayland (Linux only)")
     endif ()
 
     add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
