@@ -48,11 +48,9 @@ namespace Stone::Core
     template <typename R, typename... Args>
     class FunctionDelegate<R(Args...)> : public IDelegate<R(Args...)>
     {
+    public:
         using Fn = R (*)(Args...);
 
-        Fn const _fn;
-
-    public:
         FunctionDelegate(const FunctionDelegate &) = delete;
         FunctionDelegate &operator=(const FunctionDelegate &) = delete;
 
@@ -71,6 +69,9 @@ namespace Stone::Core
         {
             return _fn(std::forward<Args>(args)...);
         }
+
+    private:
+        Fn const _fn;
     };
 
     /**
@@ -88,11 +89,9 @@ namespace Stone::Core
     template <typename R, typename... Args>
     class LambdaDelegate<R(Args...)> : public IDelegate<R(Args...)>
     {
+    public:
         using Fn = std::function<R(Args...)>;
 
-        Fn const _fn;
-
-    public:
         LambdaDelegate(const LambdaDelegate &) = delete;
         LambdaDelegate &operator=(const LambdaDelegate &) = delete;
 
@@ -111,6 +110,9 @@ namespace Stone::Core
         {
             return _fn(std::forward<Args>(args)...);
         }
+
+    private:
+        Fn const _fn;
     };
 
     /**
@@ -129,12 +131,9 @@ namespace Stone::Core
     template <typename C, typename R, typename... Args>
     class MethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
+    public:
         using Method = R (C::*)(Args...);
 
-        C *const _target;
-        Method const _method;
-
-    public:
         MethodDelegate(const MethodDelegate &) = delete;
         MethodDelegate &operator=(const MethodDelegate &) = delete;
 
@@ -157,6 +156,10 @@ namespace Stone::Core
         {
             return (_target->*_method)(std::forward<Args>(args)...);
         }
+
+    private:
+        C *const _target;
+        Method const _method;
     };
 
     /**
@@ -175,12 +178,9 @@ namespace Stone::Core
     template <typename C, typename R, typename... Args>
     class ConstMethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
+    public:
         using Method = R (C::*)(Args...) const;
 
-        const C *const _target;
-        Method const _method;
-
-    public:
         ConstMethodDelegate(const ConstMethodDelegate &) = delete;
         ConstMethodDelegate &operator=(const ConstMethodDelegate &) = delete;
 
@@ -203,6 +203,10 @@ namespace Stone::Core
         {
             return (_target->*_method)(std::forward<Args>(args)...);
         }
+
+    private:
+        const C *const _target;
+        Method const _method;
     };
 
 } // namespace Stone::Core
