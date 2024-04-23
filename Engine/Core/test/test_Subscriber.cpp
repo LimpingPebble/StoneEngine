@@ -53,9 +53,9 @@ TEST(Subscriber, PerformMethod)
 
 TEST(Subscriber, PerformMethodConst)
 {
-    class Calc
+    struct Calc
     {
-    public:
+        Calc(int intern) : internal(intern) {}
         int internal;
 
         int docalc(int a, int b) const
@@ -64,8 +64,7 @@ TEST(Subscriber, PerformMethodConst)
         }
     };
 
-    Calc calc;
-    calc.internal = 10;
+    const Calc calc(10);
 
     Subscriber<int(int, int)> subscriber(&calc, &Calc::docalc);
     int result = subscriber.perform(5, 8);
