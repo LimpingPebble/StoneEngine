@@ -27,30 +27,22 @@ namespace Stone::Scene
         return "Material";
     }
 
-    std::string Material::debugDescription() const
+    std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",textures:{";
+        Object::writeToStream(stream, false);
+        stream << ",textures:{";
         for (auto &it : _textures)
-        {
-            str += it.first + ":" + (it.second ? std::to_string(it.second->getId()) : "null") + ",";
-        }
-        str.pop_back();
-        str += "},vectors:{";
+            stream << it.first << ":" << (it.second ? std::to_string(it.second->getId()) : "null") << ",";
+        stream << "},vectors:{";
         for (auto &it : _vectors)
-        {
-            str += it.first + ":" + std::to_string(it.second) + ",";
-        }
-        str.pop_back();
-        str += "},scalars:{";
+            stream << it.first << ":" << std::to_string(it.second) << ",";
+        stream << "},scalars:{";
         for (auto &it : _scalars)
-        {
-            str += it.first + ":" + std::to_string(it.second) + ",";
-        }
-        str.pop_back();
-        str += "}";
-        return str;
+            stream << it.first << ":" << it.second << ",";
+        stream << "}";
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void Material::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)

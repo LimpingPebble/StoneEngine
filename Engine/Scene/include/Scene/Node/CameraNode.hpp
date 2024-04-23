@@ -17,7 +17,7 @@ namespace Stone::Scene
 
         virtual ~CameraNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual const glm::mat4 getProjectionMatrix() const = 0;
 
@@ -44,7 +44,7 @@ namespace Stone::Scene
 
         virtual ~PerspectiveCameraNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual const glm::mat4 getProjectionMatrix() const override;
 
@@ -68,7 +68,7 @@ namespace Stone::Scene
         OrthographicCameraNode(const OrthographicCameraNode &other);
         virtual ~OrthographicCameraNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual const glm::mat4 getProjectionMatrix() const override;
 

@@ -23,13 +23,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string LightNode::debugDescription() const
+    std::ostream &LightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = PivotNode::debugDescription();
-        str.pop_back();
-        str += ",intensity:" + std::to_string(_intensity);
-        str += ",color:" + std::to_string(_color) + "}";
-        return str;
+        PivotNode::writeToStream(stream, false);
+        stream << ",intensity:" << _intensity;
+        stream << ",color:" << std::to_string(_color, true);
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     bool LightNode::isCastingShadow() const
@@ -58,9 +59,9 @@ namespace Stone::Scene
     {
     }
 
-    std::string AmbientLightNode::debugDescription() const
+    std::ostream &AmbientLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        return LightNode::debugDescription();
+        return LightNode::writeToStream(stream, closing_bracer);
     }
 
     STONE_NODE_IMPLEMENTATION(PointLightNode);
@@ -79,13 +80,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string PointLightNode::debugDescription() const
+    std::ostream &PointLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = LightNode::debugDescription();
-        str.pop_back();
-        str += ",attenuation:" + std::to_string(_attenuation);
-        str += ",specular:" + std::to_string(_specular) + "}";
-        return str;
+        LightNode::writeToStream(stream, false);
+        stream << ",attenuation:" << std::to_string(_attenuation, true);
+        stream << ",specular:" << std::to_string(_specular, true);
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     STONE_ABSTRACT_NODE_IMPLEMENTATION(CastingLightNode);
@@ -104,15 +106,16 @@ namespace Stone::Scene
     {
     }
 
-    std::string CastingLightNode::debugDescription() const
+    std::ostream &CastingLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = LightNode::debugDescription();
-        str.pop_back();
-        str += ",castShadow:" + std::to_string(_castShadow);
-        str += ",shadowClipNear:" + std::to_string(_shadowClipNear);
-        str += ",shadowClipFar:" + std::to_string(_shadowClipFar);
-        str += ",shadowMapSize:" + std::to_string(_shadowMapSize);
-        return str + "}";
+        LightNode::writeToStream(stream, false);
+        stream << ",castShadow:" << _castShadow;
+        stream << ",shadowClipNear:" << _shadowClipNear;
+        stream << ",shadowClipFar:" << _shadowClipFar;
+        stream << ",shadowMapSize:" << std::to_string(_shadowMapSize);
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     bool CastingLightNode::isCastingShadow() const
@@ -185,13 +188,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string DirectionalLightNode::debugDescription() const
+    std::ostream &DirectionalLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = CastingLightNode::debugDescription();
-        str.pop_back();
-        str += ",infinite:" + std::to_string(_infinite);
-        str += ",shadowOrthoSize:" + std::to_string(_shadowOrthoSize) + "}";
-        return str;
+        CastingLightNode::writeToStream(stream, false);
+        stream << ",infinite:" << _infinite;
+        stream << ",shadowOrthoSize:" << std::to_string(_shadowOrthoSize);
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     bool DirectionalLightNode::isInfinite() const
@@ -238,13 +242,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string SpotLightNode::debugDescription() const
+    std::ostream &SpotLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = CastingLightNode::debugDescription();
-        str.pop_back();
-        str += ",coneAngle:" + std::to_string(_coneAngle);
-        str += ",coneAttenuation:" + std::to_string(_coneAttenuation);
-        return str + "}";
+        CastingLightNode::writeToStream(stream, false);
+        stream << ",coneAngle:" << _coneAngle;
+        stream << ",coneAttenuation:" << _coneAttenuation;
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     float SpotLightNode::getConeAngle() const

@@ -10,13 +10,17 @@ namespace std
         return "{x:" + std::to_string(v.x) + ",y:" + std::to_string(v.y) + "}";
     }
 
-    string to_string(const glm::vec3 &v)
+    string to_string(const glm::vec3 &v, bool color)
     {
+        if (color)
+            return "{r:" + std::to_string(v.r) + ",g:" + std::to_string(v.g) + ",b:" + std::to_string(v.b) + "}";
         return "{x:" + std::to_string(v.x) + ",y:" + std::to_string(v.y) + ",z:" + std::to_string(v.z) + "}";
     }
 
-    string to_string(const glm::vec4 &v)
+    string to_string(const glm::vec4 &v, bool color)
     {
+        if (color)
+            return "{r:" + std::to_string(v.r) + ",g:" + std::to_string(v.g) + ",b:" + std::to_string(v.b) + ",a:" + std::to_string(v.a) + "}";
         return "{x:" + std::to_string(v.x) + ",y:" + std::to_string(v.y) + ",z:" + std::to_string(v.z) + ",w:" + std::to_string(v.w) + "}";
     }
 

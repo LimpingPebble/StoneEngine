@@ -16,7 +16,7 @@ namespace Stone::Core
 
         virtual ~Image();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         void setSize(const glm::uvec2 &size);
         const glm::uvec2 &getSize() const;

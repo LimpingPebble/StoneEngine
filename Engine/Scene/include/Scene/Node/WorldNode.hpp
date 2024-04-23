@@ -19,7 +19,7 @@ namespace Stone::Scene
 
         virtual ~WorldNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         void setActiveCamera(std::shared_ptr<CameraNode> camera);
         std::shared_ptr<CameraNode> getActiveCamera() const;

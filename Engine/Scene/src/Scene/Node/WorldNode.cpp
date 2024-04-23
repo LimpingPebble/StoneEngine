@@ -22,13 +22,13 @@ namespace Stone::Scene
         {
         }
 
-        std::string WorldNode::debugDescription() const
+        std::ostream &WorldNode::writeToStream(std::ostream &stream, bool closing_bracer) const
         {
-            std::string str = Node::debugDescription();
-            str.pop_back();
-            str += ",active_camera:" + (_activeCamera.expired() ? "null" : _activeCamera.lock()->getGlobalName());
-            str += "}";
-            return str;
+            Node::writeToStream(stream, false);
+            stream << ",active_camera:" << (_activeCamera.expired() ? "null" : _activeCamera.lock()->getGlobalName());
+            if (closing_bracer)
+                stream << "}";
+            return stream;
         }
 
         void WorldNode::setActiveCamera(std::shared_ptr<CameraNode> camera)

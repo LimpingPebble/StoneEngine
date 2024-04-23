@@ -22,7 +22,7 @@ namespace Stone::Scene
         virtual ~Texture();
 
         virtual const char *getClassName() const override;
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 

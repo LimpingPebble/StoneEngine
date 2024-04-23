@@ -24,14 +24,15 @@ namespace Stone::Scene
     {
     }
 
-    std::string SkinMeshNode::debugDescription() const
+    std::ostream &SkinMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = PivotNode::debugDescription();
-        str.pop_back();
-        str += ",mesh:" + (_mesh == nullptr ? "null" : std::to_string(_mesh->getId()));
-        str += ",material:" + (_material == nullptr ? "null" : std::to_string(_material->getId()));
-        str += ",skeleton:" + (_skeleton.expired() ? "nullptr" : _skeleton.lock()->getGlobalName()) + "}";
-        return str;
+        PivotNode::writeToStream(stream, false);
+        stream << ",mesh:" << (_mesh == nullptr ? "null" : std::to_string(_mesh->getId()));
+        stream << ",material:" << (_material == nullptr ? "null" : std::to_string(_material->getId()));
+        stream << ",skeleton:" << (_skeleton.expired() ? "null" : _skeleton.lock()->getGlobalName());
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     std::shared_ptr<SkinMesh> SkinMeshNode::getSkinMesh() const

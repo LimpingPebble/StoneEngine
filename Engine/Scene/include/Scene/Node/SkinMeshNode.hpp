@@ -21,7 +21,7 @@ namespace Stone::Scene
 
         virtual ~SkinMeshNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         std::shared_ptr<SkinMesh> getSkinMesh() const;
         void setSkinMesh(std::shared_ptr<SkinMesh> mesh);

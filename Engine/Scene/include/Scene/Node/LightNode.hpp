@@ -17,7 +17,7 @@ namespace Stone::Scene
 
         virtual ~LightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual bool isCastingShadow() const;
 
@@ -38,7 +38,7 @@ namespace Stone::Scene
 
         virtual ~AmbientLightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
     };
 
     class PointLightNode : public LightNode
@@ -51,7 +51,7 @@ namespace Stone::Scene
 
         virtual ~PointLightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
     protected:
         glm::vec3 _attenuation;
@@ -68,7 +68,7 @@ namespace Stone::Scene
 
         virtual ~CastingLightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual bool isCastingShadow() const override;
         void setCastingShadow(bool castShadow);
@@ -106,7 +106,7 @@ namespace Stone::Scene
 
         virtual ~DirectionalLightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         bool isInfinite() const;
         void setInfinite(bool infinite);
@@ -131,7 +131,7 @@ namespace Stone::Scene
 
         virtual ~SpotLightNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         float getConeAngle() const;
         void setConeAngle(float coneAngle);

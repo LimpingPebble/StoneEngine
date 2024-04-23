@@ -24,12 +24,13 @@ namespace Stone::Scene
     {
     }
 
-    std::string Node::debugDescription() const
+    std::ostream &Node::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",name:\"" + _name + "\"}";
-        return str;
+        Object::writeToStream(stream, false);
+        stream << ",name:\"" << _name << "\"";
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void Node::update(float deltaTime)
@@ -244,7 +245,7 @@ namespace Stone::Scene
         }
     }
 
-    void Node::writeInStream(std::ostream &stream, std::string linePrefix, std::string firstPrefix, std::string lastPrefix, bool colored) const
+    void Node::writeHierarchy(std::ostream &stream, bool colored, std::string linePrefix, std::string firstPrefix, std::string lastPrefix) const
     {
         stream << linePrefix << firstPrefix;
         if (colored)
@@ -256,16 +257,16 @@ namespace Stone::Scene
         {
             stream << _name << " [" << getClassName() << "] ";
         }
-        stream << debugDescription() << std::endl;
+        stream << *this << std::endl;
         for (size_t i = 0; i < _children.size(); i++)
         {
             if (i == _children.size() - 1)
             {
-                _children[i]->writeInStream(stream, linePrefix + lastPrefix, "└─", "  ", colored);
+                _children[i]->writeHierarchy(stream, colored, linePrefix + lastPrefix, "└─", "  ");
             }
             else
             {
-                _children[i]->writeInStream(stream, linePrefix + lastPrefix, "├─", "│ ", colored);
+                _children[i]->writeHierarchy(stream, colored, linePrefix + lastPrefix, "├─", "│ ");
             }
         }
     }

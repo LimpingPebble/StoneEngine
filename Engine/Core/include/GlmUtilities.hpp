@@ -9,8 +9,8 @@
 namespace std
 {
     string to_string(const glm::vec2 &v);
-    string to_string(const glm::vec3 &v);
-    string to_string(const glm::vec4 &v);
+    string to_string(const glm::vec3 &v, bool color = false);
+    string to_string(const glm::vec4 &v, bool color = false);
     string to_string(const glm::mat3 &m);
     string to_string(const glm::mat4 &m);
     string to_string(const glm::quat &q);

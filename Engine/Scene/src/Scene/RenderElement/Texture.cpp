@@ -26,12 +26,13 @@ namespace Stone::Scene
         return "Texture";
     }
 
-    std::string Texture::debugDescription() const
+    std::ostream &Texture::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",image:" + (_image ? std::to_string(_image->getId()) : "null") + "}";
-        return str;
+        Object::writeToStream(stream, false);
+        stream << ",image:" << (_image ? std::to_string(_image->getId()) : "null");
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void Texture::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)

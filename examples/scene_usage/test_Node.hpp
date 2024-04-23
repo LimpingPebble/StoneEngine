@@ -57,13 +57,13 @@ void testNode()
 
     humanMesh->setSkeleton(skeleton);
 
-    world->writeInStream(std::cout);
+    world->writeHierarchy(std::cout);
 
     glm::mat4 t = hand->getTransformMatrixRelativeToNode(elbow);
 
-    std::cout << "textures: [" << blank_texture->debugDescription() << "]" << std::endl;
-    std::cout << "materials: [" << blank_material->debugDescription() << "]" << std::endl;
-    std::cout << "mesh: [" << mesh->debugDescription() << "]" << std::endl;
+    std::cout << "textures: [" << blank_texture << "]" << std::endl;
+    std::cout << "materials: [" << blank_material << "]" << std::endl;
+    std::cout << "mesh: [" << mesh << "]" << std::endl;
 
     std::cout << "hand_to_elbow: "
               << std::to_string(t[3][0]) << ","
@@ -121,8 +121,7 @@ void testNodeDynamic()
     arm->addChild(hand);
     auto torch = makeNode<PointLightNode>("PointLightNode", "torch");
     hand->addChild(torch);
-    
 
-    world->writeInStream(std::cout);
+    world->writeHierarchy(std::cout, true);
 
 }

@@ -23,13 +23,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string CameraNode::debugDescription() const
+    std::ostream &CameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = PivotNode::debugDescription();
-        str.pop_back();
-        str += ",near:" + std::to_string(_near);
-        str += ",far:" + std::to_string(_far) + "}";
-        return str;
+        PivotNode::writeToStream(stream, false);
+        stream << ",near:" << _near;
+        stream << ",far:" << _far;
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     float CameraNode::getNear() const
@@ -73,13 +74,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string PerspectiveCameraNode::debugDescription() const
+    std::ostream &PerspectiveCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = CameraNode::debugDescription();
-        str.pop_back();
-        str += ",fov:" + std::to_string(_fov);
-        str += ",aspect:" + std::to_string(_aspect) + "}";
-        return str;
+        CameraNode::writeToStream(stream, false);
+        stream << ",fov:" << _fov;
+        stream << ",aspect:" << _aspect;
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     const glm::mat4 PerspectiveCameraNode::getProjectionMatrix() const
@@ -123,12 +125,13 @@ namespace Stone::Scene
     {
     }
 
-    std::string OrthographicCameraNode::debugDescription() const
+    std::ostream &OrthographicCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = CameraNode::debugDescription();
-        str.pop_back();
-        str += ",size:" + std::to_string(_size) + "}";
-        return str;
+        CameraNode::writeToStream(stream, false);
+        stream << ",size:" << std::to_string(_size);
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     const glm::mat4 OrthographicCameraNode::getProjectionMatrix() const

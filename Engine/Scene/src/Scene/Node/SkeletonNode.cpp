@@ -27,18 +27,18 @@ namespace Stone::Scene
     {
     }
 
-    std::string SkeletonNode::debugDescription() const
+    std::ostream &SkeletonNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Node::debugDescription();
-        str.pop_back();
-        str += ",bones:[";
+        Node::writeToStream(stream, false);
+        stream << ",bones:[";
         for (const auto &bone : _bones)
         {
-            str += (bone.pivot.expired() ? "nullptr" : bone.pivot.lock()->getGlobalName()) + ",";
+            stream << bone.pivot.lock()->getGlobalName() << ",";
         }
-        str.pop_back();
-        str += "]}";
-        return str;
+        stream << "]";
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     const std::vector<SkeletonNode::Bone> &SkeletonNode::getBones() const

@@ -24,7 +24,7 @@ namespace Stone::Scene
 
         virtual ~Node();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         virtual void update(float deltaTime);
         virtual void render(RenderContext &context);
@@ -98,7 +98,7 @@ namespace Stone::Scene
 
         void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
-        void writeInStream(std::ostream &flux, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "", bool colored = true) const;
+        void writeHierarchy(std::ostream &flux, bool colored = true, std::string linePrefix = "", std::string firstPrefix = "", std::string lastPrefix = "") const;
 
     protected:
         std::string _name;

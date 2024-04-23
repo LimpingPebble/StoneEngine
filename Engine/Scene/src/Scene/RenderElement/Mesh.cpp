@@ -20,13 +20,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string Mesh::debugDescription() const
+    std::ostream &Mesh::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",vertices:" + std::to_string(_vertices.size());
-        str += ",indices:" + std::to_string(_indices.size()) + "}";
-        return str;
+        Object::writeToStream(stream, false);
+        stream << ",vertices:" << _vertices.size();
+        stream << ",indices:" << _indices.size();
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void Mesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)

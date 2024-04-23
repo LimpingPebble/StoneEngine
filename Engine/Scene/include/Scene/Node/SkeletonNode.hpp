@@ -29,7 +29,7 @@ namespace Stone::Scene
 
         virtual ~SkeletonNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         const std::vector<Bone> &getBones() const;
         void addBone(std::shared_ptr<PivotNode> pivot);

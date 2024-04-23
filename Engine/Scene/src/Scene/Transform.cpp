@@ -99,10 +99,10 @@ namespace Stone::Scene
         return transformMatrix;
     }
 
-    std::ostream& Transform2D::sendToFlux(std::ostream& flux) const
+    std::ostream &Transform2D::write(std::ostream &stream) const
     {
-        flux << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation) << ",scale:" << std::to_string(_scale) << "}";
-        return flux;
+        stream << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation) << ",scale:" << std::to_string(_scale) << "}";
+        return stream;
     }
 
     void Transform2D::calculateTransformMatrix(glm::mat3 &m) const
@@ -236,10 +236,10 @@ namespace Stone::Scene
         return transformMatrix;
     }
 
-    std::ostream& Transform3D::sendToFlux(std::ostream& flux) const
+    std::ostream &Transform3D::write(std::ostream &stream) const
     {
-        flux << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation) << ",scale:" << std::to_string(_scale) << "}";
-        return flux;
+        stream << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation) << ",scale:" << std::to_string(_scale) << "}";
+        return stream;
     }
 
     void Transform3D::calculateTransformMatrix(glm::mat4 &m) const
@@ -251,3 +251,13 @@ namespace Stone::Scene
     }
 
 } // namespace Stone::Scene
+
+std::ostream &operator<<(std::ostream &stream, const Stone::Scene::Transform2D &transform)
+{
+    return transform.write(stream);
+}
+
+std::ostream &operator<<(std::ostream &stream, const Stone::Scene::Transform3D &transform)
+{
+    return transform.write(stream);
+}

@@ -20,13 +20,14 @@ namespace Stone::Core
     {
     }
 
-    std::string Image::debugDescription() const
+    std::ostream &Image::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Object::debugDescription();
-        str.pop_back();
-        str += ",size:" + std::to_string(_size);
-        str += ",channels:" + std::to_string(_channels) + "}";
-        return str;
+        Object::writeToStream(stream, false);
+        stream << ",size:" << std::to_string(_size);
+        stream << ",channels:" << _channels;
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void Image::setSize(const glm::uvec2 &size)

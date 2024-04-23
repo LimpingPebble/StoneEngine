@@ -35,11 +35,19 @@ namespace Stone
             return "Object";
         }
 
-        std::string Object::debugDescription() const
+        std::ostream& Object::writeToStream(std::ostream& stream, bool closing_bracer) const
         {
-            return "{id:" + std::to_string(_id) + "}";
+            stream << "{id:" << _id;
+            if (closing_bracer)
+                stream << "}";
+            return stream;
         }
 
     }
 
+}
+
+std::ostream& operator<<(std::ostream& os, const Stone::Core::Object& obj)
+{
+    return obj.writeToStream(os);
 }

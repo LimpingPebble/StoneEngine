@@ -20,7 +20,7 @@ namespace Stone::Scene
 
         virtual ~MeshNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         std::shared_ptr<Mesh> getMesh() const;
         void setMesh(std::shared_ptr<Mesh> mesh);
@@ -45,7 +45,7 @@ namespace Stone::Scene
 
         virtual ~InstancedMeshNode();
 
-        virtual std::string debugDescription() const override;
+        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
         void addInstance(const Transform3D &transform);
         void removeInstance(size_t index);

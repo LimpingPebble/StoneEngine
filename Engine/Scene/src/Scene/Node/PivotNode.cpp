@@ -22,16 +22,13 @@ namespace Stone::Scene
     {
     }
 
-    std::string PivotNode::debugDescription() const
+    std::ostream &PivotNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = Node::debugDescription();
-        str.pop_back();
-        str += ",transform:";
-        std::stringstream ss;
-        _transform.sendToFlux(ss);
-        str += ss.str();
-        str += "}";
-        return str;
+        Node::writeToStream(stream, false);
+        stream << ",transform:" << _transform;
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void PivotNode::render(RenderContext &context)

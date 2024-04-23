@@ -24,13 +24,14 @@ namespace Stone::Scene
     {
     }
 
-    std::string MeshNode::debugDescription() const
+    std::ostream &MeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = PivotNode::debugDescription();
-        str.pop_back();
-        str += ",mesh:" + (_mesh ? std::to_string(_mesh->getId()) : "null");
-        str += ",material:" + (_material ? std::to_string(_material->getId()) : "null") + "}";
-        return str;
+        PivotNode::writeToStream(stream, false);
+        stream << ",mesh:" << (_mesh ? std::to_string(_mesh->getId()) : "null");
+        stream << ",material:" << (_material ? std::to_string(_material->getId()) : "null");
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     std::shared_ptr<Mesh> MeshNode::getMesh() const
@@ -74,12 +75,13 @@ namespace Stone::Scene
     {
     }
 
-    std::string InstancedMeshNode::debugDescription() const
+    std::ostream &InstancedMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const
     {
-        std::string str = MeshNode::debugDescription();
-        str.pop_back();
-        str += ",instances:" + std::to_string(_instancesTransforms.size()) + "}";
-        return str;
+        MeshNode::writeToStream(stream, false);
+        stream << ",instances:" << _instancesTransforms.size();
+        if (closing_bracer)
+            stream << "}";
+        return stream;
     }
 
     void InstancedMeshNode::addInstance(const Transform3D &transform)

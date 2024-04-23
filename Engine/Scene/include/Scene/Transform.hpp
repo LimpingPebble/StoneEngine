@@ -34,7 +34,7 @@ namespace Stone::Scene
         /** Return the transform matrix if cached or calculate it */
         glm::mat3 getTransformMatrix() const;
 
-        std::ostream& sendToFlux(std::ostream& flux) const;
+        std::ostream &write(std::ostream &stream) const;
 
     protected:
         glm::vec2 _position;
@@ -73,7 +73,7 @@ namespace Stone::Scene
         const glm::mat4 &getTransformMatrix();
         glm::mat4 getTransformMatrix() const;
 
-        std::ostream& sendToFlux(std::ostream& flux) const;
+        std::ostream &write(std::ostream &stream) const;
 
     protected:
         glm::vec3 _position;
@@ -87,3 +87,6 @@ namespace Stone::Scene
     };
 
 } // namespace Stone::Scene
+
+std::ostream &operator<<(std::ostream &stream, const Stone::Scene::Transform2D &transform);
+std::ostream &operator<<(std::ostream &stream, const Stone::Scene::Transform3D &transform);
