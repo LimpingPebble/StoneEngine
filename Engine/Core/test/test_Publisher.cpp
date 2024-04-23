@@ -122,6 +122,32 @@ TEST(Publisher, Unbind)
     EXPECT_EQ(result, 13);
 }
 
+TEST(Publisher, MultipleRebind)
+{
+    int count = 0;
+    auto increment = [&count](int addition)
+    {
+        count += addition;
+    };
+
+    Subscriber<void(int)> sub(increment);
+
+    Publisher<void(int)> pub1;
+    Publisher<void(int)> pub2;
+    Publisher<void(int)> pub3;
+
+    pub1.bind(sub);
+    pub2.bind(sub);
+    pub3.bind(sub);
+    // sub should only be bind to the last one
+
+    pub1.broadcast(3);
+    pub2.broadcast(7);
+    pub3.broadcast(13);
+
+    EXPECT_EQ(count, 13);
+}
+
 TEST(Publisher, BulletGame)
 {
     class Actor
@@ -145,18 +171,26 @@ TEST(Publisher, BulletGame)
     class Character : public Actor
     {
     public:
-        int health = 10;
+        int health;
+        Publisher<void(Character *)> on_death;
 
-        Character() = default;
+        Character() : Actor(), health(10) {}
+
+        void getHit()
+        {
+            health -= 3;
+            if (health <= 0)
+                on_death.broadcast(this);
+        }
     };
 
-    class Bullet
+    class Bullet : public Actor
     {
     public:
         std::shared_ptr<PhysicBody> body;
         Subscriber<void(Actor *)> on_body_hit;
 
-        Bullet() : body(std::make_shared<PhysicBody>()),
+        Bullet() : Actor(), body(std::make_shared<PhysicBody>()),
                    on_body_hit(this, &Bullet::on_hit)
         {
             body->onHit.bind(on_body_hit);
@@ -167,27 +201,44 @@ TEST(Publisher, BulletGame)
             Character *character = dynamic_cast<Character *>(actor);
             if (character != nullptr)
             {
-                character->health -= 1;
+                character->getHit();
             }
         }
     };
 
     Character character;
 
+    bool character_died = false;
+    Subscriber<void(Character *)> char_died_sub(
+        [&character_died](Character *)
+        {
+            character_died = true;
+        });
+
+    character.on_death.bind(char_died_sub);
+
     EXPECT_EQ(character.health, 10);
 
     Bullet bullet;
     bullet.body->trigger_collision(&character);
-
-    EXPECT_EQ(character.health, 9);
+    EXPECT_EQ(character.health, 7);
 
     bullet.body->trigger_collision(&character);
-    EXPECT_EQ(character.health, 8);
+    EXPECT_EQ(character.health, 4);
 
     bullet.on_body_hit.unbind();
     bullet.body->trigger_collision(&character);
-    EXPECT_EQ(character.health, 8);
+    EXPECT_EQ(character.health, 4);
+    EXPECT_FALSE(character_died);
 
+    Bullet bullet2;
+    bullet2.body->trigger_collision(&character);
+    EXPECT_EQ(character.health, 1);
+    EXPECT_FALSE(character_died);
+
+    bullet2.body->trigger_collision(&character);
+    EXPECT_LE(character.health, 0);
+    EXPECT_TRUE(character_died);
 }
 
 // Run all the tests
