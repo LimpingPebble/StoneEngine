@@ -3,7 +3,7 @@ set(LIB_NAME graphics)
 setup_files()
 
 check_dependencies(${LIB_NAME}
-        TARGET_DEPS logging widgets
+        TARGET_DEPS logging widgets utils
         VARIABLE_DEPS Vulkan_LIBRARIES Vulkan_INCLUDE_DIRS
         FATAL_ERROR
 )
@@ -13,6 +13,7 @@ add_library(${LIB_NAME} ${SRCS})
 target_link_libraries(${LIB_NAME}
         PUBLIC ${Vulkan_LIBRARIES}
         PUBLIC logging
+        PUBLIC utils
         PUBLIC widgets
 )
 target_include_directories(${LIB_NAME}

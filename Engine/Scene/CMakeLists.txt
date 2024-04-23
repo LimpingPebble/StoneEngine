@@ -3,7 +3,7 @@ set(LIB_NAME scene)
 setup_files()
 
 check_dependencies(${LIB_NAME}
-        TARGET_DEPS glm assimp core logging json
+        TARGET_DEPS glm assimp core logging json utils
         VARIABLE_DEPS assimp_SOURCE_DIR
         FATAL_ERROR
 )
@@ -14,6 +14,7 @@ target_link_libraries(${LIB_NAME}
         PUBLIC assimp
         PUBLIC json
         PUBLIC core
+        PUBLIC utils
         PUBLIC logging
 )
 target_include_directories(${LIB_NAME}

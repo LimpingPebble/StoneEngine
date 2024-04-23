@@ -1,20 +1,20 @@
 #include "test_Node.hpp"
 #include "config.h"
 
-#if STONE_ENGINE_OS_NAME == Windows
+#ifdef _WIN32
 #include <Windows.h>
 #endif
 
 int main() {
-#if STONE_ENGINE_OS_NAME == Windows
-    SetConsoleOutputCP(CP_UTF8);
+#ifdef _WIN32
+	SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    testNodeDynamic();
+	testNodeDynamic();
 
 #if STONE_ENGINE_USE_SYSTEM_PAUSE
     system("pause");
 #endif
 
-    return 0;
+	return 0;
 }
