@@ -7,82 +7,110 @@
 namespace Stone::Core
 {
 
-    template <typename... Args>
-    class IDelegate
+    template <typename T>
+    class IDelegate;
+
+    template <typename R, typename... Args>
+    class IDelegate<R(Args...)>
     {
     public:
         virtual ~IDelegate() = default;
-        virtual void perform(Args...) = 0;
+        virtual R perform(Args...) = 0;
     };
 
-    template <typename... Args>
-    class FunctionDelegate : public IDelegate<Args...>
-    {
-        using Fn = void (*)(Args...);
+    template <typename T>
+    class FunctionDelegate;
 
-        Fn const fn;
+    template <typename R, typename... Args>
+    class FunctionDelegate<R(Args...)> : public IDelegate<R(Args...)>
+    {
+        using Fn = R (*)(Args...);
+
+        Fn const _fn;
 
     public:
         FunctionDelegate(const FunctionDelegate &) = delete;
         FunctionDelegate &operator=(const FunctionDelegate &) = delete;
 
-        FunctionDelegate(const Fn fn) : fn(fn) {}
+        FunctionDelegate(const Fn fn) : _fn(fn) {}
 
-        virtual void perform(Args... args) override
+        virtual R perform(Args... args) override
         {
-            fn(std::forward<Args>(args)...);
+            return _fn(std::forward<Args>(args)...);
+        }
+    };
+
+    template <typename T>
+    class LambdaDelegate;
+
+    template <typename R, typename... Args>
+    class LambdaDelegate<R(Args...)> : public IDelegate<R(Args...)>
+    {
+        using Fn = std::function<R(Args...)>;
+
+        Fn const _fn;
+
+    public:
+        LambdaDelegate(const LambdaDelegate &) = delete;
+        LambdaDelegate &operator=(const LambdaDelegate &) = delete;
+
+        LambdaDelegate(const Fn fn) : _fn(fn) {}
+
+        virtual R perform(Args... args) override
+        {
+            return _fn(std::forward<Args>(args)...);
         }
     };
 
     template <typename T>
     class MethodDelegate;
 
-    template <typename C, typename... Args>
-    class MethodDelegate<void (C::*)(Args...)> : public IDelegate<Args...>
+    template <typename C, typename R, typename... Args>
+    class MethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
-        using Method = void (C::*)(Args...);
+        using Method = R (C::*)(Args...);
 
-        C *const object;
-        Method const method;
+        C *const _target;
+        Method const _method;
 
     public:
         MethodDelegate(const MethodDelegate &) = delete;
         MethodDelegate &operator=(const MethodDelegate &) = delete;
 
-        MethodDelegate(C *object, Method method)
-            : object(object), method(method)
+        MethodDelegate(C *target, Method method)
+            : _target(target), _method(method)
         {
         }
 
-        virtual void perform(Args... args) override
+        virtual R perform(Args... args) override
         {
-            return (object->*method)(std::forward<Args>(args)...);
+            return (_target->*_method)(std::forward<Args>(args)...);
         }
     };
 
     template <typename T>
     class ConstMethodDelegate;
 
-    template <typename C, typename... Args>
-    class ConstMethodDelegate<void (C::*)(Args...)> : public IDelegate<Args...>
+    template <typename C, typename R, typename... Args>
+    class ConstMethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
-        using Method = void (C::*)(Args...) const;
+        using Method = R (C::*)(Args...) const;
 
-        const C *const object;
-        Method const method;
+        const C *const _target;
+        Method const _method;
 
     public:
         ConstMethodDelegate(const ConstMethodDelegate &) = delete;
         ConstMethodDelegate &operator=(const ConstMethodDelegate &) = delete;
 
-        ConstMethodDelegate(const C *object, const Method method)
-            : object(object), method(method)
+        ConstMethodDelegate(const C *target, const Method method)
+            : _target(target), _method(method)
         {
         }
 
-        virtual void perform(Args... args) override
+        virtual R perform(Args... args) override
         {
-            return (object->*method)(std::forward<Args>(args)...);
+            return (_target->*_method)(std::forward<Args>(args)...);
         }
     };
 
