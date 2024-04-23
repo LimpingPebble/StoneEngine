@@ -2,42 +2,35 @@
 
 #pragma once
 
-namespace Stone
+#include "Scene/Transform.hpp"
+#include "Scene/Vertex.hpp"
+#include "Scene/RenderContext.hpp"
+
+namespace Stone::Scene
 {
 
-    namespace Scene
-    {
+    /** Node */
+    class Node;
+    class PivotNode;
+    class CameraNode;
+    class LightNode;
+    class AmbientLightNode;
+    class PointLightNode;
+    class CastingLightNode;
+    class DirectionalLightNode;
+    class SpotLightNode;
+    class MeshNode;
+    class InstancedMeshNode;
+    class SkeletonNode;
+    class SkinMeshNode;
+    class WorldNode;
 
-        struct Transform2D;
-        struct Transform3D;
+    /** RenderElement */
+    class Texture;
+    class Material;
 
-        class Node;
-        class Pivot;
+    class Mesh;
+    class Skeleton;
+    class SkinMesh;
 
-        struct RenderContext;
-        class Camera;
-        class Scene;
-
-        class Light;
-        class AmbientLight;
-        class PointLight;
-        class CastingLight;
-        class DirectionalLight;
-        class SpotLight;
-
-        struct Vertex;
-        struct WeightVertex;
-
-        class RenderableNode;
-        class Mesh;
-        class InstancedMesh;
-        class Skeleton;
-        class SkinnedMesh;
-
-        class Skybox;
-
-        class Texture;
-        class Material;
-
-    }
-}
+} // namespace Stone::Scene

@@ -3,24 +3,19 @@
 #pragma once
 
 #include "Scene/Transform.hpp"
-
-#include "Scene/Node.hpp"
-#include "Scene/Pivot.hpp"
-
-#include "Scene/RenderContext.hpp"
-#include "Scene/Camera.hpp"
-#include "Scene/Scene.hpp"
-
-#include "Scene/Texture.hpp"
-#include "Scene/Material.hpp"
-
-#include "Scene/Light.hpp"
-
 #include "Scene/Vertex.hpp"
+#include "Scene/RenderContext.hpp"
 
-#include "Scene/RenderableNode.hpp"
-#include "Scene/Mesh.hpp"
-#include "Scene/Skeleton.hpp"
-#include "Scene/SkinnedMesh.hpp"
+#include "Scene/Node/Node.hpp"
+#include "Scene/Node/PivotNode.hpp"
+#include "Scene/Node/CameraNode.hpp"
+#include "Scene/Node/WorldNode.hpp"
+#include "Scene/Node/LightNode.hpp"
+#include "Scene/Node/MeshNode.hpp"
+#include "Scene/Node/SkeletonNode.hpp"
+#include "Scene/Node/SkinMeshNode.hpp"
 
-#include "Scene/Skybox.hpp"
+#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/RenderElement/Material.hpp"
+#include "Scene/RenderElement/Mesh.hpp"
+#include "Scene/RenderElement/SkinMesh.hpp"
