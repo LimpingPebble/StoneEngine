@@ -8,17 +8,13 @@ namespace Stone::Core
 {
 
     /**
-     * @brief Interface for delegates.
-     * @tparam T The delegate type.
-     */
-    template <typename T>
-    class IDelegate;
-
-    /**
      * @brief Interface specialization for delegates with a return type and arguments.
      * @tparam R The return type.
      * @tparam Args The argument types.
      */
+    template <typename T>
+    class IDelegate;
+
     template <typename R, typename... Args>
     class IDelegate<R(Args...)>
     {
@@ -34,17 +30,13 @@ namespace Stone::Core
     };
 
     /**
-     * @brief Delegate class for function pointers.
-     * @tparam T The delegate type.
-     */
-    template <typename T>
-    class FunctionDelegate;
-
-    /**
      * @brief Delegate specialization for function pointers with a return type and arguments.
      * @tparam R The return type.
      * @tparam Args The argument types.
      */
+    template <typename T>
+    class FunctionDelegate;
+
     template <typename R, typename... Args>
     class FunctionDelegate<R(Args...)> : public IDelegate<R(Args...)>
     {
@@ -75,17 +67,13 @@ namespace Stone::Core
     };
 
     /**
-     * @brief Delegate class for lambda functions.
-     * @tparam T The delegate type.
-     */
-    template <typename T>
-    class LambdaDelegate;
-
-    /**
      * @brief Delegate specialization for lambda functions with a return type and arguments.
      * @tparam R The return type.
      * @tparam Args The argument types.
      */
+    template <typename T>
+    class LambdaDelegate;
+
     template <typename R, typename... Args>
     class LambdaDelegate<R(Args...)> : public IDelegate<R(Args...)>
     {
@@ -116,18 +104,14 @@ namespace Stone::Core
     };
 
     /**
-     * @brief Delegate class for member function pointers.
-     * @tparam T The delegate type.
-     */
-    template <typename T>
-    class MethodDelegate;
-
-    /**
      * @brief Delegate specialization for member function pointers with a return type and arguments.
      * @tparam C The class type.
      * @tparam R The return type.
      * @tparam Args The argument types.
      */
+    template <typename T>
+    class MethodDelegate;
+
     template <typename C, typename R, typename... Args>
     class MethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
@@ -163,18 +147,14 @@ namespace Stone::Core
     };
 
     /**
-     * @brief Delegate class for const member function pointers.
-     * @tparam T The delegate type.
-     */
-    template <typename T>
-    class ConstMethodDelegate;
-
-    /**
      * @brief Delegate specialization for const member function pointers with a return type and arguments.
      * @tparam C The class type.
      * @tparam R The return type.
      * @tparam Args The argument types.
      */
+    template <typename T>
+    class ConstMethodDelegate;
+
     template <typename C, typename R, typename... Args>
     class ConstMethodDelegate<R (C::*)(Args...)> : public IDelegate<R(Args...)>
     {
