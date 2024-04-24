@@ -24,7 +24,7 @@ namespace Stone
 
             virtual const char *getClassName() const;
 
-            virtual std::string debugDescription() const;
+            virtual std::ostream& writeToStream(std::ostream& stream, bool closing_bracer = true) const;
 
         protected:
             uint32_t _id;
@@ -33,3 +33,5 @@ namespace Stone
     } // namespace Core
 
 } // namespace Stone
+
+std::ostream& operator<<(std::ostream& os, const Stone::Core::Object& obj);

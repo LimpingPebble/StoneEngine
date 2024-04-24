@@ -7,10 +7,11 @@
 
 int main() {
 #ifdef _WIN32
-	SetConsoleOutputCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);
 #endif
 
-	testNodeDynamic();
+    testNode();
+    testNodeDynamic();
 
 #if STONE_ENGINE_USE_SYSTEM_PAUSE
     system("pause");
