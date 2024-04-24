@@ -3,8 +3,9 @@
 #pragma once
 
 #include <utility>
+#include <functional>
 
-namespace Stone::Core
+namespace Stone
 {
 
     /**
@@ -189,4 +190,4 @@ namespace Stone::Core
         Method const _method;
     };
 
-} // namespace Stone::Core
+} // namespace Stone

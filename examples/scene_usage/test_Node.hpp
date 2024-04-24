@@ -76,8 +76,8 @@ void testNode()
 template <typename T>
 std::shared_ptr<T> makeNode(const std::string &type, const std::string &name)
 {
-    return std::dynamic_pointer_cast<T>(DynamicObjectFactory<Node, const std::string &>::getInstance()
-                                            .createObject(type, name));
+    return std::dynamic_pointer_cast<T>(Stone::DynamicObjectFactory<Node, const std::string &>::getInstance()
+                                            .create(type, name));
 }
 
 void testNodeDynamic()
@@ -123,5 +123,4 @@ void testNodeDynamic()
     hand->addChild(torch);
 
     world->writeHierarchy(std::cout, true);
-
 }

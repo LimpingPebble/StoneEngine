@@ -31,7 +31,7 @@
             return std::make_shared<NewClassName>(nodeName);           \
         };                                                             \
         DynamicObjectFactory<Node, const std::string &>::getInstance() \
-            .registerConstructor(#NewClassName, constructor);          \
+            .add(#NewClassName, constructor);                          \
         return #NewClassName;                                          \
     }();
 

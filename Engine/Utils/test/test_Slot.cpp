@@ -1,21 +1,21 @@
 #include <gtest/gtest.h>
-#include "Utils/PubSub.hpp"
+#include "Utils/SigSlot.hpp"
 
-using namespace Stone::Core;
+using namespace Stone;
 
 int add(int a, int b)
 {
     return a + b;
 }
 
-TEST(Subscriber, PerformFunction)
+TEST(Slot, PerformFunction)
 {
-    Subscriber<int(int, int)> subscriber(add);
-    int result = subscriber.perform(5, 8);
+    Slot<int(int, int)> slot(add);
+    int result = slot.perform(5, 8);
     EXPECT_EQ(result, 13);
 }
 
-TEST(Subscriber, PerformLambda)
+TEST(Slot, PerformLambda)
 {
     int result = 0;
     auto addition = [&result](int a, int b)
@@ -24,13 +24,13 @@ TEST(Subscriber, PerformLambda)
         return result;
     };
 
-    Subscriber<int(int, int)> subscriber(addition);
-    int res = subscriber.perform(5, 8);
+    Slot<int(int, int)> slot(addition);
+    int res = slot.perform(5, 8);
     EXPECT_EQ(res, 13);
     EXPECT_EQ(result, 13);
 }
 
-TEST(Subscriber, PerformMethod)
+TEST(Slot, PerformMethod)
 {
     class Calc
     {
@@ -46,12 +46,12 @@ TEST(Subscriber, PerformMethod)
     Calc calc;
     calc.internal = 10;
 
-    Subscriber<int(int, int)> subscriber(&calc, &Calc::docalc);
-    int result = subscriber.perform(5, 8);
+    Slot<int(int, int)> slot(&calc, &Calc::docalc);
+    int result = slot.perform(5, 8);
     EXPECT_EQ(result, 23);
 }
 
-TEST(Subscriber, PerformMethodConst)
+TEST(Slot, PerformMethodConst)
 {
     struct Calc
     {
@@ -66,8 +66,8 @@ TEST(Subscriber, PerformMethodConst)
 
     const Calc calc(10);
 
-    Subscriber<int(int, int)> subscriber(&calc, &Calc::docalc);
-    int result = subscriber.perform(5, 8);
+    Slot<int(int, int)> slot(&calc, &Calc::docalc);
+    int result = slot.perform(5, 8);
     EXPECT_EQ(result, 23);
 }
 

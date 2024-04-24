@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "Utils/Delegate.hpp"
 
-using namespace Stone::Core;
+using namespace Stone;
 
 std::string add_two(float a, float b, int& result)
 {

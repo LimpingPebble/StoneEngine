@@ -1,31 +1,31 @@
 #include <gtest/gtest.h>
-#include "Utils/PubSub.hpp"
+#include "Utils/SigSlot.hpp"
 
-using namespace Stone::Core;
+using namespace Stone;
 
 void add(int a, int b, int &result)
 {
     result = a + b;
 }
 
-TEST(Publisher, SubscribeWithFunction)
+TEST(Signal, SubscribeWithFunction)
 {
     int result = 0;
 
-    Publisher<void(int, int, int &)> publisher;
-    publisher.broadcast(5, 5, result);
+    Signal<void(int, int, int &)> signal;
+    signal.broadcast(5, 5, result);
     EXPECT_EQ(result, 0);
     {
-        Subscriber<void(int, int, int &)> subscriber(add);
-        publisher.bind(subscriber);
-        publisher.broadcast(5, 8, result);
+        Slot<void(int, int, int &)> slot(add);
+        signal.bind(slot);
+        signal.broadcast(5, 8, result);
         EXPECT_EQ(result, 13);
     }
-    publisher.broadcast(12, 5, result);
+    signal.broadcast(12, 5, result);
     EXPECT_EQ(result, 13);
 }
 
-TEST(Publisher, SubscribeWithLambda)
+TEST(Signal, SubscribeWithLambda)
 {
     int result = 0;
     auto addition = [&result](int a, int b)
@@ -33,20 +33,20 @@ TEST(Publisher, SubscribeWithLambda)
         result = a + b;
     };
 
-    Publisher<void(int, int)> publisher;
-    publisher.broadcast(5, 5);
+    Signal<void(int, int)> signal;
+    signal.broadcast(5, 5);
     EXPECT_EQ(result, 0);
     {
-        Subscriber<void(int, int)> subscriber(addition);
-        publisher.bind(subscriber);
-        publisher.broadcast(5, 8);
+        Slot<void(int, int)> slot(addition);
+        signal.bind(slot);
+        signal.broadcast(5, 8);
         EXPECT_EQ(result, 13);
     }
-    publisher.broadcast(12, 5);
+    signal.broadcast(12, 5);
     EXPECT_EQ(result, 13);
 }
 
-TEST(Publisher, SubscribeWithMethod)
+TEST(Signal, SubscribeWithMethod)
 {
     struct Calc
     {
@@ -57,18 +57,18 @@ TEST(Publisher, SubscribeWithMethod)
     Calc calc;
     EXPECT_EQ(calc.result, 0);
 
-    Publisher<void(int, int)> publisher;
+    Signal<void(int, int)> signal;
     {
-        Subscriber<void(int, int)> subscriber(&calc, &Calc::add_numbers);
-        publisher.bind(subscriber);
-        publisher.broadcast(5, 8);
+        Slot<void(int, int)> slot(&calc, &Calc::add_numbers);
+        signal.bind(slot);
+        signal.broadcast(5, 8);
         EXPECT_EQ(calc.result, 13);
     }
-    publisher.broadcast(12, 5);
+    signal.broadcast(12, 5);
     EXPECT_EQ(calc.result, 13);
 }
 
-TEST(Publisher, SubscribeWithMethodConst)
+TEST(Signal, SubscribeWithMethodConst)
 {
     struct Calc
     {
@@ -84,23 +84,23 @@ TEST(Publisher, SubscribeWithMethodConst)
     const Calc calc(3);
     int result = 0;
 
-    Publisher<void(int, int, int &)> publisher;
+    Signal<void(int, int, int &)> signal;
 
     {
-        Subscriber<void(int, int, int &)> subscriber(&calc, &Calc::add_numbers);
+        Slot<void(int, int, int &)> slot(&calc, &Calc::add_numbers);
 
-        publisher.bind(subscriber);
+        signal.bind(slot);
 
-        publisher.broadcast(2, 3, result);
+        signal.broadcast(2, 3, result);
         EXPECT_EQ(result, 15);
     }
 
-    publisher.broadcast(12, 5, result);
+    signal.broadcast(12, 5, result);
 
     EXPECT_EQ(result, 15);
 }
 
-TEST(Publisher, Unbind)
+TEST(Signal, Unbind)
 {
     int result = 0;
     auto addition = [&result](int a, int b)
@@ -108,21 +108,21 @@ TEST(Publisher, Unbind)
         result = a + b;
     };
 
-    Publisher<void(int, int)> publisher;
+    Signal<void(int, int)> signal;
     {
-        Subscriber<void(int, int)> subscriber(addition);
-        publisher.bind(subscriber);
-        publisher.broadcast(5, 8);
+        Slot<void(int, int)> slot(addition);
+        signal.bind(slot);
+        signal.broadcast(5, 8);
         EXPECT_EQ(result, 13);
-        subscriber.unbind();
-        publisher.broadcast(12, 5);
+        slot.unbind();
+        signal.broadcast(12, 5);
         EXPECT_EQ(result, 13);
     }
-    publisher.broadcast(12, 5);
+    signal.broadcast(12, 5);
     EXPECT_EQ(result, 13);
 }
 
-TEST(Publisher, MultipleRebind)
+TEST(Signal, MultipleRebind)
 {
     int count = 0;
     auto increment = [&count](int addition)
@@ -130,11 +130,11 @@ TEST(Publisher, MultipleRebind)
         count += addition;
     };
 
-    Subscriber<void(int)> sub(increment);
+    Slot<void(int)> sub(increment);
 
-    Publisher<void(int)> pub1;
-    Publisher<void(int)> pub2;
-    Publisher<void(int)> pub3;
+    Signal<void(int)> pub1;
+    Signal<void(int)> pub2;
+    Signal<void(int)> pub3;
 
     pub1.bind(sub);
     pub2.bind(sub);
@@ -148,7 +148,7 @@ TEST(Publisher, MultipleRebind)
     EXPECT_EQ(count, 13);
 }
 
-TEST(Publisher, BulletGame)
+TEST(Signal, BulletGame)
 {
     class Actor
     {
@@ -160,7 +160,7 @@ TEST(Publisher, BulletGame)
     class PhysicBody
     {
     public:
-        Publisher<void(Actor *)> onHit;
+        Signal<void(Actor *)> onHit;
 
         void trigger_collision(Actor *actor)
         {
@@ -172,7 +172,7 @@ TEST(Publisher, BulletGame)
     {
     public:
         int health;
-        Publisher<void(Character *)> on_death;
+        Signal<void(Character *)> on_death;
 
         Character() : Actor(), health(10) {}
 
@@ -188,7 +188,7 @@ TEST(Publisher, BulletGame)
     {
     public:
         std::shared_ptr<PhysicBody> body;
-        Subscriber<void(Actor *)> on_body_hit;
+        Slot<void(Actor *)> on_body_hit;
 
         Bullet() : Actor(), body(std::make_shared<PhysicBody>()),
                    on_body_hit(this, &Bullet::on_hit)
@@ -209,7 +209,7 @@ TEST(Publisher, BulletGame)
     Character character;
 
     bool character_died = false;
-    Subscriber<void(Character *)> char_died_sub(
+    Slot<void(Character *)> char_died_sub(
         [&character_died](Character *)
         {
             character_died = true;

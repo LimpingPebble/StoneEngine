@@ -6,30 +6,39 @@
 #include <map>
 #include <functional>
 
-template <class T, class... Args>
-class DynamicObjectFactory {
-public:
-    using Constructor = std::function<std::shared_ptr<T>(Args...)>;
+namespace Stone
+{
 
-    DynamicObjectFactory() = default;
-    static DynamicObjectFactory& getInstance() {
-        static DynamicObjectFactory instance;
-        return instance;
-    }
+    template <class T, class... Args>
+    class DynamicObjectFactory
+    {
+    public:
+        using Constructor = std::function<std::shared_ptr<T>(Args...)>;
 
-    std::shared_ptr<T> createObject(const std::string& type, Args... arg) {
-        auto it = _constructors.find(type);
-        if (it != _constructors.end()) {
-            return it->second(arg...);
+        DynamicObjectFactory() = default;
+        static DynamicObjectFactory &getInstance()
+        {
+            static DynamicObjectFactory instance;
+            return instance;
         }
-        return nullptr;
-    }
 
-    void registerConstructor(const std::string& type, Constructor constructor) {
-        _constructors[type] = constructor;
-    }
+        std::shared_ptr<T> create(const std::string &type, Args... arg)
+        {
+            auto it = _constructors.find(type);
+            if (it != _constructors.end())
+            {
+                return it->second(arg...);
+            }
+            return nullptr;
+        }
 
-protected:
+        void add(const std::string &type, Constructor constructor)
+        {
+            _constructors[type] = constructor;
+        }
 
-    std::map<std::string, Constructor> _constructors;
-};
+    protected:
+        std::map<std::string, Constructor> _constructors;
+    };
+
+} // namespace Stone
