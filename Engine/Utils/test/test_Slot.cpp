@@ -70,10 +70,3 @@ TEST(Slot, PerformMethodConst)
     int result = slot.perform(5, 8);
     EXPECT_EQ(result, 23);
 }
-
-// Run all the tests
-int main(int argc, char **argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}

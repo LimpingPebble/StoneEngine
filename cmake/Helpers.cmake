@@ -167,7 +167,10 @@ function(setup_module)
 
                 set(TEST_EXEC "test_${SETUP_MODULE_NAME}")
                 add_executable(${TEST_EXEC} ${SRCS})
-                target_link_libraries(${TEST_EXEC} GTest::gtest GTest::gtest_main)
+                target_link_libraries(${TEST_EXEC}
+                        PRIVATE GTest::gtest_main
+                        PRIVATE ${SETUP_MODULE_NAME}
+                )
                 gtest_discover_tests(${TEST_EXEC})
             else ()
                 message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: tests was enabled but no directory test was found")

@@ -82,10 +82,3 @@ TEST(MethodDelegate, PerformConst)
     EXPECT_EQ(result, 14);
     EXPECT_EQ(str, "14");
 }
-
-// Run all the tests
-int main(int argc, char** argv)
-{
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
-}
