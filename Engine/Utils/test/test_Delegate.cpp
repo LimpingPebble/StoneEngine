@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
-#include "Core/Delegate.hpp"
-#include <string>
+#include "Utils/Delegate.hpp"
 
 using namespace Stone::Core;
 

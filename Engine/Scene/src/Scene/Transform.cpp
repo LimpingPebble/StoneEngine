@@ -1,7 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "Scene/Transform.hpp"
-#include "GlmUtilities.hpp"
+#include "Utils/Glm.hpp"
 
 namespace Stone::Scene
 {

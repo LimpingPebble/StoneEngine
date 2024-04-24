@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "GlmUtilities.hpp"
+#include "Utils/Glm.hpp"
 #include <glm/ext.hpp>
 
 namespace std

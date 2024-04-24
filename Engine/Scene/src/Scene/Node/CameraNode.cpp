@@ -2,7 +2,7 @@
 
 #include "Scene/Node/CameraNode.hpp"
 #include <glm/ext.hpp>
-#include "GlmUtilities.hpp"
+#include "Utils/Glm.hpp"
 
 namespace Stone::Scene
 {

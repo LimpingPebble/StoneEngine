@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "Core/Subscriber.hpp"
+#include "Utils/PubSub.hpp"
 
 using namespace Stone::Core;
 
