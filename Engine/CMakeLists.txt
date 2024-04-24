@@ -1,6 +1,8 @@
-set(ENABLE_TESTS OFF)
-if (NOT SKIP_TESTS AND GTEST_FOUND)
-    set(ENABLE_TESTS ON)
+set(STONE_ENGINE_ENABLE_TESTS OFF)
+if (NOT SKIP_TESTS AND TARGET GTest::gtest_main)
+    set(STONE_ENGINE_ENABLE_TESTS ON)
+    enable_testing()
+    include(GoogleTest)
 endif ()
 
 # Layer 0

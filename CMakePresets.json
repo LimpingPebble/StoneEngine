@@ -20,6 +20,10 @@
         "USE_SYSTEM_PAUSE": {
           "type": "BOOL",
           "value": "OFF"
+        },
+        "SKIP_TESTS": {
+          "type": "BOOL",
+          "value": "OFF"
         }
       },
       "condition": {
