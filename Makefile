@@ -31,4 +31,10 @@ init_configure:
 list-presets:
 	@${CMAKE} --list-presets=${LIST_PRESETS_TYPE}
 
-.PHONY:	clean all $(LIBS)
+test:
+	@${CMAKE} --build --preset=debug-tests
+
+examples:
+	@${CMAKE} --build --preset=debug-examples
+
+.PHONY:	clean all test examples $(LIBS)

@@ -44,7 +44,7 @@
   ],
   "buildPresets": [
     {
-      "name": "Debug",
+      "name": "debug",
       "configurePreset": "debug",
       "condition": {
         "type": "notEquals",
@@ -53,8 +53,28 @@
       }
     },
     {
-      "name": "Release",
+      "name": "release",
       "configurePreset": "release"
+    },
+    {
+      "name": "debug-tests",
+      "configurePreset": "debug",
+      "targets": ["test"]
+    },
+    {
+      "name": "release-tests",
+      "configurePreset": "release",
+      "targets": ["test"]
+    },
+    {
+      "name": "debug-examples",
+      "configurePreset": "debug",
+      "targets": ["examples"]
+    },
+    {
+      "name": "release-examples",
+      "configurePreset": "release",
+      "targets": ["examples"]
     }
   ]
 }

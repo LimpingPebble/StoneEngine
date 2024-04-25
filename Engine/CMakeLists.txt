@@ -21,3 +21,17 @@ add_subdirectory(Widgets)
 add_subdirectory(Graphics)
 # Layer 6
 add_subdirectory(Window)
+
+get_all_targets(all_targets)
+set(test_targets)
+foreach (target IN ITEMS ${all_targets})
+    if (target MATCHES "^test_")
+        message(DEBUG "Matching target: ${target}")
+        list(APPEND test_targets ${target})
+    endif ()
+endforeach ()
+
+if (test_targets)
+    message(DEBUG "adding unit test target")
+    add_custom_target(test DEPENDS ${test_targets})
+endif ()

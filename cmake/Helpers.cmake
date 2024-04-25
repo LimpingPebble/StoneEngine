@@ -166,7 +166,7 @@ function(setup_module)
                 setup_files(test)
 
                 set(TEST_EXEC "test_${SETUP_MODULE_NAME}")
-                add_executable(${TEST_EXEC} ${SRCS})
+                add_executable(${TEST_EXEC} EXCLUDE_FROM_ALL ${SRCS})
                 target_link_libraries(${TEST_EXEC}
                         PRIVATE GTest::gtest_main
                         PRIVATE ${SETUP_MODULE_NAME}
@@ -180,3 +180,20 @@ function(setup_module)
         set("${SETUP_MODULE_NAME}_SRCS" ${SRCS} PARENT_SCOPE)
     endif ()
 endfunction()
+
+function (get_all_targets var)
+    set(targets)
+    get_all_targets_recursive(targets ${CMAKE_CURRENT_LIST_DIR})
+    set(${var} ${targets} PARENT_SCOPE)
+endfunction()
+
+macro (get_all_targets_recursive targets dir)
+    get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
+
+    foreach (subdir IN ITEMS ${subdirectories})
+        get_all_targets_recursive(${targets} ${subdir})
+    endforeach ()
+
+    get_property(current_targets DIRECTORY ${dir} PROPERTY BUILDSYSTEM_TARGETS)
+    list(APPEND ${targets} ${current_targets})
+endmacro()
