@@ -142,9 +142,27 @@ function(setup_module)
                 PRIVATE ${PROJECT_BINARY_DIR}/include
         )
 
+        set(UNIX_COMPILER_IDS GNU AppleClang Clang)
+        message(STATUS "module ${SETUP_MODULE_NAME}: Enabling warning flags for target")
+        if (CMAKE_CXX_COMPILER_ID IN_LIST UNIX_COMPILER_IDS)
+            message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling -Wall -Wextra")
+            target_compile_options(${SETUP_MODULE_NAME}
+                    PUBLIC -Wall
+                    PUBLIC -Wextra
+            )
+
+            if (CMAKE_BUILD_TYPE STREQUAL "Release")
+                message(NOTICE "module ${SETUP_MODULE_NAME}: Enabling error flag")
+                message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling flag -Werror")
+                target_compile_options(${SETUP_MODULE_NAME} PRIVATE -Werror)
+            endif ()
+        else ()
+            message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: Current compiler isn't supported for enabling warning or error flags")
+        endif ()
+
         if (DEFINED SETUP_MODULE_SPECIAL_HEADER_PATHS)
             foreach (path IN ITEMS ${SETUP_MODULE_SPECIAL_HEADER_PATHS})
-                target_include_directories(${SETUP_MODULE_NAME} PUBLIC ${path})
+                target_include_directories(${SETUP_MODULE_NAME} PRIVATE ${path})
             endforeach ()
         endif ()
 
@@ -156,7 +174,7 @@ function(setup_module)
 
         if (DEFINED SETUP_MODULE_SPECIAL_LIBS)
             foreach (dep IN ITEMS ${SETUP_MODULE_SPECIAL_LIBS})
-                target_link_libraries(${SETUP_MODULE_NAME} PUBLIC ${dep})
+                target_link_libraries(${SETUP_MODULE_NAME} PRIVATE ${dep})
             endforeach ()
         endif ()
 
@@ -181,13 +199,13 @@ function(setup_module)
     endif ()
 endfunction()
 
-function (get_all_targets var)
+function(get_all_targets var)
     set(targets)
     get_all_targets_recursive(targets ${CMAKE_CURRENT_LIST_DIR})
     set(${var} ${targets} PARENT_SCOPE)
 endfunction()
 
-macro (get_all_targets_recursive targets dir)
+macro(get_all_targets_recursive targets dir)
     get_property(subdirectories DIRECTORY ${dir} PROPERTY SUBDIRECTORIES)
 
     foreach (subdir IN ITEMS ${subdirectories})
