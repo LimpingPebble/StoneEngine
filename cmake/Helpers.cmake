@@ -134,6 +134,12 @@ function(setup_module)
 
     setup_files(src include)
 
+    set(SRCS_FOR_DOCS ${SRCS_FOR_DOCS_CACHED} ${SRCS} CACHE INTERNAL "")
+    if (NOT FULL_CONFIGURE)
+        message(NOTICE "module ${SETUP_MODULE_NAME}: Won't declare targets")
+        return()
+    endif ()
+
     if (NOT STONE_ENGINE_DISABLE_FULL_COMPILATION)
         add_library(${SETUP_MODULE_NAME} ${SRCS})
         target_include_directories(${SETUP_MODULE_NAME}

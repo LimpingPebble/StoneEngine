@@ -8,6 +8,7 @@ set(USE_SYSTEM_GLM ON CACHE BOOL "Uses glm from system libraries")
 set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
 set(USE_SYSTEM_PAUSE OFF CACHE BOOL "Enables the use of Windows' pause after ending console only programs. (Windows only)")
+set(FULL_CONFIGURE ON CACHE BOOL "Full configure project (may be used in pipeline to avoid the setup of all the dependencies)")
 
 # TODO: dependencies are not mandatory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
@@ -127,3 +128,5 @@ FetchContent_MakeAvailable(assimp)
 
 add_subdirectory(Engine)
 add_subdirectory(examples)
+
+include(Doxygen)
