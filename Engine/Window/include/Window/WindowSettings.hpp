@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 
 namespace Stone::Window
 {
@@ -13,6 +14,8 @@ namespace Stone::Window
         int height = 600;
         std::string title = "Stone Engine";
         bool fullScreen = false;
+        bool resizable = true;
+        std::weak_ptr<class Window> shareContext;
     };
 
 } // namespace Stone::Window

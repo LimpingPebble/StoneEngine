@@ -2,24 +2,25 @@
 
 #include "Window/App.hpp"
 #include "Window/Window.hpp"
-// #include "Window/GlfwWindow.hpp"
+#include "Window/GlfwWindow.hpp"
 #include <algorithm>
-
 
 namespace Stone::Window
 {
 
     App::App() : std::enable_shared_from_this<App>(), _windows()
     {
+        glfwInit();
     }
 
     App::~App()
     {
+        glfwTerminate();
     }
 
     std::shared_ptr<Window> App::createWindow(const WindowSettings &settings)
     {
-        std::shared_ptr<Window> win = std::make_shared<Window>(shared_from_this(), settings);
+        std::shared_ptr<Window> win = std::make_shared<GlfwWindow>(shared_from_this(), settings);
         _windows.push_back(win);
         return win;
     }
@@ -29,17 +30,23 @@ namespace Stone::Window
         auto it = std::find(_windows.begin(), _windows.end(), window);
         if (it != _windows.end())
         {
-            _windows.erase(it);
+            *it = nullptr;
         }
     }
 
     void App::run()
     {
-        while (true)
+        while (_windows.empty() == false)
         {
-            for (auto &window : _windows)
+            for (int i = _windows.size() - 1; i >= 0; --i)
             {
-                window->loopOnce();
+                if (_windows[i] == nullptr)
+                {
+                    _windows.erase(_windows.begin() + i);
+                    continue;
+                }
+
+                _windows[i]->loopOnce();
             }
         }
     }
