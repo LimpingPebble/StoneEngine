@@ -44,14 +44,14 @@ jobs:
         id: graphviz-cache
         with:
           path: "${{ env.home }}/${{ env.DEPS_PATH }}/graphviz"
-          key: ${{ env.GRAPHVIZ_VERSION }}
+          key: graphviz-${{ env.GRAPHVIZ_VERSION }}
 
       - name: Cache Doxygen dependency
         uses: actions/cache@v4
         id: doxygen-cache
         with:
           path: "${{ env.home }}/${{ env.DEPS_PATH }}/doxygen"
-          key: ${{ env.DOXYGEN_VERSION }}
+          key: doxygen-${{ env.DOXYGEN_VERSION }}
 
 
       - name: Update apt repos
