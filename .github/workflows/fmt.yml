@@ -53,4 +53,6 @@ jobs:
 
       # If there are any comments, fail the check
       - if: steps.review.outputs.total_comments > 0
-        run: exit 1
+        run: |
+          echo "Error: ${{ steps.review.outputs.total_comments }} checks have failed"
+          exit 1
