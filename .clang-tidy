@@ -1,5 +1,4 @@
-# Generated from CLion Inspection settings
----
+UseColor: true
 Checks: '-*,
 bugprone-argument-comment,
 bugprone-assert-side-effect,
