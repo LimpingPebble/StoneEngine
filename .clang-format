@@ -2,26 +2,9 @@ Language: Cpp
 BasedOnStyle: LLVM
 
 
-AlignConsecutiveShortCaseStatements:
-  Enabled: true
-  AlignCaseColons: true
-  AcrossEmptyLines: true
-  AcrossComments: true
-AlignConsecutiveAssignments:
-  Enabled: true
-  AcrossComments: true
-  AcrossEmptyLines: true
-  AlignCompound: true
-  PadOperators: true
-AlignConsecutiveDeclarations:
-  Enabled: true
-  AcrossComments: true
-  AcrossEmptyLines: true
-  AlignCompound: true
-  PadOperators: true
 AlignOperands: Align
 QualifierAlignment: Custom
-ColumnLimit: 160
+ColumnLimit: 120
 AlignEscapedNewlines: Right
 
 ReferenceAlignment: Right

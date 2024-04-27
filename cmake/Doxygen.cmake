@@ -4,8 +4,6 @@ find_package(
         # mscgen Will be required in network module
 )
 
-message(TRACE "Include dirs detected: ${INCLUDE_DIRS_FOR_DOCS}")
-
 if (Doxygen_FOUND)
     set(DOXYGEN_OUTPUT_DIRECTORY docs)
     set(DOXYGEN_CREATE_SUBDIRS YES)
@@ -41,6 +39,6 @@ if (Doxygen_FOUND)
     if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         set(DOXYGEN_CASE_SENSE_NAMES NO)
     endif ()
-endif ()
 
-doxygen_add_docs(doxygen ${SRCS_FOR_DOCS})
+    doxygen_add_docs(doxygen ${SRCS_FOR_DOCS})
+endif ()
