@@ -1,8 +1,8 @@
 {
-  "version": 6,
+  "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 28
+    "minor": 22
   },
   "configurePresets": [
     {
@@ -40,6 +40,21 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "doxygen",
+      "displayName": "Generate DOxygen documentation",
+      "binaryDir": "${sourceDir}/build/doxygen",
+      "cacheVariables": {
+        "FULL_CONFIGURE": {
+          "type": "BOOL",
+          "value": "OFF"
+        },
+        "SKIP_TESTS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
     }
   ],
   "buildPresets": [
@@ -59,22 +74,37 @@
     {
       "name": "debug-tests",
       "configurePreset": "debug",
-      "targets": ["test"]
+      "targets": [
+        "test"
+      ]
     },
     {
       "name": "release-tests",
       "configurePreset": "release",
-      "targets": ["test"]
+      "targets": [
+        "test"
+      ]
     },
     {
       "name": "debug-examples",
       "configurePreset": "debug",
-      "targets": ["examples"]
+      "targets": [
+        "examples"
+      ]
     },
     {
       "name": "release-examples",
       "configurePreset": "release",
-      "targets": ["examples"]
+      "targets": [
+        "examples"
+      ]
+    },
+    {
+      "name": "generate-doxygen",
+      "configurePreset": "doxygen",
+      "targets": [
+        "doxygen"
+      ]
     }
   ]
 }
