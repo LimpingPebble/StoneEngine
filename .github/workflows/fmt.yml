@@ -34,5 +34,23 @@ jobs:
           find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format-${{ env.CLANG_FORMAT_VERSION }} -i -style=file
 
       - name: Check for differences
+        if: ${{ !env.ACT }}
         run: |
           git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ZedThree/clang-tidy-review@v0.14.0
+        id: review
+
+      # Uploads an artefact containing clang_fixes.json
+      - uses: ZedThree/clang-tidy-review/upload@v0.14.0
+        id: upload-review
+
+      # If there are any comments, fail the check
+      - if: steps.review.outputs.total_comments > 0
+        run: exit 1
