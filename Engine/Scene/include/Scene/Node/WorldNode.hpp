@@ -4,32 +4,30 @@
 
 #include "Scene/Node/Node.hpp"
 
-namespace Stone::Scene
-{
+namespace Stone::Scene {
 
-    class CameraNode;
+class CameraNode;
 
-    class WorldNode : public Node
-    {
-    public:
-        STONE_NODE(WorldNode);
+class WorldNode : public Node {
+public:
+	STONE_NODE(WorldNode);
 
-        WorldNode(const std::string &name = "world");
-        WorldNode(const WorldNode &other);
+	WorldNode(const std::string &name = "world");
+	WorldNode(const WorldNode &other);
 
-        virtual ~WorldNode();
+	virtual ~WorldNode();
 
-        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
-        void setActiveCamera(std::shared_ptr<CameraNode> camera);
-        std::shared_ptr<CameraNode> getActiveCamera() const;
+	void setActiveCamera(std::shared_ptr<CameraNode> camera);
+	std::shared_ptr<CameraNode> getActiveCamera() const;
 
-        void render();
+	void render();
 
-    protected:
-        std::weak_ptr<CameraNode> _activeCamera;
+protected:
+	std::weak_ptr<CameraNode> _activeCamera;
 
-        virtual const char *_termClassColor() const override;
-    };
+	virtual const char *_termClassColor() const override;
+};
 
 } // namespace Stone::Scene

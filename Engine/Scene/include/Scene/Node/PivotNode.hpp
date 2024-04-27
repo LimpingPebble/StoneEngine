@@ -5,36 +5,34 @@
 #include "Scene/Node/Node.hpp"
 #include "Scene/Transform.hpp"
 
-namespace Stone::Scene
-{
+namespace Stone::Scene {
 
-    class PivotNode : public Node
-    {
-    public:
-        STONE_NODE(PivotNode);
+class PivotNode : public Node {
+public:
+	STONE_NODE(PivotNode);
 
-        PivotNode(const std::string &name = "pivot");
-        PivotNode(const PivotNode &other);
+	PivotNode(const std::string &name = "pivot");
+	PivotNode(const PivotNode &other);
 
-        virtual ~PivotNode();
+	virtual ~PivotNode();
 
-        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
-        virtual void render(RenderContext &context) override;
+	virtual void render(RenderContext &context) override;
 
-        virtual void transformRelativeMatrix(glm::mat4 &relative) const override;
+	virtual void transformRelativeMatrix(glm::mat4 &relative) const override;
 
-        Transform3D &getTransform();
-        const Transform3D &getTransform() const;
-        void setTransform(const Transform3D &transform);
+	Transform3D &getTransform();
+	const Transform3D &getTransform() const;
+	void setTransform(const Transform3D &transform);
 
-        const glm::mat4 &getTransformMatrix();
-        const glm::mat4 getTransformMatrix() const;
+	const glm::mat4 &getTransformMatrix();
+	const glm::mat4 getTransformMatrix() const;
 
-    protected:
-        Transform3D _transform;
+protected:
+	Transform3D _transform;
 
-        virtual const char *_termClassColor() const override;
-    };
+	virtual const char *_termClassColor() const override;
+};
 
 } // namespace Stone::Scene

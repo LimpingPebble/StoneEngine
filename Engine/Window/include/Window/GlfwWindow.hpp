@@ -8,31 +8,29 @@
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 
-namespace Stone::Window
-{
+namespace Stone::Window {
 
-    class GlfwWindow : public Window
-    {
-    public:
-        GlfwWindow() = delete;
-        GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings);
+class GlfwWindow : public Window {
+public:
+	GlfwWindow() = delete;
+	GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings);
 
-        virtual ~GlfwWindow();
+	virtual ~GlfwWindow();
 
-        virtual void loopOnce() override;
+	virtual void loopOnce() override;
 
-        virtual bool shouldClose() const override;
+	virtual bool shouldClose() const override;
 
-        /** Window events */
+	/** Window events */
 
-    private:
-        GLFWwindow *_glfwWindow;
-        std::pair<float, float> _mousePosition;
+private:
+	GLFWwindow *_glfwWindow;
+	std::pair<float, float> _mousePosition;
 
-        float _elapsedTime;
-        float _deltaTime;
+	float _elapsedTime;
+	float _deltaTime;
 
-        void _initializeWindowCallbacks();
-    };
+	void _initializeWindowCallbacks();
+};
 
 } // namespace Stone::Window

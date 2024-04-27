@@ -4,54 +4,58 @@
 
 #include "Scene/RenderContext.hpp"
 
-namespace Stone::Scene
-{
+namespace Stone::Scene {
 
-    /**
-     * @brief Interface for render behaviour
-     *
-     * This interface is used to define the render behaviour of a renderable element.
-     * The render behaviour is the way the element is rendered in the scene.
-     *
-     * ```
-     * class VulkanMesh : IRenderBehaviour
-     * {
-     * public:
-     *    VulkanMesh(std::shared_ptr<Mesh> mesh);
-     *    virtual void render(RenderContext &context) override;
-     * }
-     * ```
-     */
-    class IRenderBehaviour
-    {
-    public:
-        virtual void render(RenderContext &context) = 0;
-    };
+/**
+ * @brief Interface for render behaviour
+ *
+ * This interface is used to define the render behaviour of a renderable element.
+ * The render behaviour is the way the element is rendered in the scene.
+ *
+ * ```
+ * class VulkanMesh : IRenderBehaviour
+ * {
+ * public:
+ *    VulkanMesh(std::shared_ptr<Mesh> mesh);
+ *    virtual void render(RenderContext &context) override;
+ * }
+ * ```
+ */
+class IRenderBehaviour {
+public:
+	virtual void render(RenderContext &context) = 0;
+};
 
-    class ISceneRenderer;
+class ISceneRenderer;
 
-    class IRenderElement
-    {
-    public:
-        IRenderElement()
-            : _renderBehaviour(nullptr), _dirty(true) {}
-        IRenderElement(const IRenderElement &other)
-            : _renderBehaviour(other._renderBehaviour), _dirty(true) {}
+class IRenderElement {
+public:
+	IRenderElement() : _renderBehaviour(nullptr), _dirty(true) {
+	}
+	IRenderElement(const IRenderElement &other) : _renderBehaviour(other._renderBehaviour), _dirty(true) {
+	}
 
-        virtual ~IRenderElement() {}
+	virtual ~IRenderElement() {
+	}
 
-        virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) = 0;
+	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) = 0;
 
-        bool isDirty() const { return _dirty; }
-        void markDirty() { _dirty = true; }
+	bool isDirty() const {
+		return _dirty;
+	}
+	void markDirty() {
+		_dirty = true;
+	}
 
-    protected:
-        friend class ISceneRenderer;
+protected:
+	friend class ISceneRenderer;
 
-        void markUndirty() { _dirty = false; }
+	void markUndirty() {
+		_dirty = false;
+	}
 
-        std::shared_ptr<IRenderBehaviour> _renderBehaviour;
-        bool _dirty;
-    };
+	std::shared_ptr<IRenderBehaviour> _renderBehaviour;
+	bool _dirty;
+};
 
 } // namespace Stone::Scene

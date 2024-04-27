@@ -1,142 +1,117 @@
 // Copyright 2024 Stone-Engine
 
 #include "Scene/Node/CameraNode.hpp"
-#include <glm/ext.hpp>
+
 #include "Utils/Glm.hpp"
 
-namespace Stone::Scene
-{
+#include <glm/ext.hpp>
 
-    STONE_ABSTRACT_NODE_IMPLEMENTATION(CameraNode)
+namespace Stone::Scene {
 
-    CameraNode::CameraNode(const std::string &name)
-        : PivotNode(name), _near(0.1f), _far(100.0f)
-    {
-    }
+STONE_ABSTRACT_NODE_IMPLEMENTATION(CameraNode)
 
-    CameraNode::CameraNode(const CameraNode &other)
-        : PivotNode(other), _near(other._near), _far(other._far)
-    {
-    }
+CameraNode::CameraNode(const std::string &name) : PivotNode(name), _near(0.1f), _far(100.0f) {
+}
 
-    CameraNode::~CameraNode()
-    {
-    }
+CameraNode::CameraNode(const CameraNode &other) : PivotNode(other), _near(other._near), _far(other._far) {
+}
 
-    std::ostream &CameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
-    {
-        PivotNode::writeToStream(stream, false);
-        stream << ",near:" << _near;
-        stream << ",far:" << _far;
-        if (closing_bracer)
-            stream << "}";
-        return stream;
-    }
+CameraNode::~CameraNode() {
+}
 
-    float CameraNode::getNear() const
-    {
-        return _near;
-    }
+std::ostream &CameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
+	PivotNode::writeToStream(stream, false);
+	stream << ",near:" << _near;
+	stream << ",far:" << _far;
+	if (closing_bracer)
+		stream << "}";
+	return stream;
+}
 
-    void CameraNode::setNear(float near)
-    {
-        _near = near;
-    }
+float CameraNode::getNear() const {
+	return _near;
+}
 
-    float CameraNode::getFar() const
-    {
-        return _far;
-    }
+void CameraNode::setNear(float near) {
+	_near = near;
+}
 
-    void CameraNode::setFar(float far)
-    {
-        _far = far;
-    }
+float CameraNode::getFar() const {
+	return _far;
+}
 
-    const char *CameraNode::_termClassColor() const
-    {
-        return TERM_COLOR_BOLD TERM_COLOR_BLUE;
-    }
+void CameraNode::setFar(float far) {
+	_far = far;
+}
 
-    STONE_NODE_IMPLEMENTATION(PerspectiveCameraNode)
+const char *CameraNode::_termClassColor() const {
+	return TERM_COLOR_BOLD TERM_COLOR_BLUE;
+}
 
-    PerspectiveCameraNode::PerspectiveCameraNode(const std::string &name)
-        : CameraNode(name), _fov(glm::radians(45.0f)), _aspect(1.0f)
-    {
-    }
+STONE_NODE_IMPLEMENTATION(PerspectiveCameraNode)
 
-    PerspectiveCameraNode::PerspectiveCameraNode(const PerspectiveCameraNode &other)
-        : CameraNode(other), _fov(other._fov), _aspect(other._aspect)
-    {
-    }
+PerspectiveCameraNode::PerspectiveCameraNode(const std::string &name)
+	: CameraNode(name), _fov(glm::radians(45.0f)), _aspect(1.0f) {
+}
 
-    PerspectiveCameraNode::~PerspectiveCameraNode()
-    {
-    }
+PerspectiveCameraNode::PerspectiveCameraNode(const PerspectiveCameraNode &other)
+	: CameraNode(other), _fov(other._fov), _aspect(other._aspect) {
+}
 
-    std::ostream &PerspectiveCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
-    {
-        CameraNode::writeToStream(stream, false);
-        stream << ",fov:" << _fov;
-        stream << ",aspect:" << _aspect;
-        if (closing_bracer)
-            stream << "}";
-        return stream;
-    }
+PerspectiveCameraNode::~PerspectiveCameraNode() {
+}
 
-    const glm::mat4 PerspectiveCameraNode::getProjectionMatrix() const
-    {
-        return glm::perspective(_fov, _aspect, _near, _far);
-    }
+std::ostream &PerspectiveCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
+	CameraNode::writeToStream(stream, false);
+	stream << ",fov:" << _fov;
+	stream << ",aspect:" << _aspect;
+	if (closing_bracer)
+		stream << "}";
+	return stream;
+}
 
-    float PerspectiveCameraNode::getFov() const
-    {
-        return _fov;
-    }
+const glm::mat4 PerspectiveCameraNode::getProjectionMatrix() const {
+	return glm::perspective(_fov, _aspect, _near, _far);
+}
 
-    void PerspectiveCameraNode::setFov(float fov)
-    {
-        _fov = fov;
-    }
+float PerspectiveCameraNode::getFov() const {
+	return _fov;
+}
 
-    float PerspectiveCameraNode::getAspect() const
-    {
-        return _aspect;
-    }
+void PerspectiveCameraNode::setFov(float fov) {
+	_fov = fov;
+}
 
-    void PerspectiveCameraNode::setAspect(float aspect)
-    {
-        _aspect = aspect;
-    }
+float PerspectiveCameraNode::getAspect() const {
+	return _aspect;
+}
 
-    STONE_NODE_IMPLEMENTATION(OrthographicCameraNode)
+void PerspectiveCameraNode::setAspect(float aspect) {
+	_aspect = aspect;
+}
 
-    OrthographicCameraNode::OrthographicCameraNode(const std::string &name)
-        : CameraNode(name), _size(10.0f)
-    {
-    }
+STONE_NODE_IMPLEMENTATION(OrthographicCameraNode)
 
-    OrthographicCameraNode::OrthographicCameraNode(const OrthographicCameraNode &other)
-        : CameraNode(other), _size(other._size)
-    {
-    }
+OrthographicCameraNode::OrthographicCameraNode(const std::string &name) : CameraNode(name), _size(10.0f) {
+}
 
-    OrthographicCameraNode::~OrthographicCameraNode()
-    {
-    }
+OrthographicCameraNode::OrthographicCameraNode(const OrthographicCameraNode &other)
+	: CameraNode(other), _size(other._size) {
+}
 
-    std::ostream &OrthographicCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const
-    {
-        CameraNode::writeToStream(stream, false);
-        stream << ",size:" << std::to_string(_size);
-        if (closing_bracer)
-            stream << "}";
-        return stream;
-    }
+OrthographicCameraNode::~OrthographicCameraNode() {
+}
 
-    const glm::mat4 OrthographicCameraNode::getProjectionMatrix() const
-    {
-        return glm::ortho(-_size.x / 2, _size.x / 2, -_size.y / 2, _size.y / 2, _near, _far);
-    }
+std::ostream &OrthographicCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
+	CameraNode::writeToStream(stream, false);
+	stream << ",size:" << std::to_string(_size);
+	if (closing_bracer)
+		stream << "}";
+	return stream;
+}
+
+const glm::mat4 OrthographicCameraNode::getProjectionMatrix() const {
+	return glm::ortho(-_size.x / 2, _size.x / 2, -_size.y / 2, _size.y / 2, _near, _far);
+}
 
 } // namespace Stone::Scene

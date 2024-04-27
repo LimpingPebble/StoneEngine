@@ -7,84 +7,81 @@
 #include <glm/gtc/quaternion.hpp>
 #include <iostream>
 
-namespace Stone::Scene
-{
+namespace Stone::Scene {
 
-    struct Transform2D
-    {
-        Transform2D();
-        Transform2D(const Transform2D &other);
+struct Transform2D {
+	Transform2D();
+	Transform2D(const Transform2D &other);
 
-        Transform2D &operator=(const Transform2D &other);
+	Transform2D &operator=(const Transform2D &other);
 
-        void setPosition(const glm::vec2 &position);
-        void setRotation(float rotation);
-        void setScale(const glm::vec2 &scale);
+	void setPosition(const glm::vec2 &position);
+	void setRotation(float rotation);
+	void setScale(const glm::vec2 &scale);
 
-        const glm::vec2 &getPosition() const;
-        float getRotation() const;
-        const glm::vec2 &getScale() const;
+	const glm::vec2 &getPosition() const;
+	float getRotation() const;
+	const glm::vec2 &getScale() const;
 
-        void translate(const glm::vec2 &translation);
-        void rotate(float rotation);
-        void scale(const glm::vec2 &scale);
+	void translate(const glm::vec2 &translation);
+	void rotate(float rotation);
+	void scale(const glm::vec2 &scale);
 
-        /** Update if needed and return the transform matrix */
-        const glm::mat3 &getTransformMatrix();
-        /** Return the transform matrix if cached or calculate it */
-        glm::mat3 getTransformMatrix() const;
+	/** Update if needed and return the transform matrix */
+	const glm::mat3 &getTransformMatrix();
+	/** Return the transform matrix if cached or calculate it */
+	glm::mat3 getTransformMatrix() const;
 
-        std::ostream &write(std::ostream &stream) const;
+	std::ostream &write(std::ostream &stream) const;
 
-    protected:
-        glm::vec2 _position;
-        float _rotation;
-        glm::vec2 _scale;
+protected:
+	glm::vec2 _position;
+	float _rotation;
+	glm::vec2 _scale;
 
-        glm::mat3 _transformMatrix;
-        bool _transformMatrixDirty;
+	glm::mat3 _transformMatrix;
+	bool _transformMatrixDirty;
 
-        void calculateTransformMatrix(glm::mat3 &m) const;
-    };
+	void calculateTransformMatrix(glm::mat3 &m) const;
+};
 
-    struct Transform3D
-    {
-        Transform3D();
-        Transform3D(const Transform3D &other);
+struct Transform3D {
+	Transform3D();
+	Transform3D(const Transform3D &other);
 
-        Transform3D &operator=(const Transform3D &other);
+	Transform3D &operator=(const Transform3D &other);
 
-        void setPosition(const glm::vec3 &position);
-        void setRotation(const glm::quat &rotation);
-        void setEulerAngles(const glm::vec3 &eulerAngles);
-        void setScale(const glm::vec3 &scale);
+	void setPosition(const glm::vec3 &position);
+	void setRotation(const glm::quat &rotation);
+	void setEulerAngles(const glm::vec3 &eulerAngles);
+	void setScale(const glm::vec3 &scale);
 
-        const glm::vec3 &getPosition() const;
-        const glm::quat &getRotation() const;
-        const glm::vec3 getEulerAngles() const;
-        const glm::vec3 &getScale() const;
+	const glm::vec3 &getPosition() const;
+	const glm::quat &getRotation() const;
+	const glm::vec3 getEulerAngles() const;
+	const glm::vec3 &getScale() const;
 
-        void translate(const glm::vec3 &translation);
-        void rotate(const glm::quat &rotation);
-        void rotate(float angle, const glm::vec3 &axis);
-        void rotate(const glm::vec3 &eulerAngles);
-        void scale(const glm::vec3 &scale);
+	void translate(const glm::vec3 &translation);
+	void rotate(const glm::quat &rotation);
+	void rotate(float angle, const glm::vec3 &axis);
+	void rotate(const glm::vec3 &eulerAngles);
+	void scale(const glm::vec3 &scale);
 
-        const glm::mat4 &getTransformMatrix();
-        glm::mat4 getTransformMatrix() const;
+	const glm::mat4 &getTransformMatrix();
+	glm::mat4 getTransformMatrix() const;
 
-        std::ostream &write(std::ostream &stream) const;
+	std::ostream &write(std::ostream &stream) const;
 
-    protected:
-        glm::vec3 _position;
-        glm::quat _rotation;
-        glm::vec3 _scale;
+protected:
+	glm::vec3 _position;
+	glm::quat _rotation;
+	glm::vec3 _scale;
 
-        glm::mat4 _transformMatrix;
-        bool _transformMatrixDirty;
+	glm::mat4 _transformMatrix;
+	bool _transformMatrixDirty;
 
-        void calculateTransformMatrix(glm::mat4 &m) const;
-    };
+	void calculateTransformMatrix(glm::mat4 &m) const;
+};
 
 } // namespace Stone::Scene
 

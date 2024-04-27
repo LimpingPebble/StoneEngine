@@ -5,32 +5,29 @@
 #include "Core/Object.hpp"
 #include "Scene/RenderElement/IRenderElement.hpp"
 
-namespace Stone::Core
-{
-    class Image;
+namespace Stone::Core {
+class Image;
 }
 
-namespace Stone::Scene
-{
+namespace Stone::Scene {
 
-    class Texture : public Core::Object, public IRenderElement
-    {
-    public:
-        Texture();
-        Texture(const Texture &other);
+class Texture : public Core::Object, public IRenderElement {
+public:
+	Texture();
+	Texture(const Texture &other);
 
-        virtual ~Texture();
+	virtual ~Texture();
 
-        virtual const char *getClassName() const override;
-        virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	virtual const char *getClassName() const override;
+	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
 
-        virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
+	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
-        void setImage(std::shared_ptr<Core::Image> image);
-        std::shared_ptr<Core::Image> getImage() const;
+	void setImage(std::shared_ptr<Core::Image> image);
+	std::shared_ptr<Core::Image> getImage() const;
 
-    protected:
-        std::shared_ptr<Core::Image> _image;
-    };
+protected:
+	std::shared_ptr<Core::Image> _image;
+};
 
 } // namespace Stone::Scene
