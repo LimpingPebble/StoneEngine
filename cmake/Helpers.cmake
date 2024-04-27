@@ -112,7 +112,7 @@ function(setup_module)
 
     setup_files(src include)
 
-    set(SRCS_FOR_DOCS ${SRCS_FOR_DOCS_CACHED} ${SRCS} CACHE INTERNAL "")
+    set(SRCS_FOR_DOCS ${SRCS_FOR_DOCS} ${SRCS} CACHE INTERNAL "")
     if (NOT FULL_CONFIGURE)
         message(NOTICE "module ${SETUP_MODULE_NAME}: Won't declare targets")
         return()
