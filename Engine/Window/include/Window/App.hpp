@@ -3,8 +3,6 @@
 #pragma once
 
 #include "Window/WindowSettings.hpp"
-#include <memory>
-#include <vector>
 
 namespace Stone::Window
 {

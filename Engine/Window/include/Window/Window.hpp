@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Window/WindowSettings.hpp"
-#include <memory>
 
 namespace Stone::Scene
 {
