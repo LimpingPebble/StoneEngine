@@ -53,6 +53,10 @@
         "SKIP_TESTS": {
           "type": "BOOL",
           "value": "ON"
+        },
+        "ENABLE_DOCS": {
+          "type": "BOOL",
+          "value": "ON"
         }
       }
     }

@@ -9,6 +9,7 @@ set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
 set(USE_SYSTEM_PAUSE OFF CACHE BOOL "Enables the use of Windows' pause after ending console only programs. (Windows only)")
 set(FULL_CONFIGURE ON CACHE BOOL "Full configure project (may be used in pipeline to avoid the setup of all the dependencies)")
+set(ENABLE_DOCS OFF CACHE BOOL "Builds documentation with doxygen")
 
 # TODO: dependencies are not mandatory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
@@ -135,4 +136,6 @@ if (FULL_CONFIGURE)
     add_subdirectory(examples)
 endif ()
 
-include(Doxygen)
+if (ENABLE_DOCS)
+    include(Doxygen)
+endif ()
