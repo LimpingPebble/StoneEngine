@@ -42,4 +42,7 @@ examples:
 ${ALL_EXAMPLES}: examples
 	cd ${BUILD_DIR}/${PRESET}/ && ./examples/$@/$@
 
-.PHONY:	clean all test examples $(LIBS)
+setup-tidy:
+	@${CMAKE} --preset=setup-tidy
+
+.PHONY:	clean all test examples $(LIBS) setup-tidy

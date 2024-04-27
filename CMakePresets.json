@@ -44,7 +44,7 @@
     },
     {
       "name": "doxygen",
-      "displayName": "Generate DOxygen documentation",
+      "description": "Generate Doxygen documentation",
       "binaryDir": "${sourceDir}/build/doxygen",
       "cacheVariables": {
         "FULL_CONFIGURE": {
@@ -56,6 +56,20 @@
           "value": "ON"
         },
         "ENABLE_DOCS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
+    },
+    {
+      "name": "setup-tidy",
+      "binaryDir": "${sourceDir}/build/setup-tidy",
+      "cacheVariables": {
+        "FULL_CONFIGURE": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "SKIP_TESTS": {
           "type": "BOOL",
           "value": "ON"
         }
