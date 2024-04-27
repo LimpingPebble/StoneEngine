@@ -1,0 +1,35 @@
+name: C++ Lint
+
+on:
+  push:
+  pull_request:
+    branches: [ main, dev ]
+
+env:
+  CLANG_FORMAT_VERSION: 17
+
+  home: /home/runner
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        env:
+          VERSION: ${{ env.CLANG_FORMAT_VERSION }}
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
+          sudo apt-add-repository -y "deb https://apt.llvm.org/jammy/ llvm-toolchain-jammy-${VERSION} main"
+          sudo apt-get install -y clang-format-${VERSION}
+
+      - name: Run clang-format
+        run: |
+          cd ${{ github.workspace }}
+          find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format-${{ env.CLANG_FORMAT_VERSION }} -i -style=file
+
+      - name: Check for differences
+        run: |
+          git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
