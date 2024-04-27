@@ -65,6 +65,7 @@
       "name": "setup-tidy",
       "binaryDir": "${sourceDir}/build/setup-tidy",
       "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "FULL_CONFIGURE": {
           "type": "BOOL",
           "value": "ON"
