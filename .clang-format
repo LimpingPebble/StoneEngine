@@ -1,0 +1,68 @@
+Language: Cpp
+BasedOnStyle: LLVM
+
+
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AlignCaseColons: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossComments: true
+  AcrossEmptyLines: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossComments: true
+  AcrossEmptyLines: true
+  AlignCompound: true
+  PadOperators: true
+AlignOperands: Align
+QualifierAlignment: Custom
+ColumnLimit: 160
+AlignEscapedNewlines: Right
+
+ReferenceAlignment: Right
+PointerAlignment: Right
+
+TabWidth: 4
+UseTab: Always
+IndentWidth: 4
+IndentAccessModifiers: false
+IndentCaseBlocks: true
+IndentCaseLabels: false
+AccessModifierOffset: -4
+
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+
+InsertNewlineAtEOF: true
+KeepEmptyLinesAtEOF: false
+MaxEmptyLinesToKeep: 2
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: Always
+SpaceAfterTemplateKeyword: true
+FixNamespaceComments: true
+
+AllowShortFunctionsOnASingleLine: None
+AllowShortLambdasOnASingleLine: Inline
+AllowShortBlocksOnASingleLine: Never
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlignArrayOfStructures: Right
+
+QualifierOrder:
+  - const
+  - constexpr
+  - static
+  - inline
+  - friend
+  - volatile
+  - restrict
+  - type
+
+AlwaysBreakTemplateDeclarations: Yes
