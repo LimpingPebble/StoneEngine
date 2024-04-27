@@ -110,6 +110,14 @@ function(setup_module)
         return()
     endif ()
 
+    setup_files(src include)
+
+    set(SRCS_FOR_DOCS ${SRCS_FOR_DOCS_CACHED} ${SRCS} CACHE INTERNAL "")
+    if (NOT FULL_CONFIGURE)
+        message(NOTICE "module ${SETUP_MODULE_NAME}: Won't declare targets")
+        return()
+    endif ()
+
     if (SETUP_MODULE_FATAL_ERROR)
         set(DEPS ${DEPS} FATAL_ERROR)
     elseif (SETUP_MODULE_WARNING)
@@ -132,76 +140,65 @@ function(setup_module)
         message(TRACE "module ${SETUP_MODULE_NAME}: got ALL_FOUND = ${ALL_FOUND} -> ${${ALL_FOUND}}")
     endif ()
 
-    setup_files(src include)
 
-    set(SRCS_FOR_DOCS ${SRCS_FOR_DOCS_CACHED} ${SRCS} CACHE INTERNAL "")
-    if (NOT FULL_CONFIGURE)
-        message(NOTICE "module ${SETUP_MODULE_NAME}: Won't declare targets")
-        return()
-    endif ()
+    add_library(${SETUP_MODULE_NAME} ${SRCS})
+    target_include_directories(${SETUP_MODULE_NAME}
+            PUBLIC include
+            PRIVATE src
+            PRIVATE ${PROJECT_BINARY_DIR}/include
+    )
 
-    if (NOT STONE_ENGINE_DISABLE_FULL_COMPILATION)
-        add_library(${SETUP_MODULE_NAME} ${SRCS})
-        target_include_directories(${SETUP_MODULE_NAME}
-                PUBLIC include
-                PRIVATE src
-                PRIVATE ${PROJECT_BINARY_DIR}/include
+    set(UNIX_COMPILER_IDS GNU AppleClang Clang)
+    message(STATUS "module ${SETUP_MODULE_NAME}: Enabling warning flags for target")
+    if (CMAKE_CXX_COMPILER_ID IN_LIST UNIX_COMPILER_IDS)
+        message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling -Wall -Wextra")
+        target_compile_options(${SETUP_MODULE_NAME}
+                PUBLIC -Wall
+                PUBLIC -Wextra
         )
 
-        set(UNIX_COMPILER_IDS GNU AppleClang Clang)
-        message(STATUS "module ${SETUP_MODULE_NAME}: Enabling warning flags for target")
-        if (CMAKE_CXX_COMPILER_ID IN_LIST UNIX_COMPILER_IDS)
-            message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling -Wall -Wextra")
-            target_compile_options(${SETUP_MODULE_NAME}
-                    PUBLIC -Wall
-                    PUBLIC -Wextra
-            )
-
-            if (CMAKE_BUILD_TYPE STREQUAL "Release")
-                message(NOTICE "module ${SETUP_MODULE_NAME}: Enabling error flag")
-                message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling flag -Werror")
-                target_compile_options(${SETUP_MODULE_NAME} PRIVATE -Werror)
-            endif ()
-        else ()
-            message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: Current compiler isn't supported for enabling warning or error flags")
-        endif ()
-
-        if (DEFINED SETUP_MODULE_SPECIAL_HEADER_PATHS)
-            foreach (path IN ITEMS ${SETUP_MODULE_SPECIAL_HEADER_PATHS})
-                target_include_directories(${SETUP_MODULE_NAME} PRIVATE ${path})
-            endforeach ()
-        endif ()
-
-        if (DEFINED SETUP_MODULE_TARGET_DEPS)
-            foreach (dep IN ITEMS ${SETUP_MODULE_TARGET_DEPS})
-                target_link_libraries(${SETUP_MODULE_NAME} PUBLIC ${dep})
-            endforeach ()
-        endif ()
-
-        if (DEFINED SETUP_MODULE_SPECIAL_LIBS)
-            foreach (dep IN ITEMS ${SETUP_MODULE_SPECIAL_LIBS})
-                target_link_libraries(${SETUP_MODULE_NAME} PRIVATE ${dep})
-            endforeach ()
-        endif ()
-
-        if (SETUP_MODULE_ENABLE_TESTS AND STONE_ENGINE_ENABLE_TESTS)
-            if (IS_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/test")
-                set(SRCS "") # Empties old SRCS
-                setup_files(test)
-
-                set(TEST_EXEC "test_${SETUP_MODULE_NAME}")
-                add_executable(${TEST_EXEC} EXCLUDE_FROM_ALL ${SRCS})
-                target_link_libraries(${TEST_EXEC}
-                        PRIVATE GTest::gtest_main
-                        PRIVATE ${SETUP_MODULE_NAME}
-                )
-                gtest_discover_tests(${TEST_EXEC})
-            else ()
-                message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: tests was enabled but no directory test was found")
-            endif ()
+        if (CMAKE_BUILD_TYPE STREQUAL "Release")
+            message(NOTICE "module ${SETUP_MODULE_NAME}: Enabling error flag")
+            message(DEBUG "module ${SETUP_MODULE_NAME}: Enabling flag -Werror")
+            target_compile_options(${SETUP_MODULE_NAME} PRIVATE -Werror)
         endif ()
     else ()
-        set("${SETUP_MODULE_NAME}_SRCS" ${SRCS} PARENT_SCOPE)
+        message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: Current compiler isn't supported for enabling warning or error flags")
+    endif ()
+
+    if (DEFINED SETUP_MODULE_SPECIAL_HEADER_PATHS)
+        foreach (path IN ITEMS ${SETUP_MODULE_SPECIAL_HEADER_PATHS})
+            target_include_directories(${SETUP_MODULE_NAME} PRIVATE ${path})
+        endforeach ()
+    endif ()
+
+    if (DEFINED SETUP_MODULE_TARGET_DEPS)
+        foreach (dep IN ITEMS ${SETUP_MODULE_TARGET_DEPS})
+            target_link_libraries(${SETUP_MODULE_NAME} PUBLIC ${dep})
+        endforeach ()
+    endif ()
+
+    if (DEFINED SETUP_MODULE_SPECIAL_LIBS)
+        foreach (dep IN ITEMS ${SETUP_MODULE_SPECIAL_LIBS})
+            target_link_libraries(${SETUP_MODULE_NAME} PRIVATE ${dep})
+        endforeach ()
+    endif ()
+
+    if (SETUP_MODULE_ENABLE_TESTS AND STONE_ENGINE_ENABLE_TESTS)
+        if (IS_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/test")
+            set(SRCS "") # Empties old SRCS
+            setup_files(test)
+
+            set(TEST_EXEC "test_${SETUP_MODULE_NAME}")
+            add_executable(${TEST_EXEC} EXCLUDE_FROM_ALL ${SRCS})
+            target_link_libraries(${TEST_EXEC}
+                    PRIVATE GTest::gtest_main
+                    PRIVATE ${SETUP_MODULE_NAME}
+            )
+            gtest_discover_tests(${TEST_EXEC})
+        else ()
+            message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: tests was enabled but no directory test was found")
+        endif ()
     endif ()
 endfunction()
 
