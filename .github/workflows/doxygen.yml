@@ -2,7 +2,7 @@ name: Generate documentation
 
 on:
   push:
-    branches: [ "dev", "feat/cmake-config" ]
+    branches: [ "dev" ]
   workflow_dispatch:
 
 permissions:

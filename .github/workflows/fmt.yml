@@ -1,9 +1,12 @@
 name: C++ Lint
 
 on:
-  push:
   pull_request:
     branches: [ main, dev ]
+    paths:
+      - '**.cpp'
+      - '**.hpp'
+      - '**.h'
 
 env:
   CLANG_FORMAT_VERSION: 17
