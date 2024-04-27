@@ -17,6 +17,8 @@ LIBS						=	graphics logging physics scene sound
 PRESET						=	debug
 LIST_PRESETS_TYPE			=	configure
 
+ALL_EXAMPLES 				=	$(subst examples/,,$(shell find examples/ -type d))
+
 all:			$(LIBS)
 
 $(LIBS):		| init_configure
@@ -36,5 +38,8 @@ test:
 
 examples:
 	@${CMAKE} --build --preset=debug-examples
+
+${ALL_EXAMPLES}: examples
+	cd ${BUILD_DIR}/${PRESET}/ && ./examples/$@/$@
 
 .PHONY:	clean all test examples $(LIBS)
