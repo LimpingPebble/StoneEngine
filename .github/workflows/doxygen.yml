@@ -2,7 +2,7 @@ name: Generate documentation
 
 on:
   push:
-    branches: [ "feat/cmake-config" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
@@ -39,7 +39,7 @@ jobs:
         uses: ssciwr/doxygen-install@v1
       - name: Setup Graphviz
         uses: ts-graphviz/setup-graphviz@v2
-      - name: Install Cmake
+      - name: Install Cmake (local runs only)
         if: ${{ env.ACT }}
         run: sudo apt install -y cmake
 
