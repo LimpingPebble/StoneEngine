@@ -11,12 +11,12 @@ namespace Stone::Scene
     STONE_NODE_IMPLEMENTATION(SkinMeshNode)
 
     SkinMeshNode::SkinMeshNode(const std::string &name)
-        : PivotNode(name), _mesh(), _skeleton(), _material()
+        : PivotNode(name), _mesh(), _material(), _skeleton()
     {
     }
 
     SkinMeshNode::SkinMeshNode(const SkinMeshNode &other)
-        : PivotNode(other), _mesh(other._mesh), _skeleton(other._skeleton), _material(other._material)
+        : PivotNode(other), _mesh(other._mesh),  _material(other._material), _skeleton(other._skeleton)
     {
     }
 
