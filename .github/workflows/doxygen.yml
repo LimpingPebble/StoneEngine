@@ -11,11 +11,14 @@ permissions:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Documentation
+  CMAKE_PRESET: doxygen
+  CMAKE_BUILD_PRESET: generate-doxygen
 
   DOXYGEN_VERSION: "1.10.0"
-  GRAPHVIZ_VERSION: '2.42.2-3build2'
-  DEPS_PATH: ~/deps
+  GRAPHVIZ_VERSION: '2.42.2-6'
+  DEPS_PATH: deps
+
+  home: /home/runner
 
 jobs:
   build:
@@ -28,36 +31,92 @@ jobs:
       - name: Setup GitHub Actions
         uses: actions/checkout@v3
 
-      #      - name: Setup Doxygen cache
-      #        uses: actions/cache@v4
-      #        id: doxygen-cache
-      #        with:
-      #          path: ~/deps/**
-      #          key: doxygen-${{env.DOXYGEN_VERSION}}
+      - name: Cache CMake buildsystem
+        uses: actions/cache@v4
+        with:
+          path: "${{ github.workspace }}/build/${{ env.CMAKE_PRESET }}"
+          key: cmake-build-doxygen-${{ hashFiles('**/CMakeLists.txt', 'cmake/**') }}
+          restore-keys: cmake-build-doxygen-
 
-      - name: Setup Doxygen
-        uses: ssciwr/doxygen-install@v1
-      - name: Setup Graphviz
-        uses: ts-graphviz/setup-graphviz@v2
-      - name: Install Cmake (local runs only)
-        if: ${{ env.ACT }}
-        run: sudo apt install -y cmake
+      - name: Cache Graphviz dependency
+        uses: actions/cache@v4
+        id: graphviz-cache
+        with:
+          path: "${{ env.home }}/${{ env.DEPS_PATH }}/graphviz"
+          key: ${{ env.GRAPHVIZ_VERSION }}
+
+      - name: Cache Doxygen dependency
+        uses: actions/cache@v4
+        id: doxygen-cache
+        with:
+          path: "${{ env.home }}/${{ env.DEPS_PATH }}/doxygen"
+          key: ${{ env.DOXYGEN_VERSION }}
+
+
+      - name: Update apt repos
+        if: ${{ !steps.graphviz-cache.outputs.cache-hit }}
+        run: sudo apt update
+
+      - name: Install Doxygen
+        env:
+          CACHE_HIT: ${{ steps.doxygen-cache.outputs.cache-hit }}
+          CACHE_PATH: ${{ env.home }}/${{ env.DEPS_PATH }}/doxygen
+          VERSION: ${{ env.DOXYGEN_VERSION }}
+        continue-on-error: false
+        run: |
+          if [[ "${CACHE_HIT}" == 'true' ]]; then
+            cd ${CACHE_PATH}
+            sudo make install
+          else
+            cd /tmp
+            wget https://github.com/doxygen/doxygen/releases/download/Release_${VERSION//./_}/doxygen-${VERSION}.linux.bin.tar.gz
+            tar xzvf doxygen-${VERSION}.linux.bin.tar.gz
+            cd doxygen-${VERSION}
+            sudo make install
+            cd ..
+            
+            mkdir -p ${CACHE_PATH}
+            rmdir ${CACHE_PATH}
+            mv doxygen-${VERSION} ${CACHE_PATH}
+          fi
+
+      - name: Install Graphviz
+        env:
+          VERSION: ${{ env.GRAPHVIZ_VERSION }}
+          CACHE_HIT: ${{ steps.graphviz-cache.outputs.cache-hit }}
+          CACHE_PATH: ${{ env.home }}/${{ env.DEPS_PATH }}/graphviz
+        continue-on-error: false
+        run: |
+          if [[ "${CACHE_HIT}" == 'true' ]]; then
+            sudo cp --verbose --force --recursive ${CACHE_PATH}/* /
+          else
+            sudo apt install -y graphviz=${VERSION}
+            mkdir -p $CACHE_PATH
+
+            sudo dpkg -L graphviz | \
+              while IFS= read -r f; do \
+                if test -f $f; then \
+                  echo $f; \
+                fi; \
+              done | \
+              xargs cp --parents --target-directory ${CACHE_PATH}
+          fi
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake --preset doxygen
+        run: cmake --preset ${{ env.CMAKE_PRESET }}
 
       - name: Generate Documentation
         # Build the program with the given configuration
-        run: cmake --build --preset generate-doxygen
+        run: cmake --build --preset ${{ env.CMAKE_BUILD_PRESET }}
 
       - name: Upload documentation artifacts
         uses: actions/upload-pages-artifact@v3
         if: ${{ !env.ACT }}
         with:
           name: Docs
-          path: ${{github.workspace}}/build/doxygen/docs/html
+          path: ${{ github.workspace }}/build/${{ env.CMAKE_PRESET }}/docs/html
           retention-days: 7
 
   deploy:
@@ -71,14 +130,3 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: Docs
-
-#      - name: Check installed documentation
-#        run: (ls -lA ${{github.workspace}}/build && ls -lA ${{github.workspace}}/build/doxygen && ls -lA ${{github.workspace}}/build/doxygen/out && ls -lA ${{github.workspace}}/build/doxygen/out/html) || exit 0
-#
-#      - name: Check where are deps
-#        run: |
-#          which dot
-#          which doxygen
-#
-#          dot -V
-#          doxygen --version
