@@ -62,6 +62,22 @@ PointLightNode::PointLightNode(const PointLightNode &other) : LightNode(other) {
 PointLightNode::~PointLightNode() {
 }
 
+const glm::vec3 &PointLightNode::getAttenuation() const {
+	return _attenuation;
+}
+
+void PointLightNode::setAttenuation(const glm::vec3 &attenuation) {
+    _attenuation = attenuation;
+}
+
+const glm::vec3 &PointLightNode::getSpecular() const {
+    return _specular;
+}
+
+void PointLightNode::setSpecular(const glm::vec3 &specular) {
+    _specular = specular;
+}
+
 std::ostream &PointLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	LightNode::writeToStream(stream, false);
 	stream << ",attenuation:" << std::to_string(_attenuation, true);

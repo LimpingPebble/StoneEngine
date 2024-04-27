@@ -21,13 +21,13 @@ public:
 
 	virtual void loopOnce();
 
-	virtual bool shouldClose() const;
+	[[nodiscard]] virtual bool shouldClose() const;
 
-	const WindowSettings &getSettings() const;
-	std::shared_ptr<App> getApp() const;
+	[[nodiscard]] const WindowSettings &getSettings() const;
+	[[nodiscard]] std::shared_ptr<App> getApp() const;
 
 	virtual void setWorld(std::shared_ptr<Stone::Scene::WorldNode> world);
-	std::shared_ptr<Stone::Scene::WorldNode> getWorld() const;
+	[[nodiscard]] std::shared_ptr<Stone::Scene::WorldNode> getWorld() const;
 
 protected:
 	void _onMouseMoveCallback(double x, double y);

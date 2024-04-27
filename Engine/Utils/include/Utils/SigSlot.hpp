@@ -127,8 +127,7 @@ public:
 	/**
 	 * @brief Default constructor to create a Signal object.
 	 */
-	Signal() : _slots() {
-	}
+	Signal() = default;
 
 	/**
 	 * @brief Destructor to clean up the Signal object.

@@ -18,13 +18,13 @@ public:
 
 	virtual ~Texture();
 
-	virtual const char *getClassName() const override;
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	[[nodiscard]] const char *getClassName() const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
+	void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
 	void setImage(std::shared_ptr<Core::Image> image);
-	std::shared_ptr<Core::Image> getImage() const;
+	[[nodiscard]] std::shared_ptr<Core::Image> getImage() const;
 
 protected:
 	std::shared_ptr<Core::Image> _image;

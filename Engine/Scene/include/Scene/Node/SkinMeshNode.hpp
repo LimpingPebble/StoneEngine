@@ -14,20 +14,20 @@ class SkinMeshNode : public PivotNode {
 public:
 	STONE_NODE(SkinMeshNode);
 
-	SkinMeshNode(const std::string &name = "skinmesh");
+	explicit SkinMeshNode(const std::string &name = "skinmesh");
 	SkinMeshNode(const SkinMeshNode &other);
 
 	virtual ~SkinMeshNode();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	std::shared_ptr<SkinMesh> getSkinMesh() const;
+	[[nodiscard]] std::shared_ptr<SkinMesh> getSkinMesh() const;
 	void setSkinMesh(std::shared_ptr<SkinMesh> mesh);
 
-	std::shared_ptr<Material> getMaterial() const;
+	[[nodiscard]] std::shared_ptr<Material> getMaterial() const;
 	void setMaterial(std::shared_ptr<Material> material);
 
-	std::shared_ptr<SkeletonNode> getSkeleton() const;
+	[[nodiscard]] std::shared_ptr<SkeletonNode> getSkeleton() const;
 	void setSkeleton(std::shared_ptr<SkeletonNode> skeleton);
 
 protected:
@@ -35,7 +35,7 @@ protected:
 	std::shared_ptr<Material> _material;
 	std::weak_ptr<SkeletonNode> _skeleton;
 
-	virtual const char *_termClassColor() const override;
+	[[nodiscard]] const char *_termClassColor() const override;
 };
 
 } // namespace Stone::Scene

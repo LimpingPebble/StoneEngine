@@ -35,12 +35,11 @@ public:
 	IRenderElement(const IRenderElement &other) : _renderBehaviour(other._renderBehaviour), _dirty(true) {
 	}
 
-	virtual ~IRenderElement() {
-	}
+	virtual ~IRenderElement() = default;
 
 	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) = 0;
 
-	bool isDirty() const {
+	[[nodiscard]] bool isDirty() const {
 		return _dirty;
 	}
 	void markDirty() {

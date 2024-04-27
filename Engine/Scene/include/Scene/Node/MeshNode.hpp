@@ -13,42 +13,42 @@ class MeshNode : public PivotNode {
 public:
 	STONE_NODE(MeshNode);
 
-	MeshNode(const std::string &name = "mesh");
+	explicit MeshNode(const std::string &name = "mesh");
 	MeshNode(const MeshNode &other);
 
 	virtual ~MeshNode();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	std::shared_ptr<Mesh> getMesh() const;
+	[[nodiscard]] std::shared_ptr<Mesh> getMesh() const;
 	void setMesh(std::shared_ptr<Mesh> mesh);
 
-	std::shared_ptr<Material> getMaterial() const;
+	[[nodiscard]] std::shared_ptr<Material> getMaterial() const;
 	void setMaterial(std::shared_ptr<Material> material);
 
 protected:
 	std::shared_ptr<Mesh> _mesh;
 	std::shared_ptr<Material> _material;
 
-	virtual const char *_termClassColor() const override;
+	[[nodiscard]] const char *_termClassColor() const override;
 };
 
 class InstancedMeshNode : public MeshNode {
 public:
 	STONE_NODE(InstancedMeshNode);
 
-	InstancedMeshNode(const std::string &name = "instancedmesh");
+	explicit InstancedMeshNode(const std::string &name = "instancedmesh");
 	InstancedMeshNode(const InstancedMeshNode &other);
 
-	virtual ~InstancedMeshNode();
+	~InstancedMeshNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	void addInstance(const Transform3D &transform);
 	void removeInstance(size_t index);
 	void clearInstances();
 
-	const std::vector<Transform3D> &getInstancesTransforms() const;
+	[[nodiscard]] const std::vector<Transform3D> &getInstancesTransforms() const;
 
 protected:
 	std::vector<Transform3D> _instancesTransforms;

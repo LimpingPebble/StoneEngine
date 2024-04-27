@@ -6,9 +6,7 @@
 #include <memory>
 #include <string>
 
-namespace Stone {
-
-namespace Core {
+namespace Stone::Core {
 
 class Object : public std::enable_shared_from_this<Object> {
 public:
@@ -21,14 +19,12 @@ public:
 
 	virtual const char *getClassName() const;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const;
+	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const;
 
 protected:
 	uint32_t _id;
 };
 
-} // namespace Core
-
-} // namespace Stone
+} // namespace Stone::Core
 
 std::ostream &operator<<(std::ostream &os, const Stone::Core::Object &obj);

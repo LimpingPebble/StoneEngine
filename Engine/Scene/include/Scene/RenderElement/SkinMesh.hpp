@@ -17,14 +17,14 @@ public:
 
 	virtual ~SkinMesh();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
+	void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
-	const std::vector<WeightVertex> &getVertices() const;
+	[[nodiscard]] const std::vector<WeightVertex> &getVertices() const;
 	std::vector<WeightVertex> &verticesRef();
 
-	const std::vector<uint32_t> &getIndices() const;
+	[[nodiscard]] const std::vector<uint32_t> &getIndices() const;
 	std::vector<uint32_t> &indicesRef();
 
 protected:

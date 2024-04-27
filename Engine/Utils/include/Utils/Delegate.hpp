@@ -48,7 +48,7 @@ public:
 	 * @brief Constructs a FunctionDelegate object with the given function pointer.
 	 * @param fn The function pointer.
 	 */
-	FunctionDelegate(const Fn fn) : _fn(fn) {
+	explicit FunctionDelegate(const Fn fn) : _fn(fn) {
 	}
 
 	/**
@@ -56,7 +56,7 @@ public:
 	 * @param args The arguments for the delegate.
 	 * @return The result of the delegate operation.
 	 */
-	virtual R perform(Args... args) override {
+	R perform(Args... args) override {
 		return _fn(std::forward<Args>(args)...);
 	}
 
@@ -84,7 +84,7 @@ public:
 	 * @brief Constructs a LambdaDelegate object with the given lambda function.
 	 * @param fn The lambda function.
 	 */
-	LambdaDelegate(const Fn fn) : _fn(fn) {
+	explicit LambdaDelegate(const Fn fn) : _fn(fn) {
 	}
 
 	/**
@@ -92,7 +92,7 @@ public:
 	 * @param args The arguments for the delegate.
 	 * @return The result of the delegate operation.
 	 */
-	virtual R perform(Args... args) override {
+	R perform(Args... args) override {
 		return _fn(std::forward<Args>(args)...);
 	}
 
@@ -130,7 +130,7 @@ public:
 	 * @param args The arguments for the delegate.
 	 * @return The result of the delegate operation.
 	 */
-	virtual R perform(Args... args) override {
+	R perform(Args... args) override {
 		return (_target->*_method)(std::forward<Args>(args)...);
 	}
 
@@ -169,7 +169,7 @@ public:
 	 * @param args The arguments for the delegate.
 	 * @return The result of the delegate operation.
 	 */
-	virtual R perform(Args... args) override {
+	R perform(Args... args) override {
 		return (_target->*_method)(std::forward<Args>(args)...);
 	}
 

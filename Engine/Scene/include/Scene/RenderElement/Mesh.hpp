@@ -17,12 +17,12 @@ public:
 
 	virtual ~Mesh();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer);
 
-	const std::vector<Vertex> &getVertices() const;
-	const std::vector<uint32_t> &getIndices() const;
+	[[nodiscard]] const std::vector<Vertex> &getVertices() const;
+	[[nodiscard]] const std::vector<uint32_t> &getIndices() const;
 	std::vector<Vertex> &verticesRef();
 	std::vector<uint32_t> &indicesRef();
 

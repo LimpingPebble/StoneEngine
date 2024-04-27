@@ -15,16 +15,16 @@ public:
 
 	virtual ~Image();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	void setSize(const glm::uvec2 &size);
-	const glm::uvec2 &getSize() const;
+	[[nodiscard]] const glm::uvec2 &getSize() const;
 
 	void setChannels(uint32_t channels);
-	uint32_t getChannels() const;
+	[[nodiscard]] uint32_t getChannels() const;
 
 	void setData(const uint8_t *data);
-	const uint8_t *getData() const;
+	[[nodiscard]] const uint8_t *getData() const;
 
 protected:
 	glm::uvec2 _size;

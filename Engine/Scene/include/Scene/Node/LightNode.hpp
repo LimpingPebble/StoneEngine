@@ -10,44 +10,50 @@ class LightNode : public PivotNode {
 public:
 	STONE_ABSTRACT_NODE(LightNode);
 
-	LightNode(const std::string &name = "light");
+	explicit LightNode(const std::string &name = "light");
 	LightNode(const LightNode &other);
 
 	virtual ~LightNode();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual bool isCastingShadow() const;
+	[[nodiscard]] virtual bool isCastingShadow() const;
 
 protected:
 	float _intensity;
 	glm::vec3 _color;
 
-	virtual const char *_termClassColor() const override;
+	[[nodiscard]] const char *_termClassColor() const override;
 };
 
 class AmbientLightNode : public LightNode {
 public:
 	STONE_NODE(AmbientLightNode);
 
-	AmbientLightNode(const std::string &name = "ambientlight");
+	explicit AmbientLightNode(const std::string &name = "ambientlight");
 	AmbientLightNode(const AmbientLightNode &other);
 
-	virtual ~AmbientLightNode();
+	~AmbientLightNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 };
 
 class PointLightNode : public LightNode {
 public:
 	STONE_NODE(PointLightNode);
 
-	PointLightNode(const std::string &name = "pointlight");
+	explicit PointLightNode(const std::string &name = "pointlight");
 	PointLightNode(const PointLightNode &other);
 
-	virtual ~PointLightNode();
+	~PointLightNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+    [[nodiscard]] const glm::vec3 &getAttenuation() const;
+    void setAttenuation(const glm::vec3 &attenuation);
+
+    [[nodiscard]] const glm::vec3 &getSpecular() const;
+    void setSpecular(const glm::vec3 &specular);
+
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 protected:
 	glm::vec3 _attenuation;
@@ -58,25 +64,25 @@ class CastingLightNode : public LightNode {
 public:
 	STONE_ABSTRACT_NODE(CastingLightNode);
 
-	CastingLightNode(const std::string &name = "castinglight");
+	explicit CastingLightNode(const std::string &name = "castinglight");
 	CastingLightNode(const CastingLightNode &other);
 
-	virtual ~CastingLightNode();
+	~CastingLightNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual bool isCastingShadow() const override;
+	[[nodiscard]] bool isCastingShadow() const override;
 	void setCastingShadow(bool castShadow);
 
-	const glm::mat4 &getProjectionMatrix() const;
+	[[nodiscard]] const glm::mat4 &getProjectionMatrix() const;
 
-	float getShadowClipNear() const;
+	[[nodiscard]] float getShadowClipNear() const;
 	void setShadowClipNear(float shadowClipNear);
 
-	float getShadowClipFar() const;
+	[[nodiscard]] float getShadowClipFar() const;
 	void setShadowClipFar(float shadowClipFar);
 
-	const glm::ivec2 &getShadowMapSize() const;
+	[[nodiscard]] const glm::ivec2 &getShadowMapSize() const;
 	void setShadowMapSize(const glm::ivec2 &shadowMapSize);
 
 protected:
@@ -88,55 +94,55 @@ protected:
 
 	virtual void _updateProjectionMatrix() = 0;
 
-	virtual const char *_termClassColor() const override;
+	[[nodiscard]] const char *_termClassColor() const override;
 };
 
 class DirectionalLightNode : public CastingLightNode {
 public:
 	STONE_NODE(DirectionalLightNode);
 
-	DirectionalLightNode(const std::string &name = "directionallight");
+	explicit DirectionalLightNode(const std::string &name = "directionallight");
 	DirectionalLightNode(const DirectionalLightNode &other);
 
-	virtual ~DirectionalLightNode();
+	~DirectionalLightNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	bool isInfinite() const;
+	[[nodiscard]] bool isInfinite() const;
 	void setInfinite(bool infinite);
 
-	const glm::vec2 &getShadowOrthoSize() const;
+	[[nodiscard]] const glm::vec2 &getShadowOrthoSize() const;
 	void setShadowOrthoSize(const glm::vec2 &shadowOrthoSize);
 
 protected:
 	bool _infinite;
 	glm::vec2 _shadowOrthoSize;
 
-	virtual void _updateProjectionMatrix() override;
+	void _updateProjectionMatrix() override;
 };
 
 class SpotLightNode : public CastingLightNode {
 public:
 	STONE_NODE(SpotLightNode);
 
-	SpotLightNode(const std::string &name = "spotlight");
+	explicit SpotLightNode(const std::string &name = "spotlight");
 	SpotLightNode(const SpotLightNode &other);
 
-	virtual ~SpotLightNode();
+	~SpotLightNode() override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	float getConeAngle() const;
+	[[nodiscard]] float getConeAngle() const;
 	void setConeAngle(float coneAngle);
 
-	float getConeAttenuation() const;
+	[[nodiscard]] float getConeAttenuation() const;
 	void setConeAttenuation(float coneAttenuation);
 
 protected:
 	float _coneAngle;
 	float _coneAttenuation;
 
-	virtual void _updateProjectionMatrix() override;
+	void _updateProjectionMatrix() override;
 };
 
 } // namespace Stone::Scene

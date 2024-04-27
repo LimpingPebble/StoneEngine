@@ -19,9 +19,9 @@ struct Transform2D {
 	void setRotation(float rotation);
 	void setScale(const glm::vec2 &scale);
 
-	const glm::vec2 &getPosition() const;
-	float getRotation() const;
-	const glm::vec2 &getScale() const;
+	[[nodiscard]] const glm::vec2 &getPosition() const;
+	[[nodiscard]] float getRotation() const;
+	[[nodiscard]] const glm::vec2 &getScale() const;
 
 	void translate(const glm::vec2 &translation);
 	void rotate(float rotation);
@@ -30,7 +30,7 @@ struct Transform2D {
 	/** Update if needed and return the transform matrix */
 	const glm::mat3 &getTransformMatrix();
 	/** Return the transform matrix if cached or calculate it */
-	glm::mat3 getTransformMatrix() const;
+	[[nodiscard]] glm::mat3 getTransformMatrix() const;
 
 	std::ostream &write(std::ostream &stream) const;
 
@@ -56,10 +56,10 @@ struct Transform3D {
 	void setEulerAngles(const glm::vec3 &eulerAngles);
 	void setScale(const glm::vec3 &scale);
 
-	const glm::vec3 &getPosition() const;
-	const glm::quat &getRotation() const;
-	const glm::vec3 getEulerAngles() const;
-	const glm::vec3 &getScale() const;
+	[[nodiscard]] const glm::vec3 &getPosition() const;
+	[[nodiscard]] const glm::quat &getRotation() const;
+	[[nodiscard]] const glm::vec3 getEulerAngles() const;
+	[[nodiscard]] const glm::vec3 &getScale() const;
 
 	void translate(const glm::vec3 &translation);
 	void rotate(const glm::quat &rotation);
@@ -68,7 +68,7 @@ struct Transform3D {
 	void scale(const glm::vec3 &scale);
 
 	const glm::mat4 &getTransformMatrix();
-	glm::mat4 getTransformMatrix() const;
+	[[nodiscard]] glm::mat4 getTransformMatrix() const;
 
 	std::ostream &write(std::ostream &stream) const;
 

@@ -119,7 +119,7 @@ std::shared_ptr<Node> Node::getChild(const std::string &name) const {
 	return nullptr;
 }
 
-std::shared_ptr<Node> Node::getChildWithPath(const std::string &path) const {
+std::shared_ptr<Node> Node::getChildByPath(const std::string &path) const {
 	if (path.size() <= 1) {
 		return getChild(path);
 	}
@@ -130,7 +130,7 @@ std::shared_ptr<Node> Node::getChildWithPath(const std::string &path) const {
 			if (child->getName() == childName) {
 				return child;
 			}
-			std::shared_ptr<Node> grandChild = child->getChildWithPath(path);
+			std::shared_ptr<Node> grandChild = child->getChildByPath(path);
 			if (grandChild) {
 				return grandChild;
 			}
@@ -147,7 +147,7 @@ std::shared_ptr<Node> Node::getChildWithPath(const std::string &path) const {
 			return nullptr;
 		}
 		std::string subpath = path.substr(firstSlash + 1);
-		return childNode->getChildWithPath(subpath);
+		return childNode->getChildByPath(subpath);
 	}
 
 	return getChild(path);

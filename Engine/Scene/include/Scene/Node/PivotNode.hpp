@@ -11,28 +11,28 @@ class PivotNode : public Node {
 public:
 	STONE_NODE(PivotNode);
 
-	PivotNode(const std::string &name = "pivot");
+	explicit PivotNode(const std::string &name = "pivot");
 	PivotNode(const PivotNode &other);
 
 	virtual ~PivotNode();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual void render(RenderContext &context) override;
+	void render(RenderContext &context) override;
 
-	virtual void transformRelativeMatrix(glm::mat4 &relative) const override;
+	void transformRelativeMatrix(glm::mat4 &relative) const override;
 
 	Transform3D &getTransform();
-	const Transform3D &getTransform() const;
+	[[nodiscard]] const Transform3D &getTransform() const;
 	void setTransform(const Transform3D &transform);
 
 	const glm::mat4 &getTransformMatrix();
-	const glm::mat4 getTransformMatrix() const;
+	[[nodiscard]] const glm::mat4 getTransformMatrix() const;
 
 protected:
 	Transform3D _transform;
 
-	virtual const char *_termClassColor() const override;
+	[[nodiscard]] const char *_termClassColor() const override;
 };
 
 } // namespace Stone::Scene

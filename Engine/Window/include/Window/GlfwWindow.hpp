@@ -17,9 +17,9 @@ public:
 
 	virtual ~GlfwWindow();
 
-	virtual void loopOnce() override;
+	void loopOnce() override;
 
-	virtual bool shouldClose() const override;
+	[[nodiscard]] bool shouldClose() const override;
 
 	/** Window events */
 

@@ -18,19 +18,19 @@ class Node : public Core::Object {
 public:
 	STONE_NODE(Node);
 
-	Node(const std::string &name = "node");
+	explicit Node(const std::string &name = "node");
 	Node(const Node &other);
 
 	virtual ~Node();
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer = true) const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	virtual void update(float deltaTime);
 	virtual void render(RenderContext &context);
 
 	void setName(const std::string &name);
-	const std::string &getName() const;
-	std::string getGlobalName() const;
+	[[nodiscard]] const std::string &getName() const;
+	[[nodiscard]] std::string getGlobalName() const;
 
 	void addChild(std::shared_ptr<Node> child);
 
@@ -44,39 +44,39 @@ public:
 	void removeChild(std::shared_ptr<Node> child);
 	void removeFromParent();
 
-	std::shared_ptr<Node> getParent() const;
-	bool hasParent() const;
-	bool isAncestorOf(std::shared_ptr<Node> node) const;
-	bool isDescendantOf(std::shared_ptr<Node> node) const;
+	[[nodiscard]] std::shared_ptr<Node> getParent() const;
+	[[nodiscard]] bool hasParent() const;
+	[[nodiscard]] bool isAncestorOf(std::shared_ptr<Node> node) const;
+	[[nodiscard]] bool isDescendantOf(std::shared_ptr<Node> node) const;
 
 	const std::vector<std::shared_ptr<Node>> &getChildren() const;
 
-	std::shared_ptr<Node> getChild(const std::string &name) const;
+	[[nodiscard]] std::shared_ptr<Node> getChild(const std::string &name) const;
 	/**
 	 * @brief Get a child node with a path
 	 *
 	 * @param path The path to the child node. If starting with '*\/', then it will look for any descendant with the
 	 * given name
 	 *
-	 * @example getChildWithPath("child1/child2/child3")
-	 * @example getChildWithPath("*\/child3")
+	 * @example getChildByPath("child1/child2/child3")
+	 * @example getChildByPath("*\/child3")
 	 *
 	 * @return `std::shared_ptr<Node>` The child node
 	 */
-	std::shared_ptr<Node> getChildWithPath(const std::string &path) const;
+	[[nodiscard]] std::shared_ptr<Node> getChildByPath(const std::string &path) const;
 
 	template <typename T>
-	std::shared_ptr<T> getChild(const std::string &name) const {
+	[[nodiscard]] std::shared_ptr<T> getChild(const std::string &name) const {
 		return std::dynamic_pointer_cast<T>(getChild(name));
 	}
 
 	template <typename T>
-	std::shared_ptr<T> getChildWithPath(const std::string &path) const {
-		return std::dynamic_pointer_cast<T>(getChildWithPath(path));
+	[[nodiscard]] std::shared_ptr<T> getChildByPath(const std::string &path) const {
+		return std::dynamic_pointer_cast<T>(getChildByPath(path));
 	}
 
 	template <typename T>
-	std::shared_ptr<T> getChildWithClass() const {
+	[[nodiscard]] std::shared_ptr<T> getChildByClass() const {
 		for (auto &child : _children) {
 			std::shared_ptr<T> node = std::dynamic_pointer_cast<T>(child);
 			if (node)
@@ -85,11 +85,11 @@ public:
 		return nullptr;
 	}
 
-	std::shared_ptr<WorldNode> getWorld() const;
+	[[nodiscard]] std::shared_ptr<WorldNode> getWorld() const;
 
 	virtual void transformRelativeMatrix(glm::mat4 &relative) const;
-	const glm::mat4 getWorldTransformMatrix() const;
-	const glm::mat4 getTransformMatrixRelativeToNode(std::shared_ptr<Node> otherNode) const;
+	[[nodiscard]] const glm::mat4 getWorldTransformMatrix() const;
+	[[nodiscard]] const glm::mat4 getTransformMatrixRelativeToNode(std::shared_ptr<Node> otherNode) const;
 
 	void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
 
@@ -102,7 +102,7 @@ protected:
 	std::weak_ptr<Node> _parent;
 	std::weak_ptr<WorldNode> _world;
 
-	virtual const char *_termClassColor() const;
+	[[nodiscard]] virtual const char *_termClassColor() const;
 };
 
 } // namespace Stone::Scene

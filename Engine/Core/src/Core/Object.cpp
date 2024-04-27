@@ -2,9 +2,7 @@
 
 #include "Core/Object.hpp"
 
-namespace Stone {
-
-namespace Core {
+namespace Stone::Core {
 
 Object::Object() : std::enable_shared_from_this<Object>() {
 	static uint32_t id = 0;
@@ -33,10 +31,8 @@ std::ostream &Object::writeToStream(std::ostream &stream, bool closing_bracer) c
 	return stream;
 }
 
-} // namespace Core
-
-} // namespace Stone
+} // namespace Stone::Core
 
 std::ostream &operator<<(std::ostream &os, const Stone::Core::Object &obj) {
-	return obj.writeToStream(os);
+	return obj.writeToStream(os, true);
 }

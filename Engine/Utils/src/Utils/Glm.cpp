@@ -5,6 +5,7 @@
 #include <glm/ext.hpp>
 
 namespace std {
+
 string to_string(const glm::vec2 &v) {
 	return "{x:" + std::to_string(v.x) + ",y:" + std::to_string(v.y) + "}";
 }
@@ -61,6 +62,7 @@ string to_string(const glm::quat &q) {
 	return "{x:" + std::to_string(q.x) + ",y:" + std::to_string(q.y) + ",z:" + std::to_string(q.z) +
 		   ",w:" + std::to_string(q.w) + "}";
 }
+
 } // namespace std
 
 namespace glm {
