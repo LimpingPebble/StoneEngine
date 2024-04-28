@@ -3,6 +3,7 @@
 #include "Core/Image.hpp"
 
 #include "Utils/Glm.hpp"
+
 #include <glm/gtx/io.hpp>
 
 namespace Stone::Core {
