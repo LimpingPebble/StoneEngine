@@ -3,6 +3,7 @@
 #include "Core/Image.hpp"
 
 #include "Utils/Glm.hpp"
+#include <glm/gtx/io.hpp>
 
 namespace Stone::Core {
 
@@ -17,7 +18,7 @@ Image::~Image() {
 
 std::ostream &Image::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
-	stream << ",size:" << std::to_string(_size);
+	stream << ",size:" << _size;
 	stream << ",channels:" << _channels;
 	if (closing_bracer)
 		stream << "}";

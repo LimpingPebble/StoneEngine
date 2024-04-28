@@ -28,7 +28,7 @@ std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer)
 		stream << it.first << ":" << (it.second ? std::to_string(it.second->getId()) : "null") << ",";
 	stream << "},vectors:{";
 	for (auto &it : _vectors)
-		stream << it.first << ":" << std::to_string(it.second) << ",";
+		stream << it.first << ":" << it.second << ",";
 	stream << "},scalars:{";
 	for (auto &it : _scalars)
 		stream << it.first << ":" << it.second << ",";

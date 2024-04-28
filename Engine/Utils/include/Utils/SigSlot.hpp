@@ -4,15 +4,16 @@
 
 #include "Utils/Delegate.hpp"
 
+#include <cstdint>
 #include <set>
 
 namespace Stone {
 
 template <typename T>
-class Signal;
+struct Signal;
 
 template <typename T>
-class Slot;
+struct Slot;
 
 /**
  * @brief A class template representing a slot in an event system.
@@ -24,8 +25,8 @@ class Slot;
  * @tparam Args The argument types of the slot's callback function.
  */
 template <typename R, typename... Args>
-class Slot<R(Args...)> {
-public:
+struct Slot<R(Args...)> {
+
 	Slot(const Slot &) = delete;
 	Slot &operator=(const Slot &) = delete;
 
@@ -34,7 +35,7 @@ public:
 	 *
 	 * @param fn A function pointer to the callback function.
 	 */
-	Slot(R (*fn)(Args... args)) : _signal(nullptr) {
+	explicit Slot(R (*fn)(Args... args)) : _signal(nullptr) {
 		new (_delegateptr) FunctionDelegate<R(Args...)>(fn);
 	}
 
@@ -43,7 +44,7 @@ public:
 	 *
 	 * @param fn A lambda expression representing the callback function.
 	 */
-	Slot(std::function<R(Args...)> fn) : _signal(nullptr) {
+	explicit Slot(std::function<R(Args...)> fn) : _signal(nullptr) {
 		new (_delegateptr) LambdaDelegate<R(Args...)>(fn);
 	}
 
@@ -110,7 +111,7 @@ private:
 };
 
 template <typename T>
-class Slot;
+struct Slot;
 
 /**
  * @brief The Signal class is responsible for managing slots and broadcasting events.
@@ -119,8 +120,8 @@ class Slot;
  * @tparam Args The argument types of the event.
  */
 template <typename R, typename... Args>
-class Signal<R(Args...)> {
-public:
+struct Signal<R(Args...)> {
+
 	Signal(const Signal &) = delete;
 	Signal &operator=(const Signal &) = delete;
 

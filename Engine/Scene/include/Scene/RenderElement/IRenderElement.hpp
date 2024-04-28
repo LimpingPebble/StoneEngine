@@ -32,6 +32,7 @@ class IRenderElement {
 public:
 	IRenderElement() : _renderBehaviour(nullptr), _dirty(true) {
 	}
+
 	IRenderElement(const IRenderElement &other) : _renderBehaviour(other._renderBehaviour), _dirty(true) {
 	}
 

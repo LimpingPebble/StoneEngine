@@ -22,7 +22,7 @@ LightNode::~LightNode() {
 std::ostream &LightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	PivotNode::writeToStream(stream, false);
 	stream << ",intensity:" << _intensity;
-	stream << ",color:" << std::to_string(_color, true);
+	stream << ",color:" << _color;
 	if (closing_bracer)
 		stream << "}";
 	return stream;
@@ -67,21 +67,21 @@ const glm::vec3 &PointLightNode::getAttenuation() const {
 }
 
 void PointLightNode::setAttenuation(const glm::vec3 &attenuation) {
-    _attenuation = attenuation;
+	_attenuation = attenuation;
 }
 
 const glm::vec3 &PointLightNode::getSpecular() const {
-    return _specular;
+	return _specular;
 }
 
 void PointLightNode::setSpecular(const glm::vec3 &specular) {
-    _specular = specular;
+	_specular = specular;
 }
 
 std::ostream &PointLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	LightNode::writeToStream(stream, false);
-	stream << ",attenuation:" << std::to_string(_attenuation, true);
-	stream << ",specular:" << std::to_string(_specular, true);
+	stream << ",attenuation:" << _attenuation;
+	stream << ",specular:" << _specular;
 	if (closing_bracer)
 		stream << "}";
 	return stream;
@@ -106,7 +106,7 @@ std::ostream &CastingLightNode::writeToStream(std::ostream &stream, bool closing
 	stream << ",castShadow:" << _castShadow;
 	stream << ",shadowClipNear:" << _shadowClipNear;
 	stream << ",shadowClipFar:" << _shadowClipFar;
-	stream << ",shadowMapSize:" << std::to_string(_shadowMapSize);
+	stream << ",shadowMapSize:" << _shadowMapSize;
 	if (closing_bracer)
 		stream << "}";
 	return stream;
@@ -172,7 +172,7 @@ DirectionalLightNode::~DirectionalLightNode() {
 std::ostream &DirectionalLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	CastingLightNode::writeToStream(stream, false);
 	stream << ",infinite:" << _infinite;
-	stream << ",shadowOrthoSize:" << std::to_string(_shadowOrthoSize);
+	stream << ",shadowOrthoSize:" << _shadowOrthoSize;
 	if (closing_bracer)
 		stream << "}";
 	return stream;

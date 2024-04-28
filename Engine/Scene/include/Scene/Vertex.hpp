@@ -17,8 +17,8 @@ struct Vertex {
 };
 
 struct WeightVertex : Vertex {
-	glm::ivec4 boneIDs;
-	glm::vec4 boneWeights;
+	glm::ivec4 boneIDs = glm::ivec4(0);
+	glm::vec4 boneWeights = glm::vec4(0.0f);
 };
 
 enum class CubeAxis : uint8_t {

@@ -85,8 +85,7 @@ glm::mat3 Transform2D::getTransformMatrix() const {
 }
 
 std::ostream &Transform2D::write(std::ostream &stream) const {
-	stream << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation)
-		   << ",scale:" << std::to_string(_scale) << "}";
+	stream << "{pos:" << _position << ",rot:" << _rotation << ",scale:" << _scale << "}";
 	return stream;
 }
 
@@ -203,8 +202,7 @@ glm::mat4 Transform3D::getTransformMatrix() const {
 }
 
 std::ostream &Transform3D::write(std::ostream &stream) const {
-	stream << "{pos:" << std::to_string(_position) << ",rot:" << std::to_string(_rotation)
-		   << ",scale:" << std::to_string(_scale) << "}";
+	stream << "{pos:" << _position << ",rot:" << _rotation << ",scale:" << _scale << "}";
 	return stream;
 }
 
@@ -213,7 +211,7 @@ void Transform3D::calculateTransformMatrix(glm::mat4 &m) const {
 	m = glm::translate(m, _position);
 	m = glm::rotate(m, glm::angle(_rotation), glm::axis(_rotation));
 	m = glm::scale(m, _scale);
-} // Stone/Scene/Transform3D
+}
 
 } // namespace Stone::Scene
 

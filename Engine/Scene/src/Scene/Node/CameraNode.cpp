@@ -104,7 +104,7 @@ OrthographicCameraNode::~OrthographicCameraNode() {
 
 std::ostream &OrthographicCameraNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	CameraNode::writeToStream(stream, false);
-	stream << ",size:" << std::to_string(_size);
+	stream << ",size:" << _size;
 	if (closing_bracer)
 		stream << "}";
 	return stream;

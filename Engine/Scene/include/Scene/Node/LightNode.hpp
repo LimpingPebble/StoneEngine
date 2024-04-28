@@ -47,11 +47,11 @@ public:
 
 	~PointLightNode() override;
 
-    [[nodiscard]] const glm::vec3 &getAttenuation() const;
-    void setAttenuation(const glm::vec3 &attenuation);
+	[[nodiscard]] const glm::vec3 &getAttenuation() const;
+	void setAttenuation(const glm::vec3 &attenuation);
 
-    [[nodiscard]] const glm::vec3 &getSpecular() const;
-    void setSpecular(const glm::vec3 &specular);
+	[[nodiscard]] const glm::vec3 &getSpecular() const;
+	void setSpecular(const glm::vec3 &specular);
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
