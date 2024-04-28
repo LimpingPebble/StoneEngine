@@ -147,6 +147,7 @@ function(setup_module)
             PRIVATE src
             PRIVATE ${PROJECT_BINARY_DIR}/include
     )
+    target_enable_clang_tidy(${SETUP_MODULE_NAME})
 
     set(UNIX_COMPILER_IDS GNU AppleClang Clang)
     message(STATUS "module ${SETUP_MODULE_NAME}: Enabling warning flags for target")

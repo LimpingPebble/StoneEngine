@@ -2,7 +2,7 @@
   "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 22
+    "minor": 25
   },
   "configurePresets": [
     {
@@ -56,21 +56,6 @@
           "value": "ON"
         },
         "ENABLE_DOCS": {
-          "type": "BOOL",
-          "value": "ON"
-        }
-      }
-    },
-    {
-      "name": "setup-tidy",
-      "binaryDir": "${sourceDir}/build/setup-tidy",
-      "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "FULL_CONFIGURE": {
-          "type": "BOOL",
-          "value": "ON"
-        },
-        "SKIP_TESTS": {
           "type": "BOOL",
           "value": "ON"
         }

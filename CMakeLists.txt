@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.25)
 project(StoneEngine LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -13,6 +13,7 @@ set(ENABLE_DOCS OFF CACHE BOOL "Builds documentation with doxygen")
 
 # TODO: dependencies are not mandatory
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+include(ClangTidy)
 include(Helpers)
 include(OSDetection)
 
@@ -70,6 +71,7 @@ if (FULL_CONFIGURE)
 
         FetchContent_MakeAvailable(glm)
         set(GLM_FOUND ON)
+        set_target_properties(glm PROPERTIES SYSTEM ON)
     endif ()
 
     # Fetches GoogleTest only if needed
