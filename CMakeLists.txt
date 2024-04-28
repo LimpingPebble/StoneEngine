@@ -84,6 +84,7 @@ if (FULL_CONFIGURE)
         # For Windows: Prevent overriding the parent project's compiler/linker settings
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
         FetchContent_MakeAvailable(gtest)
+        set_target_properties(gtest PROPERTIES SYSTEM ON)
     endif ()
 
     # Setup Glfw
@@ -109,6 +110,8 @@ if (FULL_CONFIGURE)
         add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
     endif ()
 
+    set_target_properties(glfw PROPERTIES SYSTEM ON)
+
     # Setup Json
     FetchContent_Declare(
             json
@@ -117,6 +120,8 @@ if (FULL_CONFIGURE)
     )
     FetchContent_MakeAvailable(json)
     add_library(json ALIAS nlohmann_json)
+
+    set_target_properties(nlohmann_json PROPERTIES SYSTEM ON)
 
     # Setup Assimp
     FetchContent_Declare(
@@ -130,6 +135,7 @@ if (FULL_CONFIGURE)
     set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
     FetchContent_MakeAvailable(assimp)
 
+    set_target_properties(assimp PROPERTIES SYSTEM ON)
 endif ()
 
 add_subdirectory(Engine)

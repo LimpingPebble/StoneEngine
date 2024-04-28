@@ -1,4 +1,4 @@
-name: C++ Lint
+name: Code Analysis
 
 on:
   pull_request:
@@ -7,6 +7,8 @@ on:
       - '**.cpp'
       - '**.hpp'
       - '**.h'
+      - '**.cmake'
+      - '**/CMakeLists.txt'
 
 env:
   CLANG_FORMAT_VERSION: 17
@@ -15,6 +17,7 @@ env:
 
 jobs:
   format:
+    name: Check formatting
     runs-on: ubuntu-latest
 
     steps:
