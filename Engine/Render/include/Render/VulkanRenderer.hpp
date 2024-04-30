@@ -42,10 +42,13 @@ private:
 	void _setupDebugMessenger();
 	void _destroyDebugMessenger();
 
-	VkInstance _instance;
+	void _pickPhysicalDevice();
+
+	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
-	VkDebugUtilsMessengerEXT _debugMessenger;
+	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
 #endif
+	VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render

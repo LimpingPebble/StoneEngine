@@ -23,17 +23,13 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBits
 
 namespace Stone::Render {
 
-VulkanRenderer::VulkanRenderer(Settings settings)
-	: Renderer(), _instance(VK_NULL_HANDLE),
-#ifndef NDEBUG
-	  _debugMessenger(VK_NULL_HANDLE)
-#endif
-{
+VulkanRenderer::VulkanRenderer(Settings settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
 	_createInstance(std::move(settings));
 #ifndef NDEBUG
 	_setupDebugMessenger();
 #endif
+	_pickPhysicalDevice();
 }
 
 VulkanRenderer::~VulkanRenderer() {
@@ -43,6 +39,8 @@ VulkanRenderer::~VulkanRenderer() {
 	_destroyInstance();
 	std::cout << "VulkanRenderer destroyed" << std::endl;
 }
+
+/** Instance */
 
 void VulkanRenderer::_createInstance(Settings settings) {
 	VkApplicationInfo appInfo = {};
@@ -89,6 +87,8 @@ void VulkanRenderer::_destroyInstance() {
 	_instance = VK_NULL_HANDLE;
 }
 
+/** Debug Messenger */
+
 void VulkanRenderer::_setupDebugMessenger() {
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -118,6 +118,53 @@ void VulkanRenderer::_destroyDebugMessenger() {
 	if (func != nullptr) {
 		func(_instance, _debugMessenger, nullptr);
 	}
+}
+
+/** Physical Device */
+
+int deviceSuitability(VkPhysicalDevice device) {
+	int score = 0;
+	VkPhysicalDeviceProperties properties;
+	vkGetPhysicalDeviceProperties(device, &properties);
+
+	if (properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+		score += 1000;
+	}
+
+	VkPhysicalDeviceFeatures features;
+	vkGetPhysicalDeviceFeatures(device, &features);
+	if (!features.geometryShader) {
+		return -1;
+	}
+
+	score += static_cast<int>(properties.limits.maxImageDimension2D);
+
+	return score;
+}
+
+void VulkanRenderer::_pickPhysicalDevice() {
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
+	if (deviceCount == 0) {
+		throw std::runtime_error("Failed to find GPUs with Vulkan support");
+	}
+
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(_instance, &deviceCount, devices.data());
+
+	int bestDeviceIndex = -1;
+	int bestScore = -1;
+	for (uint32_t i = 0; i < deviceCount; i++) {
+		int score = deviceSuitability(devices[i]);
+		if (score > bestScore) {
+			bestScore = score;
+			bestDeviceIndex = static_cast<int>(i);
+		}
+	}
+	if (bestDeviceIndex < 0 || bestScore < 0) {
+		throw std::runtime_error("Failed to find a suitable GPU");
+	}
+	_physicalDevice = devices[bestDeviceIndex];
 }
 
 } // namespace Stone::Render
