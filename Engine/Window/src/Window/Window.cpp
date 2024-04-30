@@ -8,8 +8,8 @@
 
 namespace Stone::Window {
 
-Window::Window(std::shared_ptr<App> app, const WindowSettings &settings)
-	: std::enable_shared_from_this<Window>(), _app(app), _settings(settings) {
+Window::Window(const std::shared_ptr<App>& app, WindowSettings settings)
+	: std::enable_shared_from_this<Window>(), _app(app), _settings(std::move(settings)) {
 	std::cout << "window [" << this << "] created" << std::endl;
 }
 
@@ -33,7 +33,7 @@ std::shared_ptr<App> Window::getApp() const {
 }
 
 void Window::setWorld(std::shared_ptr<Stone::Scene::WorldNode> world) {
-	_world = world;
+	_world = std::move(world);
 }
 
 std::shared_ptr<Stone::Scene::WorldNode> Window::getWorld() const {

@@ -13,7 +13,7 @@ public:
 	Object();
 	Object(const Object &other);
 
-	virtual ~Object();
+	virtual ~Object() = default;
 
 	uint32_t getId() const;
 

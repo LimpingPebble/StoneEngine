@@ -11,13 +11,19 @@ public:
 	STONE_ABSTRACT_NODE(LightNode);
 
 	explicit LightNode(const std::string &name = "light");
-	LightNode(const LightNode &other);
+	LightNode(const LightNode &other) = default;
 
-	virtual ~LightNode();
+	~LightNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	[[nodiscard]] virtual bool isCastingShadow() const;
+
+	[[nodiscard]] float getIntensity() const;
+	void setIntensity(float intensity);
+
+	[[nodiscard]] const glm::vec3 &getColor() const;
+	void setColor(const glm::vec3 &color);
 
 protected:
 	float _intensity;
@@ -33,7 +39,7 @@ public:
 	explicit AmbientLightNode(const std::string &name = "ambientlight");
 	AmbientLightNode(const AmbientLightNode &other);
 
-	~AmbientLightNode() override;
+	~AmbientLightNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 };
@@ -45,7 +51,7 @@ public:
 	explicit PointLightNode(const std::string &name = "pointlight");
 	PointLightNode(const PointLightNode &other);
 
-	~PointLightNode() override;
+	~PointLightNode() override = default;
 
 	[[nodiscard]] const glm::vec3 &getAttenuation() const;
 	void setAttenuation(const glm::vec3 &attenuation);
@@ -67,7 +73,7 @@ public:
 	explicit CastingLightNode(const std::string &name = "castinglight");
 	CastingLightNode(const CastingLightNode &other);
 
-	~CastingLightNode() override;
+	~CastingLightNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -104,7 +110,7 @@ public:
 	explicit DirectionalLightNode(const std::string &name = "directionallight");
 	DirectionalLightNode(const DirectionalLightNode &other);
 
-	~DirectionalLightNode() override;
+	~DirectionalLightNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -128,7 +134,7 @@ public:
 	explicit SpotLightNode(const std::string &name = "spotlight");
 	SpotLightNode(const SpotLightNode &other);
 
-	~SpotLightNode() override;
+	~SpotLightNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

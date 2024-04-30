@@ -14,9 +14,9 @@ public:
 	STONE_NODE(MeshNode);
 
 	explicit MeshNode(const std::string &name = "mesh");
-	MeshNode(const MeshNode &other);
+	MeshNode(const MeshNode &other) = default;
 
-	virtual ~MeshNode();
+	~MeshNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -38,14 +38,14 @@ public:
 	STONE_NODE(InstancedMeshNode);
 
 	explicit InstancedMeshNode(const std::string &name = "instancedmesh");
-	InstancedMeshNode(const InstancedMeshNode &other);
+	InstancedMeshNode(const InstancedMeshNode &other) = default;
 
-	~InstancedMeshNode() override;
+	~InstancedMeshNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	void addInstance(const Transform3D &transform);
-	void removeInstance(size_t index);
+	void removeInstance(int index);
 	void clearInstances();
 
 	[[nodiscard]] const std::vector<Transform3D> &getInstancesTransforms() const;

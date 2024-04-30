@@ -8,20 +8,7 @@ namespace Stone::Scene {
 
 Transform2D::Transform2D()
 	: _position(0.0f, 0.0f), _rotation(0.0f), _scale(1.0f, 1.0f), _transformMatrix(1.0f), _transformMatrixDirty(true) {
-}
-
-Transform2D::Transform2D(const Transform2D &other)
-	: _position(other._position), _rotation(other._rotation), _scale(other._scale),
-	  _transformMatrix(other._transformMatrix), _transformMatrixDirty(other._transformMatrixDirty) {
-}
-
-Transform2D &Transform2D::operator=(const Transform2D &other) {
-	_position = other._position;
-	_rotation = other._rotation;
-	_scale = other._scale;
-	_transformMatrix = other._transformMatrix;
-	_transformMatrixDirty = other._transformMatrixDirty;
-	return *this;
+	calculateTransformMatrix(_transformMatrix);
 }
 
 void Transform2D::setPosition(const glm::vec2 &position) {
@@ -106,20 +93,7 @@ void Transform2D::calculateTransformMatrix(glm::mat3 &m) const {
 Transform3D::Transform3D()
 	: _position(0.0f, 0.0f, 0.0f), _rotation(1.0f, 0.0f, 0.0f, 0.0f), _scale(1.0f, 1.0f, 1.0f), _transformMatrix(1.0f),
 	  _transformMatrixDirty(true) {
-}
-
-Transform3D::Transform3D(const Transform3D &other)
-	: _position(other._position), _rotation(other._rotation), _scale(other._scale),
-	  _transformMatrix(other._transformMatrix), _transformMatrixDirty(other._transformMatrixDirty) {
-}
-
-Transform3D &Transform3D::operator=(const Transform3D &other) {
-	_position = other._position;
-	_rotation = other._rotation;
-	_scale = other._scale;
-	_transformMatrix = other._transformMatrix;
-	_transformMatrixDirty = other._transformMatrixDirty;
-	return *this;
+	calculateTransformMatrix(_transformMatrix);
 }
 
 void Transform3D::setPosition(const glm::vec3 &position) {
@@ -150,7 +124,7 @@ const glm::quat &Transform3D::getRotation() const {
 	return _rotation;
 }
 
-const glm::vec3 Transform3D::getEulerAngles() const {
+glm::vec3 Transform3D::getEulerAngles() const {
 	return glm::eulerAngles(_rotation);
 }
 

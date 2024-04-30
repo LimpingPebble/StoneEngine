@@ -13,13 +13,6 @@ STONE_NODE_IMPLEMENTATION(SkinMeshNode)
 SkinMeshNode::SkinMeshNode(const std::string &name) : PivotNode(name), _mesh(), _material(), _skeleton() {
 }
 
-SkinMeshNode::SkinMeshNode(const SkinMeshNode &other)
-	: PivotNode(other), _mesh(other._mesh), _material(other._material), _skeleton(other._skeleton) {
-}
-
-SkinMeshNode::~SkinMeshNode() {
-}
-
 std::ostream &SkinMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	PivotNode::writeToStream(stream, false);
 	stream << ",mesh:" << (_mesh == nullptr ? "null" : std::to_string(_mesh->getId()));
@@ -35,7 +28,7 @@ std::shared_ptr<SkinMesh> SkinMeshNode::getSkinMesh() const {
 }
 
 void SkinMeshNode::setSkinMesh(std::shared_ptr<SkinMesh> mesh) {
-	_mesh = mesh;
+	_mesh = std::move(mesh);
 }
 
 std::shared_ptr<Material> SkinMeshNode::getMaterial() const {
@@ -43,14 +36,14 @@ std::shared_ptr<Material> SkinMeshNode::getMaterial() const {
 }
 
 void SkinMeshNode::setMaterial(std::shared_ptr<Material> material) {
-	_material = material;
+	_material = std::move(material);
 }
 
 std::shared_ptr<SkeletonNode> SkinMeshNode::getSkeleton() const {
 	return _skeleton.lock();
 }
 
-void SkinMeshNode::setSkeleton(std::shared_ptr<SkeletonNode> skeleton) {
+void SkinMeshNode::setSkeleton(const std::shared_ptr<SkeletonNode> &skeleton) {
 	_skeleton = skeleton;
 }
 

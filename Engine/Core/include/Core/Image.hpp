@@ -10,10 +10,10 @@ namespace Stone::Core {
 
 class Image : public Object {
 public:
-	Image();
-	Image(const Image &other);
+	Image() = default;
+	Image(const Image &other) = default;
 
-	virtual ~Image();
+	~Image() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -27,9 +27,9 @@ public:
 	[[nodiscard]] const uint8_t *getData() const;
 
 protected:
-	glm::uvec2 _size;
-	uint32_t _channels;
-	const uint8_t *_data;
+	glm::uvec2 _size = glm::uvec2(0);
+	uint32_t _channels = 0;
+	const uint8_t *_data = nullptr;
 };
 
 } // namespace Stone::Core

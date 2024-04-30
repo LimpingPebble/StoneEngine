@@ -13,9 +13,9 @@ namespace Stone::Window {
 class GlfwWindow : public Window {
 public:
 	GlfwWindow() = delete;
-	GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings);
+	GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &settings);
 
-	virtual ~GlfwWindow();
+	~GlfwWindow() override;
 
 	void loopOnce() override;
 
@@ -27,8 +27,8 @@ private:
 	GLFWwindow *_glfwWindow;
 	std::pair<float, float> _mousePosition;
 
-	float _elapsedTime;
-	float _deltaTime;
+	double _elapsedTime;
+	double _deltaTime;
 
 	void _initializeWindowCallbacks();
 };

@@ -19,9 +19,9 @@ public:
 	STONE_NODE(Node);
 
 	explicit Node(const std::string &name = "node");
-	Node(const Node &other);
+	Node(const Node &other) = default;
 
-	virtual ~Node();
+	~Node() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -32,7 +32,7 @@ public:
 	[[nodiscard]] const std::string &getName() const;
 	[[nodiscard]] std::string getGlobalName() const;
 
-	void addChild(std::shared_ptr<Node> child);
+	void addChild(const std::shared_ptr<Node> &child);
 
 	template <typename T>
 	std::shared_ptr<T> addChild(const std::string &name = T::className) {
@@ -41,13 +41,13 @@ public:
 		return child;
 	}
 
-	void removeChild(std::shared_ptr<Node> child);
+	void removeChild(const std::shared_ptr<Node> &child);
 	void removeFromParent();
 
 	[[nodiscard]] std::shared_ptr<Node> getParent() const;
 	[[nodiscard]] bool hasParent() const;
-	[[nodiscard]] bool isAncestorOf(std::shared_ptr<Node> node) const;
-	[[nodiscard]] bool isDescendantOf(std::shared_ptr<Node> node) const;
+	[[nodiscard]] bool isAncestorOf(const std::shared_ptr<Node> &node) const;
+	[[nodiscard]] bool isDescendantOf(const std::shared_ptr<Node> &node) const;
 
 	const std::vector<std::shared_ptr<Node>> &getChildren() const;
 
@@ -88,13 +88,13 @@ public:
 	[[nodiscard]] std::shared_ptr<WorldNode> getWorld() const;
 
 	virtual void transformRelativeMatrix(glm::mat4 &relative) const;
-	[[nodiscard]] const glm::mat4 getWorldTransformMatrix() const;
-	[[nodiscard]] const glm::mat4 getTransformMatrixRelativeToNode(std::shared_ptr<Node> otherNode) const;
+	[[nodiscard]] glm::mat4 getWorldTransformMatrix() const;
+	[[nodiscard]] glm::mat4 getTransformMatrixRelativeToNode(const std::shared_ptr<Node> &otherNode) const;
 
-	void withAllChildrenHierarchy(std::function<void(std::shared_ptr<Node>)> callback) const;
+	void withAllChildrenHierarchy(const std::function<void(const std::shared_ptr<Node> &)> &callback) const;
 
-	void writeHierarchy(std::ostream &flux, bool colored = true, std::string linePrefix = "",
-						std::string firstPrefix = "", std::string lastPrefix = "") const;
+	void writeHierarchy(std::ostream &stream, bool colored = true, const std::string &linePrefix = "",
+						const std::string &firstPrefix = "", const std::string &lastPrefix = "") const;
 
 protected:
 	std::string _name;

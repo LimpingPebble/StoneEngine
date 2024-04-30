@@ -13,12 +13,6 @@ STONE_ABSTRACT_NODE_IMPLEMENTATION(LightNode);
 LightNode::LightNode(const std::string &name) : PivotNode(name), _intensity(1.0f), _color(1.0f) {
 }
 
-LightNode::LightNode(const LightNode &other) : PivotNode(other), _intensity(other._intensity), _color(other._color) {
-}
-
-LightNode::~LightNode() {
-}
-
 std::ostream &LightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	PivotNode::writeToStream(stream, false);
 	stream << ",intensity:" << _intensity;
@@ -32,6 +26,22 @@ bool LightNode::isCastingShadow() const {
 	return false;
 }
 
+float LightNode::getIntensity() const {
+	return _intensity;
+}
+
+void LightNode::setIntensity(float intensity) {
+	_intensity = intensity;
+}
+
+const glm::vec3 &LightNode::getColor() const {
+	return _color;
+}
+
+void LightNode::setColor(const glm::vec3 &color) {
+	_color = color;
+}
+
 const char *LightNode::_termClassColor() const {
 	return TERM_COLOR_BOLD TERM_COLOR_YELLOW;
 }
@@ -41,25 +51,13 @@ STONE_NODE_IMPLEMENTATION(AmbientLightNode);
 AmbientLightNode::AmbientLightNode(const std::string &name) : LightNode(name) {
 }
 
-AmbientLightNode::AmbientLightNode(const AmbientLightNode &other) : LightNode(other) {
-}
-
-AmbientLightNode::~AmbientLightNode() {
-}
-
 std::ostream &AmbientLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	return LightNode::writeToStream(stream, closing_bracer);
 }
 
 STONE_NODE_IMPLEMENTATION(PointLightNode);
 
-PointLightNode::PointLightNode(const std::string &name) : LightNode(name) {
-}
-
-PointLightNode::PointLightNode(const PointLightNode &other) : LightNode(other) {
-}
-
-PointLightNode::~PointLightNode() {
+PointLightNode::PointLightNode(const std::string &name) : LightNode(name), _attenuation(1.0f), _specular(1.0f) {
 }
 
 const glm::vec3 &PointLightNode::getAttenuation() const {
@@ -90,15 +88,8 @@ std::ostream &PointLightNode::writeToStream(std::ostream &stream, bool closing_b
 STONE_ABSTRACT_NODE_IMPLEMENTATION(CastingLightNode);
 
 CastingLightNode::CastingLightNode(const std::string &name)
-	: LightNode(name), _castShadow(true), _shadowClipNear(0.1f), _shadowClipFar(100.0f), _shadowMapSize(1024) {
-}
-
-CastingLightNode::CastingLightNode(const CastingLightNode &other)
-	: LightNode(other), _castShadow(other._castShadow), _shadowClipNear(other._shadowClipNear),
-	  _shadowClipFar(other._shadowClipFar), _shadowMapSize(other._shadowMapSize) {
-}
-
-CastingLightNode::~CastingLightNode() {
+	: LightNode(name), _castShadow(true), _shadowClipNear(0.1f), _shadowClipFar(100.0f), _shadowMapSize(1024),
+	  _projectionMatrix(1) {
 }
 
 std::ostream &CastingLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
@@ -161,14 +152,6 @@ DirectionalLightNode::DirectionalLightNode(const std::string &name)
 	_updateProjectionMatrix();
 }
 
-DirectionalLightNode::DirectionalLightNode(const DirectionalLightNode &other)
-	: CastingLightNode(other), _infinite(other._infinite), _shadowOrthoSize(other._shadowOrthoSize) {
-	_updateProjectionMatrix();
-}
-
-DirectionalLightNode::~DirectionalLightNode() {
-}
-
 std::ostream &DirectionalLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	CastingLightNode::writeToStream(stream, false);
 	stream << ",infinite:" << _infinite;
@@ -205,14 +188,6 @@ STONE_NODE_IMPLEMENTATION(SpotLightNode);
 SpotLightNode::SpotLightNode(const std::string &name)
 	: CastingLightNode(name), _coneAngle(glm::radians(45.0f)), _coneAttenuation(0.0f) {
 	_updateProjectionMatrix();
-}
-
-SpotLightNode::SpotLightNode(const SpotLightNode &other)
-	: CastingLightNode(other), _coneAngle(other._coneAngle), _coneAttenuation(other._coneAttenuation) {
-	_updateProjectionMatrix();
-}
-
-SpotLightNode::~SpotLightNode() {
 }
 
 std::ostream &SpotLightNode::writeToStream(std::ostream &stream, bool closing_bracer) const {

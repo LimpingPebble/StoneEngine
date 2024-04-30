@@ -14,10 +14,10 @@ class Texture;
 
 class Material : public Core::Object, public IRenderElement {
 public:
-	Material();
-	Material(const Material &other);
+	Material() = default;
+	Material(const Material &other) = default;
 
-	virtual ~Material();
+	~Material() override = default;
 
 	[[nodiscard]] const char *getClassName() const override;
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;

@@ -7,15 +7,6 @@
 
 namespace Stone::Scene {
 
-Texture::Texture() : Object(), IRenderElement(), _image(nullptr) {
-}
-
-Texture::Texture(const Texture &other) : Object(other), IRenderElement(other), _image(other._image) {
-}
-
-Texture::~Texture() {
-}
-
 const char *Texture::getClassName() const {
 	return "Texture";
 }
@@ -33,7 +24,7 @@ void Texture::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) 
 }
 
 void Texture::setImage(std::shared_ptr<Core::Image> image) {
-	_image = image;
+	_image = std::move(image);
 	markDirty();
 }
 

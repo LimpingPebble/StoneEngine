@@ -17,7 +17,7 @@ public:
 	/** Create a window. Can be called before or during the application loop */
 	std::shared_ptr<Window> createWindow(const WindowSettings &settings);
 
-	void destroyWindow(std::shared_ptr<Window> window);
+	void destroyWindow(const std::shared_ptr<Window> &window);
 
 	/** Run the application loop */
 	void run();

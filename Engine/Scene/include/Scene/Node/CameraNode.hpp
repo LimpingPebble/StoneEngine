@@ -13,11 +13,11 @@ public:
 	explicit CameraNode(const std::string &name = "camera");
 	CameraNode(const CameraNode &other);
 
-	virtual ~CameraNode();
+	~CameraNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	[[nodiscard]] virtual const glm::mat4 getProjectionMatrix() const = 0;
+	[[nodiscard]] virtual glm::mat4 getProjectionMatrix() const = 0;
 
 	[[nodiscard]] float getNear() const;
 	void setNear(float near);
@@ -39,11 +39,11 @@ public:
 	explicit PerspectiveCameraNode(const std::string &name = "perspective_camera");
 	PerspectiveCameraNode(const PerspectiveCameraNode &other);
 
-	~PerspectiveCameraNode() override;
+	~PerspectiveCameraNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	[[nodiscard]] const glm::mat4 getProjectionMatrix() const override;
+	[[nodiscard]] glm::mat4 getProjectionMatrix() const override;
 
 	[[nodiscard]] float getFov() const;
 	void setFov(float fov);
@@ -63,11 +63,11 @@ public:
 	explicit OrthographicCameraNode(const std::string &name = "orthographic_camera");
 	OrthographicCameraNode(const OrthographicCameraNode &other);
 
-	~OrthographicCameraNode() override;
+	~OrthographicCameraNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	[[nodiscard]] const glm::mat4 getProjectionMatrix() const override;
+	[[nodiscard]] glm::mat4 getProjectionMatrix() const override;
 
 	[[nodiscard]] glm::vec2 getSize() const;
 	void setSize(const glm::vec2 &size);

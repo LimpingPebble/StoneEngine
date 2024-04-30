@@ -12,9 +12,9 @@ public:
 	STONE_NODE(PivotNode);
 
 	explicit PivotNode(const std::string &name = "pivot");
-	PivotNode(const PivotNode &other);
+	PivotNode(const PivotNode &other) = default;
 
-	virtual ~PivotNode();
+	~PivotNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -27,7 +27,7 @@ public:
 	void setTransform(const Transform3D &transform);
 
 	const glm::mat4 &getTransformMatrix();
-	[[nodiscard]] const glm::mat4 getTransformMatrix() const;
+	[[nodiscard]] glm::mat4 getTransformMatrix() const;
 
 protected:
 	Transform3D _transform;

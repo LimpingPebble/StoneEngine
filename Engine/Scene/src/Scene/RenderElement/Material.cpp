@@ -8,15 +8,6 @@
 
 namespace Stone::Scene {
 
-Material::Material() : Object(), IRenderElement() {
-}
-
-Material::Material(const Material &other) : Object(other), IRenderElement(other) {
-}
-
-Material::~Material() {
-}
-
 const char *Material::getClassName() const {
 	return "Material";
 }
@@ -43,7 +34,7 @@ void Material::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer)
 }
 
 void Material::setTextureParameter(const std::string &name, std::shared_ptr<Texture> texture) {
-	_textures[name] = texture;
+	_textures[name] = std::move(texture);
 	markDirty();
 }
 

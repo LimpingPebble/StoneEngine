@@ -13,12 +13,6 @@ STONE_NODE_IMPLEMENTATION(MeshNode)
 MeshNode::MeshNode(const std::string &name) : PivotNode(name), _mesh(nullptr), _material(nullptr) {
 }
 
-MeshNode::MeshNode(const MeshNode &other) : PivotNode(other), _mesh(other._mesh), _material(other._material) {
-}
-
-MeshNode::~MeshNode() {
-}
-
 std::ostream &MeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	PivotNode::writeToStream(stream, false);
 	stream << ",mesh:" << (_mesh ? std::to_string(_mesh->getId()) : "null");
@@ -33,7 +27,7 @@ std::shared_ptr<Mesh> MeshNode::getMesh() const {
 }
 
 void MeshNode::setMesh(std::shared_ptr<Mesh> mesh) {
-	_mesh = mesh;
+	_mesh = std::move(mesh);
 }
 
 std::shared_ptr<Material> MeshNode::getMaterial() const {
@@ -41,7 +35,7 @@ std::shared_ptr<Material> MeshNode::getMaterial() const {
 }
 
 void MeshNode::setMaterial(std::shared_ptr<Material> material) {
-	_material = material;
+	_material = std::move(material);
 }
 
 const char *MeshNode::_termClassColor() const {
@@ -51,13 +45,6 @@ const char *MeshNode::_termClassColor() const {
 STONE_NODE_IMPLEMENTATION(InstancedMeshNode)
 
 InstancedMeshNode::InstancedMeshNode(const std::string &name) : MeshNode(name), _instancesTransforms() {
-}
-
-InstancedMeshNode::InstancedMeshNode(const InstancedMeshNode &other)
-	: MeshNode(other), _instancesTransforms(other._instancesTransforms) {
-}
-
-InstancedMeshNode::~InstancedMeshNode() {
 }
 
 std::ostream &InstancedMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
@@ -72,8 +59,8 @@ void InstancedMeshNode::addInstance(const Transform3D &transform) {
 	_instancesTransforms.push_back(transform);
 }
 
-void InstancedMeshNode::removeInstance(size_t index) {
-	assert(index < _instancesTransforms.size());
+void InstancedMeshNode::removeInstance(int index) {
+	assert(index < static_cast<int>(_instancesTransforms.size()));
 	_instancesTransforms.erase(_instancesTransforms.begin() + index);
 }
 

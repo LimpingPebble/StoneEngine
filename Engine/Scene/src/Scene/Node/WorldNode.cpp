@@ -11,12 +11,6 @@ STONE_NODE_IMPLEMENTATION(WorldNode)
 WorldNode::WorldNode(const std::string &name) : Node(name), _activeCamera() {
 }
 
-WorldNode::WorldNode(const WorldNode &other) : Node(other), _activeCamera(other._activeCamera) {
-}
-
-WorldNode::~WorldNode() {
-}
-
 std::ostream &WorldNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Node::writeToStream(stream, false);
 	stream << ",active_camera:" << (_activeCamera.expired() ? "null" : _activeCamera.lock()->getGlobalName());
@@ -25,7 +19,7 @@ std::ostream &WorldNode::writeToStream(std::ostream &stream, bool closing_bracer
 	return stream;
 }
 
-void WorldNode::setActiveCamera(std::shared_ptr<CameraNode> camera) {
+void WorldNode::setActiveCamera(const std::shared_ptr<CameraNode> &camera) {
 	_activeCamera = camera;
 }
 

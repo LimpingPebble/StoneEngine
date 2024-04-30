@@ -7,12 +7,12 @@
 
 namespace Stone::Window {
 
-GlfwWindow::GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings)
+GlfwWindow::GlfwWindow(const std::shared_ptr<App>& app, const WindowSettings &settings)
 	: Window(app, settings), _glfwWindow(nullptr), _mousePosition(0.0f, 0.0f) {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, settings.resizable ? GLFW_TRUE : GLFW_FALSE);
 
-	GLFWwindow *sharingContext = NULL;
+	GLFWwindow *sharingContext = nullptr;
 	if (!settings.shareContext.expired()) {
 		std::shared_ptr<GlfwWindow> sharingGlfwWindow =
 			std::dynamic_pointer_cast<GlfwWindow>(settings.shareContext.lock());
@@ -22,7 +22,7 @@ GlfwWindow::GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings)
 	}
 
 	_glfwWindow = glfwCreateWindow(settings.width, settings.height, settings.title.c_str(),
-								   settings.fullScreen ? glfwGetPrimaryMonitor() : NULL, sharingContext);
+								   settings.fullScreen ? glfwGetPrimaryMonitor() : nullptr, sharingContext);
 	if (!_glfwWindow) {
 		throw std::runtime_error("Failed to create GLFW window");
 	}
@@ -38,13 +38,13 @@ GlfwWindow::GlfwWindow(std::shared_ptr<App> app, const WindowSettings &settings)
 }
 
 GlfwWindow::~GlfwWindow() {
-	if (_glfwWindow != NULL) {
+	if (_glfwWindow != nullptr) {
 		glfwDestroyWindow(_glfwWindow);
 	}
 }
 
 void GlfwWindow::loopOnce() {
-	if (_glfwWindow == NULL)
+	if (_glfwWindow == nullptr)
 		return;
 
 	glfwPollEvents();
@@ -62,47 +62,47 @@ void GlfwWindow::loopOnce() {
 }
 
 bool GlfwWindow::shouldClose() const {
-	return _glfwWindow == NULL || glfwWindowShouldClose(_glfwWindow);
+	return _glfwWindow == nullptr || glfwWindowShouldClose(_glfwWindow);
 }
 
 void GlfwWindow::_initializeWindowCallbacks() {
 	glfwSetWindowUserPointer(_glfwWindow, this);
 
 	glfwSetCursorPosCallback(_glfwWindow, [](GLFWwindow *win, double x, double y) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onMouseMoveCallback(x, y);
 	});
 
 	glfwSetMouseButtonCallback(_glfwWindow, [](GLFWwindow *win, int button, int action, int modifiers) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onMouseButtonCallback(button, action, modifiers);
 	});
 
 	glfwSetKeyCallback(_glfwWindow, [](GLFWwindow *win, int key, int scancode, int action, int mods) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onKeyCallback(key, scancode, action, mods);
 	});
 
 	glfwSetCharCallback(_glfwWindow, [](GLFWwindow *win, unsigned int codepoint) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onCharCallback(codepoint);
 	});
 
 	glfwSetWindowCloseCallback(_glfwWindow, [](GLFWwindow *win) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onCloseCallback();
 	});
 
 	glfwSetWindowSizeCallback(_glfwWindow, [](GLFWwindow *win, int width, int height) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
-		if (window->_glfwWindow == NULL)
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		if (window->_glfwWindow == nullptr)
 			return;
 		glfwGetWindowSize(window->_glfwWindow, &(window->_settings.width), &(window->_settings.height));
 		window->_onResizeCallback(width, height);
 	});
 
 	glfwSetScrollCallback(_glfwWindow, [](GLFWwindow *win, double x, double y) {
-		GlfwWindow *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
+		auto *window = static_cast<GlfwWindow *>(glfwGetWindowUserPointer(win));
 		window->_onScrollCallback(x, y);
 	});
 }

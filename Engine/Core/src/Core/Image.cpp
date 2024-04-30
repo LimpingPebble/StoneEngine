@@ -8,15 +8,6 @@
 
 namespace Stone::Core {
 
-Image::Image() : Object(), _size(0), _channels(0), _data(nullptr) {
-}
-
-Image::Image(const Image &other) : Object(other), _size(other._size), _channels(other._channels), _data(other._data) {
-}
-
-Image::~Image() {
-}
-
 std::ostream &Image::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",size:" << _size;

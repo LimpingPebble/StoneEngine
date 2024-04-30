@@ -8,17 +8,11 @@ namespace Stone::Scene {
 
 STONE_NODE_IMPLEMENTATION(SkeletonNode)
 
-SkeletonNode::Bone::Bone(std::shared_ptr<PivotNode> pivot)
+SkeletonNode::Bone::Bone(const std::shared_ptr<PivotNode> &pivot)
 	: pivot(pivot), inverseBindMatrix(1.0f), restPose(pivot->getTransform()) {
 }
 
 SkeletonNode::SkeletonNode(const std::string &name) : Node(name), _bones() {
-}
-
-SkeletonNode::SkeletonNode(const SkeletonNode &other) : Node(other), _bones(other._bones) {
-}
-
-SkeletonNode::~SkeletonNode() {
 }
 
 std::ostream &SkeletonNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
@@ -37,15 +31,17 @@ const std::vector<SkeletonNode::Bone> &SkeletonNode::getBones() const {
 	return _bones;
 }
 
-void SkeletonNode::addBone(std::shared_ptr<PivotNode> pivot) {
-	Bone bone(pivot);
+void SkeletonNode::addBone(const std::shared_ptr<PivotNode> &pivot) {
+	glm::mat4 inverseBindMatrix;
 	if (!_bones.empty()) {
-		bone.inverseBindMatrix = glm::inverse(pivot->getTransformMatrixRelativeToNode(_bones[0].pivot.lock()));
+		inverseBindMatrix = glm::inverse(pivot->getTransformMatrixRelativeToNode(_bones[0].pivot.lock()));
+	} else {
+		inverseBindMatrix = glm::mat4(1);
 	}
-	_bones.push_back(Bone(pivot));
+	addBone(pivot, inverseBindMatrix);
 }
 
-void SkeletonNode::addBone(std::shared_ptr<PivotNode> pivot, glm::mat4 offset) {
+void SkeletonNode::addBone(const std::shared_ptr<PivotNode> &pivot, const glm::mat4 &offset) {
 	Bone bone(pivot);
 	bone.inverseBindMatrix = offset;
 	_bones.push_back(bone);

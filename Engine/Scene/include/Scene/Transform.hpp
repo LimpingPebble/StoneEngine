@@ -12,9 +12,9 @@ namespace Stone::Scene {
 
 struct Transform2D {
 	Transform2D();
-	Transform2D(const Transform2D &other);
+	Transform2D(const Transform2D &other) = default;
 
-	Transform2D &operator=(const Transform2D &other);
+	Transform2D &operator=(const Transform2D &other) = default;
 
 	void setPosition(const glm::vec2 &position);
 	void setRotation(float rotation);
@@ -48,9 +48,9 @@ protected:
 
 struct Transform3D {
 	Transform3D();
-	Transform3D(const Transform3D &other);
+	Transform3D(const Transform3D &other) = default;
 
-	Transform3D &operator=(const Transform3D &other);
+	Transform3D &operator=(const Transform3D &other) = default;
 
 	void setPosition(const glm::vec3 &position);
 	void setRotation(const glm::quat &rotation);
@@ -59,7 +59,7 @@ struct Transform3D {
 
 	[[nodiscard]] const glm::vec3 &getPosition() const;
 	[[nodiscard]] const glm::quat &getRotation() const;
-	[[nodiscard]] const glm::vec3 getEulerAngles() const;
+	[[nodiscard]] glm::vec3 getEulerAngles() const;
 	[[nodiscard]] const glm::vec3 &getScale() const;
 
 	void translate(const glm::vec3 &translation);

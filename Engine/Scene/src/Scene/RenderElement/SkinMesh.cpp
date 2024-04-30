@@ -7,16 +7,6 @@
 
 namespace Stone::Scene {
 
-SkinMesh::SkinMesh() : Object(), IRenderElement(), _vertices(), _indices() {
-}
-
-SkinMesh::SkinMesh(const SkinMesh &other)
-	: Object(other), IRenderElement(other), _vertices(other._vertices), _indices(other._indices) {
-}
-
-SkinMesh::~SkinMesh() {
-}
-
 std::ostream &SkinMesh::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",vertices:" << _vertices.size();

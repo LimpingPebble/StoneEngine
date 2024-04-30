@@ -12,10 +12,10 @@ namespace Stone::Scene {
 
 class SkinMesh : public Core::Object, public IRenderElement {
 public:
-	SkinMesh();
-	SkinMesh(const SkinMesh &other);
+	SkinMesh() = default;
+	SkinMesh(const SkinMesh &other) = default;
 
-	virtual ~SkinMesh();
+	~SkinMesh() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

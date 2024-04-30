@@ -15,7 +15,7 @@ class App;
 class Window : public std::enable_shared_from_this<Window> {
 public:
 	Window() = delete;
-	Window(std::shared_ptr<App> app, const WindowSettings &settings);
+	Window(const std::shared_ptr<App> &app, WindowSettings settings);
 
 	virtual ~Window();
 

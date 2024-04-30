@@ -15,9 +15,9 @@ public:
 	STONE_NODE(SkinMeshNode);
 
 	explicit SkinMeshNode(const std::string &name = "skinmesh");
-	SkinMeshNode(const SkinMeshNode &other);
+	SkinMeshNode(const SkinMeshNode &other) = default;
 
-	virtual ~SkinMeshNode();
+	~SkinMeshNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -28,7 +28,7 @@ public:
 	void setMaterial(std::shared_ptr<Material> material);
 
 	[[nodiscard]] std::shared_ptr<SkeletonNode> getSkeleton() const;
-	void setSkeleton(std::shared_ptr<SkeletonNode> skeleton);
+	void setSkeleton(const std::shared_ptr<SkeletonNode> &skeleton);
 
 protected:
 	std::shared_ptr<SkinMesh> _mesh;

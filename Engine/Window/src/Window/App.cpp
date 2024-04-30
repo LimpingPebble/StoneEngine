@@ -23,7 +23,7 @@ std::shared_ptr<Window> App::createWindow(const WindowSettings &settings) {
 	return win;
 }
 
-void App::destroyWindow(std::shared_ptr<Window> window) {
+void App::destroyWindow(const std::shared_ptr<Window> &window) {
 	auto it = std::find(_windows.begin(), _windows.end(), window);
 	if (it != _windows.end()) {
 		*it = nullptr;
@@ -32,7 +32,7 @@ void App::destroyWindow(std::shared_ptr<Window> window) {
 
 void App::run() {
 	while (_windows.empty() == false) {
-		for (int i = _windows.size() - 1; i >= 0; --i) {
+		for (int i = static_cast<int>(_windows.size()) - 1; i >= 0; --i) {
 			if (_windows[i] == nullptr) {
 				_windows.erase(_windows.begin() + i);
 				continue;

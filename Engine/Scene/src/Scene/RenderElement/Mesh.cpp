@@ -6,16 +6,6 @@
 
 namespace Stone::Scene {
 
-Mesh::Mesh() : Object(), IRenderElement(), _vertices(), _indices() {
-}
-
-Mesh::Mesh(const Mesh &other)
-	: Object(other), IRenderElement(other), _vertices(other._vertices), _indices(other._indices) {
-}
-
-Mesh::~Mesh() {
-}
-
 std::ostream &Mesh::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",vertices:" << _vertices.size();

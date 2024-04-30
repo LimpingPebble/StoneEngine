@@ -13,10 +13,10 @@ namespace Stone::Scene {
 
 class Texture : public Core::Object, public IRenderElement {
 public:
-	Texture();
-	Texture(const Texture &other);
+	Texture() = default;
+	Texture(const Texture &other) = default;
 
-	virtual ~Texture();
+	~Texture() override = default;
 
 	[[nodiscard]] const char *getClassName() const override;
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;

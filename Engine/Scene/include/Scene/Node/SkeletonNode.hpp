@@ -18,19 +18,19 @@ public:
 		glm::mat4 inverseBindMatrix;
 		Transform3D restPose;
 
-		explicit Bone(std::shared_ptr<PivotNode> pivot);
+		explicit Bone(const std::shared_ptr<PivotNode> &pivot);
 	};
 
 	explicit SkeletonNode(const std::string &name = "skeleton");
-	SkeletonNode(const SkeletonNode &other);
+	SkeletonNode(const SkeletonNode &other) = default;
 
-	virtual ~SkeletonNode();
+	~SkeletonNode() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	[[nodiscard]] const std::vector<Bone> &getBones() const;
-	void addBone(std::shared_ptr<PivotNode> pivot);
-	void addBone(std::shared_ptr<PivotNode> pivot, glm::mat4 offset);
+	void addBone(const std::shared_ptr<PivotNode> &pivot);
+	void addBone(const std::shared_ptr<PivotNode> &pivot, const glm::mat4 &offset);
 
 protected:
 	std::vector<Bone> _bones;

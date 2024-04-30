@@ -12,14 +12,14 @@ namespace Stone::Scene {
 
 class Mesh : public Core::Object, public IRenderElement {
 public:
-	Mesh();
-	Mesh(const Mesh &other);
+	Mesh() = default;
+	Mesh(const Mesh &other) = default;
 
-	virtual ~Mesh();
+	~Mesh() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	virtual void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer);
+	void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
 
 	[[nodiscard]] const std::vector<Vertex> &getVertices() const;
 	[[nodiscard]] const std::vector<uint32_t> &getIndices() const;
