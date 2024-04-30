@@ -5,6 +5,7 @@
 #include "VulkanUtilities.hpp"
 
 #include <iostream>
+#include <optional>
 
 VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 											 VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -20,6 +21,38 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBits
 	return VK_FALSE;
 }
 
+struct QueueFamilyIndices {
+	std::optional<uint32_t> graphicsFamily = {};
+
+	[[nodiscard]] bool isComplete() const {
+		return graphicsFamily.has_value(); // && presentFamily.has_value();
+	}
+};
+
+QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+	if (queueFamilyCount == 0) {
+		throw std::runtime_error("Failed to find queue families");
+	}
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+	for (uint32_t i = 0; i < queueFamilyCount; ++i) {
+		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+			indices.graphicsFamily = i;
+		}
+
+		if (indices.isComplete()) {
+			break;
+		}
+	}
+
+	return indices;
+}
 
 namespace Stone::Render {
 
@@ -76,7 +109,7 @@ void VulkanRenderer::_createInstance(Settings settings) {
 		throw std::runtime_error("Failed to create Vulkan instance");
 	}
 
-	enumerateExtensions(std::cout);
+	// enumerateExtensions(std::cout);
 }
 
 void VulkanRenderer::_destroyInstance() {
@@ -123,6 +156,10 @@ void VulkanRenderer::_destroyDebugMessenger() {
 /** Physical Device */
 
 int deviceSuitability(VkPhysicalDevice device) {
+	if (device == VK_NULL_HANDLE) {
+		return -1;
+	}
+
 	int score = 0;
 	VkPhysicalDeviceProperties properties;
 	vkGetPhysicalDeviceProperties(device, &properties);
@@ -134,6 +171,11 @@ int deviceSuitability(VkPhysicalDevice device) {
 	VkPhysicalDeviceFeatures features;
 	vkGetPhysicalDeviceFeatures(device, &features);
 	if (!features.geometryShader) {
+		return -1;
+	}
+
+	QueueFamilyIndices indices = findQueueFamilies(device);
+	if (!indices.isComplete()) {
 		return -1;
 	}
 
@@ -166,5 +208,8 @@ void VulkanRenderer::_pickPhysicalDevice() {
 	}
 	_physicalDevice = devices[bestDeviceIndex];
 }
+
+/** Queue */
+
 
 } // namespace Stone::Render
