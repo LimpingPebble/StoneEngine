@@ -19,6 +19,14 @@ std::ostream &WorldNode::writeToStream(std::ostream &stream, bool closing_bracer
 	return stream;
 }
 
+void WorldNode::setRenderer(const std::shared_ptr<ISceneRenderer> &renderer) {
+	_renderer = renderer;
+}
+
+std::shared_ptr<ISceneRenderer> WorldNode::getRenderer() const {
+	return _renderer;
+}
+
 void WorldNode::setActiveCamera(const std::shared_ptr<CameraNode> &camera) {
 	_activeCamera = camera;
 }

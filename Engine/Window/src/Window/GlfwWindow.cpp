@@ -2,22 +2,24 @@
 
 #include "Window/GlfwWindow.hpp"
 
+#include "Render/VulkanRenderer.hpp"
+
 #include <iostream>
 #include <stdexcept>
 
 namespace Stone::Window {
 
 GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &settings)
-	: Window(app, settings), _glfwWindow(nullptr), _mousePosition(0.0f, 0.0f) {
+	: Window(app, settings), _glfwWindow(nullptr) {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, settings.resizable ? GLFW_TRUE : GLFW_FALSE);
 
 	GLFWwindow *sharingContext = nullptr;
 	if (!settings.shareContext.expired()) {
-		std::shared_ptr<GlfwWindow> sharingGlfwWindow =
-			std::dynamic_pointer_cast<GlfwWindow>(settings.shareContext.lock());
+		auto sharingGlfwWindow = std::dynamic_pointer_cast<GlfwWindow>(settings.shareContext.lock());
 		if (sharingGlfwWindow) {
 			sharingContext = sharingGlfwWindow->_glfwWindow;
+			_renderer = sharingGlfwWindow->_renderer;
 		}
 	}
 
@@ -33,8 +35,13 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 
 	glfwSwapInterval(1);
 
-	_elapsedTime = glfwGetTime();
-	_deltaTime = 0;
+    _elapsedTime = glfwGetTime();
+
+	if (!_renderer) {
+		_renderer = std::make_shared<Render::VulkanRenderer>();
+	}
+
+	_world->setRenderer(_renderer);
 }
 
 GlfwWindow::~GlfwWindow() {

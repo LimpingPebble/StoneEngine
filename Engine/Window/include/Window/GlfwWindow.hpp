@@ -25,10 +25,6 @@ public:
 
 private:
 	GLFWwindow *_glfwWindow;
-	std::pair<float, float> _mousePosition;
-
-	double _elapsedTime;
-	double _deltaTime;
 
 	void _initializeWindowCallbacks();
 };

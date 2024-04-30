@@ -7,6 +7,9 @@
 namespace Stone::Scene {
 class WorldNode;
 }
+namespace Stone::Render {
+class Renderer;
+}
 
 namespace Stone::Window {
 
@@ -26,7 +29,6 @@ public:
 	[[nodiscard]] const WindowSettings &getSettings() const;
 	[[nodiscard]] std::shared_ptr<App> getApp() const;
 
-	virtual void setWorld(std::shared_ptr<Stone::Scene::WorldNode> world);
 	[[nodiscard]] std::shared_ptr<Stone::Scene::WorldNode> getWorld() const;
 
 protected:
@@ -41,6 +43,10 @@ protected:
 	std::weak_ptr<App> _app;
 	WindowSettings _settings;
 	std::shared_ptr<Stone::Scene::WorldNode> _world;
+	std::shared_ptr<Stone::Render::Renderer> _renderer;
+
+	double _elapsedTime = 0;
+	double _deltaTime = 0;
 };
 
 } // namespace Stone::Window

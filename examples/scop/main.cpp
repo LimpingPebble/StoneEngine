@@ -18,9 +18,6 @@ int main() {
 		Stone::Window::WindowSettings win_settings;
 		auto window = app->createWindow(win_settings);
 
-		std::shared_ptr<Stone::Scene::WorldNode> world = std::make_shared<Stone::Scene::WorldNode>("root");
-		window->setWorld(world);
-
 		app->run();
 	}
 
