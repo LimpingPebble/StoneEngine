@@ -12,7 +12,7 @@ class VulkanRenderer : public Renderer {
 public:
 	struct Settings {
 		std::string app_name = "Stone";
-        uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
+		uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
 		std::vector<const char *> extensions;
 	};
 
