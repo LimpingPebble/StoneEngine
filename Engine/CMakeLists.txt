@@ -21,7 +21,7 @@ add_subdirectory(Physics)
 # Layer 5
 add_subdirectory(Sound)
 add_subdirectory(Widgets)
-add_subdirectory(Graphics)
+add_subdirectory(Render)
 # Layer 6
 add_subdirectory(Window)
 

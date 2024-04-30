@@ -12,7 +12,7 @@ define build_target
 	$(eval arg = $1)
 endef
 
-LIBS						=	graphics logging physics scene sound
+LIBS						=	render logging physics scene sound
 
 PRESET						=	debug
 LIST_PRESETS_TYPE			=	configure
