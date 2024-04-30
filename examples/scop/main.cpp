@@ -16,6 +16,7 @@ int main() {
 		auto app = std::make_shared<Stone::Window::App>();
 
 		Stone::Window::WindowSettings win_settings;
+        win_settings.title = "Scop";
 		auto window = app->createWindow(win_settings);
 
 		app->run();

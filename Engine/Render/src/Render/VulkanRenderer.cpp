@@ -4,43 +4,54 @@
 
 namespace Stone::Render {
 
-VulkanRenderer::VulkanRenderer() : Renderer() {
-    std::cout << "VulkanRenderer created" << std::endl;
+VulkanRenderer::VulkanRenderer(Settings settings) : Renderer() {
+	std::cout << "VulkanRenderer created" << std::endl;
+	_createInstance(std::move(settings));
 }
 
 VulkanRenderer::~VulkanRenderer() {
-    std::cout << "VulkanRenderer destroyed" << std::endl;
+	std::cout << "VulkanRenderer destroyed" << std::endl;
+	vkDestroyInstance(_instance, nullptr);
 }
 
-void VulkanRenderer::generateDataForMesh(std::shared_ptr<Scene::Mesh> mesh) {
-    (void)mesh;
+static void enumerateExtensions() {
+	uint32_t extensionCount = 0;
+	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+	std::vector<VkExtensionProperties> extensions(extensionCount);
+	vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
+
+	std::cout << "Available extensions:" << std::endl;
+	for (const auto &extension : extensions) {
+		std::cout << "\t" << extension.extensionName << std::endl;
+	}
 }
 
-void VulkanRenderer::generateDataForSkinMesh(std::shared_ptr<Scene::SkinMesh> skinmesh) {
-    (void)skinmesh;
+void VulkanRenderer::_createInstance(Settings settings) {
+	VkApplicationInfo appInfo = {};
+	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appInfo.pApplicationName = settings.app_name.c_str();
+	appInfo.applicationVersion = settings.app_version;
+	appInfo.pEngineName = "Stone-Engine";
+	appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+	appInfo.apiVersion = VK_API_VERSION_1_0;
+
+	VkInstanceCreateInfo createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	createInfo.pApplicationInfo = &appInfo;
+	createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	createInfo.enabledLayerCount = 0;
+
+	settings.extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(settings.extensions.size());
+	createInfo.ppEnabledExtensionNames = settings.extensions.data();
+
+	VkResult result = vkCreateInstance(&createInfo, nullptr, &_instance);
+	if (result != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create Vulkan instance");
+	}
+
+	enumerateExtensions();
 }
 
-void VulkanRenderer::generateDataForMaterial(std::shared_ptr<Scene::Material> material) {
-    (void)material;
-}
-
-void VulkanRenderer::generateDataForTexture(std::shared_ptr<Scene::Texture> texture) {
-    (void)texture;
-}
-
-void VulkanRenderer::renderMeshNode(std::shared_ptr<Scene::MeshNode> node, Scene::RenderContext &context) {
-    (void)node;
-    (void)context;
-}
-
-void VulkanRenderer::renderInstancedMeshNode(std::shared_ptr<Scene::InstancedMeshNode> instancedmesh, Scene::RenderContext &context) {
-    (void)instancedmesh;
-    (void)context;
-}
-
-void VulkanRenderer::renderSkinMeshNode(std::shared_ptr<Scene::SkinMeshNode> skinmesh, Scene::RenderContext &context) {
-    (void)skinmesh;
-    (void)context;
-}
 
 } // namespace Stone::Render

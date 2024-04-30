@@ -33,7 +33,7 @@ void App::destroyWindow(const std::shared_ptr<Window> &window) {
 void App::run() {
 	while (_windows.empty() == false) {
 		for (int i = static_cast<int>(_windows.size()) - 1; i >= 0; --i) {
-			if (_windows[i] == nullptr) {
+			if (_windows[i] == nullptr || _windows[i]->shouldClose()) {
 				_windows.erase(_windows.begin() + i);
 				continue;
 			}

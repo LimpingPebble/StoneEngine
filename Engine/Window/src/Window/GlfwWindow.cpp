@@ -35,10 +35,19 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 
 	glfwSwapInterval(1);
 
-    _elapsedTime = glfwGetTime();
+	_elapsedTime = glfwGetTime();
 
 	if (!_renderer) {
-		_renderer = std::make_shared<Render::VulkanRenderer>();
+		Render::VulkanRenderer::Settings rendererSettings;
+		rendererSettings.app_name = settings.title;
+
+		uint32_t glfwExtensionCount = 0;
+		const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+		for (uint32_t i = 0; i < glfwExtensionCount; i++) {
+			rendererSettings.extensions.emplace_back(glfwExtensions[i]);
+		}
+
+		_renderer = std::make_shared<Render::VulkanRenderer>(rendererSettings);
 	}
 
 	_world->setRenderer(_renderer);

@@ -4,12 +4,19 @@
 
 #include "Render/Renderer.hpp"
 #include "Scene.hpp"
+#include "vulkan/vulkan.h"
 
 namespace Stone::Render {
 
 class VulkanRenderer : public Renderer {
 public:
-	VulkanRenderer();
+	struct Settings {
+		std::string app_name = "Stone";
+        uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
+		std::vector<const char *> extensions;
+	};
+
+	explicit VulkanRenderer(Settings settings);
 	VulkanRenderer(const VulkanRenderer &) = delete;
 
 	~VulkanRenderer() override;
@@ -22,8 +29,14 @@ public:
 
 	/** Element Rendering */
 	void renderMeshNode(std::shared_ptr<Scene::MeshNode> node, Scene::RenderContext &context) override;
-	void renderInstancedMeshNode(std::shared_ptr<Scene::InstancedMeshNode> instancedmesh, Scene::RenderContext &context) override;
+	void renderInstancedMeshNode(std::shared_ptr<Scene::InstancedMeshNode> instancedmesh,
+								 Scene::RenderContext &context) override;
 	void renderSkinMeshNode(std::shared_ptr<Scene::SkinMeshNode> skinmesh, Scene::RenderContext &context) override;
+
+private:
+	void _createInstance(Settings settings);
+
+	VkInstance _instance;
 };
 
 } // namespace Stone::Render
