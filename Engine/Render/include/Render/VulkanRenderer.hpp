@@ -14,8 +14,10 @@ public:
 		std::string app_name = "Stone";
 		uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
 		std::vector<const char *> extensions;
+		std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 	};
 
+	VulkanRenderer() = delete;
 	explicit VulkanRenderer(Settings settings);
 	VulkanRenderer(const VulkanRenderer &) = delete;
 
@@ -35,8 +37,15 @@ public:
 
 private:
 	void _createInstance(Settings settings);
+	void _destroyInstance();
+
+	void _setupDebugMessenger();
+	void _destroyDebugMessenger();
 
 	VkInstance _instance;
+#ifndef NDEBUG
+	VkDebugUtilsMessengerEXT _debugMessenger;
+#endif
 };
 
 } // namespace Stone::Render

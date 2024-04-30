@@ -43,9 +43,7 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 
 		uint32_t glfwExtensionCount = 0;
 		const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-		for (uint32_t i = 0; i < glfwExtensionCount; i++) {
-			rendererSettings.extensions.emplace_back(glfwExtensions[i]);
-		}
+		rendererSettings.extensions = std::vector<const char *>(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
 		_renderer = std::make_shared<Render::VulkanRenderer>(rendererSettings);
 	}
