@@ -7,7 +7,7 @@
 
 namespace Stone::Window {
 
-GlfwWindow::GlfwWindow(const std::shared_ptr<App>& app, const WindowSettings &settings)
+GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &settings)
 	: Window(app, settings), _glfwWindow(nullptr), _mousePosition(0.0f, 0.0f) {
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, settings.resizable ? GLFW_TRUE : GLFW_FALSE);

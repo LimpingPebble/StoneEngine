@@ -8,7 +8,7 @@
 
 namespace Stone::Window {
 
-Window::Window(const std::shared_ptr<App>& app, WindowSettings settings)
+Window::Window(const std::shared_ptr<App> &app, WindowSettings settings)
 	: std::enable_shared_from_this<Window>(), _app(app), _settings(std::move(settings)) {
 	std::cout << "window [" << this << "] created" << std::endl;
 }
