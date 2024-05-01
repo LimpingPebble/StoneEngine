@@ -13,8 +13,6 @@ on:
       - '**/.clang-format'
 
 env:
-  CLANG_FORMAT_VERSION: 17
-
   home: /home/runner
 
 jobs:
@@ -22,42 +20,72 @@ jobs:
     name: Check formatting
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+    container:
+      image: ghcr.io/limpingpebble/toolchain:llvm18-ninja1.12.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install dependencies
-        env:
-          VERSION: ${{ env.CLANG_FORMAT_VERSION }}
-        run: |
-          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
-          sudo apt-add-repository -y "deb https://apt.llvm.org/jammy/ llvm-toolchain-jammy-${VERSION} main"
-          sudo apt-get install -y clang-format-${VERSION}
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Run clang-format
-        run: |
-          cd ${{ github.workspace }}
-          find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format-${{ env.CLANG_FORMAT_VERSION }} -i -style=file
+        run: find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
 
       - name: Check for differences
         if: ${{ !env.ACT }}
         run: |
+          git config --global --add safe.directory /__w/StoneEngine/StoneEngine
           git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
 
-#  lint:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - uses: ZedThree/clang-tidy-review@v0.14.0
-#        id: review
-#
-#      # Uploads an artefact containing clang_fixes.json
-#      - uses: ZedThree/clang-tidy-review/upload@v0.14.0
-#        id: upload-review
-#
-#      # If there are any comments, fail the check
-#      - if: steps.review.outputs.total_comments > 0
-#        run: |
-#          echo "Error: ${{ steps.review.outputs.total_comments }} checks have failed"
-#          exit 1
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/limpingpebble/toolchain:llvm18-ninja1.12.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+      volumes:
+        - /workspace:${{ github.workspace }}
+
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v4
+
+      - name: Cache cmake output
+        uses: actions/cache@v4
+        with:
+          key: cmake-debug
+          path: build/debug
+
+      - name: Configuring cmake
+        run: cmake --preset debug
+
+      - name: Build project
+        run: cmake --build --preset debug --jobs 2
+
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    container:
+      image: ghcr.io/limpingpebble/toolchain:llvm18-ninja1.12.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+      volumes:
+        - /workspace:${{ github.workspace }}
+
+    steps:
+      - name: Job tests
+        run: |
+          pwd
+          ls -la
