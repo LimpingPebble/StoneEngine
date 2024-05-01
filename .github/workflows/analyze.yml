@@ -30,9 +30,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Run clang-format
-        run: |
-          cd ${{ github.workspace }}
-          find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
+        run: find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
 
       - name: Check for differences
         if: ${{ !env.ACT }}
@@ -62,78 +60,14 @@ jobs:
       - name: Checkout repos
         uses: actions/checkout@v4
 
-      - name: Cache build artifacts
+      - name: Cache cmake output
         uses: actions/cache@v4
         with:
           key: cmake-debug
           path: build/debug
 
       - name: Configuring cmake
-        if: always()
         run: cmake --preset debug
 
       - name: Build project
-        if: always()
-        run: cmake --build --preset debug
-
-      - name: Upload build/debug artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          path: build/debug
-          name: cmake-debug
-          overwrite: true
-          if-no-files-found: error
-          retention-days: 1
-
-#      - name: Cache LLVM dependencies
-#        uses: actions/cache@v4
-#        id: llvm-cache
-#        with:
-#          path: "${{ env.home }}/llvm"
-#          key: llvm-${{ env.LLVM_VERSION }}
-
-#      - name: Install LLVM
-#        env:
-#          VERSION: ${{ env.LLVM_VERSION }}
-#          CACHE_HIT: ${{ steps.llvm-cache.outputs.cache-hit }}
-#          CACHE_PATH: ${{ env.home }}/llvm
-#        continue-on-error: false
-#        run: |
-#          if [[ "${CACHE_HIT}" == 'true' ]]; then
-#            sudo cp --verbose --force --recursive ${CACHE_PATH}/* /
-#          else
-#            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
-#            if [ "${VERSION}" = "19" ]; then
-#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main"
-#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy main"
-#            elif [ "${VERSION}" = "18" ]; then
-#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main"
-#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main"
-#            elif [ "${VERSION}" = "17" ]; then
-#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
-#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
-#            else
-#              echo "error: no repository for LLVM-${VERSION} was found"
-#              exit 1
-#            fi
-#
-#            sudo apt update
-#            sudo apt install -y clang-tidy-${VERSION} clang-format-${VERSION}
-#            echo "----------------------------------------------------------------------------------------------------------------------------"
-#            dpkg -L clang-tidy-${VERSION}
-#            apt-cache depends --recurse -q clang-tidy-${VERSION}
-#
-#            echo "----------------------------------------------------------------------------------------------------------------------------"
-#            dpkg -L clang-format-${VERSION}
-#            apt-cache depends --recurse clang-format-${VERSION}
-#          fi
-#            mkdir -p $CACHE_PATH
-#
-#            sudo dpkg -L graphviz | \
-#              while IFS= read -r f; do \
-#                if test -f $f; then \
-#                  echo $f; \
-#                fi; \
-#              done | \
-#              xargs cp --parents --target-directory ${CACHE_PATH}
+        run: cmake --build --preset debug --jobs 2
