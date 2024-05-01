@@ -27,16 +27,17 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repos
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Run clang-format
         run: find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
 
       - name: Check for differences
         if: ${{ !env.ACT }}
-        run: |
-          pwd
-          git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
+        run: git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
 
   build:
     name: Build project
@@ -49,15 +50,6 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Permission test
-        shell: bash
-        run: |
-          pwd
-          ls -la .
-          ls -lad .
-          whoami
-          id $(whoami)
-
       - name: Checkout repos
         uses: actions/checkout@v4
 
