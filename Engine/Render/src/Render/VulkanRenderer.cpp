@@ -63,6 +63,7 @@ VulkanRenderer::VulkanRenderer(Settings settings) : Renderer() {
 	_setupDebugMessenger();
 #endif
 	_pickPhysicalDevice();
+	_createLogicalDevice();
 }
 
 VulkanRenderer::~VulkanRenderer() {
@@ -70,6 +71,7 @@ VulkanRenderer::~VulkanRenderer() {
 	_destroyDebugMessenger();
 #endif
 	_destroyInstance();
+	_destroyLogicalDevice();
 	std::cout << "VulkanRenderer destroyed" << std::endl;
 }
 
@@ -209,7 +211,47 @@ void VulkanRenderer::_pickPhysicalDevice() {
 	_physicalDevice = devices[bestDeviceIndex];
 }
 
-/** Queue */
+/** Logical device */
 
+void VulkanRenderer::_createLogicalDevice() {
+	QueueFamilyIndices indices = findQueueFamilies(_physicalDevice);
+
+	VkDeviceQueueCreateInfo queueCreateInfo = {};
+	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfo.queueFamilyIndex = indices.graphicsFamily.value();
+	queueCreateInfo.queueCount = 1;
+	float queuePriority = 1.0f;
+	queueCreateInfo.pQueuePriorities = &queuePriority;
+
+	VkPhysicalDeviceFeatures deviceFeatures = {};
+
+	VkDeviceCreateInfo createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	createInfo.pQueueCreateInfos = &queueCreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+	createInfo.pEnabledFeatures = &deviceFeatures;
+	createInfo.enabledExtensionCount = 0;
+
+#ifndef NDEBUG
+	createInfo.enabledLayerCount = static_cast<uint32_t>(_settings.validationLayers.size());
+	createInfo.ppEnabledLayerNames = _settings.validationLayers.data();
+#else
+	createInfo.enabledLayerCount = 0;
+#endif
+
+	if (vkCreateDevice(_physicalDevice, &createInfo, nullptr, &_device) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create logical device");
+	}
+
+	vkGetDeviceQueue(_device, indices.graphicsFamily.value(), 0, &_graphicsQueue);
+}
+
+void VulkanRenderer::_destroyLogicalDevice() {
+	if (_device == VK_NULL_HANDLE) {
+		return;
+	}
+	vkDestroyDevice(_device, nullptr);
+	_device = VK_NULL_HANDLE;
+}
 
 } // namespace Stone::Render
