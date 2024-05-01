@@ -43,3 +43,6 @@
 
 # Act secrets
 .secrets
+
+# MacOS Finder files
+.DS_Store
