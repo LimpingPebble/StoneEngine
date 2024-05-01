@@ -133,16 +133,27 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createSurface(settings);
 	_pickPhysicalDevice(settings);
 	_createLogicalDevice(settings);
-	_createSwapChain(settings);
+	_createSwapChain(settings.frame_size);
+	_createImageViews();
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	_destroyImageViews();
 	_destroySwapChain();
 	_destroyLogicalDevice();
 	_destroySurface();
 	_destroyDebugMessenger();
 	_destroyInstance();
 	std::cout << "VulkanRenderer destroyed" << std::endl;
+}
+
+void VulkanRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
+	vkDeviceWaitIdle(_device);
+
+	_destroyImageViews();
+	_destroySwapChain();
+	_createSwapChain(size);
+	_createImageViews();
 }
 
 /** Instance */
@@ -381,13 +392,13 @@ void VulkanRenderer::_destroyLogicalDevice() {
 
 /** Swap chain */
 
-void VulkanRenderer::_createSwapChain(Settings &settings) {
+void VulkanRenderer::_createSwapChain(const std::pair<uint32_t, uint32_t> &size) {
 	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(_physicalDevice, _surface);
 
 	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
 
-	auto [width, height] = settings.windowSize;
+	auto [width, height] = size;
 	VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, width, height);
 
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
@@ -412,12 +423,10 @@ void VulkanRenderer::_createSwapChain(Settings &settings) {
 		createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 		createInfo.queueFamilyIndexCount = 2;
 		createInfo.pQueueFamilyIndices = queueFamilyIndices;
-		std::cout << "Concurrent" << std::endl;
 	} else {
 		createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
 		createInfo.queueFamilyIndexCount = 0;
 		createInfo.pQueueFamilyIndices = nullptr;
-		std::cout << "Exclusive" << std::endl;
 	}
 
 	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;

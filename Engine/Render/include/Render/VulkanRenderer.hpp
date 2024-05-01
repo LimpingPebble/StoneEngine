@@ -18,7 +18,7 @@ public:
 		std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 		std::function<VkResult(VkInstance, const VkAllocationCallbacks *, VkSurfaceKHR *)> createSurface = nullptr;
 		std::vector<const char *> deviceExt = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-		std::pair<uint32_t, uint32_t> windowSize = {800, 600};
+		std::pair<uint32_t, uint32_t> frame_size = {};
 	};
 
 	VulkanRenderer() = delete;
@@ -26,6 +26,8 @@ public:
 	VulkanRenderer(const VulkanRenderer &) = delete;
 
 	~VulkanRenderer() override;
+
+	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
 
 	void generateDataForMesh(std::shared_ptr<Scene::Mesh> mesh) override;
 	void generateDataForSkinMesh(std::shared_ptr<Scene::SkinMesh> skinmesh) override;
@@ -54,7 +56,7 @@ private:
 	void _createLogicalDevice(Settings &settings);
 	void _destroyLogicalDevice();
 
-	void _createSwapChain(Settings &settings);
+	void _createSwapChain(const std::pair<uint32_t, uint32_t> &size);
 	void _destroySwapChain();
 
 	void _createImageViews();

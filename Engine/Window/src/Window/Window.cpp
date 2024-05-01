@@ -2,6 +2,7 @@
 
 #include "Window/Window.hpp"
 
+#include "Render/Renderer.hpp"
 #include "Scene/Node/WorldNode.hpp"
 #include "Window/App.hpp"
 
@@ -68,6 +69,7 @@ void Window::_onCloseCallback() {
 
 void Window::_onResizeCallback(int width, int height) {
 	std::cout << this << ":resize " << width << " " << height << std::endl;
+	_renderer->updateFrameSize({static_cast<uint32_t>(width), static_cast<uint32_t>(height)});
 }
 
 } // namespace Stone::Window

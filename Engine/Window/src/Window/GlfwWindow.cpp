@@ -49,7 +49,7 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 			return glfwCreateWindowSurface(instance, _glfwWindow, allocator, surface);
 		};
 
-		rendererSettings.windowSize = {
+		rendererSettings.frame_size = {
 			static_cast<uint32_t>(settings.width),
 			static_cast<uint32_t>(settings.height),
 		};
