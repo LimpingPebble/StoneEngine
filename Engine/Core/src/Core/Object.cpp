@@ -10,7 +10,7 @@ Object::Object() : std::enable_shared_from_this<Object>() {
 }
 
 Object::Object(const Object &other) : std::enable_shared_from_this<Object>(other) {
-	_id = other._id;
+		_id = other._id;
 }
 
 uint32_t Object::getId() const {
