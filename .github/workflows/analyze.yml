@@ -48,6 +48,7 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+      options: -w /home/runner
 
     steps:
       - name: Permission test
