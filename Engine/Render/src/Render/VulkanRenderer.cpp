@@ -129,9 +129,7 @@ namespace Stone::Render {
 VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
 	_createInstance(settings);
-#ifndef NDEBUG
 	_setupDebugMessenger();
-#endif
 	_createSurface(settings);
 	_pickPhysicalDevice(settings);
 	_createLogicalDevice(settings);
@@ -142,9 +140,7 @@ VulkanRenderer::~VulkanRenderer() {
 	_destroySwapChain();
 	_destroyLogicalDevice();
 	_destroySurface();
-#ifndef NDEBUG
 	_destroyDebugMessenger();
-#endif
 	_destroyInstance();
 	std::cout << "VulkanRenderer destroyed" << std::endl;
 }
@@ -199,6 +195,7 @@ void VulkanRenderer::_destroyInstance() {
 /** Debug Messenger */
 
 void VulkanRenderer::_setupDebugMessenger() {
+#ifndef NDEBUG
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
@@ -216,9 +213,11 @@ void VulkanRenderer::_setupDebugMessenger() {
 	} else {
 		throw std::runtime_error("Failed to setup debug messenger");
 	}
+#endif
 }
 
 void VulkanRenderer::_destroyDebugMessenger() {
+#ifndef NDEBUG
 	if (_debugMessenger == VK_NULL_HANDLE) {
 		return;
 	}
@@ -227,6 +226,7 @@ void VulkanRenderer::_destroyDebugMessenger() {
 	if (func != nullptr) {
 		func(_instance, _debugMessenger, nullptr);
 	}
+#endif
 }
 
 /** Surface */
