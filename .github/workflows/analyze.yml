@@ -48,7 +48,6 @@ jobs:
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-      options: -w /home/runner
 
     steps:
       - name: Permission test
@@ -63,24 +62,29 @@ jobs:
       - name: Checkout repos
         uses: actions/checkout@v4
 
-      - name: Download build/debug artifact
-        uses: actions/download-artifact@v4
+      - name: Cache build artifacts
+        uses: actions/cache@v4
         with:
-          name: cmake-debug
+          key: cmake-debug
+          path: build/debug
 
       - name: Configuring cmake
+        if: always()
         run: cmake --preset debug
 
       - name: Build project
+        if: always()
         run: cmake --build --preset debug
 
       - name: Upload build/debug artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           path: build/debug
           name: cmake-debug
           overwrite: true
           if-no-files-found: error
+          retention-days: 1
 
 #      - name: Cache LLVM dependencies
 #        uses: actions/cache@v4
