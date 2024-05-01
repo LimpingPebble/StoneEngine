@@ -39,11 +39,7 @@ jobs:
         if: ${{ !env.ACT }}
         run: |
           git config --global --add safe.directory /__w/StoneEngine/StoneEngine
-          pwd
-          ls -lad .git
-          ls -la .git
-          git status
-          git diff  --exit-code || (echo "Code is not formatted properly" && exit 1)
+          git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
 
   build:
     name: Build project
