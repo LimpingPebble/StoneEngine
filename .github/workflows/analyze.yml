@@ -41,6 +41,7 @@ jobs:
           pwd
           ls -lad .git
           ls -la .git
+          git status
           git diff HEAD --exit-code || (echo "Code is not formatted properly" && exit 1)
 
   build:
