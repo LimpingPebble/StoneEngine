@@ -4,7 +4,8 @@
 
 #include "Render/Renderer.hpp"
 #include "Scene.hpp"
-#include "vulkan/vulkan.h"
+
+#include <vulkan/vulkan.h>
 
 namespace Stone::Render {
 
@@ -13,12 +14,13 @@ public:
 	struct Settings {
 		std::string app_name = "Stone";
 		uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
-		std::vector<const char *> extensions;
+		std::vector<const char *> extensions = {};
 		std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+		std::function<VkResult(VkInstance, const VkAllocationCallbacks *, VkSurfaceKHR *)> createSurface = nullptr;
 	};
 
 	VulkanRenderer() = delete;
-	explicit VulkanRenderer(Settings settings);
+	explicit VulkanRenderer(Settings &settings);
 	VulkanRenderer(const VulkanRenderer &) = delete;
 
 	~VulkanRenderer() override;
@@ -36,21 +38,25 @@ public:
 	void renderSkinMeshNode(std::shared_ptr<Scene::SkinMeshNode> skinmesh, Scene::RenderContext &context) override;
 
 private:
-	void _createInstance(Settings settings);
+	void _createInstance(Settings &settings);
 	void _destroyInstance();
 
 	void _setupDebugMessenger();
 	void _destroyDebugMessenger();
 
+	void _createSurface(Settings &settings);
+	void _destroySurface();
+
 	void _pickPhysicalDevice();
 
-	void _createLogicalDevice();
+	void _createLogicalDevice(Settings &settings);
 	void _destroyLogicalDevice();
 
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
 #endif
+	VkSurfaceKHR _surface = VK_NULL_HANDLE;
 	VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
 	VkDevice _device = VK_NULL_HANDLE;
 	VkQueue _graphicsQueue = VK_NULL_HANDLE;

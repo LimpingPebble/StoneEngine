@@ -56,28 +56,30 @@ QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
 
 namespace Stone::Render {
 
-VulkanRenderer::VulkanRenderer(Settings settings) : Renderer() {
+VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
-	_createInstance(std::move(settings));
+	_createInstance(settings);
 #ifndef NDEBUG
 	_setupDebugMessenger();
 #endif
+	_createSurface(settings);
 	_pickPhysicalDevice();
-	_createLogicalDevice();
+	_createLogicalDevice(settings);
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	_destroyLogicalDevice();
+	_destroySurface();
 #ifndef NDEBUG
 	_destroyDebugMessenger();
 #endif
 	_destroyInstance();
-	_destroyLogicalDevice();
 	std::cout << "VulkanRenderer destroyed" << std::endl;
 }
 
 /** Instance */
 
-void VulkanRenderer::_createInstance(Settings settings) {
+void VulkanRenderer::_createInstance(Settings &settings) {
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = settings.app_name.c_str();
@@ -155,6 +157,25 @@ void VulkanRenderer::_destroyDebugMessenger() {
 	}
 }
 
+/** Surface */
+
+void VulkanRenderer::_createSurface(Settings &settings) {
+	if (settings.createSurface != nullptr) {
+		if (settings.createSurface(_instance, nullptr, &_surface) == VK_SUCCESS) {
+			return;
+		}
+	}
+	throw std::runtime_error("Failed to create window surface !");
+}
+
+void VulkanRenderer::_destroySurface() {
+	if (_surface == VK_NULL_HANDLE) {
+		return;
+	}
+	vkDestroySurfaceKHR(_instance, _surface, nullptr);
+	_surface = VK_NULL_HANDLE;
+}
+
 /** Physical Device */
 
 int deviceSuitability(VkPhysicalDevice device) {
@@ -213,7 +234,7 @@ void VulkanRenderer::_pickPhysicalDevice() {
 
 /** Logical device */
 
-void VulkanRenderer::_createLogicalDevice() {
+void VulkanRenderer::_createLogicalDevice(Settings &settings) {
 	QueueFamilyIndices indices = findQueueFamilies(_physicalDevice);
 
 	VkDeviceQueueCreateInfo queueCreateInfo = {};
@@ -233,8 +254,8 @@ void VulkanRenderer::_createLogicalDevice() {
 	createInfo.enabledExtensionCount = 0;
 
 #ifndef NDEBUG
-	createInfo.enabledLayerCount = static_cast<uint32_t>(_settings.validationLayers.size());
-	createInfo.ppEnabledLayerNames = _settings.validationLayers.data();
+	createInfo.enabledLayerCount = static_cast<uint32_t>(settings.validationLayers.size());
+	createInfo.ppEnabledLayerNames = settings.validationLayers.data();
 #else
 	createInfo.enabledLayerCount = 0;
 #endif

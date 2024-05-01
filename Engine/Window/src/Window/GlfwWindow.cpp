@@ -44,6 +44,10 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 		uint32_t glfwExtensionCount = 0;
 		const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 		rendererSettings.extensions = std::vector<const char *>(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		rendererSettings.createSurface = [&](VkInstance instance, const VkAllocationCallbacks *allocator,
+											 VkSurfaceKHR *surface) {
+			return glfwCreateWindowSurface(instance, _glfwWindow, allocator, surface);
+		};
 
 		_renderer = std::make_shared<Render::VulkanRenderer>(rendererSettings);
 	}
