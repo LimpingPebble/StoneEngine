@@ -2,8 +2,8 @@
 
 #include "Scene/RenderElement/Material.hpp"
 
-#include "Scene/ISceneRenderer.hpp"
 #include "Scene/RenderElement/Texture.hpp"
+#include "Scene/RendererObjectManager.hpp"
 #include "Utils/Glm.hpp"
 
 namespace Stone::Scene {
@@ -29,8 +29,8 @@ std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer)
 	return stream;
 }
 
-void Material::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) {
-	renderer->generateDataForMaterial(std::static_pointer_cast<Material>(shared_from_this()));
+void Material::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
+	manager->updateMaterial(std::static_pointer_cast<Material>(shared_from_this()));
 }
 
 void Material::setTextureParameter(const std::string &name, std::shared_ptr<Texture> texture) {

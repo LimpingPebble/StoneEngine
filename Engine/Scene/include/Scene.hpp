@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Scene/Node/CameraNode.hpp"
+#include "Scene/Node/InstancedMeshNode.hpp"
 #include "Scene/Node/LightNode.hpp"
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/Node/Node.hpp"

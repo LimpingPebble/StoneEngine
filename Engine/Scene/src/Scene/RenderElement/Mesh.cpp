@@ -2,7 +2,7 @@
 
 #include "Scene/RenderElement/Mesh.hpp"
 
-#include "Scene/ISceneRenderer.hpp"
+#include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {
 
@@ -15,8 +15,8 @@ std::ostream &Mesh::writeToStream(std::ostream &stream, bool closing_bracer) con
 	return stream;
 }
 
-void Mesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) {
-	renderer->generateDataForMesh(std::static_pointer_cast<Mesh>(shared_from_this()));
+void Mesh::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
+	manager->updateMesh(std::static_pointer_cast<Mesh>(shared_from_this()));
 }
 
 const std::vector<Vertex> &Mesh::getVertices() const {
@@ -28,10 +28,12 @@ const std::vector<uint32_t> &Mesh::getIndices() const {
 }
 
 std::vector<Vertex> &Mesh::verticesRef() {
+	markDirty();
 	return _vertices;
 }
 
 std::vector<uint32_t> &Mesh::indicesRef() {
+	markDirty();
 	return _indices;
 }
 

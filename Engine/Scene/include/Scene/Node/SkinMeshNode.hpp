@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/Node/PivotNode.hpp"
+#include "Scene/Node/RenderableNode.hpp"
 
 namespace Stone::Scene {
 
@@ -10,7 +10,7 @@ class SkinMesh;
 class SkeletonNode;
 class Material;
 
-class SkinMeshNode : public PivotNode {
+class SkinMeshNode : public RenderableNode {
 public:
 	STONE_NODE(SkinMeshNode);
 
@@ -18,6 +18,8 @@ public:
 	SkinMeshNode(const SkinMeshNode &other) = default;
 
 	~SkinMeshNode() override = default;
+
+	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
