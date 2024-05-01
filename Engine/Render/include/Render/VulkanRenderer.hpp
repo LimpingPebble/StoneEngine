@@ -14,9 +14,11 @@ public:
 	struct Settings {
 		std::string app_name = "Stone";
 		uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
-		std::vector<const char *> extensions = {};
+		std::vector<const char *> instanceExt = {};
 		std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 		std::function<VkResult(VkInstance, const VkAllocationCallbacks *, VkSurfaceKHR *)> createSurface = nullptr;
+		std::vector<const char *> deviceExt = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+		std::pair<uint32_t, uint32_t> windowSize = {800, 600};
 	};
 
 	VulkanRenderer() = delete;
@@ -47,10 +49,13 @@ private:
 	void _createSurface(Settings &settings);
 	void _destroySurface();
 
-	void _pickPhysicalDevice();
+	void _pickPhysicalDevice(Settings &settings);
 
 	void _createLogicalDevice(Settings &settings);
 	void _destroyLogicalDevice();
+
+	void _createSwapChain(Settings &settings);
+	void _destroySwapChain();
 
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
@@ -61,6 +66,10 @@ private:
 	VkDevice _device = VK_NULL_HANDLE;
 	VkQueue _graphicsQueue = VK_NULL_HANDLE;
 	VkQueue _presentQueue = VK_NULL_HANDLE;
+	VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
+	std::vector<VkImage> _swapChainImages;
+	VkFormat _swapChainImageFormat;
+	VkExtent2D _swapChainExtent;
 };
 
 } // namespace Stone::Render
