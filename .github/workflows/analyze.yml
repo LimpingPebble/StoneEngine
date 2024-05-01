@@ -50,6 +50,11 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Permission test
+        run: |
+          ls -la .
+          ls -lad .
+
       - name: Checkout repos
         uses: actions/checkout@v4
 
