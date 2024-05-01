@@ -37,7 +37,9 @@ jobs:
 
       - name: Check for differences
         if: ${{ !env.ACT }}
-        run: git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
+        run: |
+          ls -la .git
+          git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
 
   build:
     name: Build project
