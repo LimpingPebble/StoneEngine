@@ -38,6 +38,7 @@ jobs:
       - name: Check for differences
         if: ${{ !env.ACT }}
         run: |
+          git config --global --add safe.directory /__w/StoneEngine/StoneEngine
           pwd
           ls -lad .git
           ls -la .git
