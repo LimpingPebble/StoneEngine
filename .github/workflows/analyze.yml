@@ -52,8 +52,10 @@ jobs:
     steps:
       - name: Permission test
         run: |
+          pwd
           ls -la .
           ls -lad .
+          whoami
 
       - name: Checkout repos
         uses: actions/checkout@v4
