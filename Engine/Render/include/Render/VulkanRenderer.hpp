@@ -57,6 +57,9 @@ private:
 	void _createSwapChain(Settings &settings);
 	void _destroySwapChain();
 
+	void _createImageViews();
+	void _destroyImageViews();
+
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
@@ -67,9 +70,10 @@ private:
 	VkQueue _graphicsQueue = VK_NULL_HANDLE;
 	VkQueue _presentQueue = VK_NULL_HANDLE;
 	VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
-	std::vector<VkImage> _swapChainImages;
-	VkFormat _swapChainImageFormat;
-	VkExtent2D _swapChainExtent;
+	std::vector<VkImage> _swapChainImages = {};
+	VkFormat _swapChainImageFormat = VK_FORMAT_UNDEFINED;
+	VkExtent2D _swapChainExtent = {0, 0};
+	std::vector<VkImageView> _swapChainImageViews = {};
 };
 
 } // namespace Stone::Render
