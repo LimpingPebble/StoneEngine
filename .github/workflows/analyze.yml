@@ -51,11 +51,13 @@ jobs:
 
     steps:
       - name: Permission test
+        shell: bash
         run: |
           pwd
           ls -la .
           ls -lad .
           whoami
+          id $(whoami)
 
       - name: Checkout repos
         uses: actions/checkout@v4
