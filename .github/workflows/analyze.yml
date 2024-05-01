@@ -13,8 +13,6 @@ on:
       - '**/.clang-format'
 
 env:
-  CLANG_FORMAT_VERSION: 17
-
   home: /home/runner
 
 jobs:
@@ -22,42 +20,106 @@ jobs:
     name: Check formatting
     runs-on: ubuntu-latest
 
+    container:
+      image: ghcr.io/limpingpebble/toolchain:llvm18-ninja1.12.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        env:
-          VERSION: ${{ env.CLANG_FORMAT_VERSION }}
-        run: |
-          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
-          sudo apt-add-repository -y "deb https://apt.llvm.org/jammy/ llvm-toolchain-jammy-${VERSION} main"
-          sudo apt-get install -y clang-format-${VERSION}
 
       - name: Run clang-format
         run: |
           cd ${{ github.workspace }}
-          find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format-${{ env.CLANG_FORMAT_VERSION }} -i -style=file
+          find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
 
       - name: Check for differences
         if: ${{ !env.ACT }}
         run: |
           git diff --exit-code || (echo "Code is not formatted properly" && exit 1)
 
-#  lint:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - uses: ZedThree/clang-tidy-review@v0.14.0
-#        id: review
-#
-#      # Uploads an artefact containing clang_fixes.json
-#      - uses: ZedThree/clang-tidy-review/upload@v0.14.0
-#        id: upload-review
-#
-#      # If there are any comments, fail the check
-#      - if: steps.review.outputs.total_comments > 0
+  build:
+    name: Build project
+    runs-on: ubuntu-latest
+
+    container:
+      image: ghcr.io/limpingpebble/toolchain:llvm18-ninja1.12.0
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v4
+
+      - name: Download build/debug artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cmake-debug
+
+      - name: Configuring cmake
+        run: cmake --preset debug
+
+      - name: Build project
+        run: cmake --build --preset debug
+
+      - name: Upload build/debug artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/debug
+          name: cmake-debug
+          overwrite: true
+          if-no-files-found: error
+
+#      - name: Cache LLVM dependencies
+#        uses: actions/cache@v4
+#        id: llvm-cache
+#        with:
+#          path: "${{ env.home }}/llvm"
+#          key: llvm-${{ env.LLVM_VERSION }}
+
+#      - name: Install LLVM
+#        env:
+#          VERSION: ${{ env.LLVM_VERSION }}
+#          CACHE_HIT: ${{ steps.llvm-cache.outputs.cache-hit }}
+#          CACHE_PATH: ${{ env.home }}/llvm
+#        continue-on-error: false
 #        run: |
-#          echo "Error: ${{ steps.review.outputs.total_comments }} checks have failed"
-#          exit 1
+#          if [[ "${CACHE_HIT}" == 'true' ]]; then
+#            sudo cp --verbose --force --recursive ${CACHE_PATH}/* /
+#          else
+#            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
+#            if [ "${VERSION}" = "19" ]; then
+#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy main"
+#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy main"
+#            elif [ "${VERSION}" = "18" ]; then
+#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main"
+#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-18 main"
+#            elif [ "${VERSION}" = "17" ]; then
+#              sudo apt-add-repository -y -n "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
+#              sudo apt-add-repository -y -n "deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main"
+#            else
+#              echo "error: no repository for LLVM-${VERSION} was found"
+#              exit 1
+#            fi
+#
+#            sudo apt update
+#            sudo apt install -y clang-tidy-${VERSION} clang-format-${VERSION}
+#            echo "----------------------------------------------------------------------------------------------------------------------------"
+#            dpkg -L clang-tidy-${VERSION}
+#            apt-cache depends --recurse -q clang-tidy-${VERSION}
+#
+#            echo "----------------------------------------------------------------------------------------------------------------------------"
+#            dpkg -L clang-format-${VERSION}
+#            apt-cache depends --recurse clang-format-${VERSION}
+#          fi
+#            mkdir -p $CACHE_PATH
+#
+#            sudo dpkg -L graphviz | \
+#              while IFS= read -r f; do \
+#                if test -f $f; then \
+#                  echo $f; \
+#                fi; \
+#              done | \
+#              xargs cp --parents --target-directory ${CACHE_PATH}

@@ -40,3 +40,6 @@
 /.idea
 /.vscode
 .obsidian
+
+# Act secrets
+.secrets
