@@ -52,7 +52,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
       volumes:
-        - ${{ github.workspace }}
+        - /workspace:${{ github.workspace }}
 
     steps:
       - name: Checkout repos
@@ -82,7 +82,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
       volumes:
-        - ${{ github.workspace }}
+        - /workspace:${{ github.workspace }}
 
     steps:
       - name: Job tests
