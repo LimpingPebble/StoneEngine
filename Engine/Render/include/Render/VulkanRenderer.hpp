@@ -60,6 +60,7 @@ private:
 	VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
 	VkDevice _device = VK_NULL_HANDLE;
 	VkQueue _graphicsQueue = VK_NULL_HANDLE;
+	VkQueue _presentQueue = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render
