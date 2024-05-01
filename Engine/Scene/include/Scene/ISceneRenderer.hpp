@@ -21,6 +21,9 @@ public:
 	virtual void renderMeshNode(std::shared_ptr<MeshNode> node, RenderContext &context) = 0;
 	virtual void renderInstancedMeshNode(std::shared_ptr<InstancedMeshNode> instancedmesh, RenderContext &context) = 0;
 	virtual void renderSkinMeshNode(std::shared_ptr<SkinMeshNode> skinmesh, RenderContext &context) = 0;
+
+	virtual void updateDataForWorld(const std::shared_ptr<WorldNode> &world) = 0;
+	virtual void renderWorld(const std::shared_ptr<WorldNode> &world) = 0;
 };
 
 } // namespace Stone::Scene

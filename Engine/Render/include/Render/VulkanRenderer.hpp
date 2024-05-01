@@ -27,6 +27,11 @@ public:
 
 	~VulkanRenderer() override;
 
+	/** Renderer */
+
+	void updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) override;
+	void renderWorld(const std::shared_ptr<Scene::WorldNode> &world) override;
+
 	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
 
 	void generateDataForMesh(std::shared_ptr<Scene::Mesh> mesh) override;

@@ -21,6 +21,13 @@ Window::~Window() {
 }
 
 void Window::loopOnce() {
+	_world->traverseTopDown(
+		[this](const std::shared_ptr<Scene::Node> &node) { node->update(static_cast<float>(_deltaTime)); });
+
+	if (_renderer) {
+		_renderer->updateDataForWorld(_world);
+		_renderer->renderWorld(_world);
+	}
 }
 
 bool Window::shouldClose() const {

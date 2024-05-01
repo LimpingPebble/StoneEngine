@@ -4,6 +4,22 @@
 
 namespace Stone::Render {
 
+void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) {
+	std::shared_ptr<Renderer> renderer = shared_from_this();
+	world->traverseTopDown([this, renderer](const std::shared_ptr<Scene::Node> &node) {
+		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderElement>(node);
+		if (renderElement && renderElement->isDirty()) {
+			renderElement->generateRenderBehaviour(renderer);
+		}
+	});
+}
+
+void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {
+	Scene::RenderContext context;
+	world->initializeRenderContext(context);
+	world->render(context);
+}
+
 void VulkanRenderer::generateDataForMesh(std::shared_ptr<Scene::Mesh> mesh) {
 	(void)mesh;
 }

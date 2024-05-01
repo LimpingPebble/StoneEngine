@@ -79,7 +79,7 @@ void GlfwWindow::loopOnce() {
 	_deltaTime = newTime - _elapsedTime;
 	_elapsedTime = newTime;
 
-	// TODO: Update the scene and render it
+	Window::loopOnce();
 
 	glfwSwapBuffers(_glfwWindow);
 }
