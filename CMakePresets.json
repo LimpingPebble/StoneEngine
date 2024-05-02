@@ -67,6 +67,7 @@
     {
       "name": "debug",
       "configurePreset": "debug",
+      "jobs": 2,
       "condition": {
         "type": "notEquals",
         "lhs": "${hostSystemName}",
@@ -139,6 +140,10 @@
           "type": "configure",
           "name": "debug"
         },
+        {
+          "type": "build",
+          "name": "debug-tests"
+        }
         {
           "type": "test",
           "name": "pipeline"
