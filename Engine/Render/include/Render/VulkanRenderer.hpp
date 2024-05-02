@@ -56,6 +56,11 @@ private:
 	void _createImageViews();
 	void _destroyImageViews();
 
+	void _createGraphicPipeline();
+	void _destroyGraphicPipeline();
+
+	VkShaderModule _createShaderModule(const std::vector<char> &code);
+
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;

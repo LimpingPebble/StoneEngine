@@ -2,6 +2,7 @@
 
 #include "Render/VulkanRenderer.hpp"
 
+#include "Utils/FileSystem.hpp"
 #include "VulkanUtilities.hpp"
 
 #include <iostream>
@@ -32,9 +33,11 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createLogicalDevice(settings);
 	_createSwapChain(settings.frame_size);
 	_createImageViews();
+	_createGraphicPipeline();
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	_destroyGraphicPipeline();
 	_destroyImageViews();
 	_destroySwapChain();
 	_destroyLogicalDevice();
@@ -386,6 +389,48 @@ void VulkanRenderer::_destroyImageViews() {
 		vkDestroyImageView(_device, imageView, nullptr);
 	}
 	_swapChainImageViews.clear();
+}
+
+void VulkanRenderer::_createGraphicPipeline() {
+	auto vertShaderCode = Utils::readFile("shaders/vert.spv");
+	auto fragShaderCode = Utils::readFile("shaders/frag.spv");
+
+	auto vertShaderModule = _createShaderModule(vertShaderCode);
+	auto fragShaderModule = _createShaderModule(fragShaderCode);
+
+	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
+	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo fragShaderStageInfo = {};
+	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
+
+	vkDestroyShaderModule(_device, vertShaderModule, nullptr);
+	vkDestroyShaderModule(_device, fragShaderModule, nullptr);
+}
+
+void VulkanRenderer::_destroyGraphicPipeline() {
+}
+
+VkShaderModule VulkanRenderer::_createShaderModule(const std::vector<char> &code) {
+	VkShaderModuleCreateInfo createInfo = {};
+	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+	createInfo.codeSize = code.size();
+	createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
+
+	VkShaderModule shaderModule;
+	if (vkCreateShaderModule(_device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create shader module");
+	}
+
+	return shaderModule;
 }
 
 } // namespace Stone::Render
