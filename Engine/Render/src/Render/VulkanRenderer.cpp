@@ -35,9 +35,11 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createImageViews();
 	_createRenderPass();
 	_createGraphicPipeline();
+	_createFramebuffers();
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	_destroyFramebuffers();
 	_destroyGraphicPipeline();
 	_destroyRenderPass();
 	_destroyImageViews();
@@ -596,6 +598,34 @@ VkShaderModule VulkanRenderer::_createShaderModule(const std::vector<char> &code
 	}
 
 	return shaderModule;
+}
+
+void VulkanRenderer::_createFramebuffers() {
+	_swapChainFramebuffers.resize(_swapChainImageViews.size());
+
+	for (size_t i = 0; i < _swapChainFramebuffers.size(); ++i) {
+		VkImageView attachments[] = {_swapChainImageViews[i]};
+
+		VkFramebufferCreateInfo framebufferInfo = {};
+		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebufferInfo.renderPass = _renderPass;
+		framebufferInfo.attachmentCount = 1;
+		framebufferInfo.pAttachments = attachments;
+		framebufferInfo.width = _swapChainExtent.width;
+		framebufferInfo.height = _swapChainExtent.height;
+		framebufferInfo.layers = 1;
+
+		if (vkCreateFramebuffer(_device, &framebufferInfo, nullptr, &_swapChainFramebuffers[i]) != VK_SUCCESS) {
+			throw std::runtime_error("Failed to create framebuffer");
+		}
+	}
+}
+
+void VulkanRenderer::_destroyFramebuffers() {
+	for (auto framebuffer : _swapChainFramebuffers) {
+		vkDestroyFramebuffer(_device, framebuffer, nullptr);
+	}
+	_swapChainFramebuffers.clear();
 }
 
 } // namespace Stone::Render

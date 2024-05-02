@@ -64,6 +64,9 @@ private:
 
 	VkShaderModule _createShaderModule(const std::vector<char> &code);
 
+	void _createFramebuffers();
+	void _destroyFramebuffers();
+
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
@@ -81,6 +84,7 @@ private:
 	VkRenderPass _renderPass = VK_NULL_HANDLE;
 	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
 	VkPipeline _graphicsPipeline = VK_NULL_HANDLE;
+	std::vector<VkFramebuffer> _swapChainFramebuffers = {};
 };
 
 } // namespace Stone::Render
