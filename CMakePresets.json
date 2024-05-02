@@ -140,7 +140,7 @@
         },
         {
           "type": "build",
-          "name": "debug-tests"
+          "name": "debug"
         }
       ]
     },
