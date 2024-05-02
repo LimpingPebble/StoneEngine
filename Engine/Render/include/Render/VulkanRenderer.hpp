@@ -80,6 +80,7 @@ private:
 	std::vector<VkImageView> _swapChainImageViews = {};
 	VkRenderPass _renderPass = VK_NULL_HANDLE;
 	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
+	VkPipeline _graphicsPipeline = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render
