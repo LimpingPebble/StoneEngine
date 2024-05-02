@@ -19,6 +19,26 @@ int main() {
 		win_settings.title = "Scop";
 		auto window = app->createWindow(win_settings);
 
+		auto meshNode = window->getWorld()->addChild<Stone::Scene::MeshNode>();
+
+		auto mesh = std::make_shared<Stone::Scene::Mesh>();
+		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
+		mesh->verticesRef().emplace_back();
+		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};
+		mesh->verticesRef().emplace_back();
+		mesh->verticesRef().back().position = {0.5f, -0.5f, 0.0f};
+		mesh->verticesRef().emplace_back();
+		mesh->verticesRef().back().position = {0.5f, 0.5f, 0.0f};
+		mesh->verticesRef().emplace_back();
+		mesh->verticesRef().back().position = {-0.5f, 0.5f, 0.0f};
+
+		meshNode->setMesh(mesh);
+
+		auto cameraNode = window->getWorld()->addChild<Stone::Scene::PerspectiveCameraNode>();
+		cameraNode->getTransform().setPosition({0.0f, 0.0f, 2.0f});
+
+		window->getWorld()->setActiveCamera(cameraNode);
+
 		app->run();
 	}
 
