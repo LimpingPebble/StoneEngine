@@ -546,15 +546,41 @@ void VulkanRenderer::_createGraphicPipeline() {
 		throw std::runtime_error("Failed to create pipeline layout");
 	}
 
+	VkGraphicsPipelineCreateInfo pipelineInfo = {};
+	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipelineInfo.stageCount = 2;
+	pipelineInfo.pStages = shaderStages;
+	pipelineInfo.pVertexInputState = &vertexInputInfo;
+	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pViewportState = &viewportState;
+	pipelineInfo.pRasterizationState = &rasterizer;
+	pipelineInfo.pMultisampleState = &multisampling;
+	pipelineInfo.pDepthStencilState = nullptr;
+	pipelineInfo.pColorBlendState = &colorBlending;
+	pipelineInfo.pDynamicState = &dynamicStateCreateInfo;
+	pipelineInfo.layout = _pipelineLayout;
+	pipelineInfo.renderPass = _renderPass;
+	pipelineInfo.subpass = 0;
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+	pipelineInfo.basePipelineIndex = -1;
+
+	if (vkCreateGraphicsPipelines(_device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &_graphicsPipeline) !=
+		VK_SUCCESS) {
+		throw std::runtime_error("Failed to create graphics pipeline");
+	}
+
 	vkDestroyShaderModule(_device, vertShaderModule, nullptr);
 	vkDestroyShaderModule(_device, fragShaderModule, nullptr);
 }
 
 void VulkanRenderer::_destroyGraphicPipeline() {
-	if (_pipelineLayout == VK_NULL_HANDLE) {
-		return;
+	if (_graphicsPipeline != VK_NULL_HANDLE) {
+		vkDestroyPipeline(_device, _graphicsPipeline, nullptr);
 	}
-	vkDestroyPipelineLayout(_device, _pipelineLayout, nullptr);
+	_graphicsPipeline = VK_NULL_HANDLE;
+	if (_pipelineLayout != VK_NULL_HANDLE) {
+		vkDestroyPipelineLayout(_device, _pipelineLayout, nullptr);
+	}
 	_pipelineLayout = VK_NULL_HANDLE;
 }
 
