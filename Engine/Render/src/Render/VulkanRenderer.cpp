@@ -61,12 +61,19 @@ VulkanRenderer::~VulkanRenderer() {
 }
 
 void VulkanRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
+	if (_device == VK_NULL_HANDLE) {
+		return;
+	}
+
 	vkDeviceWaitIdle(_device);
 
+	_destroyFramebuffers();
 	_destroyImageViews();
 	_destroySwapChain();
+
 	_createSwapChain(size);
 	_createImageViews();
+	_createFramebuffers();
 }
 
 /** Instance */
