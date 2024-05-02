@@ -75,6 +75,9 @@ private:
 
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
+	void _createSyncObjects();
+	void _destroySyncObjects();
+
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
@@ -95,6 +98,10 @@ private:
 	std::vector<VkFramebuffer> _swapChainFramebuffers = {};
 	VkCommandPool _commandPool = VK_NULL_HANDLE;
 	VkCommandBuffer _commandBuffer = VK_NULL_HANDLE;
+
+	VkSemaphore _imageAvailableSemaphore = VK_NULL_HANDLE;
+	VkSemaphore _renderFinishedSemaphore = VK_NULL_HANDLE;
+	VkFence _inFlightFence = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render

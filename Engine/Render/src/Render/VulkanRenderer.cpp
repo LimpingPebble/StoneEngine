@@ -38,9 +38,14 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createFramebuffers();
 	_createCommandPool();
 	_createCommandBuffer();
+	_createSyncObjects();
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	if (_device != VK_NULL_HANDLE) {
+		vkDeviceWaitIdle(_device);
+	}
+	_destroySyncObjects();
 	_destroyCommandBuffer();
 	_destroyCommandPool();
 	_destroyFramebuffers();
@@ -419,12 +424,22 @@ void VulkanRenderer::_createRenderPass() {
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &colorAttachmentRef;
 
+	VkSubpassDependency dependency{};
+	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+	dependency.dstSubpass = 0;
+	dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.srcAccessMask = 0;
+	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
 	VkRenderPassCreateInfo renderPassInfo = {};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderPassInfo.attachmentCount = 1;
 	renderPassInfo.pAttachments = &colorAttachment;
 	renderPassInfo.subpassCount = 1;
 	renderPassInfo.pSubpasses = &subpass;
+	renderPassInfo.dependencyCount = 1;
+	renderPassInfo.pDependencies = &dependency;
 
 	if (vkCreateRenderPass(_device, &renderPassInfo, nullptr, &_renderPass) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create render pass");
@@ -715,6 +730,36 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t
 	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to record command buffer");
 	}
+}
+
+void VulkanRenderer::_createSyncObjects() {
+	VkSemaphoreCreateInfo semaphoreInfo = {};
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+	VkFenceCreateInfo fenceInfo = {};
+	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	if (vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &_imageAvailableSemaphore) != VK_SUCCESS ||
+		vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &_renderFinishedSemaphore) != VK_SUCCESS ||
+		vkCreateFence(_device, &fenceInfo, nullptr, &_inFlightFence) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create synchronization objects for a frame");
+	}
+}
+
+void VulkanRenderer::_destroySyncObjects() {
+	if (_imageAvailableSemaphore != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, _imageAvailableSemaphore, nullptr);
+	}
+	_imageAvailableSemaphore = VK_NULL_HANDLE;
+	if (_renderFinishedSemaphore != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, _renderFinishedSemaphore, nullptr);
+	}
+	_renderFinishedSemaphore = VK_NULL_HANDLE;
+	if (_inFlightFence != VK_NULL_HANDLE) {
+		vkDestroyFence(_device, _inFlightFence, nullptr);
+	}
+	_inFlightFence = VK_NULL_HANDLE;
 }
 
 } // namespace Stone::Render
