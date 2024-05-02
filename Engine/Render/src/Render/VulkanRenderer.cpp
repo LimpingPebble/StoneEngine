@@ -37,7 +37,7 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createGraphicPipeline();
 	_createFramebuffers();
 	_createCommandPool();
-	_createCommandBuffer();
+	_createCommandBuffers();
 	_createSyncObjects();
 }
 
@@ -46,7 +46,7 @@ VulkanRenderer::~VulkanRenderer() {
 		vkDeviceWaitIdle(_device);
 	}
 	_destroySyncObjects();
-	_destroyCommandBuffer();
+	_destroyCommandBuffers();
 	_destroyCommandPool();
 	_destroyFramebuffers();
 	_destroyGraphicPipeline();
@@ -667,23 +667,27 @@ void VulkanRenderer::_destroyCommandPool() {
 	_commandPool = VK_NULL_HANDLE;
 }
 
-void VulkanRenderer::_createCommandBuffer() {
+void VulkanRenderer::_createCommandBuffers() {
+
+	_commandBuffers.resize(_swapChainFramebuffers.size());
+
 	VkCommandBufferAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.commandPool = _commandPool;
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-	allocInfo.commandBufferCount = 1;
+	allocInfo.commandBufferCount = static_cast<uint32_t>(_commandBuffers.size());
 
-	if (vkAllocateCommandBuffers(_device, &allocInfo, &_commandBuffer) != VK_SUCCESS) {
+	if (vkAllocateCommandBuffers(_device, &allocInfo, _commandBuffers.data()) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to allocate command buffer");
 	}
 }
 
-void VulkanRenderer::_destroyCommandBuffer() {
-	if (_commandBuffer != VK_NULL_HANDLE) {
-		vkFreeCommandBuffers(_device, _commandPool, 1, &_commandBuffer);
+void VulkanRenderer::_destroyCommandBuffers() {
+	if (_commandBuffers.empty()) {
+		return;
 	}
-	_commandBuffer = VK_NULL_HANDLE;
+	vkFreeCommandBuffers(_device, _commandPool, static_cast<uint32_t>(_commandBuffers.size()), _commandBuffers.data());
+	_commandBuffers.clear();
 }
 
 void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex) {
@@ -733,6 +737,19 @@ void VulkanRenderer::recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t
 }
 
 void VulkanRenderer::_createSyncObjects() {
+	_syncObjects.clear();
+	_syncObjects.reserve(_commandBuffers.size());
+	for (size_t i = 0; i < _commandBuffers.size(); ++i) {
+		_syncObjects.emplace_back(_device);
+	}
+}
+
+void VulkanRenderer::_destroySyncObjects() {
+	_syncObjects.clear();
+}
+
+VulkanRenderer::SyncronizedObjects::SyncronizedObjects(VkDevice &device) : _device(device) {
+	std::cout << "Creating syncronized objects" << std::endl;
 	VkSemaphoreCreateInfo semaphoreInfo = {};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -740,26 +757,24 @@ void VulkanRenderer::_createSyncObjects() {
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-	if (vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &_imageAvailableSemaphore) != VK_SUCCESS ||
-		vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &_renderFinishedSemaphore) != VK_SUCCESS ||
-		vkCreateFence(_device, &fenceInfo, nullptr, &_inFlightFence) != VK_SUCCESS) {
+	if (vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &imageAvailable) != VK_SUCCESS ||
+		vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &renderFinished) != VK_SUCCESS ||
+		vkCreateFence(_device, &fenceInfo, nullptr, &inFlight) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create synchronization objects for a frame");
 	}
 }
 
-void VulkanRenderer::_destroySyncObjects() {
-	if (_imageAvailableSemaphore != VK_NULL_HANDLE) {
-		vkDestroySemaphore(_device, _imageAvailableSemaphore, nullptr);
+VulkanRenderer::SyncronizedObjects::~SyncronizedObjects() {
+	std::cout << "Destroying syncronized objects" << std::endl;
+	if (imageAvailable != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, imageAvailable, nullptr);
 	}
-	_imageAvailableSemaphore = VK_NULL_HANDLE;
-	if (_renderFinishedSemaphore != VK_NULL_HANDLE) {
-		vkDestroySemaphore(_device, _renderFinishedSemaphore, nullptr);
+	if (renderFinished != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, renderFinished, nullptr);
 	}
-	_renderFinishedSemaphore = VK_NULL_HANDLE;
-	if (_inFlightFence != VK_NULL_HANDLE) {
-		vkDestroyFence(_device, _inFlightFence, nullptr);
+	if (inFlight != VK_NULL_HANDLE) {
+		vkDestroyFence(_device, inFlight, nullptr);
 	}
-	_inFlightFence = VK_NULL_HANDLE;
 }
 
 } // namespace Stone::Render

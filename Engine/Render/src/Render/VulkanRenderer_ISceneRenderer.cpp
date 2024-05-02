@@ -18,33 +18,36 @@ void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 }
 
 void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {
-	vkWaitForFences(_device, 1, &_inFlightFence, VK_TRUE, UINT64_MAX);
 
-	vkResetFences(_device, 1, &_inFlightFence);
+	VkCommandBuffer &commandBuffer(_commandBuffers[_currentFrame]);
+	SyncronizedObjects &syncObject(_syncObjects[_currentFrame]);
+
+	vkWaitForFences(_device, 1, &syncObject.inFlight, VK_TRUE, UINT64_MAX);
+	vkResetFences(_device, 1, &syncObject.inFlight);
 
 	uint32_t imageIndex;
-	vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, _imageAvailableSemaphore, VK_NULL_HANDLE, &imageIndex);
+	vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, syncObject.imageAvailable, VK_NULL_HANDLE, &imageIndex);
 
-	vkResetCommandBuffer(_commandBuffer, 0);
+	vkResetCommandBuffer(commandBuffer, 0);
 
-	recordCommandBuffer(_commandBuffer, imageIndex);
+	recordCommandBuffer(commandBuffer, imageIndex);
 
 	VkSubmitInfo submitInfo{};
 	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	VkSemaphore waitSemaphores[] = {_imageAvailableSemaphore};
+	VkSemaphore waitSemaphores[] = {syncObject.imageAvailable};
 	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
 	submitInfo.waitSemaphoreCount = 1;
 	submitInfo.pWaitSemaphores = waitSemaphores;
 	submitInfo.pWaitDstStageMask = waitStages;
 	submitInfo.commandBufferCount = 1;
-	submitInfo.pCommandBuffers = &_commandBuffer;
+	submitInfo.pCommandBuffers = &commandBuffer;
 
-	VkSemaphore signalSemaphores[] = {_renderFinishedSemaphore};
+	VkSemaphore signalSemaphores[] = {syncObject.renderFinished};
 	submitInfo.signalSemaphoreCount = 1;
 	submitInfo.pSignalSemaphores = signalSemaphores;
 
-	if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, _inFlightFence) != VK_SUCCESS) {
+	if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, syncObject.inFlight) != VK_SUCCESS) {
 		throw std::runtime_error("failed to submit draw command buffer!");
 	}
 
@@ -63,6 +66,12 @@ void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 	// Scene::RenderContext context;
 	// world->initializeRenderContext(context);
 	// world->render(context);
+
+	if (_commandBuffers.empty()) {
+		return;
+	}
+
+	_currentFrame = (_currentFrame + 1) % _commandBuffers.size();
 }
 
 } // namespace Stone::Render

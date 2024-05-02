@@ -70,8 +70,8 @@ private:
 	void _createCommandPool();
 	void _destroyCommandPool();
 
-	void _createCommandBuffer();
-	void _destroyCommandBuffer();
+	void _createCommandBuffers();
+	void _destroyCommandBuffers();
 
 	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
@@ -97,11 +97,21 @@ private:
 	VkPipeline _graphicsPipeline = VK_NULL_HANDLE;
 	std::vector<VkFramebuffer> _swapChainFramebuffers = {};
 	VkCommandPool _commandPool = VK_NULL_HANDLE;
-	VkCommandBuffer _commandBuffer = VK_NULL_HANDLE;
 
-	VkSemaphore _imageAvailableSemaphore = VK_NULL_HANDLE;
-	VkSemaphore _renderFinishedSemaphore = VK_NULL_HANDLE;
-	VkFence _inFlightFence = VK_NULL_HANDLE;
+	std::vector<VkCommandBuffer> _commandBuffers = {};
+
+	struct SyncronizedObjects {
+		VkSemaphore imageAvailable = VK_NULL_HANDLE;
+		VkSemaphore renderFinished = VK_NULL_HANDLE;
+		VkFence inFlight = VK_NULL_HANDLE;
+		VkDevice &_device;
+
+		explicit SyncronizedObjects(VkDevice &device);
+		~SyncronizedObjects();
+	};
+
+	std::vector<SyncronizedObjects> _syncObjects;
+	size_t _currentFrame = 0;
 };
 
 } // namespace Stone::Render
