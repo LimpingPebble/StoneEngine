@@ -36,9 +36,11 @@ VulkanRenderer::VulkanRenderer(Settings &settings) : Renderer() {
 	_createRenderPass();
 	_createGraphicPipeline();
 	_createFramebuffers();
+	_createCommandPool();
 }
 
 VulkanRenderer::~VulkanRenderer() {
+	_destroyCommandPool();
 	_destroyFramebuffers();
 	_destroyGraphicPipeline();
 	_destroyRenderPass();
@@ -626,6 +628,26 @@ void VulkanRenderer::_destroyFramebuffers() {
 		vkDestroyFramebuffer(_device, framebuffer, nullptr);
 	}
 	_swapChainFramebuffers.clear();
+}
+
+void VulkanRenderer::_createCommandPool() {
+	QueueFamilyIndices queueFamilyIndices = findQueueFamilies(_physicalDevice, _surface);
+
+	VkCommandPoolCreateInfo poolInfo = {};
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+	poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+
+	if (vkCreateCommandPool(_device, &poolInfo, nullptr, &_commandPool) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create command pool");
+	}
+}
+
+void VulkanRenderer::_destroyCommandPool() {
+	if (_commandPool != VK_NULL_HANDLE) {
+		vkDestroyCommandPool(_device, _commandPool, nullptr);
+	}
+	_commandPool = VK_NULL_HANDLE;
 }
 
 } // namespace Stone::Render
