@@ -56,6 +56,9 @@ private:
 	void _createImageViews();
 	void _destroyImageViews();
 
+	void _createRenderPass();
+	void _destroyRenderPass();
+
 	void _createGraphicPipeline();
 	void _destroyGraphicPipeline();
 
@@ -75,6 +78,7 @@ private:
 	VkFormat _swapChainImageFormat = VK_FORMAT_UNDEFINED;
 	VkExtent2D _swapChainExtent = {0, 0};
 	std::vector<VkImageView> _swapChainImageViews = {};
+	VkRenderPass _renderPass = VK_NULL_HANDLE;
 	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
 };
 
