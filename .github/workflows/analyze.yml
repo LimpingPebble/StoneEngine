@@ -62,7 +62,7 @@ jobs:
           path: build/debug
 
       - name: Configure and build project
-        run: cmake --workflow --preset build-debug  --log-level=DEBUG
+        run: cmake --workflow --preset build-debug
 
   test:
     name: Run tests
@@ -86,4 +86,4 @@ jobs:
           path: build/debug
 
       - name: Run tests
-        run: cmake --workflow --preset pipeline-test --log-level=DEBUG
+        run: cmake --workflow --preset pipeline-test
