@@ -67,6 +67,8 @@ private:
 	void _createFramebuffers();
 	void _destroyFramebuffers();
 
+	void _recreateSwapChain(std::pair<uint32_t, uint32_t> size);
+
 	void _createCommandPool();
 	void _destroyCommandPool();
 

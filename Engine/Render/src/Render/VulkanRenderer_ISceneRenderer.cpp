@@ -23,10 +23,18 @@ void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 	SyncronizedObjects &syncObject(_syncObjects[_currentFrame]);
 
 	vkWaitForFences(_device, 1, &syncObject.inFlight, VK_TRUE, UINT64_MAX);
-	vkResetFences(_device, 1, &syncObject.inFlight);
 
 	uint32_t imageIndex;
-	vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, syncObject.imageAvailable, VK_NULL_HANDLE, &imageIndex);
+	VkResult result =
+		vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, syncObject.imageAvailable, VK_NULL_HANDLE, &imageIndex);
+
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+		std::cout << "Must recreate swap chain" << std::endl;
+	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+		throw std::runtime_error("failed to acquire swap chain image!");
+	}
+
+	vkResetFences(_device, 1, &syncObject.inFlight);
 
 	vkResetCommandBuffer(commandBuffer, 0);
 
