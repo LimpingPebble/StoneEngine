@@ -70,6 +70,11 @@ private:
 	void _createCommandPool();
 	void _destroyCommandPool();
 
+	void _createCommandBuffer();
+	void _destroyCommandBuffer();
+
+	void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifndef NDEBUG
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
@@ -89,6 +94,7 @@ private:
 	VkPipeline _graphicsPipeline = VK_NULL_HANDLE;
 	std::vector<VkFramebuffer> _swapChainFramebuffers = {};
 	VkCommandPool _commandPool = VK_NULL_HANDLE;
+	VkCommandBuffer _commandBuffer = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render
