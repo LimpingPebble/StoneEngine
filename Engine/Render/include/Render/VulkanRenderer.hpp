@@ -75,6 +75,7 @@ private:
 	VkFormat _swapChainImageFormat = VK_FORMAT_UNDEFINED;
 	VkExtent2D _swapChainExtent = {0, 0};
 	std::vector<VkImageView> _swapChainImageViews = {};
+	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render
