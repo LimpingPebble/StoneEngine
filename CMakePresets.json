@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 25
@@ -109,6 +109,70 @@
       "configurePreset": "doxygen",
       "targets": [
         "doxygen"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "all",
+      "description": "Runs all tests",
+      "configurePreset": "debug",
+      "execution": {
+        "enableFailover": true
+      }
+    },
+    {
+      "name": "pipeline",
+      "description": "Runs all tests as the pipeline",
+      "configurePreset": "debug",
+      "execution": {
+        "enableFailover": false
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "pipeline-build",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug-tests"
+        }
+      ]
+    },
+    {
+      "name": "pipeline-test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug-tests"
+        },
+        {
+          "type": "test",
+          "name": "pipeline"
+        }
+      ]
+    },
+    {
+      "name": "debug",
+      "description": "Basic developer debug workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug"
+        }
       ]
     }
   ]
