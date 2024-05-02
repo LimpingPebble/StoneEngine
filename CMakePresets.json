@@ -132,28 +132,11 @@
   ],
   "workflowPresets": [
     {
-      "name": "pipeline-build",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "debug"
-        },
-        {
-          "type": "build",
-          "name": "debug"
-        }
-      ]
-    },
-    {
       "name": "pipeline-test",
       "steps": [
         {
           "type": "configure",
           "name": "debug"
-        },
-        {
-          "type": "build",
-          "name": "debug-tests"
         },
         {
           "type": "test",
@@ -162,7 +145,7 @@
       ]
     },
     {
-      "name": "debug",
+      "name": "build-debug",
       "description": "Basic developer debug workflow",
       "steps": [
         {

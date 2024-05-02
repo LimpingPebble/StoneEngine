@@ -62,7 +62,7 @@ jobs:
           path: build/debug
 
       - name: Configure and build project
-        run: cmake --workflow --preset pipeline-build
+        run: cmake --workflow --preset build-debug
 
   test:
     name: Run tests
