@@ -143,7 +143,7 @@
         {
           "type": "build",
           "name": "debug-tests"
-        }
+        },
         {
           "type": "test",
           "name": "pipeline"
