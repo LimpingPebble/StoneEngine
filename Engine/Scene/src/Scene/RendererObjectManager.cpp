@@ -46,4 +46,17 @@ void RendererObjectManager::updateTexture(const std::shared_ptr<Texture> &textur
 	texture->markUndirty();
 }
 
+std::shared_ptr<IRendererObject> RendererObjectManager::getRendererObjectFrom(IRenderElement *element) {
+	return element->getRendererObject();
+}
+
+void RendererObjectManager::setRendererObjectTo(IRenderElement *element,
+												const std::shared_ptr<IRendererObject> &rendererObject) {
+	element->setRendererObject(rendererObject);
+}
+
+void RendererObjectManager::markElementUndirty(IRenderElement *element) {
+	element->markUndirty();
+}
+
 } // namespace Stone::Scene

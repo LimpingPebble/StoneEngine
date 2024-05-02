@@ -52,6 +52,14 @@ public:
 protected:
 	friend class RendererObjectManager;
 
+	[[nodiscard]] std::shared_ptr<IRendererObject> getRendererObject() const {
+		return _rendererObject;
+	}
+
+	void setRendererObject(const std::shared_ptr<IRendererObject> &rendererObject) {
+		_rendererObject = rendererObject;
+	}
+
 	void markUndirty() {
 		_dirty = false;
 	}

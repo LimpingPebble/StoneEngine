@@ -15,6 +15,11 @@ public:
 	virtual void updateMesh(const std::shared_ptr<Mesh> &mesh);
 	virtual void updateSkinMesh(const std::shared_ptr<SkinMesh> &skinmesh);
 	virtual void updateTexture(const std::shared_ptr<Texture> &texture);
+
+protected:
+	std::shared_ptr<IRendererObject> getRendererObjectFrom(IRenderElement *element);
+	void setRendererObjectTo(IRenderElement *element, const std::shared_ptr<IRendererObject> &rendererObject);
+	void markElementUndirty(IRenderElement *element);
 };
 
 } // namespace Stone::Scene
