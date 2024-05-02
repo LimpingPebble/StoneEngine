@@ -206,6 +206,8 @@ function(setup_module)
             )
             gtest_discover_tests(${TEST_EXEC})
             message(STATUS "Discovering tests for module ${SETUP_MODULE_NAME} in executable ${TEST_EXEC}")
+
+            add_dependencies(build_tests ${TEST_EXEC})
         else()
             message(AUTHOR_WARNING "module ${SETUP_MODULE_NAME}: tests was enabled but no directory test was found")
         endif()

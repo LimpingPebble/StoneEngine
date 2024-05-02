@@ -82,14 +82,14 @@
       "name": "debug-tests",
       "configurePreset": "debug",
       "targets": [
-        "test"
+        "build_tests"
       ]
     },
     {
       "name": "release-tests",
       "configurePreset": "release",
       "targets": [
-        "test"
+        "build_tests"
       ]
     },
     {
