@@ -51,9 +51,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-      volumes:
-        - /workspace:${{ github.workspace }}
-
     steps:
       - name: Checkout repos
         uses: actions/checkout@v4
@@ -64,11 +61,8 @@ jobs:
           key: cmake-debug
           path: build/debug
 
-      - name: Configuring cmake
-        run: cmake --preset debug
-
-      - name: Build project
-        run: cmake --build --preset debug --jobs 2
+      - name: Configure and build project
+        run: cmake --workflow --preset pipeline-build
 
   test:
     name: Run tests
@@ -81,11 +75,15 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-      volumes:
-        - /workspace:${{ github.workspace }}
-
     steps:
-      - name: Job tests
-        run: |
-          pwd
-          ls -la
+      - name: Checkout repos
+        uses: actions/checkout@v4
+
+      - name: Cache cmake output
+        uses: actions/cache@v4
+        with:
+          key: cmake-debug
+          path: build/debug
+
+      - name: Run tests
+        run: cmake --workflow --preset pipeline-test
