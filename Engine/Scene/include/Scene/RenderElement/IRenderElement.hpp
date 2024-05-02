@@ -49,12 +49,13 @@ public:
 		_dirty = true;
 	}
 
+	template <typename T>
+	[[nodiscard]] std::shared_ptr<T> getRendererObject() const {
+		return std::dynamic_pointer_cast<T>(_rendererObject);
+	}
+
 protected:
 	friend class RendererObjectManager;
-
-	[[nodiscard]] std::shared_ptr<IRendererObject> getRendererObject() const {
-		return _rendererObject;
-	}
 
 	void setRendererObject(const std::shared_ptr<IRendererObject> &rendererObject) {
 		_rendererObject = rendererObject;

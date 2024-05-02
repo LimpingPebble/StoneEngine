@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Scene/RenderElement/IRenderElement.hpp"
 #include "SceneTypes.hpp"
 
 namespace Stone::Scene {
@@ -17,9 +18,8 @@ public:
 	virtual void updateTexture(const std::shared_ptr<Texture> &texture);
 
 protected:
-	std::shared_ptr<IRendererObject> getRendererObjectFrom(IRenderElement *element);
-	void setRendererObjectTo(IRenderElement *element, const std::shared_ptr<IRendererObject> &rendererObject);
-	void markElementUndirty(IRenderElement *element);
+	static void setRendererObjectTo(IRenderElement *element, const std::shared_ptr<IRendererObject> &rendererObject);
+	static void markElementUndirty(IRenderElement *element);
 };
 
 } // namespace Stone::Scene
