@@ -23,6 +23,8 @@ namespace Stone::Scene {
  */
 class IRendererObject {
 public:
+	virtual ~IRendererObject() = default;
+
 	virtual void render(RenderContext &context) = 0;
 };
 
