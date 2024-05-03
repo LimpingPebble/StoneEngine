@@ -1,0 +1,168 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25
+  },
+  "configurePresets": [
+    {
+      "name": "debug",
+      "displayName": "Debug Config",
+      "description": "Configure project using Ninja generator",
+      "binaryDir": "${sourceDir}/build/debug",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "USE_SYSTEM_GLM": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "USE_SYSTEM_PAUSE": {
+          "type": "BOOL",
+          "value": "OFF"
+        },
+        "SKIP_TESTS": {
+          "type": "BOOL",
+          "value": "OFF"
+        },
+        "CMAKE_MESSAGE_LOG_LEVEL": "TRACE"
+      },
+      "condition": {
+        "type": "notEquals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Release Config",
+      "inherits": "debug",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "doxygen",
+      "description": "Generate Doxygen documentation",
+      "binaryDir": "${sourceDir}/build/doxygen",
+      "cacheVariables": {
+        "FULL_CONFIGURE": {
+          "type": "BOOL",
+          "value": "OFF"
+        },
+        "SKIP_TESTS": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "ENABLE_DOCS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "debug",
+      "jobs": 2,
+      "condition": {
+        "type": "notEquals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "debug-tests",
+      "configurePreset": "debug",
+      "targets": [
+        "build_tests"
+      ]
+    },
+    {
+      "name": "release-tests",
+      "configurePreset": "release",
+      "targets": [
+        "build_tests"
+      ]
+    },
+    {
+      "name": "debug-examples",
+      "configurePreset": "debug",
+      "targets": [
+        "examples"
+      ]
+    },
+    {
+      "name": "release-examples",
+      "configurePreset": "release",
+      "targets": [
+        "examples"
+      ]
+    },
+    {
+      "name": "generate-doxygen",
+      "configurePreset": "doxygen",
+      "targets": [
+        "doxygen"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "all",
+      "description": "Runs all tests",
+      "configurePreset": "debug",
+      "execution": {
+        "enableFailover": true
+      }
+    },
+    {
+      "name": "pipeline",
+      "description": "Runs all tests as the pipeline",
+      "configurePreset": "debug",
+      "execution": {
+        "enableFailover": false
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "pipeline-test",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug-tests"
+        },
+        {
+          "type": "test",
+          "name": "pipeline"
+        }
+      ]
+    },
+    {
+      "name": "build-debug",
+      "description": "Basic developer debug workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "debug"
+        },
+        {
+          "type": "build",
+          "name": "debug"
+        }
+      ]
+    }
+  ]
+}

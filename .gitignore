@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+
+# CMake artifacts
+/cmake-build-*
+/build*
+/CMakeUserPresets.json
+
+# IDE directories
+/.idea
+/.vscode
+.obsidian
+
+# Act secrets
+.secrets
+
+# MacOS Finder files
+.DS_Store

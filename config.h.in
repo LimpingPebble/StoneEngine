@@ -1,0 +1,4 @@
+#pragma once
+
+#define STONE_ENGINE_OS_NAME "@STONE_ENGINE_OS_NAME@"
+#cmakedefine01 STONE_ENGINE_USE_SYSTEM_PAUSE
