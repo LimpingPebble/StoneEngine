@@ -25,7 +25,8 @@
         "SKIP_TESTS": {
           "type": "BOOL",
           "value": "OFF"
-        }
+        },
+        "CMAKE_MESSAGE_LOG_LEVEL": "TRACE"
       },
       "condition": {
         "type": "notEquals",
@@ -66,6 +67,7 @@
     {
       "name": "debug",
       "configurePreset": "debug",
+      "jobs": 2,
       "condition": {
         "type": "notEquals",
         "lhs": "${hostSystemName}",
@@ -80,14 +82,14 @@
       "name": "debug-tests",
       "configurePreset": "debug",
       "targets": [
-        "test"
+        "build_tests"
       ]
     },
     {
       "name": "release-tests",
       "configurePreset": "release",
       "targets": [
-        "test"
+        "build_tests"
       ]
     },
     {
@@ -132,19 +134,6 @@
   ],
   "workflowPresets": [
     {
-      "name": "pipeline-build",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "debug"
-        },
-        {
-          "type": "build",
-          "name": "debug-tests"
-        }
-      ]
-    },
-    {
       "name": "pipeline-test",
       "steps": [
         {
@@ -162,7 +151,7 @@
       ]
     },
     {
-      "name": "debug",
+      "name": "build-debug",
       "description": "Basic developer debug workflow",
       "steps": [
         {

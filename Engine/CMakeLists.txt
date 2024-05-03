@@ -3,6 +3,8 @@ if (NOT SKIP_TESTS AND TARGET GTest::gtest_main)
     set(STONE_ENGINE_ENABLE_TESTS ON)
     enable_testing()
     include(GoogleTest)
+
+    add_custom_target(build_tests)
 endif ()
 
 set(SRCS_FOR_DOCS "" CACHE INTERNAL "")
