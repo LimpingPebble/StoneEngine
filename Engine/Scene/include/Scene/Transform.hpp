@@ -20,6 +20,7 @@ struct Transform2D {
 	void setPosition(const glm::vec2 &position);
 	void setRotation(float rotation);
 	void setScale(const glm::vec2 &scale);
+	void setMatrix(const glm::mat3 &matrix);
 
 	[[nodiscard]] const glm::vec2 &getPosition() const;
 	[[nodiscard]] float getRotation() const;
@@ -57,6 +58,7 @@ struct Transform3D {
 	void setRotation(const glm::quat &rotation);
 	void setEulerAngles(const glm::vec3 &eulerAngles);
 	void setScale(const glm::vec3 &scale);
+	void setMatrix(const glm::mat4 &matrix);
 
 	[[nodiscard]] const glm::vec3 &getPosition() const;
 	[[nodiscard]] const glm::quat &getRotation() const;
