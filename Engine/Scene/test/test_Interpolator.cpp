@@ -107,3 +107,89 @@ TEST(Interpolator, QuatValueAt) {
 	EXPECT_NEAR(interpolator.valueAt(0.5f).z, 1.5f, 0.001f);
 	EXPECT_NEAR(interpolator.valueAt(0.5f).w, 1.5f, 0.001f);
 }
+
+TEST(Transform2DInterpolator, AddPositionAt) {
+	Transform2DInterpolator interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec2(0.0f, 0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addPositionAt(2.0f, glm::vec2(2.0f, 2.0f));
+
+	const Interpolator<glm::vec2> &keyPositions = interpolator.getKeyPositions();
+	EXPECT_EQ(keyPositions.valueAt(0.0f), glm::vec2(0.0f, 0.0f));
+	EXPECT_EQ(keyPositions.valueAt(1.0f), glm::vec2(1.0f, 1.0f));
+	EXPECT_EQ(keyPositions.valueAt(2.0f), glm::vec2(2.0f, 2.0f));
+}
+
+TEST(Transform2DInterpolator, AddRotationAt) {
+	Transform2DInterpolator interpolator;
+	interpolator.addRotationAt(0.0f, 0.0f);
+	interpolator.addRotationAt(1.0f, 1.0f);
+	interpolator.addRotationAt(2.0f, 2.0f);
+
+	const Interpolator<float> &keyRotations = interpolator.getKeyRotations();
+	EXPECT_EQ(keyRotations.valueAt(0.0f), 0.0f);
+	EXPECT_EQ(keyRotations.valueAt(1.0f), 1.0f);
+	EXPECT_EQ(keyRotations.valueAt(2.0f), 2.0f);
+}
+
+TEST(Transform2DInterpolator, AddScaleAt) {
+	Transform2DInterpolator interpolator;
+	interpolator.addScaleAt(0.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addScaleAt(1.0f, glm::vec2(2.0f, 2.0f));
+	interpolator.addScaleAt(2.0f, glm::vec2(3.0f, 3.0f));
+
+	const Interpolator<glm::vec2> &keyScales = interpolator.getKeyScales();
+	EXPECT_EQ(keyScales.valueAt(0.0f), glm::vec2(1.0f, 1.0f));
+	EXPECT_EQ(keyScales.valueAt(1.0f), glm::vec2(2.0f, 2.0f));
+	EXPECT_EQ(keyScales.valueAt(2.0f), glm::vec2(3.0f, 3.0f));
+}
+
+TEST(Transform2DInterpolator, AddMatrixAt) {
+	Transform2DInterpolator interpolator;
+	// TODO: Add test for this
+	glm::mat4 matrix1;
+	glm::mat4 matrix2;
+	glm::mat4 matrix3;
+	interpolator.addMatrixAt(0.0f, matrix1);
+	interpolator.addMatrixAt(1.0f, matrix2);
+	interpolator.addMatrixAt(2.0f, matrix3);
+}
+
+TEST(Transform2DInterpolator, TransformAt) {
+	Transform2DInterpolator interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec2(0.0f, 0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addPositionAt(2.0f, glm::vec2(2.0f, 2.0f));
+
+	interpolator.addRotationAt(0.0f, 0.0f);
+	interpolator.addRotationAt(1.0f, 1.0f);
+	interpolator.addRotationAt(2.0f, 2.0f);
+
+	interpolator.addScaleAt(0.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addScaleAt(1.0f, glm::vec2(2.0f, 2.0f));
+	interpolator.addScaleAt(2.0f, glm::vec2(3.0f, 3.0f));
+
+	Transform2D result = interpolator.transformAt(1.5f);
+
+	EXPECT_EQ(result.getPosition(), glm::vec2(1.5f, 1.5f));
+	EXPECT_EQ(result.getRotation(), 1.5f);
+	EXPECT_EQ(result.getScale(), glm::vec2(2.5f, 2.5f));
+}
+
+TEST(Transform2DInterpolator, Duration) {
+	Transform2DInterpolator interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec2(0.0f, 0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addPositionAt(2.0f, glm::vec2(2.0f, 2.0f));
+
+	interpolator.addRotationAt(0.0f, 0.0f);
+	interpolator.addRotationAt(1.0f, 1.0f);
+	interpolator.addRotationAt(2.0f, 2.0f);
+
+	interpolator.addScaleAt(0.0f, glm::vec2(1.0f, 1.0f));
+	interpolator.addScaleAt(1.0f, glm::vec2(2.0f, 2.0f));
+	interpolator.addScaleAt(2.0f, glm::vec2(3.0f, 3.0f));
+
+	float duration = interpolator.duration();
+	EXPECT_EQ(duration, 2.0f);
+}
