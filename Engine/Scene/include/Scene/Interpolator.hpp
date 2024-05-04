@@ -131,10 +131,6 @@ private:
  */
 template <typename Time = float>
 class Transform2DInterpolator {
-	Interpolator<glm::vec2> _keyPositions; /**< Interpolator for position key values. */
-	Interpolator<float> _keyRotations;	   /**< Interpolator for rotation key values. */
-	Interpolator<glm::vec2> _keyScales;	   /**< Interpolator for scale key values. */
-
 public:
 	Transform2DInterpolator() = default;
 	Transform2DInterpolator(const Transform2DInterpolator &copy) = default;
@@ -281,6 +277,174 @@ public:
 	Time duration() const {
 		return std::max({_keyPositions.duration(), _keyRotations.duration(), _keyScales.duration()});
 	}
+
+private:
+	Interpolator<glm::vec2> _keyPositions; /**< Interpolator for position key values. */
+	Interpolator<float> _keyRotations;	   /**< Interpolator for rotation key values. */
+	Interpolator<glm::vec2> _keyScales;	   /**< Interpolator for scale key values. */
+};
+
+/**
+ * @brief A class that interpolates 3D transformations over time.
+ *
+ * This class provides interpolation functionality for key positions, rotations, and scales
+ * in a 3D space. It uses an Interpolator class to store and interpolate the key values.
+ *
+ * @tparam Time The type of time used for interpolation (default: float).
+ */
+template <typename Time = float>
+class Transform3DInterpolator {
+public:
+	Transform3DInterpolator() = default;
+	Transform3DInterpolator(const Transform3DInterpolator &copy) = default;
+
+	virtual ~Transform3DInterpolator() = default;
+
+	Transform3DInterpolator &operator=(const Transform3DInterpolator &copy) = default;
+
+	/**
+	 * @brief Get the const reference to the key positions interpolator.
+	 *
+	 * @return const Interpolator<glm::vec3>& The const reference to the key positions interpolator.
+	 */
+	const Interpolator<glm::vec3> &getKeyPositions() const {
+		return _keyPositions;
+	}
+
+	/**
+	 * @brief Get the reference to the key positions interpolator.
+	 *
+	 * @return Interpolator<glm::vec3>& The reference to the key positions interpolator.
+	 */
+	Interpolator<glm::vec3> &keyPositionsRef() {
+		return _keyPositions;
+	}
+
+	/**
+	 * @brief Get the const reference to the key rotations interpolator.
+	 *
+	 * @return const Interpolator<glm::quat>& The const reference to the key rotations interpolator.
+	 */
+	const Interpolator<glm::quat> &getKeyRotations() const {
+		return _keyRotations;
+	}
+
+	/**
+	 * @brief Get the reference to the key rotations interpolator.
+	 *
+	 * @return Interpolator<glm::quat>& The reference to the key rotations interpolator.
+	 */
+	Interpolator<glm::quat> &keyRotationsRef() {
+		return _keyRotations;
+	}
+
+	/**
+	 * @brief Get the const reference to the key scales interpolator.
+	 *
+	 * @return const Interpolator<glm::vec3>& The const reference to the key scales interpolator.
+	 */
+	const Interpolator<glm::vec3> &getKeyScales() const {
+		return _keyScales;
+	}
+
+	/**
+	 * @brief Get the reference to the key scales interpolator.
+	 *
+	 * @return Interpolator<glm::vec3>& The reference to the key scales interpolator.
+	 */
+	Interpolator<glm::vec3> &keyScalesRef() {
+		return _keyScales;
+	}
+
+	/**
+	 * @brief Add a key position at a specific time.
+	 *
+	 * @param time The time at which to add the key position.
+	 * @param position The position value to add.
+	 * @param function The interpolation function to use (default: Curve::Function<Time>()).
+	 */
+	void addPositionAt(Time time, glm::vec3 position, Curve::Function<Time> function = Curve::Function<Time>()) {
+		_keyPositions.addKeyValueAt(position, time, function);
+	}
+
+	/**
+	 * @brief Add a key rotation at a specific time.
+	 *
+	 * @param time The time at which to add the key rotation.
+	 * @param rotation The rotation value to add.
+	 * @param function The interpolation function to use (default: Curve::Function<Time>()).
+	 */
+	void addRotationAt(Time time, glm::quat rotation, Curve::Function<Time> function = Curve::Function<Time>()) {
+		_keyRotations.addKeyValueAt(rotation, time, function);
+	}
+
+	/**
+	 * @brief Add a key scale at a specific time.
+	 *
+	 * @param time The time at which to add the key scale.
+	 * @param scale The scale value to add.
+	 * @param function The interpolation function to use (default: Curve::Function<Time>()).
+	 */
+	void addScaleAt(Time time, glm::vec3 scale, Curve::Function<Time> function = Curve::Function<Time>()) {
+		_keyScales.addKeyValueAt(scale, time, function);
+	}
+
+	/**
+	 * @brief Add a key matrix at a specific time.
+	 *
+	 * This method decomposes the matrix into position, rotation, and scale components
+	 * and adds them as key values.
+	 *
+	 * @param time The time at which to add the key matrix.
+	 * @param matrix The matrix value to add.
+	 * @param function The interpolation function to use (default: Curve::Function<Time>()).
+	 */
+	void addMatrixAt(Time time, glm::mat4 matrix, Curve::Function<Time> function = Curve::Function<Time>()) {
+		Transform3D t;
+		t.setMatrix(matrix);
+		addPositionAt(time, t.getPosition(), std::move(function));
+		addRotationAt(time, t.getRotation(), std::move(function));
+		addScaleAt(time, t.getScale(), std::move(function));
+	}
+
+	/**
+	 * @brief Get the interpolated transformation at a specific time.
+	 *
+	 * This method interpolates the key positions, rotations, and scales at the given time
+	 * and returns the resulting Transform3D object.
+	 *
+	 * @param time The time at which to get the interpolated transformation.
+	 * @param __default The default Transform3D object to use if no key values are available (default: Transform3D()).
+	 * @return Transform3D The interpolated transformation.
+	 */
+	Transform3D transformAt(Time time, Transform3D __default = Transform3D()) const {
+		if (!_keyPositions.isEmpty()) {
+			__default.setPosition(_keyPositions.valueAt(time));
+		}
+		if (!_keyRotations.isEmpty()) {
+			__default.setRotation(_keyRotations.valueAt(time));
+		}
+		if (!_keyScales.isEmpty()) {
+			__default.setScale(_keyScales.valueAt(time));
+		}
+		return __default;
+	}
+
+	/**
+	 * @brief Get the duration of the interpolator.
+	 *
+	 * This method returns the maximum duration among the key positions, rotations, and scales.
+	 *
+	 * @return Time The duration of the interpolator.
+	 */
+	Time duration() const {
+		return std::max({_keyPositions.duration(), _keyRotations.duration(), _keyScales.duration()});
+	}
+
+private:
+	Interpolator<glm::vec3> _keyPositions; /**< The interpolator for key positions. */
+	Interpolator<glm::quat> _keyRotations; /**< The interpolator for key rotations. */
+	Interpolator<glm::vec3> _keyScales;	   /**< The interpolator for key scales. */
 };
 
 } // namespace Stone::Scene

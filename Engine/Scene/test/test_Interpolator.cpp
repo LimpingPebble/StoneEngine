@@ -144,16 +144,6 @@ TEST(Transform2DInterpolator, AddScaleAt) {
 	EXPECT_EQ(keyScales.valueAt(2.0f), glm::vec2(3.0f, 3.0f));
 }
 
-TEST(Transform2DInterpolator, AddMatrixAt) {
-	Transform2DInterpolator interpolator;
-	// TODO: Add test for this
-	glm::mat4 matrix1;
-	glm::mat4 matrix2;
-	glm::mat4 matrix3;
-	interpolator.addMatrixAt(0.0f, matrix1);
-	interpolator.addMatrixAt(1.0f, matrix2);
-	interpolator.addMatrixAt(2.0f, matrix3);
-}
 
 TEST(Transform2DInterpolator, TransformAt) {
 	Transform2DInterpolator interpolator;
@@ -191,5 +181,62 @@ TEST(Transform2DInterpolator, Duration) {
 	interpolator.addScaleAt(2.0f, glm::vec2(3.0f, 3.0f));
 
 	float duration = interpolator.duration();
+	EXPECT_EQ(duration, 2.0f);
+}
+
+TEST(Transform3DInterpolator, AddPositionAt) {
+	Transform3DInterpolator<float> interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec3(0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec3(1.0f));
+
+	EXPECT_EQ(interpolator.getKeyPositions().valueAt(0.0f), glm::vec3(0.0f));
+	EXPECT_EQ(interpolator.getKeyPositions().valueAt(1.0f), glm::vec3(1.0f));
+}
+
+TEST(Transform3DInterpolator, AddRotationAt) {
+	Transform3DInterpolator<float> interpolator;
+	interpolator.addRotationAt(0.0f, glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+	interpolator.addRotationAt(1.0f, glm::quat(0.0f, 1.0f, 0.0f, 0.0f));
+
+	EXPECT_EQ(interpolator.getKeyRotations().valueAt(0.0f), glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+	EXPECT_EQ(interpolator.getKeyRotations().valueAt(1.0f), glm::quat(0.0f, 1.0f, 0.0f, 0.0f));
+}
+
+TEST(Transform3DInterpolator, AddScaleAt) {
+	Transform3DInterpolator<float> interpolator;
+	interpolator.addScaleAt(0.0f, glm::vec3(1.0f));
+	interpolator.addScaleAt(1.0f, glm::vec3(2.0f));
+
+	EXPECT_EQ(interpolator.getKeyScales().valueAt(0.0f), glm::vec3(1.0f));
+	EXPECT_EQ(interpolator.getKeyScales().valueAt(1.0f), glm::vec3(2.0f));
+}
+
+TEST(Transform3DInterpolator, TransformAt) {
+	Transform3DInterpolator<float> interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec3(0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec3(1.0f));
+	interpolator.addRotationAt(0.0f, glm::quat(glm::vec3(0.0f)));
+	interpolator.addRotationAt(1.0f, glm::quat(glm::vec3(1.0f, 0.0f, 0.0f)));
+	interpolator.addScaleAt(0.0f, glm::vec3(1.0f));
+	interpolator.addScaleAt(1.0f, glm::vec3(2.0f));
+
+	Transform3D result = interpolator.transformAt(0.5f);
+
+	EXPECT_EQ(result.getPosition(), glm::vec3(0.5f));
+	EXPECT_NEAR(glm::eulerAngles(result.getRotation()).x, 0.5f, 0.0001f);
+	EXPECT_EQ(result.getScale(), glm::vec3(1.5f));
+}
+
+TEST(Transform3DInterpolator, Duration) {
+	Transform3DInterpolator<float> interpolator;
+	interpolator.addPositionAt(0.0f, glm::vec3(0.0f));
+	interpolator.addPositionAt(1.0f, glm::vec3(1.0f));
+	interpolator.addRotationAt(0.0f, glm::quat(1.0f, 0.0f, 0.0f, 0.0f));
+	interpolator.addRotationAt(1.0f, glm::quat(0.0f, 1.0f, 0.0f, 0.0f));
+	interpolator.addScaleAt(0.0f, glm::vec3(1.0f));
+	interpolator.addScaleAt(2.0f, glm::vec3(2.0f));
+
+	float duration = interpolator.duration();
+
 	EXPECT_EQ(duration, 2.0f);
 }
