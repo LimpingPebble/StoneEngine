@@ -146,7 +146,7 @@ if ( FULL_CONFIGURE )
 	set_target_properties(assimp PROPERTIES SYSTEM ON)
 
 	if ( USE_SYSTEM_BOOST )
-		find_package(Boost 1.74.0 REQUIRED)
+		find_package(Boost 1.74.0)
 	endif ()
 
 	if ( NOT USE_SYSTEM_BOOST OR NOT Boost_FOUND )
