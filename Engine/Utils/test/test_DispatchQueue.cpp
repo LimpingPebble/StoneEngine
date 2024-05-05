@@ -12,7 +12,7 @@ TEST(DispatchQueueTest, QueueAsync) {
 
 	// Submit tasks to the queue asynchronously
 	for (int i = 0; i < 10; ++i) {
-		queue.async([&count] { ++count; });
+		queue.async(0, [&count] { ++count; });
 	}
 
 	EXPECT_EQ(count.load(), 0);
@@ -38,7 +38,7 @@ TEST(DispatchQueueTest, QueueSync) {
 	}
 
 	// Stop the secondary thread
-	queue.async([&queue] { queue.stop(); });
+	queue.async(-1, [&queue] { queue.stop(); });
 
 	++count;
 	++count;
