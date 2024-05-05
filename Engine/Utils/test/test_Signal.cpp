@@ -11,11 +11,11 @@ void add(int a, int b, int &result) {
 TEST(Signal, SubscribeWithFunction) {
 	int result = 0;
 
-	Signal<void(int, int, int &)> signal;
+	Signal<int, int, int &> signal;
 	signal.broadcast(5, 5, result);
 	EXPECT_EQ(result, 0);
 	{
-		Slot<void(int, int, int &)> slot(add);
+		Slot<int, int, int &> slot(add);
 		signal.bind(slot);
 		signal.broadcast(5, 8, result);
 		EXPECT_EQ(result, 13);
@@ -30,11 +30,11 @@ TEST(Signal, SubscribeWithLambda) {
 		result = a + b;
 	};
 
-	Signal<void(int, int)> signal;
+	Signal<int, int> signal;
 	signal.broadcast(5, 5);
 	EXPECT_EQ(result, 0);
 	{
-		Slot<void(int, int)> slot(addition);
+		Slot<int, int> slot(addition);
 		signal.bind(slot);
 		signal.broadcast(5, 8);
 		EXPECT_EQ(result, 13);
@@ -54,14 +54,14 @@ TEST(Signal, SubscribeWithMethod) {
 	Calc calc;
 	EXPECT_EQ(calc.result, 0);
 
-	Signal<void(int, int)> signal;
+	Signal<int, int> signal;
 	{
-		Slot<void(int, int)> slot(&calc, &Calc::add_numbers);
+		Slot<int, int> slot(&calc, &Calc::add_numbers);
 		signal.bind(slot);
-		signal.broadcast(5, 8);
+		signal(5, 8);
 		EXPECT_EQ(calc.result, 13);
 	}
-	signal.broadcast(12, 5);
+	signal(12, 5);
 	EXPECT_EQ(calc.result, 13);
 }
 
@@ -79,18 +79,18 @@ TEST(Signal, SubscribeWithMethodConst) {
 	const Calc calc(3);
 	int result = 0;
 
-	Signal<void(int, int, int &)> signal;
+	Signal<int, int, int &> signal;
 
 	{
-		Slot<void(int, int, int &)> slot(&calc, &Calc::add_numbers);
+		Slot<int, int, int &> slot(&calc, &Calc::add_numbers);
 
 		signal.bind(slot);
 
-		signal.broadcast(2, 3, result);
+		signal(2, 3, result);
 		EXPECT_EQ(result, 15);
 	}
 
-	signal.broadcast(12, 5, result);
+	signal(12, 5, result);
 
 	EXPECT_EQ(result, 15);
 }
@@ -101,9 +101,9 @@ TEST(Signal, Unbind) {
 		result = a + b;
 	};
 
-	Signal<void(int, int)> signal;
+	Signal<int, int> signal;
 	{
-		Slot<void(int, int)> slot(addition);
+		Slot<int, int> slot(addition);
 		signal.bind(slot);
 		signal.broadcast(5, 8);
 		EXPECT_EQ(result, 13);
@@ -121,11 +121,11 @@ TEST(Signal, MultipleRebind) {
 		count += addition;
 	};
 
-	Slot<void(int)> sub(increment);
+	Slot<int> sub(increment);
 
-	Signal<void(int)> pub1;
-	Signal<void(int)> pub2;
-	Signal<void(int)> pub3;
+	Signal<int> pub1;
+	Signal<int> pub2;
+	Signal<int> pub3;
 
 	pub1.bind(sub);
 	pub2.bind(sub);
@@ -148,7 +148,7 @@ TEST(Signal, BulletGame) {
 
 	class PhysicBody {
 	public:
-		Signal<void(Actor *)> onHit;
+		Signal<Actor *> onHit;
 
 		void trigger_collision(Actor *actor) {
 			onHit.broadcast(actor);
@@ -158,7 +158,7 @@ TEST(Signal, BulletGame) {
 	class Character : public Actor {
 	public:
 		int health;
-		Signal<void(Character *)> on_death;
+		Signal<Character *> on_death;
 
 		Character() : Actor(), health(10) {
 		}
@@ -173,7 +173,7 @@ TEST(Signal, BulletGame) {
 	class Bullet : public Actor {
 	public:
 		std::shared_ptr<PhysicBody> body;
-		Slot<void(Actor *)> on_body_hit;
+		Slot<Actor *> on_body_hit;
 
 		Bullet() : Actor(), body(std::make_shared<PhysicBody>()), on_body_hit(this, &Bullet::on_hit) {
 			body->onHit.bind(on_body_hit);
@@ -190,7 +190,7 @@ TEST(Signal, BulletGame) {
 	Character character;
 
 	bool character_died = false;
-	Slot<void(Character *)> char_died_sub([&character_died](Character *) { character_died = true; });
+	Slot<Character *> char_died_sub([&character_died](Character *) { character_died = true; });
 
 	character.on_death.bind(char_died_sub);
 
