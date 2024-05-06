@@ -25,7 +25,7 @@ public:
 	void setActiveCamera(const std::shared_ptr<CameraNode> &camera);
 	[[nodiscard]] std::shared_ptr<CameraNode> getActiveCamera() const;
 
-	void render();
+	void initializeRenderContext(RenderContext &context) const;
 
 protected:
 	std::shared_ptr<ISceneRenderer> _renderer;

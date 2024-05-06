@@ -40,7 +40,7 @@ examples:
 	@${CMAKE} --build --preset=debug-examples
 
 ${ALL_EXAMPLES}: examples
-	cd ${BUILD_DIR}/${PRESET}/ && ./examples/$@/$@
+	./${BUILD_DIR}/${PRESET}/examples/$@/$@
 
 setup-tidy:
 	@${CMAKE} --preset=setup-tidy

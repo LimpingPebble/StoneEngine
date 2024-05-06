@@ -91,7 +91,10 @@ public:
 	[[nodiscard]] glm::mat4 getWorldTransformMatrix() const;
 	[[nodiscard]] glm::mat4 getTransformMatrixRelativeToNode(const std::shared_ptr<Node> &otherNode) const;
 
-	void withAllChildrenHierarchy(const std::function<void(const std::shared_ptr<Node> &)> &callback) const;
+	void traverseTopDown(const std::function<void(const std::shared_ptr<Node> &)> &func);
+	void traverseBottomUp(const std::function<void(const std::shared_ptr<Node> &)> &func);
+	void traverseTopDownBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func);
+	void traverseBottomUpBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func);
 
 	void writeHierarchy(std::ostream &stream, bool colored = true, const std::string &linePrefix = "",
 						const std::string &firstPrefix = "", const std::string &lastPrefix = "") const;

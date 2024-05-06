@@ -43,9 +43,16 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 
 		uint32_t glfwExtensionCount = 0;
 		const char **glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-		for (uint32_t i = 0; i < glfwExtensionCount; i++) {
-			rendererSettings.extensions.emplace_back(glfwExtensions[i]);
-		}
+		rendererSettings.instanceExt = std::vector<const char *>(glfwExtensions, glfwExtensions + glfwExtensionCount);
+		rendererSettings.createSurface = [&](VkInstance instance, const VkAllocationCallbacks *allocator,
+											 VkSurfaceKHR *surface) {
+			return glfwCreateWindowSurface(instance, _glfwWindow, allocator, surface);
+		};
+
+		rendererSettings.frame_size = {
+			static_cast<uint32_t>(settings.width),
+			static_cast<uint32_t>(settings.height),
+		};
 
 		_renderer = std::make_shared<Render::VulkanRenderer>(rendererSettings);
 	}
@@ -72,7 +79,7 @@ void GlfwWindow::loopOnce() {
 	_deltaTime = newTime - _elapsedTime;
 	_elapsedTime = newTime;
 
-	// TODO: Update the scene and render it
+	Window::loopOnce();
 
 	glfwSwapBuffers(_glfwWindow);
 }

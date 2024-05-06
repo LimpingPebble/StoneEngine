@@ -183,11 +183,58 @@ glm::mat4 Node::getTransformMatrixRelativeToNode(const std::shared_ptr<Node> &ot
 	return transform;
 }
 
-void Node::withAllChildrenHierarchy(const std::function<void(const std::shared_ptr<Node> &)> &callback) const {
-	for (auto &child : _children) {
-		child->withAllChildrenHierarchy(callback);
-		callback(child);
-	}
+void Node::traverseTopDown(const std::function<void(const std::shared_ptr<Node> &)> &func) {
+	std::function<void(const std::shared_ptr<Node> &)> traverseRecursive;
+	traverseRecursive = [&](const std::shared_ptr<Node> &node) {
+		func(node);
+		for (auto &child : node->getChildren()) {
+			traverseRecursive(child);
+		}
+	};
+
+	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+}
+
+void Node::traverseBottomUp(const std::function<void(const std::shared_ptr<Node> &)> &func) {
+	std::function<void(const std::shared_ptr<Node> &)> traverseRecursive;
+	traverseRecursive = [&](const std::shared_ptr<Node> &node) {
+		for (auto &child : node->getChildren()) {
+			traverseRecursive(child);
+		}
+		func(node);
+	};
+
+	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+}
+
+void Node::traverseTopDownBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func) {
+	std::function<bool(const std::shared_ptr<Node> &)> traverseRecursive;
+	traverseRecursive = [&](const std::shared_ptr<Node> &node) {
+		if (!func(node))
+			return false;
+		for (auto &child : node->getChildren()) {
+			if (!traverseRecursive(child))
+				return false;
+		}
+		return true;
+	};
+
+	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+}
+
+void Node::traverseBottomUpBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func) {
+	std::function<bool(const std::shared_ptr<Node> &)> traverseRecursive;
+	traverseRecursive = [&](const std::shared_ptr<Node> &node) {
+		for (auto &child : node->getChildren()) {
+			if (!traverseRecursive(child))
+				return false;
+		}
+		if (!func(node))
+			return false;
+		return true;
+	};
+
+	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
 }
 
 void Node::writeHierarchy(std::ostream &stream, bool colored, const std::string &linePrefix,

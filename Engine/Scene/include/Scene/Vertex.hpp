@@ -9,16 +9,25 @@
 namespace Stone::Scene {
 
 struct Vertex {
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec3 tangent;
-	glm::vec3 bitangent;
-	glm::vec2 uv;
+	glm::vec3 position = glm::vec3(0);
+	glm::vec3 normal = glm::vec3(0, 0, 1);
+	glm::vec3 tangent = glm::vec3(1, 0, 0);
+	glm::vec3 bitangent = glm::vec3(0, 1, 0);
+	glm::vec2 uv = glm::vec2(0);
+
+	Vertex() = default;
+	Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b, const glm::vec2 &uv);
+	Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv);
 };
 
 struct WeightVertex : Vertex {
 	glm::ivec4 boneIDs = glm::ivec4(0);
 	glm::vec4 boneWeights = glm::vec4(0.0f);
+
+	WeightVertex() = default;
+	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b, const glm::vec2 &uv,
+				 const glm::ivec4 &bIds, const glm::vec4 &bWs);
+	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv);
 };
 
 enum class CubeAxis : uint8_t {

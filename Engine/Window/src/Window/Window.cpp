@@ -2,6 +2,7 @@
 
 #include "Window/Window.hpp"
 
+#include "Render/Renderer.hpp"
 #include "Scene/Node/WorldNode.hpp"
 #include "Window/App.hpp"
 
@@ -20,6 +21,13 @@ Window::~Window() {
 }
 
 void Window::loopOnce() {
+	_world->traverseTopDown(
+		[this](const std::shared_ptr<Scene::Node> &node) { node->update(static_cast<float>(_deltaTime)); });
+
+	if (_renderer) {
+		_renderer->updateDataForWorld(_world);
+		_renderer->renderWorld(_world);
+	}
 }
 
 bool Window::shouldClose() const {
@@ -68,6 +76,7 @@ void Window::_onCloseCallback() {
 
 void Window::_onResizeCallback(int width, int height) {
 	std::cout << this << ":resize " << width << " " << height << std::endl;
+	_renderer->updateFrameSize({static_cast<uint32_t>(width), static_cast<uint32_t>(height)});
 }
 
 } // namespace Stone::Window

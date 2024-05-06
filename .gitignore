@@ -46,3 +46,6 @@
 
 # MacOS Finder files
 .DS_Store
+
+# Shader artifacts
+*.spv

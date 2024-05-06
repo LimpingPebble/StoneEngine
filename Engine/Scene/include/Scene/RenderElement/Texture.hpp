@@ -21,7 +21,7 @@ public:
 	[[nodiscard]] const char *getClassName() const override;
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	void generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) override;
+	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
 
 	void setImage(std::shared_ptr<Core::Image> image);
 	[[nodiscard]] std::shared_ptr<Core::Image> getImage() const;
