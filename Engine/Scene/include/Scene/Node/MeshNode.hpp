@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "Scene/Node/PivotNode.hpp"
+#include "Scene/Node/RenderableNode.hpp"
 
 namespace Stone::Scene {
 
 class Mesh;
 class Material;
 
-class MeshNode : public PivotNode {
+class MeshNode : public RenderableNode {
 public:
 	STONE_NODE(MeshNode);
 
@@ -17,6 +17,8 @@ public:
 	MeshNode(const MeshNode &other) = default;
 
 	~MeshNode() override = default;
+
+	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -31,27 +33,6 @@ protected:
 	std::shared_ptr<Material> _material;
 
 	[[nodiscard]] const char *_termClassColor() const override;
-};
-
-class InstancedMeshNode : public MeshNode {
-public:
-	STONE_NODE(InstancedMeshNode);
-
-	explicit InstancedMeshNode(const std::string &name = "instancedmesh");
-	InstancedMeshNode(const InstancedMeshNode &other) = default;
-
-	~InstancedMeshNode() override = default;
-
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	void addInstance(const Transform3D &transform);
-	void removeInstance(int index);
-	void clearInstances();
-
-	[[nodiscard]] const std::vector<Transform3D> &getInstancesTransforms() const;
-
-protected:
-	std::vector<Transform3D> _instancesTransforms;
 };
 
 } // namespace Stone::Scene

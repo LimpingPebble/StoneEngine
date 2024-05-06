@@ -14,6 +14,8 @@ public:
 	Renderer(const Renderer &) = delete;
 
 	virtual ~Renderer() = default;
+
+	virtual void updateFrameSize(std::pair<uint32_t, uint32_t> size) = 0;
 };
 
 } // namespace Stone::Render

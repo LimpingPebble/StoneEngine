@@ -2,8 +2,8 @@
 
 #include "Scene/RenderElement/SkinMesh.hpp"
 
-#include "Scene/ISceneRenderer.hpp"
 #include "Scene/Node/SkeletonNode.hpp"
+#include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {
 
@@ -16,8 +16,8 @@ std::ostream &SkinMesh::writeToStream(std::ostream &stream, bool closing_bracer)
 	return stream;
 }
 
-void SkinMesh::generateRenderBehaviour(std::shared_ptr<ISceneRenderer> renderer) {
-	renderer->generateDataForSkinMesh(std::static_pointer_cast<SkinMesh>(shared_from_this()));
+void SkinMesh::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
+	manager->updateSkinMesh(std::static_pointer_cast<SkinMesh>(shared_from_this()));
 }
 
 const std::vector<WeightVertex> &SkinMesh::getVertices() const {
@@ -25,6 +25,7 @@ const std::vector<WeightVertex> &SkinMesh::getVertices() const {
 }
 
 std::vector<WeightVertex> &SkinMesh::verticesRef() {
+	markDirty();
 	return _vertices;
 }
 
@@ -33,6 +34,7 @@ const std::vector<uint32_t> &SkinMesh::getIndices() const {
 }
 
 std::vector<uint32_t> &SkinMesh::indicesRef() {
+	markDirty();
 	return _indices;
 }
 
