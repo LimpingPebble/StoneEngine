@@ -68,7 +68,7 @@ if ( FULL_CONFIGURE )
 		FetchContent_Declare(
 				glm
 				GIT_REPOSITORY https://github.com/g-truc/glm.git
-				GIT_TAG bf71a834948186f4097caa076cd2663c69a10e1e # refs/tags/1.0.1
+				GIT_TAG 33b0eb9fa336ffd8551024b1d2690e418014553b # refs/tags/1.0.0
 		)
 
 		FetchContent_MakeAvailable(glm)
