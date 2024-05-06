@@ -9,7 +9,6 @@ namespace Stone::Scene {
 
 class RendererObjectManager {
 public:
-
 	virtual ~RendererObjectManager() = default;
 
 	virtual void updateMeshNode(const std::shared_ptr<MeshNode> &meshNode);

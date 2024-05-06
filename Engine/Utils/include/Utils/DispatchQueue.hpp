@@ -51,10 +51,10 @@ public:
 	void stop();
 
 private:
-	std::queue<Task> _tasks;                ///< The queue of tasks.
-	std::mutex _mutex;                      ///< The mutex for thread safety.
-	std::condition_variable _condition;     ///< The condition variable for task synchronization.
-	bool _running = false;                  ///< Flag indicating if the dispatch queue is running.
+	std::queue<Task> _tasks;			///< The queue of tasks.
+	std::mutex _mutex;					///< The mutex for thread safety.
+	std::condition_variable _condition; ///< The condition variable for task synchronization.
+	bool _running = false;				///< Flag indicating if the dispatch queue is running.
 };
 
 } // namespace Stone
