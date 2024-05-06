@@ -71,6 +71,8 @@ if ( FULL_CONFIGURE )
 				GIT_TAG 33b0eb9fa336ffd8551024b1d2690e418014553b # refs/tags/1.0.0
 		)
 
+		set(GLM_ENABLE_CXX_17 ON CACHE INTERNAL "Forces C++20 in GLM")
+
 		FetchContent_MakeAvailable(glm)
 		set(GLM_FOUND ON)
 		set_target_properties(glm PROPERTIES SYSTEM ON)
