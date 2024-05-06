@@ -16,4 +16,6 @@ void RenderableNode::render(RenderContext &context) {
 	Node::render(context);
 }
 
+// TODO: Benchmark diamond inheritance with PivotNode vs pivot usage
+
 } // namespace Stone::Scene

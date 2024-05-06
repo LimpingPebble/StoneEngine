@@ -7,14 +7,14 @@
 
 namespace Stone {
 
+template <typename T>
+class IDelegate;
+
 /**
  * @brief Interface specialization for delegates with a return type and arguments.
  * @tparam R The return type.
  * @tparam Args The argument types.
  */
-template <typename T>
-class IDelegate;
-
 template <typename R, typename... Args>
 class IDelegate<R(Args...)> {
 public:
@@ -26,6 +26,13 @@ public:
 	 * @return The result of the delegate operation.
 	 */
 	virtual R perform(Args...) = 0;
+
+	/**
+	 * @brief Performs the delegate operation.
+	 */
+	inline void operator()(Args... args) {
+		perform(std::forward<Args>(args)...);
+	}
 };
 
 /**
@@ -64,14 +71,14 @@ private:
 	const Fn _fn;
 };
 
+template <typename T>
+class LambdaDelegate;
+
 /**
  * @brief Delegate specialization for lambda functions with a return type and arguments.
  * @tparam R The return type.
  * @tparam Args The argument types.
  */
-template <typename T>
-class LambdaDelegate;
-
 template <typename R, typename... Args>
 class LambdaDelegate<R(Args...)> : public IDelegate<R(Args...)> {
 public:
