@@ -4,7 +4,7 @@ project(StoneEngine LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
-set(USE_SYSTEM_GLM ON CACHE BOOL "Uses glm from system libraries")
+set(USE_SYSTEM_GLM OFF CACHE BOOL "Uses glm from system libraries")
 set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
 set(USE_SYSTEM_PAUSE OFF CACHE BOOL "Enables the use of Windows' pause after ending console only programs. (Windows only)")
