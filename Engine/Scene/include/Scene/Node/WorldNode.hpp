@@ -8,6 +8,12 @@ namespace Stone::Scene {
 
 class CameraNode;
 
+/**
+ * @class WorldNode
+ * @brief Represents the root node of the scene graph.
+ *
+ * The `WorldNode` class is the root node of the scene graph.
+ */
 class WorldNode : public Node {
 public:
 	STONE_NODE(WorldNode);
