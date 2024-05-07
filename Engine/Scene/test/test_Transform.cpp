@@ -41,7 +41,10 @@ TEST(Transform, Transform3D) {
 
 	// Set rotation
 	transform.setRotation(glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)));
-	EXPECT_EQ(transform.getRotation(), glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)));
+	EXPECT_NEAR(transform.getRotation().x, glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)).x, 0.0001f);
+	EXPECT_NEAR(transform.getRotation().y, glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)).y, 0.0001f);
+	EXPECT_NEAR(transform.getRotation().z, glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)).z, 0.0001f);
+	EXPECT_NEAR(transform.getRotation().w, glm::quat(glm::vec3(0.1f, 0.2f, 0.3f)).w, 0.0001f);
 
 	// Set scale
 	transform.setScale(glm::vec3(2.0f, 2.0f, 2.0f));
@@ -61,5 +64,7 @@ TEST(Transform, Transform3D) {
 
 	// Euler angles
 	transform.setEulerAngles(glm::vec3(0.1f, 0.2f, 0.3f));
-	EXPECT_EQ(transform.getEulerAngles(), glm::vec3(0.1f, 0.2f, 0.3f));
+	EXPECT_NEAR(transform.getEulerAngles().x, 0.1f, 0.0001f);
+	EXPECT_NEAR(transform.getEulerAngles().y, 0.2f, 0.0001f);
+	EXPECT_NEAR(transform.getEulerAngles().z, 0.3f, 0.0001f);
 }

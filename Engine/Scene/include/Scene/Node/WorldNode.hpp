@@ -18,6 +18,8 @@ class WorldNode : public Node {
 public:
 	STONE_NODE(WorldNode);
 
+	static std::shared_ptr<WorldNode> create();
+
 	explicit WorldNode(const std::string &name = "world");
 	WorldNode(const WorldNode &other) = default;
 
