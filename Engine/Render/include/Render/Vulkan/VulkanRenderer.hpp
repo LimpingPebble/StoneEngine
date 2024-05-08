@@ -9,6 +9,8 @@
 namespace Stone::Render {
 
 class VulkanDevice;
+class VulkanRenderPass;
+class VulkanFramesRenderer;
 class VulkanSwapChain;
 
 class VulkanRenderer : public Renderer {
@@ -36,6 +38,8 @@ private:
 	// void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
 	std::shared_ptr<VulkanDevice> _device;
+	std::shared_ptr<VulkanRenderPass> _renderPass;
+	std::shared_ptr<VulkanFramesRenderer> _framesRenderer;
 	std::shared_ptr<VulkanSwapChain> _swapChain;
 };
 

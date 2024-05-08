@@ -2,8 +2,10 @@
 
 #include "Render/Vulkan/VulkanRenderer.hpp"
 
-#include "Render/Vulkan/VulkanDevice.hpp"
-#include "Render/Vulkan/VulkanSwapChain.hpp"
+#include "VulkanDevice.hpp"
+#include "VulkanFramesRenderer.hpp"
+#include "VulkanRenderPass.hpp"
+#include "VulkanSwapChain.hpp"
 
 namespace Stone::Render {
 
@@ -13,7 +15,11 @@ VulkanRenderer::VulkanRenderer(VulkanSettings &settings) : Renderer() {
 	_device = std::make_shared<VulkanDevice>(settings);
 
 	VulkanSwapChainProperties swapChainProperties = _device->createSwapChainProperties(settings.frame_size);
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, swapChainProperties);
+
+	_renderPass = std::make_shared<VulkanRenderPass>(_device, swapChainProperties.surfaceFormat.format);
+	_swapChain = std::make_shared<VulkanSwapChain>(_device, _renderPass->getRenderPass(), swapChainProperties);
+	_framesRenderer = std::make_shared<VulkanFramesRenderer>(_device, _swapChain->getImagecount());
+	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
 }
 
 VulkanRenderer::~VulkanRenderer() {
@@ -21,7 +27,9 @@ VulkanRenderer::~VulkanRenderer() {
 		_device->waitIdle();
 	}
 
+	_framesRenderer.reset();
 	_swapChain.reset();
+	_renderPass.reset();
 	_device.reset();
 
 	std::cout << "VulkanRenderer destroyed" << std::endl;
@@ -41,7 +49,14 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 	_swapChain.reset();
 
 	VulkanSwapChainProperties swapChainSettings = _device->createSwapChainProperties(size);
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, swapChainSettings);
+	_swapChain = std::make_shared<VulkanSwapChain>(_device, _renderPass->getRenderPass(), swapChainSettings);
+
+	if (_framesRenderer == nullptr || _framesRenderer->getImageCount() != _swapChain->getImagecount()) {
+		_framesRenderer.reset();
+		_framesRenderer = std::make_shared<VulkanFramesRenderer>(_device, _swapChain->getImagecount());
+	}
+
+	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
 }
 
 

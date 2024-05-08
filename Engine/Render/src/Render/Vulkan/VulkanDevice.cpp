@@ -34,9 +34,8 @@ VulkanDevice::VulkanDevice(VulkanSettings &settings) {
 }
 
 VulkanDevice::~VulkanDevice() {
-	if (_device != VK_NULL_HANDLE) {
-		vkDeviceWaitIdle(_device);
-	}
+	waitIdle();
+
 	_destroyCommandPool();
 	_destroyLogicalDevice();
 	_destroySurface();
@@ -81,6 +80,7 @@ VulkanSwapChainProperties VulkanDevice::createSwapChainProperties(const std::pai
 		imageCount = swapChainSupport.capabilities.maxImageCount;
 	}
 	settings.minImageCount = imageCount;
+	settings.imageCount = imageCount;
 
 	return settings;
 }
