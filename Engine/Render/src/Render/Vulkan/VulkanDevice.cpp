@@ -2,7 +2,7 @@
 
 #include "Render/Vulkan/VulkanDevice.hpp"
 
-#include "Render/Vulkan/VulkanUtilities.hpp"
+#include "VulkanUtilities.hpp"
 
 #include <iostream>
 #include <set>
@@ -23,7 +23,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBits
 
 namespace Stone::Render {
 
-VulkanDevice::VulkanDevice(VulkanSettings &settings) : std::enable_shared_from_this<VulkanDevice>() {
+VulkanDevice::VulkanDevice(VulkanSettings &settings) {
 	std::cout << "VulkanDevice created" << std::endl;
 	_createInstance(settings);
 	_setupDebugMessenger();
@@ -57,10 +57,6 @@ VkShaderModule VulkanDevice::createShaderModule(const std::vector<char> &code) c
 	}
 
 	return shaderModule;
-}
-
-VkDevice &VulkanDevice::getDevice() {
-	return _device;
 }
 
 void VulkanDevice::waitIdle() const {

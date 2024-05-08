@@ -6,7 +6,7 @@
 
 namespace Stone::Render {
 
-class VulkanDevice : std::enable_shared_from_this<VulkanDevice> {
+class VulkanDevice {
 public:
 	VulkanDevice() = delete;
 	explicit VulkanDevice(VulkanSettings &settings);
@@ -14,9 +14,24 @@ public:
 
 	virtual ~VulkanDevice();
 
-	VkShaderModule createShaderModule(const std::vector<char> &code) const;
+	[[nodiscard]] VkShaderModule createShaderModule(const std::vector<char> &code) const;
 
-	VkDevice &getDevice();
+	const VkDevice &getDevice() {
+		return _device;
+	}
+
+	const VkPhysicalDevice &getPhysicalDevice() {
+		return _physicalDevice;
+	}
+
+	const VkSurfaceKHR &getSurface() {
+		return _surface;
+	}
+
+	const VkCommandPool &getCommandPool() {
+		return _commandPool;
+	}
+
 	void waitIdle() const;
 
 private:
@@ -37,7 +52,6 @@ private:
 	void _createCommandPool();
 	void _destroyCommandPool();
 
-public: // TODO: Remove public
 	VkInstance _instance = VK_NULL_HANDLE;
 #ifdef VALIDATION_LAYERS
 	VkDebugUtilsMessengerEXT _debugMessenger = VK_NULL_HANDLE;
