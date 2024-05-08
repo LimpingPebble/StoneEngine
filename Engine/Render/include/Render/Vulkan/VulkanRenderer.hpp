@@ -6,12 +6,12 @@
 #include "Render/Vulkan/VulkanSettings.hpp"
 #include "Scene.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanDevice;
-class VulkanRenderPass;
-class VulkanFramesRenderer;
-class VulkanSwapChain;
+class Device;
+class RenderPass;
+class FramesRenderer;
+class SwapChain;
 
 class VulkanRenderer : public Renderer {
 public:
@@ -37,10 +37,10 @@ private:
 
 	// void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
-	std::shared_ptr<VulkanDevice> _device;
-	std::shared_ptr<VulkanRenderPass> _renderPass;
-	std::shared_ptr<VulkanFramesRenderer> _framesRenderer;
-	std::shared_ptr<VulkanSwapChain> _swapChain;
+	std::shared_ptr<Device> _device;
+	std::shared_ptr<RenderPass> _renderPass;
+	std::shared_ptr<FramesRenderer> _framesRenderer;
+	std::shared_ptr<SwapChain> _swapChain;
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

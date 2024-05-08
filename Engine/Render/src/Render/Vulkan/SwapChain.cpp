@@ -1,14 +1,14 @@
 // Copyright 2024 Stone-Engine
 
-#include "Render/Vulkan/VulkanSwapChain.hpp"
+#include "Render/Vulkan/SwapChain.hpp"
 
-#include "Render/Vulkan/VulkanDevice.hpp"
+#include "Render/Vulkan/Device.hpp"
 #include "VulkanUtilities.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-VulkanSwapChain::VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, const VkRenderPass &renderPass,
-								 const VulkanSwapChainProperties &props)
+SwapChain::SwapChain(const std::shared_ptr<Device> &device, const VkRenderPass &renderPass,
+					 const SwapChainProperties &props)
 	: _device(device) {
 	std::cout << "Creating swap chain" << std::endl;
 	_createSwapChain(props);
@@ -16,7 +16,7 @@ VulkanSwapChain::VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, co
 	_createFramebuffers(renderPass);
 }
 
-VulkanSwapChain::~VulkanSwapChain() {
+SwapChain::~SwapChain() {
 	if (_device) {
 		_device->waitIdle();
 	}
@@ -30,7 +30,7 @@ VulkanSwapChain::~VulkanSwapChain() {
 
 /** Swap Chain */
 
-void VulkanSwapChain::_createSwapChain(const VulkanSwapChainProperties &props) {
+void SwapChain::_createSwapChain(const SwapChainProperties &props) {
 
 	VkSwapchainCreateInfoKHR createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
@@ -74,7 +74,7 @@ void VulkanSwapChain::_createSwapChain(const VulkanSwapChainProperties &props) {
 	_extent = props.extent;
 }
 
-void VulkanSwapChain::_destroySwapChain() {
+void SwapChain::_destroySwapChain() {
 	if (_swapChain == VK_NULL_HANDLE) {
 		return;
 	}
@@ -85,7 +85,7 @@ void VulkanSwapChain::_destroySwapChain() {
 
 /** Image Views */
 
-void VulkanSwapChain::_createImageViews() {
+void SwapChain::_createImageViews() {
 	_imageViews.resize(_imageCount);
 
 	for (size_t i = 0; i < _imageCount; ++i) {
@@ -112,7 +112,7 @@ void VulkanSwapChain::_createImageViews() {
 	}
 }
 
-void VulkanSwapChain::_destroyImageViews() {
+void SwapChain::_destroyImageViews() {
 	for (auto imageView : _imageViews) {
 		vkDestroyImageView(_device->getDevice(), imageView, nullptr);
 	}
@@ -122,7 +122,7 @@ void VulkanSwapChain::_destroyImageViews() {
 
 /** Framebuffers */
 
-void VulkanSwapChain::_createFramebuffers(const VkRenderPass &renderPass) {
+void SwapChain::_createFramebuffers(const VkRenderPass &renderPass) {
 	_framebuffers.resize(_imageCount);
 
 	for (size_t i = 0; i < _imageCount; ++i) {
@@ -143,7 +143,7 @@ void VulkanSwapChain::_createFramebuffers(const VkRenderPass &renderPass) {
 	}
 }
 
-void VulkanSwapChain::_destroyFramebuffers() {
+void SwapChain::_destroyFramebuffers() {
 	for (auto framebuffer : _framebuffers) {
 		vkDestroyFramebuffer(_device->getDevice(), framebuffer, nullptr);
 	}
@@ -151,4 +151,4 @@ void VulkanSwapChain::_destroyFramebuffers() {
 }
 
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

@@ -2,23 +2,23 @@
 
 #pragma once
 
-#include "VulkanSwapChainProperties.hpp"
+#include "SwapChainProperties.hpp"
 
 #include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanDevice;
+class Device;
 
-class VulkanFramesRenderer {
+class FramesRenderer {
 public:
-	VulkanFramesRenderer() = delete;
-	VulkanFramesRenderer(const std::shared_ptr<VulkanDevice> &device, uint32_t imageCount);
-	VulkanFramesRenderer(const VulkanFramesRenderer &) = delete;
+	FramesRenderer() = delete;
+	FramesRenderer(const std::shared_ptr<Device> &device, uint32_t imageCount);
+	FramesRenderer(const FramesRenderer &) = delete;
 
-	virtual ~VulkanFramesRenderer();
+	virtual ~FramesRenderer();
 
 	[[nodiscard]] uint32_t getImageCount() const {
 		return _imageCount;
@@ -31,7 +31,7 @@ private:
 	void _createSyncObjects();
 	void _destroySyncObjects();
 
-	std::shared_ptr<VulkanDevice> _device;
+	std::shared_ptr<Device> _device;
 	uint32_t _imageCount;
 
 	std::vector<VkCommandBuffer> _commandBuffers = {};
@@ -50,4 +50,4 @@ private:
 	size_t _currentFrame = 0;
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

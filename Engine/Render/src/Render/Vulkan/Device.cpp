@@ -1,11 +1,13 @@
 // Copyright 2024 Stone-Engine
 
-#include "Render/Vulkan/VulkanDevice.hpp"
+#include "Render/Vulkan/Device.hpp"
 
 #include "VulkanUtilities.hpp"
 
 #include <iostream>
 #include <set>
+
+namespace Stone::Render::Vulkan {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 											 VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -21,10 +23,8 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBits
 	return VK_FALSE;
 }
 
-namespace Stone::Render {
-
-VulkanDevice::VulkanDevice(VulkanSettings &settings) {
-	std::cout << "VulkanDevice created" << std::endl;
+Device::Device(VulkanSettings &settings) {
+	std::cout << "Device created" << std::endl;
 	_createInstance(settings);
 	_setupDebugMessenger();
 	_createSurface(settings);
@@ -33,7 +33,7 @@ VulkanDevice::VulkanDevice(VulkanSettings &settings) {
 	_createCommandPool();
 }
 
-VulkanDevice::~VulkanDevice() {
+Device::~Device() {
 	waitIdle();
 
 	_destroyCommandPool();
@@ -41,10 +41,10 @@ VulkanDevice::~VulkanDevice() {
 	_destroySurface();
 	_destroyDebugMessenger();
 	_destroyInstance();
-	std::cout << "VulkanDevice destroyed" << std::endl;
+	std::cout << "Device destroyed" << std::endl;
 }
 
-VkShaderModule VulkanDevice::createShaderModule(const std::vector<char> &code) const {
+VkShaderModule Device::createShaderModule(const std::vector<char> &code) const {
 	VkShaderModuleCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.codeSize = code.size();
@@ -58,12 +58,12 @@ VkShaderModule VulkanDevice::createShaderModule(const std::vector<char> &code) c
 	return shaderModule;
 }
 
-void VulkanDevice::waitIdle() const {
+void Device::waitIdle() const {
 	vkDeviceWaitIdle(_device);
 }
 
-VulkanSwapChainProperties VulkanDevice::createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const {
-	VulkanSwapChainProperties settings;
+SwapChainProperties Device::createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const {
+	SwapChainProperties settings;
 
 	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(_physicalDevice, _surface);
 
@@ -88,7 +88,7 @@ VulkanSwapChainProperties VulkanDevice::createSwapChainProperties(const std::pai
 
 /** Instance */
 
-void VulkanDevice::_createInstance(VulkanSettings &settings) {
+void Device::_createInstance(VulkanSettings &settings) {
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = settings.app_name.c_str();
@@ -125,7 +125,7 @@ void VulkanDevice::_createInstance(VulkanSettings &settings) {
 	// enumerateExtensions(std::cout);
 }
 
-void VulkanDevice::_destroyInstance() {
+void Device::_destroyInstance() {
 	if (_instance == VK_NULL_HANDLE) {
 		return;
 	}
@@ -135,7 +135,7 @@ void VulkanDevice::_destroyInstance() {
 
 /** Debug Messenger */
 
-void VulkanDevice::_setupDebugMessenger() {
+void Device::_setupDebugMessenger() {
 #ifdef VALIDATION_LAYERS
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -157,7 +157,7 @@ void VulkanDevice::_setupDebugMessenger() {
 #endif
 }
 
-void VulkanDevice::_destroyDebugMessenger() {
+void Device::_destroyDebugMessenger() {
 #ifdef VALIDATION_LAYERS
 	if (_debugMessenger == VK_NULL_HANDLE) {
 		return;
@@ -173,7 +173,7 @@ void VulkanDevice::_destroyDebugMessenger() {
 
 /** Surface */
 
-void VulkanDevice::_createSurface(VulkanSettings &settings) {
+void Device::_createSurface(VulkanSettings &settings) {
 	if (settings.createSurface != nullptr) {
 		if (settings.createSurface(_instance, nullptr, &_surface) == VK_SUCCESS) {
 			return;
@@ -182,7 +182,7 @@ void VulkanDevice::_createSurface(VulkanSettings &settings) {
 	throw std::runtime_error("Failed to create window surface !");
 }
 
-void VulkanDevice::_destroySurface() {
+void Device::_destroySurface() {
 	if (_surface == VK_NULL_HANDLE) {
 		return;
 	}
@@ -244,7 +244,7 @@ int deviceSuitability(VkPhysicalDevice device, VkSurfaceKHR surface,
 	return score;
 }
 
-void VulkanDevice::_pickPhysicalDevice(VulkanSettings &settings) {
+void Device::_pickPhysicalDevice(VulkanSettings &settings) {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
 	if (deviceCount == 0) {
@@ -271,7 +271,7 @@ void VulkanDevice::_pickPhysicalDevice(VulkanSettings &settings) {
 
 /** Logical device */
 
-void VulkanDevice::_createLogicalDevice(VulkanSettings &settings) {
+void Device::_createLogicalDevice(VulkanSettings &settings) {
 	QueueFamilyIndices indices = findQueueFamilies(_physicalDevice, _surface);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -313,7 +313,7 @@ void VulkanDevice::_createLogicalDevice(VulkanSettings &settings) {
 	vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
 }
 
-void VulkanDevice::_destroyLogicalDevice() {
+void Device::_destroyLogicalDevice() {
 	if (_device == VK_NULL_HANDLE) {
 		return;
 	}
@@ -324,7 +324,7 @@ void VulkanDevice::_destroyLogicalDevice() {
 
 /** Command Pool */
 
-void VulkanDevice::_createCommandPool() {
+void Device::_createCommandPool() {
 	QueueFamilyIndices queueFamilyIndices = findQueueFamilies(_physicalDevice, _surface);
 
 	VkCommandPoolCreateInfo poolInfo = {};
@@ -337,11 +337,11 @@ void VulkanDevice::_createCommandPool() {
 	}
 }
 
-void VulkanDevice::_destroyCommandPool() {
+void Device::_destroyCommandPool() {
 	if (_commandPool != VK_NULL_HANDLE) {
 		vkDestroyCommandPool(_device, _commandPool, nullptr);
 	}
 	_commandPool = VK_NULL_HANDLE;
 }
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

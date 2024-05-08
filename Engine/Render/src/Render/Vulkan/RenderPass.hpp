@@ -5,17 +5,17 @@
 #include <memory>
 #include <vulkan/vulkan.h>
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanDevice;
+class Device;
 
-class VulkanRenderPass {
+class RenderPass {
 public:
-	VulkanRenderPass() = delete;
-	VulkanRenderPass(const std::shared_ptr<VulkanDevice> &device, VkFormat format);
-	VulkanRenderPass(const VulkanRenderPass &) = delete;
+	RenderPass() = delete;
+	RenderPass(const std::shared_ptr<Device> &device, VkFormat format);
+	RenderPass(const RenderPass &) = delete;
 
-	virtual ~VulkanRenderPass();
+	virtual ~RenderPass();
 
 	[[nodiscard]] const VkRenderPass &getRenderPass() const {
 		return _renderPass;
@@ -29,10 +29,10 @@ private:
 	void _createRenderPass();
 	void _destroyRenderPass();
 
-	std::shared_ptr<VulkanDevice> _device;
+	std::shared_ptr<Device> _device;
 
 	VkRenderPass _renderPass = VK_NULL_HANDLE;
 	VkFormat _format = VK_FORMAT_UNDEFINED;
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

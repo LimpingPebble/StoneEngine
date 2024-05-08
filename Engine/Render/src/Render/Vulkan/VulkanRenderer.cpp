@@ -2,23 +2,23 @@
 
 #include "Render/Vulkan/VulkanRenderer.hpp"
 
-#include "VulkanDevice.hpp"
-#include "VulkanFramesRenderer.hpp"
-#include "VulkanRenderPass.hpp"
-#include "VulkanSwapChain.hpp"
+#include "Device.hpp"
+#include "FramesRenderer.hpp"
+#include "RenderPass.hpp"
+#include "SwapChain.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
 VulkanRenderer::VulkanRenderer(VulkanSettings &settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
 
-	_device = std::make_shared<VulkanDevice>(settings);
+	_device = std::make_shared<Device>(settings);
 
-	VulkanSwapChainProperties swapChainProperties = _device->createSwapChainProperties(settings.frame_size);
+	SwapChainProperties swapChainProperties = _device->createSwapChainProperties(settings.frame_size);
 
-	_renderPass = std::make_shared<VulkanRenderPass>(_device, swapChainProperties.surfaceFormat.format);
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, _renderPass->getRenderPass(), swapChainProperties);
-	_framesRenderer = std::make_shared<VulkanFramesRenderer>(_device, _swapChain->getImagecount());
+	_renderPass = std::make_shared<RenderPass>(_device, swapChainProperties.surfaceFormat.format);
+	_swapChain = std::make_shared<SwapChain>(_device, _renderPass->getRenderPass(), swapChainProperties);
+	_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImagecount());
 	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
 }
 
@@ -48,12 +48,12 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 
 	_swapChain.reset();
 
-	VulkanSwapChainProperties swapChainSettings = _device->createSwapChainProperties(size);
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, _renderPass->getRenderPass(), swapChainSettings);
+	SwapChainProperties swapChainSettings = _device->createSwapChainProperties(size);
+	_swapChain = std::make_shared<SwapChain>(_device, _renderPass->getRenderPass(), swapChainSettings);
 
 	if (_framesRenderer == nullptr || _framesRenderer->getImageCount() != _swapChain->getImagecount()) {
 		_framesRenderer.reset();
-		_framesRenderer = std::make_shared<VulkanFramesRenderer>(_device, _swapChain->getImagecount());
+		_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImagecount());
 	}
 
 	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
@@ -257,4 +257,4 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 // 	_pipelineLayout = VK_NULL_HANDLE;
 // }
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

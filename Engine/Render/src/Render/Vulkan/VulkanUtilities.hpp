@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <cstring>
 #include <iostream>
-#include <limits>
 #include <optional>
 #include <vector>
 #include <vulkan/vulkan.h>
+
+namespace Stone::Render::Vulkan {
 
 void enumerateExtensions(std::ostream &stream);
 bool checkValidationLayerSupport(const std::vector<const char *> &validationLayers);
@@ -36,3 +36,5 @@ SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurface
 VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR> &availableFormats);
 VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR> &availablePresentModes);
 VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, uint32_t width, uint32_t height);
+
+} // namespace Stone::Render::Vulkan

@@ -3,17 +3,17 @@
 #pragma once
 
 #include "Render/Vulkan/VulkanSettings.hpp"
-#include "VulkanSwapChainProperties.hpp"
+#include "SwapChainProperties.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanDevice {
+class Device {
 public:
-	VulkanDevice() = delete;
-	explicit VulkanDevice(VulkanSettings &settings);
-	VulkanDevice(const VulkanDevice &) = delete;
+	Device() = delete;
+	explicit Device(VulkanSettings &settings);
+	Device(const Device &) = delete;
 
-	virtual ~VulkanDevice();
+	virtual ~Device();
 
 	[[nodiscard]] VkShaderModule createShaderModule(const std::vector<char> &code) const;
 
@@ -35,7 +35,7 @@ public:
 
 	void waitIdle() const;
 
-	[[nodiscard]] VulkanSwapChainProperties createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const;
+	[[nodiscard]] SwapChainProperties createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const;
 
 private:
 	void _createInstance(VulkanSettings &settings);
@@ -67,4 +67,4 @@ private:
 	VkCommandPool _commandPool = VK_NULL_HANDLE;
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

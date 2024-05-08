@@ -12,7 +12,7 @@
 #define VALIDATION_LAYERS
 #endif
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
 struct VulkanSettings {
 	std::string app_name = "Stone";
@@ -24,4 +24,4 @@ struct VulkanSettings {
 	std::pair<uint32_t, uint32_t> frame_size = {};
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

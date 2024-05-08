@@ -1,19 +1,18 @@
 // Copyright 2024 Stone-Engine
 
-#include "VulkanRenderPass.hpp"
+#include "RenderPass.hpp"
 
-#include "VulkanDevice.hpp"
+#include "Device.hpp"
 
 #include <stdexcept>
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-VulkanRenderPass::VulkanRenderPass(const std::shared_ptr<VulkanDevice> &device, VkFormat format)
-	: _device(device), _format(format) {
+RenderPass::RenderPass(const std::shared_ptr<Device> &device, VkFormat format) : _device(device), _format(format) {
 	_createRenderPass();
 }
 
-VulkanRenderPass::~VulkanRenderPass() {
+RenderPass::~RenderPass() {
 	if (_device) {
 		_device->waitIdle();
 	}
@@ -21,7 +20,7 @@ VulkanRenderPass::~VulkanRenderPass() {
 	_destroyRenderPass();
 }
 
-void VulkanRenderPass::_createRenderPass() {
+void RenderPass::_createRenderPass() {
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = _format;
 	colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -63,7 +62,7 @@ void VulkanRenderPass::_createRenderPass() {
 	}
 }
 
-void VulkanRenderPass::_destroyRenderPass() {
+void RenderPass::_destroyRenderPass() {
 	if (_renderPass == VK_NULL_HANDLE) {
 		return;
 	}
@@ -71,4 +70,4 @@ void VulkanRenderPass::_destroyRenderPass() {
 	_renderPass = VK_NULL_HANDLE;
 }
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

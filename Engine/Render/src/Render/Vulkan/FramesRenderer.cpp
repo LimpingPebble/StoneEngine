@@ -1,22 +1,22 @@
 // Copyright 2024 Stone-Engine
 
-#include "VulkanFramesRenderer.hpp"
+#include "FramesRenderer.hpp"
 
-#include "VulkanDevice.hpp"
+#include "Device.hpp"
 
 #include <iostream>
 
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-VulkanFramesRenderer::VulkanFramesRenderer(const std::shared_ptr<VulkanDevice> &device, uint32_t imageCount)
+FramesRenderer::FramesRenderer(const std::shared_ptr<Device> &device, uint32_t imageCount)
 	: _device(device), _imageCount(imageCount) {
 	std::cout << "Creating frames renderer" << std::endl;
 	_createCommandBuffers();
 	_createSyncObjects();
 }
 
-VulkanFramesRenderer::~VulkanFramesRenderer() {
+FramesRenderer::~FramesRenderer() {
 	if (_device) {
 		_device->waitIdle();
 	}
@@ -29,7 +29,7 @@ VulkanFramesRenderer::~VulkanFramesRenderer() {
 
 /** Command Buffers */
 
-void VulkanFramesRenderer::_createCommandBuffers() {
+void FramesRenderer::_createCommandBuffers() {
 
 	_commandBuffers.resize(_imageCount);
 
@@ -44,7 +44,7 @@ void VulkanFramesRenderer::_createCommandBuffers() {
 	}
 }
 
-void VulkanFramesRenderer::_destroyCommandBuffers() {
+void FramesRenderer::_destroyCommandBuffers() {
 	if (_commandBuffers.empty()) {
 		return;
 	}
@@ -56,7 +56,7 @@ void VulkanFramesRenderer::_destroyCommandBuffers() {
 
 /** Sync Objects */
 
-void VulkanFramesRenderer::_createSyncObjects() {
+void FramesRenderer::_createSyncObjects() {
 	_syncObjects.clear();
 	_syncObjects.reserve(_commandBuffers.size());
 	for (size_t i = 0; i < _commandBuffers.size(); ++i) {
@@ -64,11 +64,11 @@ void VulkanFramesRenderer::_createSyncObjects() {
 	}
 }
 
-void VulkanFramesRenderer::_destroySyncObjects() {
+void FramesRenderer::_destroySyncObjects() {
 	_syncObjects.clear();
 }
 
-VulkanFramesRenderer::SyncronizedObjects::SyncronizedObjects(const VkDevice &device) : _device(device) {
+FramesRenderer::SyncronizedObjects::SyncronizedObjects(const VkDevice &device) : _device(device) {
 	std::cout << "Creating syncronized objects" << std::endl;
 	VkSemaphoreCreateInfo semaphoreInfo = {};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -84,7 +84,7 @@ VulkanFramesRenderer::SyncronizedObjects::SyncronizedObjects(const VkDevice &dev
 	}
 }
 
-VulkanFramesRenderer::SyncronizedObjects::~SyncronizedObjects() {
+FramesRenderer::SyncronizedObjects::~SyncronizedObjects() {
 	std::cout << "Destroying syncronized objects" << std::endl;
 	if (imageAvailable != VK_NULL_HANDLE) {
 		vkDestroySemaphore(_device, imageAvailable, nullptr);
@@ -97,4 +97,4 @@ VulkanFramesRenderer::SyncronizedObjects::~SyncronizedObjects() {
 	}
 }
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

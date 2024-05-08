@@ -2,24 +2,23 @@
 
 #pragma once
 
-#include "VulkanSwapChainProperties.hpp"
+#include "SwapChainProperties.hpp"
 
 #include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanDevice;
+class Device;
 
-class VulkanSwapChain {
+class SwapChain {
 public:
-	VulkanSwapChain() = delete;
-	VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, const VkRenderPass &renderPass,
-					const VulkanSwapChainProperties &props);
-	VulkanSwapChain(const VulkanSwapChain &) = delete;
+	SwapChain() = delete;
+	SwapChain(const std::shared_ptr<Device> &device, const VkRenderPass &renderPass, const SwapChainProperties &props);
+	SwapChain(const SwapChain &) = delete;
 
-	virtual ~VulkanSwapChain();
+	virtual ~SwapChain();
 
 	[[nodiscard]] const VkFormat &getImageFormat() const {
 		return _imageFormat;
@@ -34,7 +33,7 @@ public:
 	}
 
 private:
-	void _createSwapChain(const VulkanSwapChainProperties &props);
+	void _createSwapChain(const SwapChainProperties &props);
 	void _destroySwapChain();
 
 	void _createImageViews();
@@ -43,7 +42,7 @@ private:
 	void _createFramebuffers(const VkRenderPass &renderPass);
 	void _destroyFramebuffers();
 
-	std::shared_ptr<VulkanDevice> _device;
+	std::shared_ptr<Device> _device;
 
 	VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
 	uint32_t _imageCount = 0;
@@ -56,4 +55,4 @@ private:
 	std::vector<VkFramebuffer> _framebuffers = {};
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

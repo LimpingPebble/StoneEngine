@@ -6,14 +6,14 @@
 #include "Scene/RenderElement/IRenderElement.hpp"
 #include "Scene/RendererObjectManager.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-class VulkanRendererObjectManager : public Scene::RendererObjectManager {
+class RendererObjectManager : public Scene::RendererObjectManager {
 
 public:
-	explicit VulkanRendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
+	explicit RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
 
-	~VulkanRendererObjectManager() override = default;
+	~RendererObjectManager() override = default;
 
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;
 
@@ -30,4 +30,4 @@ public:
 	void render(Scene::RenderContext &context) override;
 };
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

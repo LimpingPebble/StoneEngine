@@ -1,17 +1,16 @@
 // Copyright 2024 Stone-Engine
 
-#include "VulkanRendererObjectManager.hpp"
+#include "RendererObjectManager.hpp"
 
 #include "Utils/FileSystem.hpp"
 
-namespace Stone::Render {
+namespace Stone::Render::Vulkan {
 
-VulkanRendererObjectManager::VulkanRendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer)
-	: _renderer(renderer) {
+RendererObjectManager::RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer) : _renderer(renderer) {
 }
 
-void VulkanRendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) {
-	RendererObjectManager::updateMeshNode(meshNode);
+void RendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) {
+	Scene::RendererObjectManager::updateMeshNode(meshNode);
 
 	if (meshNode->getRendererObject<VulkanMeshNode>()) {
 		return;
@@ -30,4 +29,4 @@ void VulkanMeshNode::render(Scene::RenderContext &context) {
 	(void)context;
 }
 
-} // namespace Stone::Render
+} // namespace Stone::Render::Vulkan

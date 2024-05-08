@@ -3,6 +3,10 @@
 #include "Render/Vulkan/VulkanUtilities.hpp"
 
 #include <algorithm>
+#include <cstring>
+#include <limits>
+
+namespace Stone::Render::Vulkan {
 
 void enumerateExtensions(std::ostream &stream) {
 	uint32_t extensionCount = 0;
@@ -146,3 +150,5 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, uint32
 
 	return actualExtent;
 }
+
+} // namespace Stone::Render::Vulkan
