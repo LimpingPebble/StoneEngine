@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Render/Vulkan/VulkanSettings.hpp"
+#include "VulkanSwapChainProperties.hpp"
 
 namespace Stone::Render {
 
@@ -33,6 +34,8 @@ public:
 	}
 
 	void waitIdle() const;
+
+	[[nodiscard]] VulkanSwapChainProperties createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const;
 
 private:
 	void _createInstance(VulkanSettings &settings);

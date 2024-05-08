@@ -11,7 +11,9 @@ VulkanRenderer::VulkanRenderer(VulkanSettings &settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
 
 	_device = std::make_shared<VulkanDevice>(settings);
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, settings.frame_size);
+
+	VulkanSwapChainProperties swapChainProperties = _device->createSwapChainProperties(settings.frame_size);
+	_swapChain = std::make_shared<VulkanSwapChain>(_device, swapChainProperties);
 }
 
 VulkanRenderer::~VulkanRenderer() {
@@ -29,7 +31,6 @@ void VulkanRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
 	_recreateSwapChain(size);
 }
 
-
 void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 	if (_device == nullptr) {
 		return;
@@ -39,7 +40,8 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 
 	_swapChain.reset();
 
-	_swapChain = std::make_shared<VulkanSwapChain>(_device, size);
+	VulkanSwapChainProperties swapChainSettings = _device->createSwapChainProperties(size);
+	_swapChain = std::make_shared<VulkanSwapChain>(_device, swapChainSettings);
 }
 
 

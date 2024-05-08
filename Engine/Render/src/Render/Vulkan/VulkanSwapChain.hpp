@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "VulkanSwapChainProperties.hpp"
+
 #include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -13,7 +15,7 @@ class VulkanDevice;
 class VulkanSwapChain {
 public:
 	VulkanSwapChain() = delete;
-	VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, const std::pair<uint32_t, uint32_t> &size);
+	VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, VulkanSwapChainProperties &props);
 	VulkanSwapChain(const VulkanSwapChain &) = delete;
 
 	virtual ~VulkanSwapChain();
@@ -27,7 +29,7 @@ public:
 	}
 
 private:
-	void _createSwapChain(const std::pair<uint32_t, uint32_t> &size);
+	void _createSwapChain(VulkanSwapChainProperties &props);
 	void _destroySwapChain();
 
 	void _createImageViews();

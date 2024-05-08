@@ -63,6 +63,28 @@ void VulkanDevice::waitIdle() const {
 	vkDeviceWaitIdle(_device);
 }
 
+VulkanSwapChainProperties VulkanDevice::createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const {
+	VulkanSwapChainProperties settings;
+
+	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(_physicalDevice, _surface);
+
+	settings.surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+	settings.presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+
+	settings.capabilities = swapChainSupport.capabilities;
+
+	auto [width, height] = size;
+	settings.extent = chooseSwapExtent(swapChainSupport.capabilities, width, height);
+
+	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+	if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+		imageCount = swapChainSupport.capabilities.maxImageCount;
+	}
+	settings.minImageCount = imageCount;
+
+	return settings;
+}
+
 
 /** Instance */
 

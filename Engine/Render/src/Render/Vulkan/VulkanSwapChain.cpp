@@ -7,10 +7,10 @@
 
 namespace Stone::Render {
 
-VulkanSwapChain::VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, const std::pair<uint32_t, uint32_t> &size)
+VulkanSwapChain::VulkanSwapChain(const std::shared_ptr<VulkanDevice> &device, VulkanSwapChainProperties &props)
 	: _device(device) {
 	std::cout << "Creating swap chain" << std::endl;
-	_createSwapChain(size);
+	_createSwapChain(props);
 	_createImageViews();
 
 	_createRenderPass();
@@ -35,28 +35,15 @@ VulkanSwapChain::~VulkanSwapChain() {
 
 /** Swap Chain */
 
-void VulkanSwapChain::_createSwapChain(const std::pair<uint32_t, uint32_t> &size) {
-	SwapChainSupportDetails swapChainSupport =
-		querySwapChainSupport(_device->getPhysicalDevice(), _device->getSurface());
-
-	VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-	VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-
-	auto [width, height] = size;
-	VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities, width, height);
-
-	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
-	if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
-		imageCount = swapChainSupport.capabilities.maxImageCount;
-	}
+void VulkanSwapChain::_createSwapChain(VulkanSwapChainProperties &props) {
 
 	VkSwapchainCreateInfoKHR createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
 	createInfo.surface = _device->getSurface();
-	createInfo.minImageCount = imageCount;
-	createInfo.imageFormat = surfaceFormat.format;
-	createInfo.imageColorSpace = surfaceFormat.colorSpace;
-	createInfo.imageExtent = extent;
+	createInfo.minImageCount = props.minImageCount;
+	createInfo.imageFormat = props.surfaceFormat.format;
+	createInfo.imageColorSpace = props.surfaceFormat.colorSpace;
+	createInfo.imageExtent = props.extent;
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
@@ -73,9 +60,9 @@ void VulkanSwapChain::_createSwapChain(const std::pair<uint32_t, uint32_t> &size
 		createInfo.pQueueFamilyIndices = nullptr;
 	}
 
-	createInfo.preTransform = swapChainSupport.capabilities.currentTransform;
+	createInfo.preTransform = props.capabilities.currentTransform;
 	createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-	createInfo.presentMode = presentMode;
+	createInfo.presentMode = props.presentMode;
 	createInfo.clipped = VK_TRUE;
 	createInfo.oldSwapchain = VK_NULL_HANDLE;
 
@@ -83,12 +70,14 @@ void VulkanSwapChain::_createSwapChain(const std::pair<uint32_t, uint32_t> &size
 		throw std::runtime_error("Failed to create swap chain");
 	}
 
+	uint32_t imageCount = 0;
 	vkGetSwapchainImagesKHR(_device->getDevice(), _swapChain, &imageCount, nullptr);
 	_images.resize(imageCount);
 	vkGetSwapchainImagesKHR(_device->getDevice(), _swapChain, &imageCount, _images.data());
+	props.imageCount = imageCount;
 
-	_imageFormat = surfaceFormat.format;
-	_extent = extent;
+	_imageFormat = props.surfaceFormat.format;
+	_extent = props.extent;
 }
 
 void VulkanSwapChain::_destroySwapChain() {
