@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Render/VulkanRenderer.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Scene/RenderElement/IRenderElement.hpp"
 #include "Scene/RendererObjectManager.hpp"
 

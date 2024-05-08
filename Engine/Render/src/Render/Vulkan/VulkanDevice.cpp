@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "VulkanDevice.hpp"
+#include "Render/Vulkan/VulkanDevice.hpp"
 
-#include "VulkanUtilities.hpp"
+#include "Render/Vulkan/VulkanUtilities.hpp"
 
 #include <iostream>
 #include <set>

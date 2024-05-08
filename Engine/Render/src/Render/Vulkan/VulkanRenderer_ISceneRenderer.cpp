@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Render/VulkanRenderer.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Scene/ISceneRenderer.hpp"
 #include "VulkanRendererObjectManager.hpp"
 
@@ -71,7 +71,7 @@ void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 
 	// vkQueuePresentKHR(_presentQueue, &presentInfo);
 
-	// (void)world;
+	(void)world;
 	// // Scene::RenderContext context;
 	// // world->initializeRenderContext(context);
 	// // world->render(context);

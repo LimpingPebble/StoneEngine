@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "Render/VulkanRenderer.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 
-#include "Render/VulkanDevice.hpp"
+#include "Render/Vulkan/VulkanDevice.hpp"
 
 namespace Stone::Render {
 

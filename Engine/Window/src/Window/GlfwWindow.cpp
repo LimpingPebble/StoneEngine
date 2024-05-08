@@ -2,7 +2,7 @@
 
 #include "Window/GlfwWindow.hpp"
 
-#include "Render/VulkanRenderer.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 
 #include <iostream>
 #include <stdexcept>

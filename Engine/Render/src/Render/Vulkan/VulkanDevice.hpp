@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Render/VulkanSettings.hpp"
+#include "Render/Vulkan/VulkanSettings.hpp"
 
 namespace Stone::Render {
 
