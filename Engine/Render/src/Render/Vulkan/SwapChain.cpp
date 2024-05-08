@@ -27,6 +27,15 @@ SwapChain::~SwapChain() {
 	std::cout << "Destroying swap chain" << std::endl;
 }
 
+VkResult SwapChain::acquireNextImage(const VkSemaphore &semaphore, ImageContext &imageContext) {
+	VkResult result = vkAcquireNextImageKHR(_device->getDevice(), _swapChain, UINT64_MAX, semaphore, VK_NULL_HANDLE,
+											&imageContext.index);
+	imageContext.image = _images[imageContext.index];
+	imageContext.imageView = _imageViews[imageContext.index];
+	imageContext.framebuffer = _framebuffers[imageContext.index];
+	return result;
+}
+
 
 /** Swap Chain */
 

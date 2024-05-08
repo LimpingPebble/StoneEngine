@@ -9,6 +9,36 @@
 
 namespace Stone::Render::Vulkan {
 
+
+SyncronizedObjects::SyncronizedObjects(const VkDevice &device) : _device(device) {
+	std::cout << "Creating syncronized objects" << std::endl;
+	VkSemaphoreCreateInfo semaphoreInfo = {};
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+	VkFenceCreateInfo fenceInfo = {};
+	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	if (vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &imageAvailable) != VK_SUCCESS ||
+		vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &renderFinished) != VK_SUCCESS ||
+		vkCreateFence(_device, &fenceInfo, nullptr, &inFlight) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create synchronization objects for a frame");
+	}
+}
+
+SyncronizedObjects::~SyncronizedObjects() {
+	std::cout << "Destroying syncronized objects" << std::endl;
+	if (imageAvailable != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, imageAvailable, nullptr);
+	}
+	if (renderFinished != VK_NULL_HANDLE) {
+		vkDestroySemaphore(_device, renderFinished, nullptr);
+	}
+	if (inFlight != VK_NULL_HANDLE) {
+		vkDestroyFence(_device, inFlight, nullptr);
+	}
+}
+
 FramesRenderer::FramesRenderer(const std::shared_ptr<Device> &device, uint32_t imageCount)
 	: _device(device), _imageCount(imageCount) {
 	std::cout << "Creating frames renderer" << std::endl;
@@ -24,6 +54,12 @@ FramesRenderer::~FramesRenderer() {
 	_destroySyncObjects();
 	_destroyCommandBuffers();
 	std::cout << "Destroying frames renderer" << std::endl;
+}
+
+FrameContext FramesRenderer::newFrameContext() {
+	uint32_t currentFrame = _currentFrame;
+	_currentFrame = (_currentFrame + 1) % _imageCount;
+	return {_commandBuffers[currentFrame], _syncObjects[currentFrame]};
 }
 
 
@@ -68,33 +104,5 @@ void FramesRenderer::_destroySyncObjects() {
 	_syncObjects.clear();
 }
 
-FramesRenderer::SyncronizedObjects::SyncronizedObjects(const VkDevice &device) : _device(device) {
-	std::cout << "Creating syncronized objects" << std::endl;
-	VkSemaphoreCreateInfo semaphoreInfo = {};
-	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-	VkFenceCreateInfo fenceInfo = {};
-	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-	if (vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &imageAvailable) != VK_SUCCESS ||
-		vkCreateSemaphore(_device, &semaphoreInfo, nullptr, &renderFinished) != VK_SUCCESS ||
-		vkCreateFence(_device, &fenceInfo, nullptr, &inFlight) != VK_SUCCESS) {
-		throw std::runtime_error("Failed to create synchronization objects for a frame");
-	}
-}
-
-FramesRenderer::SyncronizedObjects::~SyncronizedObjects() {
-	std::cout << "Destroying syncronized objects" << std::endl;
-	if (imageAvailable != VK_NULL_HANDLE) {
-		vkDestroySemaphore(_device, imageAvailable, nullptr);
-	}
-	if (renderFinished != VK_NULL_HANDLE) {
-		vkDestroySemaphore(_device, renderFinished, nullptr);
-	}
-	if (inFlight != VK_NULL_HANDLE) {
-		vkDestroyFence(_device, inFlight, nullptr);
-	}
-}
 
 } // namespace Stone::Render::Vulkan

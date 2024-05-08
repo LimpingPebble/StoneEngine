@@ -3,6 +3,7 @@
 #include "Window/GlfwWindow.hpp"
 
 #include "Render/Vulkan/VulkanRenderer.hpp"
+#include "Scene/Node/WorldNode.hpp"
 
 #include <iostream>
 #include <stdexcept>

@@ -1,8 +1,13 @@
 // Copyright 2024 Stone-Engine
 
+#include "Device.hpp"
+#include "FramesRenderer.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
 #include "RendererObjectManager.hpp"
+#include "RenderPass.hpp"
+#include "Scene.hpp"
 #include "Scene/ISceneRenderer.hpp"
+#include "SwapChain.hpp"
 
 namespace Stone::Render::Vulkan {
 
@@ -19,68 +24,107 @@ void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 
 void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {
 
-	// VkCommandBuffer &commandBuffer(_commandBuffers[_currentFrame]);
-	// SyncronizedObjects &syncObject(_syncObjects[_currentFrame]);
+	if (!_framesRenderer) {
+		return;
+	}
 
-	// vkWaitForFences(_device, 1, &syncObject.inFlight, VK_TRUE, UINT64_MAX);
+	FrameContext frameContext = _framesRenderer->newFrameContext();
+	SyncronizedObjects &syncObject = frameContext.syncObject;
 
-	// uint32_t imageIndex;
-	// VkResult result =
-	// 	vkAcquireNextImageKHR(_device, _swapChain, UINT64_MAX, syncObject.imageAvailable, VK_NULL_HANDLE, &imageIndex);
+	vkWaitForFences(_device->getDevice(), 1, &syncObject.inFlight, VK_TRUE, UINT64_MAX);
 
-	// if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
-	// 	std::cout << "Must recreate swap chain" << std::endl;
-	// } else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-	// 	throw std::runtime_error("failed to acquire swap chain image!");
-	// }
+	ImageContext imageContext;
+	VkResult result = _swapChain->acquireNextImage(syncObject.imageAvailable, imageContext);
 
-	// vkResetFences(_device, 1, &syncObject.inFlight);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+		std::cout << "Must recreate swap chain" << std::endl;
+	} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
+		throw std::runtime_error("failed to acquire swap chain image!");
+	}
 
-	// vkResetCommandBuffer(commandBuffer, 0);
+	vkResetFences(_device->getDevice(), 1, &syncObject.inFlight);
 
-	// recordCommandBuffer(commandBuffer, imageIndex);
+	vkResetCommandBuffer(frameContext.commandBuffer, 0);
 
-	// VkSubmitInfo submitInfo{};
-	// submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	_recordCommandBuffer(frameContext.commandBuffer, &imageContext, world);
 
-	// VkSemaphore waitSemaphores[] = {syncObject.imageAvailable};
-	// VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
-	// submitInfo.waitSemaphoreCount = 1;
-	// submitInfo.pWaitSemaphores = waitSemaphores;
-	// submitInfo.pWaitDstStageMask = waitStages;
-	// submitInfo.commandBufferCount = 1;
-	// submitInfo.pCommandBuffers = &commandBuffer;
+	VkSubmitInfo submitInfo{};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	// VkSemaphore signalSemaphores[] = {syncObject.renderFinished};
-	// submitInfo.signalSemaphoreCount = 1;
-	// submitInfo.pSignalSemaphores = signalSemaphores;
+	VkSemaphore waitSemaphores[] = {syncObject.imageAvailable};
+	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+	submitInfo.waitSemaphoreCount = 1;
+	submitInfo.pWaitSemaphores = waitSemaphores;
+	submitInfo.pWaitDstStageMask = waitStages;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &frameContext.commandBuffer;
 
-	// if (vkQueueSubmit(_graphicsQueue, 1, &submitInfo, syncObject.inFlight) != VK_SUCCESS) {
-	// 	throw std::runtime_error("failed to submit draw command buffer!");
-	// }
+	VkSemaphore signalSemaphores[] = {syncObject.renderFinished};
+	submitInfo.signalSemaphoreCount = 1;
+	submitInfo.pSignalSemaphores = signalSemaphores;
 
-	// VkPresentInfoKHR presentInfo{};
-	// presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-	// presentInfo.waitSemaphoreCount = 1;
-	// presentInfo.pWaitSemaphores = signalSemaphores;
+	if (vkQueueSubmit(_device->getGraphicsQueue(), 1, &submitInfo, syncObject.inFlight) != VK_SUCCESS) {
+		throw std::runtime_error("failed to submit draw command buffer!");
+	}
 
-	// VkSwapchainKHR swapChains[] = {_swapChain};
-	// presentInfo.swapchainCount = 1;
-	// presentInfo.pSwapchains = swapChains;
-	// presentInfo.pImageIndices = &imageIndex;
+	VkPresentInfoKHR presentInfo{};
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+	presentInfo.waitSemaphoreCount = 1;
+	presentInfo.pWaitSemaphores = signalSemaphores;
 
-	// vkQueuePresentKHR(_presentQueue, &presentInfo);
+	VkSwapchainKHR swapChains[] = {_swapChain->getSwapChain()};
+	presentInfo.swapchainCount = 1;
+	presentInfo.pSwapchains = swapChains;
+	presentInfo.pImageIndices = &imageContext.index;
 
-	(void)world;
-	// // Scene::RenderContext context;
-	// // world->initializeRenderContext(context);
-	// // world->render(context);
+	vkQueuePresentKHR(_device->getPresentQueue(), &presentInfo);
+}
 
-	// if (_commandBuffers.empty()) {
-	// 	return;
-	// }
+void VulkanRenderer::_recordCommandBuffer(VkCommandBuffer commandBuffer, ImageContext *imageContext,
+										  const std::shared_ptr<Scene::WorldNode> &world) {
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-	// _currentFrame = (_currentFrame + 1) % _commandBuffers.size();
+	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to begin recording command buffer");
+	}
+
+	VkRenderPassBeginInfo renderPassInfo = {};
+	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	renderPassInfo.renderPass = _renderPass->getRenderPass();
+	renderPassInfo.framebuffer = imageContext->framebuffer;
+	renderPassInfo.renderArea.offset = {0, 0};
+	renderPassInfo.renderArea.extent = _swapChain->getExtent();
+
+	VkClearValue clearColor = {{{0.0f, 0.0f, 0.0f, 1.0f}}};
+	renderPassInfo.clearValueCount = 1;
+	renderPassInfo.pClearValues = &clearColor;
+
+	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+
+	VkViewport viewport = {};
+	viewport.x = 0.0f;
+	viewport.y = 0.0f;
+	viewport.width = static_cast<float>(_swapChain->getExtent().width);
+	viewport.height = static_cast<float>(_swapChain->getExtent().height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
+
+	VkRect2D scissor = {};
+	scissor.offset = {0, 0};
+	scissor.extent = _swapChain->getExtent();
+	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
+
+	Scene::RenderContext context;
+	world->initializeRenderContext(context);
+	world->render(context);
+
+	vkCmdEndRenderPass(commandBuffer);
+
+	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to record command buffer");
+	}
 }
 
 } // namespace Stone::Render::Vulkan

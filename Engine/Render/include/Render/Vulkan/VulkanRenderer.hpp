@@ -4,7 +4,10 @@
 
 #include "Render/Renderer.hpp"
 #include "Render/Vulkan/VulkanSettings.hpp"
-#include "Scene.hpp"
+
+namespace Stone::Scene {
+class WorldNode;
+}
 
 namespace Stone::Render::Vulkan {
 
@@ -12,6 +15,7 @@ class Device;
 class RenderPass;
 class FramesRenderer;
 class SwapChain;
+struct ImageContext;
 
 class VulkanRenderer : public Renderer {
 public:
@@ -30,12 +34,10 @@ public:
 
 
 private:
-	// void _createGraphicPipeline();
-	// void _destroyGraphicPipeline();
-
 	void _recreateSwapChain(std::pair<uint32_t, uint32_t> size);
 
-	// void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+	void _recordCommandBuffer(VkCommandBuffer commandBuffer, ImageContext *imageContext,
+							  const std::shared_ptr<Scene::WorldNode> &world);
 
 	std::shared_ptr<Device> _device;
 	std::shared_ptr<RenderPass> _renderPass;

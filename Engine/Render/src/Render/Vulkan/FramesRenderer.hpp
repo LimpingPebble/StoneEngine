@@ -12,6 +12,21 @@ namespace Stone::Render::Vulkan {
 
 class Device;
 
+struct SyncronizedObjects {
+	VkSemaphore imageAvailable = VK_NULL_HANDLE;
+	VkSemaphore renderFinished = VK_NULL_HANDLE;
+	VkFence inFlight = VK_NULL_HANDLE;
+	const VkDevice &_device;
+
+	explicit SyncronizedObjects(const VkDevice &device);
+	~SyncronizedObjects();
+};
+
+struct FrameContext {
+	VkCommandBuffer &commandBuffer;
+	SyncronizedObjects &syncObject;
+};
+
 class FramesRenderer {
 public:
 	FramesRenderer() = delete;
@@ -24,6 +39,8 @@ public:
 		return _imageCount;
 	}
 
+	FrameContext newFrameContext();
+
 private:
 	void _createCommandBuffers();
 	void _destroyCommandBuffers();
@@ -35,16 +52,6 @@ private:
 	uint32_t _imageCount;
 
 	std::vector<VkCommandBuffer> _commandBuffers = {};
-
-	struct SyncronizedObjects {
-		VkSemaphore imageAvailable = VK_NULL_HANDLE;
-		VkSemaphore renderFinished = VK_NULL_HANDLE;
-		VkFence inFlight = VK_NULL_HANDLE;
-		const VkDevice &_device;
-
-		explicit SyncronizedObjects(const VkDevice &device);
-		~SyncronizedObjects();
-	};
 
 	std::vector<SyncronizedObjects> _syncObjects = {};
 	size_t _currentFrame = 0;

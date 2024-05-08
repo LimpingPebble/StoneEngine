@@ -12,6 +12,13 @@ namespace Stone::Render::Vulkan {
 
 class Device;
 
+struct ImageContext {
+	uint32_t index;
+	VkImage image;
+	VkImageView imageView;
+	VkFramebuffer framebuffer;
+};
+
 class SwapChain {
 public:
 	SwapChain() = delete;
@@ -19,6 +26,10 @@ public:
 	SwapChain(const SwapChain &) = delete;
 
 	virtual ~SwapChain();
+
+	[[nodiscard]] const VkSwapchainKHR &getSwapChain() const {
+		return _swapChain;
+	}
 
 	[[nodiscard]] const VkFormat &getImageFormat() const {
 		return _imageFormat;
@@ -31,6 +42,8 @@ public:
 	[[nodiscard]] uint32_t getImagecount() const {
 		return _imageCount;
 	}
+
+	VkResult acquireNextImage(const VkSemaphore &semaphore, ImageContext &imageContext);
 
 private:
 	void _createSwapChain(const SwapChainProperties &props);

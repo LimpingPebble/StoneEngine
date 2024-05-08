@@ -2,6 +2,7 @@
 
 #include "RendererObjectManager.hpp"
 
+#include "Scene/Node/MeshNode.hpp"
 #include "Utils/FileSystem.hpp"
 
 namespace Stone::Render::Vulkan {

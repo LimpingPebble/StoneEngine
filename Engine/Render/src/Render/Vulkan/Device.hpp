@@ -29,6 +29,14 @@ public:
 		return _surface;
 	}
 
+	const VkQueue &getGraphicsQueue() {
+		return _graphicsQueue;
+	}
+
+	const VkQueue &getPresentQueue() {
+		return _presentQueue;
+	}
+
 	const VkCommandPool &getCommandPool() {
 		return _commandPool;
 	}
