@@ -25,12 +25,16 @@ int main() {
 		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};
+		mesh->verticesRef().back().uv = {0.0f, 0.0f};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {0.5f, -0.5f, 0.0f};
+		mesh->verticesRef().back().uv = {1.0f, 0.0f};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {0.5f, 0.5f, 0.0f};
-		mesh->verticesRef().emplace_back();
-		mesh->verticesRef().back().position = {-0.5f, 0.5f, 0.0f};
+		mesh->verticesRef().back().uv = {1.0f, 1.0f};
+		// mesh->verticesRef().emplace_back();
+		// mesh->verticesRef().back().position = {-0.5f, 0.5f, 0.0f};
+		// mesh->verticesRef().back().uv = {0.0f, 1.0f};
 
 		meshNode->setMesh(mesh);
 

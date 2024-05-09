@@ -44,7 +44,7 @@ std::array<VkVertexInputAttributeDescription, 5> vertexAttributeDescriptions<Sce
 
 	attributeDescriptions[2].binding = 0;
 	attributeDescriptions[2].location = 2;
-	attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+	attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attributeDescriptions[2].offset = offsetof(Scene::Vertex, tangent);
 
 	attributeDescriptions[3].binding = 0;

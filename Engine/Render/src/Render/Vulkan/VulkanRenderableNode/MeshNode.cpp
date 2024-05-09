@@ -10,6 +10,7 @@
 #include "Utils/FileSystem.hpp"
 #include "VertexBinding.hpp"
 
+#include <cstring>
 #include <stdexcept>
 
 namespace Stone::Render::Vulkan {
@@ -17,12 +18,13 @@ namespace Stone::Render::Vulkan {
 
 MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<Device> &device,
 				   const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent)
-	: _device(device) {
-	(void)meshNode;
+	: _device(device), _sceneMeshNode(meshNode) {
 	_createGraphicPipeline(renderPass, extent);
+	_createVertexBuffer();
 }
 
 MeshNode::~MeshNode() {
+	_destroyVertexBuffer();
 	_destroyGraphicPipeline();
 }
 
@@ -32,7 +34,11 @@ void MeshNode::render(Scene::RenderContext &context) {
 
 	vkCmdBindPipeline(vulkanContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _graphicPipeline);
 
-	vkCmdDraw(vulkanContext->commandBuffer, 3, 1, 0, 0);
+	VkBuffer vertexBuffers[] = {_vertexBuffer};
+	VkDeviceSize offsets[] = {0};
+	vkCmdBindVertexBuffers(vulkanContext->commandBuffer, 0, 1, vertexBuffers, offsets);
+
+	vkCmdDraw(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getVertices().size(), 1, 0, 0);
 }
 
 void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent) {
@@ -66,15 +72,15 @@ void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderP
 	dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 	dynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
 
-	auto vertexInputBindingDescription = vertexBindingDescription<Scene::Vertex>();
-	auto vertexInputAttributeDescriptions = vertexAttributeDescriptions<Scene::Vertex, 5>();
+	auto bindingDescription = vertexBindingDescription<Scene::Vertex>();
+	auto attributeDescriptions = vertexAttributeDescriptions<Scene::Vertex, 5>();
 
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = &vertexInputBindingDescription;
-	vertexInputInfo.vertexAttributeDescriptionCount = vertexInputAttributeDescriptions.size();
-	vertexInputInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
+	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -189,6 +195,56 @@ void MeshNode::_destroyGraphicPipeline() {
 		vkDestroyPipelineLayout(_device->getDevice(), _pipelineLayout, nullptr);
 	}
 	_pipelineLayout = VK_NULL_HANDLE;
+}
+
+void MeshNode::_createVertexBuffer() {
+	std::shared_ptr<Scene::MeshNode> meshNode = _sceneMeshNode.lock();
+	assert(meshNode);
+
+	const std::vector<Scene::Vertex> &vertices = meshNode->getMesh()->getVertices();
+
+	VkBufferCreateInfo bufferCreateInfo = {};
+	bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferCreateInfo.size = sizeof(vertices[0]) * vertices.size();
+	bufferCreateInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+	bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	bufferCreateInfo.flags = 0;
+
+	if (vkCreateBuffer(_device->getDevice(), &bufferCreateInfo, nullptr, &_vertexBuffer) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create vertex buffer");
+	}
+
+	VkMemoryRequirements memoryRequirements;
+	vkGetBufferMemoryRequirements(_device->getDevice(), _vertexBuffer, &memoryRequirements);
+
+	VkMemoryAllocateInfo allocateInfo = {};
+	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocateInfo.allocationSize = memoryRequirements.size;
+	allocateInfo.memoryTypeIndex = _device->findMemoryType(
+		memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+	if (vkAllocateMemory(_device->getDevice(), &allocateInfo, nullptr, &_vertexBufferMemory) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to allocate vertex buffer memory");
+	}
+
+	vkBindBufferMemory(_device->getDevice(), _vertexBuffer, _vertexBufferMemory, 0);
+
+	void *data;
+	vkMapMemory(_device->getDevice(), _vertexBufferMemory, 0, bufferCreateInfo.size, 0, &data);
+	std::memcpy(data, vertices.data(), (size_t)bufferCreateInfo.size);
+	vkUnmapMemory(_device->getDevice(), _vertexBufferMemory);
+}
+
+void MeshNode::_destroyVertexBuffer() {
+	if (_vertexBuffer != VK_NULL_HANDLE) {
+		vkDestroyBuffer(_device->getDevice(), _vertexBuffer, nullptr);
+	}
+	_vertexBuffer = VK_NULL_HANDLE;
+
+	if (_vertexBufferMemory != VK_NULL_HANDLE) {
+		vkFreeMemory(_device->getDevice(), _vertexBufferMemory, nullptr);
+	}
+	_vertexBufferMemory = VK_NULL_HANDLE;
 }
 
 
