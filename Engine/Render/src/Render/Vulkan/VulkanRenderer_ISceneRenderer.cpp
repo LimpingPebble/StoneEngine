@@ -3,6 +3,7 @@
 #include "Device.hpp"
 #include "FramesRenderer.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
+#include "RenderContext.hpp"
 #include "RendererObjectManager.hpp"
 #include "RenderPass.hpp"
 #include "Scene.hpp"
@@ -33,7 +34,7 @@ void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 
 	vkWaitForFences(_device->getDevice(), 1, &syncObject.inFlight, VK_TRUE, UINT64_MAX);
 
-	ImageContext imageContext;
+	ImageContext imageContext{};
 	VkResult result = _swapChain->acquireNextImage(syncObject.imageAvailable, imageContext);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
@@ -116,7 +117,10 @@ void VulkanRenderer::_recordCommandBuffer(VkCommandBuffer commandBuffer, ImageCo
 	scissor.extent = _swapChain->getExtent();
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	Scene::RenderContext context;
+	Vulkan::RenderContext context;
+	context.commandBuffer = commandBuffer;
+	context.extent = _swapChain->getExtent();
+
 	world->initializeRenderContext(context);
 	world->render(context);
 
