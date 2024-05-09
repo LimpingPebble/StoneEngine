@@ -2,32 +2,29 @@
 
 #pragma once
 
-#include "Render/Vulkan/VulkanRenderer.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
 #include "Scene/RendererObjectManager.hpp"
 
+#include <vulkan/vulkan.h>
+
 namespace Stone::Render::Vulkan {
+
+class Device;
+class RenderPass;
 
 class RendererObjectManager : public Scene::RendererObjectManager {
 
 public:
-	explicit RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
+	RendererObjectManager(const std::shared_ptr<Device> &device, const std::shared_ptr<RenderPass> &renderPass,
+						  VkExtent2D extent);
 
 	~RendererObjectManager() override = default;
 
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;
 
 private:
-	std::shared_ptr<VulkanRenderer> _renderer;
-};
-
-class VulkanMeshNode : public Scene::IRendererObject {
-public:
-	VulkanMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<VulkanRenderer> &renderer);
-
-	~VulkanMeshNode() override = default;
-
-	void render(Scene::RenderContext &context) override;
+	std::shared_ptr<Device> _device;
+	std::shared_ptr<RenderPass> _renderPass;
+	VkExtent2D _extent;
 };
 
 } // namespace Stone::Render::Vulkan

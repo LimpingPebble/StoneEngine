@@ -2,32 +2,26 @@
 
 #include "RendererObjectManager.hpp"
 
+#include "Device.hpp"
 #include "Scene/Node/MeshNode.hpp"
-#include "Utils/FileSystem.hpp"
+#include "VulkanRenderableNode/MeshNode.hpp"
 
 namespace Stone::Render::Vulkan {
 
-RendererObjectManager::RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer) : _renderer(renderer) {
+RendererObjectManager::RendererObjectManager(const std::shared_ptr<Device> &device,
+											 const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent)
+	: Scene::RendererObjectManager(), _device(device), _renderPass(renderPass), _extent(extent) {
 }
 
 void RendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) {
 	Scene::RendererObjectManager::updateMeshNode(meshNode);
 
-	if (meshNode->getRendererObject<VulkanMeshNode>()) {
+	if (meshNode->getRendererObject<Vulkan::MeshNode>()) {
 		return;
 	}
 
-	setRendererObjectTo(meshNode.get(), std::make_shared<VulkanMeshNode>(meshNode, _renderer));
-}
-
-VulkanMeshNode::VulkanMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode,
-							   const std::shared_ptr<VulkanRenderer> &renderer) {
-	(void)meshNode;
-	(void)renderer;
-}
-
-void VulkanMeshNode::render(Scene::RenderContext &context) {
-	(void)context;
+	auto newMeshNode = std::make_shared<Vulkan::MeshNode>(meshNode, _device, _renderPass, _extent);
+	setRendererObjectTo(meshNode.get(), newMeshNode);
 }
 
 } // namespace Stone::Render::Vulkan
