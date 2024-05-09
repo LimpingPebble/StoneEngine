@@ -5,7 +5,10 @@
 #include "../Device.hpp"
 #include "../RenderContext.hpp"
 #include "../RenderPass.hpp"
+#include "Scene/Node/MeshNode.hpp"
+#include "Scene/RenderElement/Mesh.hpp"
 #include "Utils/FileSystem.hpp"
+#include "VertexBinding.hpp"
 
 #include <stdexcept>
 
@@ -63,10 +66,15 @@ void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderP
 	dynamicStateCreateInfo.dynamicStateCount = static_cast<uint32_t>(dynamicStates.size());
 	dynamicStateCreateInfo.pDynamicStates = dynamicStates.data();
 
+	auto vertexInputBindingDescription = vertexBindingDescription<Scene::Vertex>();
+	auto vertexInputAttributeDescriptions = vertexAttributeDescriptions<Scene::Vertex, 5>();
+
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.pVertexBindingDescriptions = &vertexInputBindingDescription;
+	vertexInputInfo.vertexAttributeDescriptionCount = vertexInputAttributeDescriptions.size();
+	vertexInputInfo.pVertexAttributeDescriptions = vertexInputAttributeDescriptions.data();
 
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

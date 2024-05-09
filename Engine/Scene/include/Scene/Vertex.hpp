@@ -21,12 +21,12 @@ struct Vertex {
 };
 
 struct WeightVertex : Vertex {
-	glm::ivec4 boneIDs = glm::ivec4(0);
-	glm::vec4 boneWeights = glm::vec4(0.0f);
+	glm::vec4 weights = glm::vec4(0.0f);
+	glm::ivec4 ids = glm::ivec4(0);
 
 	WeightVertex() = default;
 	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b, const glm::vec2 &uv,
-				 const glm::ivec4 &bIds, const glm::vec4 &bWs);
+				 const glm::vec4 &w, const glm::ivec4 &i);
 	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv);
 };
 
