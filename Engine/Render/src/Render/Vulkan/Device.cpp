@@ -86,6 +86,19 @@ SwapChainProperties Device::createSwapChainProperties(const std::pair<uint32_t, 
 }
 
 
+uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const {
+	VkPhysicalDeviceMemoryProperties memProperties;
+	vkGetPhysicalDeviceMemoryProperties(_physicalDevice, &memProperties);
+
+	for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
+		if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties) {
+			return i;
+		}
+	}
+
+	throw std::runtime_error("Failed to find suitable memory type");
+}
+
 /** Instance */
 
 void Device::_createInstance(VulkanSettings &settings) {

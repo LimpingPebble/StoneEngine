@@ -28,10 +28,18 @@ private:
 	void _createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent);
 	void _destroyGraphicPipeline();
 
+	void _createVertexBuffer();
+	void _destroyVertexBuffer();
+
 	std::shared_ptr<Device> _device;
+
+	std::weak_ptr<Scene::MeshNode> _sceneMeshNode;
 
 	VkPipeline _graphicPipeline = VK_NULL_HANDLE;
 	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
+
+	VkBuffer _vertexBuffer = VK_NULL_HANDLE;
+	VkDeviceMemory _vertexBufferMemory = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render::Vulkan

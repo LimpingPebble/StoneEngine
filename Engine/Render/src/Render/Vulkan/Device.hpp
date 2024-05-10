@@ -45,6 +45,8 @@ public:
 
 	[[nodiscard]] SwapChainProperties createSwapChainProperties(const std::pair<uint32_t, uint32_t> &size) const;
 
+	[[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+
 private:
 	void _createInstance(VulkanSettings &settings);
 	void _destroyInstance();
