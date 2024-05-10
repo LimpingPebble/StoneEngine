@@ -3,6 +3,7 @@
 #include "Scene/Node/Node.hpp"
 
 #include <cassert>
+#include <algorithm>
 
 namespace Stone::Scene {
 

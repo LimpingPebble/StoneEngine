@@ -6,6 +6,7 @@
 #include <optional>
 #include <vector>
 #include <vulkan/vulkan.h>
+#include <algorithm>
 
 void enumerateExtensions(std::ostream &stream) {
 	uint32_t extensionCount = 0;
