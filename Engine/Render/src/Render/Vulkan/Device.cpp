@@ -221,9 +221,11 @@ int deviceSuitability(VkPhysicalDevice device, VkSurfaceKHR surface,
 
 	VkPhysicalDeviceFeatures features;
 	vkGetPhysicalDeviceFeatures(device, &features);
+#ifndef __APPLE__
 	if (!features.geometryShader) {
 		return -1;
 	}
+#endif
 
 	QueueFamilyIndices indices = findQueueFamilies(device, surface);
 	if (!indices.isComplete()) {
