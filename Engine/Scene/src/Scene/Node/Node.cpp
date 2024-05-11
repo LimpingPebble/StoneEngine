@@ -2,8 +2,8 @@
 
 #include "Scene/Node/Node.hpp"
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 
 namespace Stone::Scene {
 
