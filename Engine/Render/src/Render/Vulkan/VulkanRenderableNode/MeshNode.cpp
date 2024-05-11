@@ -19,6 +19,7 @@ namespace Stone::Render::Vulkan {
 MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<Device> &device,
 				   const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent)
 	: _device(device), _sceneMeshNode(meshNode) {
+	_createDescriptorSetLayout();
 	_createGraphicPipeline(renderPass, extent);
 	_createVertexBuffer();
 	_createIndexBuffer();
@@ -28,6 +29,7 @@ MeshNode::~MeshNode() {
 	_destroyVertexBuffer();
 	_destroyIndexBuffer();
 	_destroyGraphicPipeline();
+	_destroyDescriptorSetLayout();
 }
 
 void MeshNode::render(Scene::RenderContext &context) {
@@ -43,6 +45,32 @@ void MeshNode::render(Scene::RenderContext &context) {
 	vkCmdBindIndexBuffer(vulkanContext->commandBuffer, _indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 	vkCmdDrawIndexed(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getIndices().size(), 1, 0, 0, 0);
+}
+
+void MeshNode::_createDescriptorSetLayout() {
+	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
+	uboLayoutBinding.binding = 0;
+	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.descriptorCount = 1;
+	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	uboLayoutBinding.pImmutableSamplers = nullptr;
+
+	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
+	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	layoutInfo.bindingCount = 1;
+	layoutInfo.pBindings = &uboLayoutBinding;
+
+	if (vkCreateDescriptorSetLayout(_device->getDevice(), &layoutInfo, nullptr, &_descriptorSetLayout) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create descriptor set layout!");
+	}
+
+	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
+}
+
+void MeshNode::_destroyDescriptorSetLayout() {
+	if (_device) {
+		vkDestroyDescriptorSetLayout(_device->getDevice(), _descriptorSetLayout, nullptr);
+	}
 }
 
 void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent) {
@@ -156,7 +184,8 @@ void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderP
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
+	pipelineLayoutInfo.setLayoutCount = 1;
+	pipelineLayoutInfo.pSetLayouts = &_descriptorSetLayout;
 	pipelineLayoutInfo.pushConstantRangeCount = 0;
 
 	if (vkCreatePipelineLayout(_device->getDevice(), &pipelineLayoutInfo, nullptr, &_pipelineLayout) != VK_SUCCESS) {

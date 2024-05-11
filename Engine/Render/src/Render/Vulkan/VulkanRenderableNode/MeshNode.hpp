@@ -25,6 +25,9 @@ public:
 	void render(Scene::RenderContext &context) override;
 
 private:
+	void _createDescriptorSetLayout();
+	void _destroyDescriptorSetLayout();
+
 	void _createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent);
 	void _destroyGraphicPipeline();
 
@@ -37,6 +40,8 @@ private:
 	std::shared_ptr<Device> _device;
 
 	std::weak_ptr<Scene::MeshNode> _sceneMeshNode;
+
+	VkDescriptorSetLayout _descriptorSetLayout = VK_NULL_HANDLE;
 
 	VkPipeline _graphicPipeline = VK_NULL_HANDLE;
 	VkPipelineLayout _pipelineLayout = VK_NULL_HANDLE;
