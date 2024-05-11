@@ -99,6 +99,39 @@ uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags prope
 	throw std::runtime_error("Failed to find suitable memory type");
 }
 
+std::pair<VkBuffer, VkDeviceMemory> Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+														 VkMemoryPropertyFlags properties) const {
+	VkBuffer buffer;
+	VkDeviceMemory bufferMemory;
+
+	VkBufferCreateInfo bufferInfo = {};
+	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+	bufferInfo.size = size;
+	bufferInfo.usage = usage;
+	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	bufferInfo.flags = 0;
+
+	if (vkCreateBuffer(_device, &bufferInfo, nullptr, &buffer) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create buffer");
+	}
+
+	VkMemoryRequirements memoryRequirements;
+	vkGetBufferMemoryRequirements(_device, buffer, &memoryRequirements);
+
+	VkMemoryAllocateInfo allocInfo = {};
+	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+	allocInfo.allocationSize = memoryRequirements.size;
+	allocInfo.memoryTypeIndex = findMemoryType(memoryRequirements.memoryTypeBits, properties);
+
+	if (vkAllocateMemory(_device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to allocate buffer memory");
+	}
+
+	vkBindBufferMemory(_device, buffer, bufferMemory, 0);
+
+	return {buffer, bufferMemory};
+}
+
 /** Instance */
 
 void Device::_createInstance(VulkanSettings &settings) {

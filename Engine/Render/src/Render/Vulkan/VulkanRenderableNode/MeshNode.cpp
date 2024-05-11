@@ -203,35 +203,15 @@ void MeshNode::_createVertexBuffer() {
 
 	const std::vector<Scene::Vertex> &vertices = meshNode->getMesh()->getVertices();
 
-	VkBufferCreateInfo bufferCreateInfo = {};
-	bufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	bufferCreateInfo.size = sizeof(vertices[0]) * vertices.size();
-	bufferCreateInfo.usage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-	bufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	bufferCreateInfo.flags = 0;
+	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-	if (vkCreateBuffer(_device->getDevice(), &bufferCreateInfo, nullptr, &_vertexBuffer) != VK_SUCCESS) {
-		throw std::runtime_error("Failed to create vertex buffer");
-	}
-
-	VkMemoryRequirements memoryRequirements;
-	vkGetBufferMemoryRequirements(_device->getDevice(), _vertexBuffer, &memoryRequirements);
-
-	VkMemoryAllocateInfo allocateInfo = {};
-	allocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocateInfo.allocationSize = memoryRequirements.size;
-	allocateInfo.memoryTypeIndex = _device->findMemoryType(
-		memoryRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-	if (vkAllocateMemory(_device->getDevice(), &allocateInfo, nullptr, &_vertexBufferMemory) != VK_SUCCESS) {
-		throw std::runtime_error("Failed to allocate vertex buffer memory");
-	}
-
-	vkBindBufferMemory(_device->getDevice(), _vertexBuffer, _vertexBufferMemory, 0);
+	std::tie(_vertexBuffer, _vertexBufferMemory) =
+		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+							  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 	void *data;
-	vkMapMemory(_device->getDevice(), _vertexBufferMemory, 0, bufferCreateInfo.size, 0, &data);
-	std::memcpy(data, vertices.data(), (size_t)bufferCreateInfo.size);
+	vkMapMemory(_device->getDevice(), _vertexBufferMemory, 0, bufferSize, 0, &data);
+	std::memcpy(data, vertices.data(), (size_t)bufferSize);
 	vkUnmapMemory(_device->getDevice(), _vertexBufferMemory);
 }
 

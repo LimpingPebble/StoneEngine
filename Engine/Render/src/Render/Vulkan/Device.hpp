@@ -47,6 +47,9 @@ public:
 
 	[[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+	std::pair<VkBuffer, VkDeviceMemory> createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
+													 VkMemoryPropertyFlags properties) const;
+
 private:
 	void _createInstance(VulkanSettings &settings);
 	void _destroyInstance();
