@@ -25,8 +25,7 @@
         "SKIP_TESTS": {
           "type": "BOOL",
           "value": "OFF"
-        },
-        "CMAKE_MESSAGE_LOG_LEVEL": "TRACE"
+        }
       },
       "condition": {
         "type": "notEquals",
