@@ -5,7 +5,9 @@
 #include "../Device.hpp"
 #include "../RenderContext.hpp"
 #include "../RenderPass.hpp"
+#include "../SwapChain.hpp"
 #include "Scene/Node/MeshNode.hpp"
+#include "Scene/RenderContext.hpp"
 #include "Scene/RenderElement/Mesh.hpp"
 #include "Utils/FileSystem.hpp"
 #include "VertexBinding.hpp"
@@ -17,15 +19,17 @@ namespace Stone::Render::Vulkan {
 
 
 MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<Device> &device,
-				   const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent)
+				   const std::shared_ptr<RenderPass> &renderPass, const std::shared_ptr<SwapChain> &swapChain)
 	: _device(device), _sceneMeshNode(meshNode) {
 	_createDescriptorSetLayout();
-	_createGraphicPipeline(renderPass, extent);
+	_createGraphicPipeline(renderPass, swapChain->getExtent());
 	_createVertexBuffer();
 	_createIndexBuffer();
+	_createUniformBuffers(swapChain);
 }
 
 MeshNode::~MeshNode() {
+	_destroyUniformBuffers();
 	_destroyVertexBuffer();
 	_destroyIndexBuffer();
 	_destroyGraphicPipeline();
@@ -36,6 +40,8 @@ void MeshNode::render(Scene::RenderContext &context) {
 	auto vulkanContext = dynamic_cast<Vulkan::RenderContext *>(&context);
 	assert(vulkanContext);
 
+	_updateUniformBuffers(*vulkanContext);
+
 	vkCmdBindPipeline(vulkanContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _graphicPipeline);
 
 	VkBuffer vertexBuffers[] = {_vertexBuffer};
@@ -45,6 +51,10 @@ void MeshNode::render(Scene::RenderContext &context) {
 	vkCmdBindIndexBuffer(vulkanContext->commandBuffer, _indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
 	vkCmdDrawIndexed(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getIndices().size(), 1, 0, 0, 0);
+}
+
+void MeshNode::_updateUniformBuffers(Vulkan::RenderContext &context) {
+	std::memcpy(_uniformBuffersMapped[context.imageIndex], &context.mvp, sizeof(Scene::MvpMatrices));
 }
 
 void MeshNode::_createDescriptorSetLayout() {
@@ -63,8 +73,6 @@ void MeshNode::_createDescriptorSetLayout() {
 	if (vkCreateDescriptorSetLayout(_device->getDevice(), &layoutInfo, nullptr, &_descriptorSetLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor set layout!");
 	}
-
-	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
 }
 
 void MeshNode::_destroyDescriptorSetLayout() {
@@ -291,6 +299,35 @@ void MeshNode::_createIndexBuffer() {
 void MeshNode::_destroyIndexBuffer() {
 	if (_device) {
 		_device->destroyBuffer(_indexBuffer, _indexBufferMemory);
+	}
+}
+
+void MeshNode::_createUniformBuffers(const std::shared_ptr<SwapChain> &swapChain) {
+	std::shared_ptr<Scene::MeshNode> meshNode = _sceneMeshNode.lock();
+	assert(meshNode);
+
+	VkDeviceSize bufferSize = sizeof(Scene::MvpMatrices);
+
+	uint32_t imageCount = swapChain->getImageCount();
+	_uniformBuffers.resize(imageCount);
+	_uniformBuffersMemory.resize(imageCount);
+	_uniformBuffersMapped.resize(imageCount);
+
+	for (uint32_t i = 0; i < imageCount; i++) {
+		std::tie(_uniformBuffers[i], _uniformBuffersMemory[i]) =
+			_device->createBuffer(bufferSize, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+								  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		vkMapMemory(_device->getDevice(), _uniformBuffersMemory[i], 0, bufferSize, 0, &_uniformBuffersMapped[i]);
+	}
+}
+
+void MeshNode::_destroyUniformBuffers() {
+	if (_device) {
+		for (size_t i = 0; i < _uniformBuffers.size(); i++) {
+			vkUnmapMemory(_device->getDevice(), _uniformBuffersMemory[i]);
+			_device->destroyBuffer(_uniformBuffers[i], _uniformBuffersMemory[i]);
+		}
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "Scene/Node/LightNode.hpp"
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/Node/Node.hpp"
+#include "Scene/Node/NodeMacros.hpp"
 #include "Scene/Node/PivotNode.hpp"
 #include "Scene/Node/SkeletonNode.hpp"
 #include "Scene/Node/SkinMeshNode.hpp"

@@ -39,7 +39,7 @@ public:
 		return _extent;
 	}
 
-	[[nodiscard]] uint32_t getImagecount() const {
+	[[nodiscard]] uint32_t getImageCount() const {
 		return _imageCount;
 	}
 

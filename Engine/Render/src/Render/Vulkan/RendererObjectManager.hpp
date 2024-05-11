@@ -10,12 +10,13 @@ namespace Stone::Render::Vulkan {
 
 class Device;
 class RenderPass;
+class SwapChain;
 
 class RendererObjectManager : public Scene::RendererObjectManager {
 
 public:
 	RendererObjectManager(const std::shared_ptr<Device> &device, const std::shared_ptr<RenderPass> &renderPass,
-						  VkExtent2D extent);
+						  const std::shared_ptr<SwapChain> &swapChain);
 
 	~RendererObjectManager() override = default;
 
@@ -24,7 +25,7 @@ public:
 private:
 	std::shared_ptr<Device> _device;
 	std::shared_ptr<RenderPass> _renderPass;
-	VkExtent2D _extent;
+	std::shared_ptr<SwapChain> _swapChain;
 };
 
 } // namespace Stone::Render::Vulkan

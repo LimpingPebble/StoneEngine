@@ -7,6 +7,16 @@
 #include "Scene.hpp"
 #include "Window.hpp"
 
+class RotatingNode : public Stone::Scene::PivotNode {
+public:
+	RotatingNode() = default;
+
+	void update(float deltaTime) override {
+		getTransform().rotate({0.0f, deltaTime * 0.1f, 0.0f});
+		std::cout << "angle = " << getTransform().getEulerAngles().y << std::endl;
+	}
+};
+
 int main() {
 #ifdef _WIN32
 	SetConsoleOutputCP(CP_UTF8);
@@ -38,8 +48,9 @@ int main() {
 
 		meshNode->setMesh(mesh);
 
-		auto cameraNode = window->getWorld()->addChild<Stone::Scene::PerspectiveCameraNode>();
-		cameraNode->getTransform().setPosition({0.0f, 0.0f, 2.0f});
+		auto rotatingNode = window->getWorld()->addChild<RotatingNode>();
+		auto cameraNode = rotatingNode->addChild<Stone::Scene::PerspectiveCameraNode>();
+		cameraNode->getTransform().setPosition({0.0f, 0.0f, -2.0f});
 
 		window->getWorld()->setActiveCamera(cameraNode);
 

@@ -18,8 +18,8 @@ VulkanRenderer::VulkanRenderer(VulkanSettings &settings) : Renderer() {
 
 	_renderPass = std::make_shared<RenderPass>(_device, swapChainProperties.surfaceFormat.format);
 	_swapChain = std::make_shared<SwapChain>(_device, _renderPass->getRenderPass(), swapChainProperties);
-	_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImagecount());
-	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
+	_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImageCount());
+	assert(_framesRenderer->getImageCount() == _swapChain->getImageCount());
 }
 
 VulkanRenderer::~VulkanRenderer() {
@@ -51,12 +51,12 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 	SwapChainProperties swapChainSettings = _device->createSwapChainProperties(size);
 	_swapChain = std::make_shared<SwapChain>(_device, _renderPass->getRenderPass(), swapChainSettings);
 
-	if (_framesRenderer == nullptr || _framesRenderer->getImageCount() != _swapChain->getImagecount()) {
+	if (_framesRenderer == nullptr || _framesRenderer->getImageCount() != _swapChain->getImageCount()) {
 		_framesRenderer.reset();
-		_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImagecount());
+		_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImageCount());
 	}
 
-	assert(_framesRenderer->getImageCount() == _swapChain->getImagecount());
+	assert(_framesRenderer->getImageCount() == _swapChain->getImageCount());
 }
 
 
