@@ -9,6 +9,12 @@ namespace Stone::Scene {
 
 class ISceneRenderer;
 
+struct MvpMatrices {
+	glm::mat4 modelMatrix = glm::mat4(1.0f);	  /**< The parent node world position matrix to use. */
+	glm::mat4 viewMatrix = glm::mat4(1.0f);		  /**< The view matrix of the camera used for rendering. */
+	glm::mat4 projectionMatrix = glm::mat4(1.0f); /**< The projection matrix of the camera used for rendering. */
+};
+
 /**
  * @brief Represents the rendering context for the current frame of a scene.
  *
@@ -21,9 +27,7 @@ class ISceneRenderer;
  * Node::render method of the root node.
  */
 struct RenderContext {
-	glm::mat4 modelMatrix = glm::mat4(1.0f);	  /**< The parent node world position matrix to use. */
-	glm::mat4 viewMatrix = glm::mat4(1.0f);		  /**< The view matrix of the camera used for rendering. */
-	glm::mat4 projectionMatrix = glm::mat4(1.0f); /**< The projection matrix of the camera used for rendering. */
+	MvpMatrices mvp; /**< The uniform buffer object containing the matrices for rendering. */
 
 	std::shared_ptr<ISceneRenderer> renderer;
 

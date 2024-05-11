@@ -20,13 +20,13 @@ std::ostream &PivotNode::writeToStream(std::ostream &stream, bool closing_bracer
 }
 
 void PivotNode::render(RenderContext &context) {
-	glm::mat4 previousModelMatrix = context.modelMatrix;
+	glm::mat4 previousModelMatrix = context.mvp.modelMatrix;
 
-	context.modelMatrix = context.modelMatrix * getTransformMatrix();
+	context.mvp.modelMatrix = context.mvp.modelMatrix * getTransformMatrix();
 	for (auto &child : getChildren()) {
 		child->render(context);
 	}
-	context.modelMatrix = previousModelMatrix;
+	context.mvp.modelMatrix = previousModelMatrix;
 }
 
 void PivotNode::transformRelativeMatrix(glm::mat4 &relative) const {
