@@ -8,6 +8,12 @@ namespace Stone::Scene {
 
 STONE_NODE_IMPLEMENTATION(WorldNode)
 
+std::shared_ptr<WorldNode> WorldNode::create() {
+	auto new_world = std::make_shared<WorldNode>();
+	new_world->_world = new_world;
+	return new_world;
+}
+
 WorldNode::WorldNode(const std::string &name) : Node(name), _activeCamera() {
 }
 

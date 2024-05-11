@@ -7,6 +7,10 @@
 
 namespace Stone::Scene {
 
+/**
+ * @class RenderableNode
+ * @brief Represents a node that can be rendered.
+ */
 class RenderableNode : public Node, public IRenderElement {
 public:
 	STONE_ABSTRACT_NODE(RenderableNode)

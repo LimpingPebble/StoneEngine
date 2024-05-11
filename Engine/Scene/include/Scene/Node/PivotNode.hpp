@@ -7,6 +7,16 @@
 
 namespace Stone::Scene {
 
+/**
+ * @class PivotNode
+ * @brief Represents a node that can be transformed.
+ *
+ * The `PivotNode` class is a node that can be transformed in 3D space. It provides a Transform3D property that can be
+ * used to move, rotate, and scale the node.
+ *
+ * @note Child nodes of a `PivotNode` are transformed relative to the pivot node's transform.
+ * All transformations applied to the pivot node are also applied to its children but not to its parent.
+ */
 class PivotNode : public Node {
 public:
 	STONE_NODE(PivotNode);

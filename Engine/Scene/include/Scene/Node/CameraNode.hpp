@@ -6,6 +6,14 @@
 
 namespace Stone::Scene {
 
+/**
+ * @class CameraNode
+ * @brief Represents a camera node.
+ *
+ * The `CameraNode` class represents a camera node in the scene graph.
+ *
+ * This class is abstract and cannot be instantiated directly. Use `PerspectiveCameraNode` or `OrthographicCameraNode`
+ */
 class CameraNode : public PivotNode {
 public:
 	STONE_ABSTRACT_NODE(CameraNode);
