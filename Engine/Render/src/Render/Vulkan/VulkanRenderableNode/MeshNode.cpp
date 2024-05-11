@@ -205,14 +205,22 @@ void MeshNode::_createVertexBuffer() {
 
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
-	std::tie(_vertexBuffer, _vertexBufferMemory) =
-		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+	auto [stagingBuffer, stagingBufferMemory] =
+		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 							  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 	void *data;
-	vkMapMemory(_device->getDevice(), _vertexBufferMemory, 0, bufferSize, 0, &data);
+	vkMapMemory(_device->getDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
 	std::memcpy(data, vertices.data(), (size_t)bufferSize);
-	vkUnmapMemory(_device->getDevice(), _vertexBufferMemory);
+	vkUnmapMemory(_device->getDevice(), stagingBufferMemory);
+
+	std::tie(_vertexBuffer, _vertexBufferMemory) =
+		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
+							  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+	_device->bufferCopy(_vertexBuffer, stagingBuffer, bufferSize);
+
+	_device->destroyBuffer(stagingBuffer, stagingBufferMemory);
 }
 
 void MeshNode::_destroyVertexBuffer() {
