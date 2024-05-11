@@ -2,10 +2,6 @@
 
 #include "Scene/Node/CameraNode.hpp"
 
-#include "Utils/Glm.hpp"
-
-#include <glm/ext.hpp>
-
 namespace Stone::Scene {
 
 STONE_ABSTRACT_NODE_IMPLEMENTATION(CameraNode)

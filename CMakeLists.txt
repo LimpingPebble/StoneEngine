@@ -4,7 +4,7 @@ project(StoneEngine LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
-set(USE_SYSTEM_GLM ON CACHE BOOL "Uses glm from system libraries")
+set(USE_SYSTEM_GLM OFF CACHE BOOL "Uses glm from system libraries")
 set(USE_SYSTEM_BOOST ON CACHE BOOL "Uses boost from system libraries")
 set(SKIP_TESTS ON CACHE BOOL "Disables tests")
 set(USE_SYSTEM_PAUSE OFF CACHE BOOL "Enables the use of Windows' pause after ending console only programs. (Windows only)")
@@ -68,8 +68,10 @@ if ( FULL_CONFIGURE )
 		FetchContent_Declare(
 				glm
 				GIT_REPOSITORY https://github.com/g-truc/glm.git
-				GIT_TAG bf71a834948186f4097caa076cd2663c69a10e1e # refs/tags/1.0.1
+				GIT_TAG 33b0eb9fa336ffd8551024b1d2690e418014553b # refs/tags/1.0.0
 		)
+
+		set(GLM_ENABLE_CXX_17 ON CACHE INTERNAL "Forces C++17 in GLM")
 
 		FetchContent_MakeAvailable(glm)
 		set(GLM_FOUND ON)

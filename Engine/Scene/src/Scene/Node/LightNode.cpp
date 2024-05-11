@@ -2,10 +2,6 @@
 
 #include "Scene/Node/LightNode.hpp"
 
-#include "Utils/Glm.hpp"
-
-#include <glm/gtc/matrix_transform.hpp>
-
 namespace Stone::Scene {
 
 STONE_ABSTRACT_NODE_IMPLEMENTATION(LightNode);

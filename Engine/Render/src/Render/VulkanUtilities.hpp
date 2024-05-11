@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstring>
 #include <optional>
 #include <vector>
