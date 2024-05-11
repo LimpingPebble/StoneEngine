@@ -5,6 +5,8 @@
 #include "Render/Vulkan/VulkanSettings.hpp"
 #include "SwapChainProperties.hpp"
 
+#include <optional>
+
 namespace Stone::Render::Vulkan {
 
 class Device {
@@ -47,8 +49,29 @@ public:
 
 	[[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+	/**
+	 * Executes the provided lambda function with a single Vulkan command buffer.
+	 *
+	 * @param lambda The lambda function to be executed with the command buffer.
+	 */
+	void withSingleCommandBuffer(const std::function<void(VkCommandBuffer)> &lambda) const;
+
 	std::pair<VkBuffer, VkDeviceMemory> createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 													 VkMemoryPropertyFlags properties) const;
+
+	void destroyBuffer(VkBuffer buffer, VkDeviceMemory memory) const;
+
+	/**
+	 * Copies data from one Vulkan buffer to another.
+	 *
+	 * @param dstBuffer The destination buffer to copy data to.
+	 * @param srcBuffer The source buffer to copy data from.
+	 * @param size The size of the data to be copied.
+	 * @param commandBufferPtr A pointer to the command buffer to record the copy command into. If nullptr, a new
+	 * command buffer will be allocated.
+	 */
+	void bufferCopy(VkBuffer dstBuffer, VkBuffer srcBuffer, VkDeviceSize size,
+					std::optional<VkCommandBuffer> commandBuffer = std::nullopt) const;
 
 private:
 	void _createInstance(VulkanSettings &settings);

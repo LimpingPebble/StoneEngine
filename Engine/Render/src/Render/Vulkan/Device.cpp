@@ -99,6 +99,37 @@ uint32_t Device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags prope
 	throw std::runtime_error("Failed to find suitable memory type");
 }
 
+void Device::withSingleCommandBuffer(const std::function<void(VkCommandBuffer)> &lambda) const {
+	VkCommandBufferAllocateInfo allocInfo = {};
+	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+	allocInfo.commandPool = _commandPool;
+	allocInfo.commandBufferCount = 1;
+
+	VkCommandBuffer commandBuffer;
+	vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer);
+
+	VkCommandBufferBeginInfo beginInfo = {};
+	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
+	vkBeginCommandBuffer(commandBuffer, &beginInfo);
+
+	lambda(commandBuffer);
+
+	vkEndCommandBuffer(commandBuffer);
+
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &commandBuffer;
+
+	vkQueueSubmit(_graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+	vkQueueWaitIdle(_graphicsQueue);
+
+	vkFreeCommandBuffers(_device, _commandPool, 1, &commandBuffer);
+}
+
 std::pair<VkBuffer, VkDeviceMemory> Device::createBuffer(VkDeviceSize size, VkBufferUsageFlags usage,
 														 VkMemoryPropertyFlags properties) const {
 	VkBuffer buffer;
@@ -130,6 +161,32 @@ std::pair<VkBuffer, VkDeviceMemory> Device::createBuffer(VkDeviceSize size, VkBu
 	vkBindBufferMemory(_device, buffer, bufferMemory, 0);
 
 	return {buffer, bufferMemory};
+}
+
+void Device::destroyBuffer(VkBuffer buffer, VkDeviceMemory memory) const {
+	if (buffer != VK_NULL_HANDLE) {
+		vkDestroyBuffer(_device, buffer, nullptr);
+	}
+	if (memory != VK_NULL_HANDLE) {
+		vkFreeMemory(_device, memory, nullptr);
+	}
+}
+
+void Device::bufferCopy(VkBuffer dstBuffer, VkBuffer srcBuffer, VkDeviceSize size,
+						std::optional<VkCommandBuffer> commandBuffer) const {
+
+	VkBufferCopy copyRegion = {};
+	copyRegion.srcOffset = 0;
+	copyRegion.dstOffset = 0;
+	copyRegion.size = size;
+
+	if (commandBuffer) {
+		vkCmdCopyBuffer(*commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
+	} else {
+		withSingleCommandBuffer([&copyRegion, srcBuffer, dstBuffer](VkCommandBuffer cmdBuff) {
+			vkCmdCopyBuffer(cmdBuff, srcBuffer, dstBuffer, 1, &copyRegion);
+		});
+	}
 }
 
 /** Instance */
