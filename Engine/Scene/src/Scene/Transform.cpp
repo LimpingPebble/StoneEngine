@@ -4,6 +4,8 @@
 
 #include "Utils/Glm.hpp"
 
+#include <glm/gtx/matrix_decompose.hpp>
+
 namespace Stone::Scene {
 
 Transform2D::Transform2D()
@@ -24,6 +26,14 @@ void Transform2D::setRotation(float rotation) {
 void Transform2D::setScale(const glm::vec2 &scale) {
 	_scale = scale;
 	_transformMatrixDirty = true;
+}
+
+void Transform2D::setMatrix(const glm::mat3 &matrix) {
+	_position = glm::vec2(matrix[2]);
+	_rotation = atan2f(matrix[1][0], matrix[0][0]);
+	_scale = glm::vec2(glm::length(glm::vec2(matrix[0])), glm::length(glm::vec2(matrix[1])));
+	calculateTransformMatrix(_transformMatrix);
+	_transformMatrixDirty = false;
 }
 
 const glm::vec2 &Transform2D::getPosition() const {
@@ -114,6 +124,14 @@ void Transform3D::setEulerAngles(const glm::vec3 &eulerAngles) {
 void Transform3D::setScale(const glm::vec3 &scale) {
 	_scale = scale;
 	_transformMatrixDirty = true;
+}
+
+void Transform3D::setMatrix(const glm::mat4 &matrix) {
+	glm::vec3 skew;
+	glm::vec4 perspective;
+	glm::decompose(matrix, _scale, _rotation, _position, skew, perspective);
+	calculateTransformMatrix(_transformMatrix);
+	_transformMatrixDirty = false;
 }
 
 const glm::vec3 &Transform3D::getPosition() const {
