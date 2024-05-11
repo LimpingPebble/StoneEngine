@@ -37,6 +37,7 @@ struct Transform2D {
 	 * @param scale The new scale.
 	 */
 	void setScale(const glm::vec2 &scale);
+	void setMatrix(const glm::mat3 &matrix);
 
 	/**
 	 * @brief Get the position of the transform.
@@ -140,6 +141,7 @@ struct Transform3D {
 	 * @param scale The new scale.
 	 */
 	void setScale(const glm::vec3 &scale);
+	void setMatrix(const glm::mat4 &matrix);
 
 	/**
 	 * @brief Get the position of the transform.

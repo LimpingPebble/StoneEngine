@@ -1,8 +1,8 @@
 setup_module(
-		NAME scene
-		TARGET_DEPS glm assimp core logging json utils
-		VARIABLE_DEPS assimp_SOURCE_DIR
-		SPECIAL_HEADER_PATHS ${assimp_SOURCE_DIR}/include
+        NAME scene
+        TARGET_DEPS glm assimp core logging json utils
+        VARIABLE_DEPS assimp_SOURCE_DIR
+        SPECIAL_HEADER_PATHS ${assimp_SOURCE_DIR}/include
         ENABLE_TESTS
-		FATAL_ERROR
+        FATAL_ERROR
 )
