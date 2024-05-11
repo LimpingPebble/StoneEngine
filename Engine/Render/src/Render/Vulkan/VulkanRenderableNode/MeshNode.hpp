@@ -31,6 +31,9 @@ private:
 	void _createVertexBuffer();
 	void _destroyVertexBuffer();
 
+	void _createIndexBuffer();
+	void _destroyIndexBuffer();
+
 	std::shared_ptr<Device> _device;
 
 	std::weak_ptr<Scene::MeshNode> _sceneMeshNode;
@@ -40,6 +43,9 @@ private:
 
 	VkBuffer _vertexBuffer = VK_NULL_HANDLE;
 	VkDeviceMemory _vertexBufferMemory = VK_NULL_HANDLE;
+	VkBuffer _indexBuffer = VK_NULL_HANDLE;
+	VkDeviceMemory _indexBufferMemory = VK_NULL_HANDLE;
+	// TODO: Use only one buffer for vertices and indices and use offsets
 };
 
 } // namespace Stone::Render::Vulkan

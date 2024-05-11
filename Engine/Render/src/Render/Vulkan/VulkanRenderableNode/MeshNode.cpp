@@ -21,10 +21,12 @@ MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::
 	: _device(device), _sceneMeshNode(meshNode) {
 	_createGraphicPipeline(renderPass, extent);
 	_createVertexBuffer();
+	_createIndexBuffer();
 }
 
 MeshNode::~MeshNode() {
 	_destroyVertexBuffer();
+	_destroyIndexBuffer();
 	_destroyGraphicPipeline();
 }
 
@@ -38,7 +40,9 @@ void MeshNode::render(Scene::RenderContext &context) {
 	VkDeviceSize offsets[] = {0};
 	vkCmdBindVertexBuffers(vulkanContext->commandBuffer, 0, 1, vertexBuffers, offsets);
 
-	vkCmdDraw(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getVertices().size(), 1, 0, 0);
+	vkCmdBindIndexBuffer(vulkanContext->commandBuffer, _indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+	vkCmdDrawIndexed(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getIndices().size(), 1, 0, 0, 0);
 }
 
 void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent) {
@@ -224,16 +228,41 @@ void MeshNode::_createVertexBuffer() {
 }
 
 void MeshNode::_destroyVertexBuffer() {
-	if (_vertexBuffer != VK_NULL_HANDLE) {
-		vkDestroyBuffer(_device->getDevice(), _vertexBuffer, nullptr);
+	if (_device) {
+		_device->destroyBuffer(_vertexBuffer, _vertexBufferMemory);
 	}
-	_vertexBuffer = VK_NULL_HANDLE;
-
-	if (_vertexBufferMemory != VK_NULL_HANDLE) {
-		vkFreeMemory(_device->getDevice(), _vertexBufferMemory, nullptr);
-	}
-	_vertexBufferMemory = VK_NULL_HANDLE;
 }
 
+void MeshNode::_createIndexBuffer() {
+	std::shared_ptr<Scene::MeshNode> meshNode = _sceneMeshNode.lock();
+	assert(meshNode);
+
+	const std::vector<uint32_t> &indices = meshNode->getMesh()->getIndices();
+
+	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+
+	auto [stagingBuffer, stagingBufferMemory] =
+		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+							  VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+	void *data;
+	vkMapMemory(_device->getDevice(), stagingBufferMemory, 0, bufferSize, 0, &data);
+	std::memcpy(data, indices.data(), (size_t)bufferSize);
+	vkUnmapMemory(_device->getDevice(), stagingBufferMemory);
+
+	std::tie(_indexBuffer, _indexBufferMemory) =
+		_device->createBuffer(bufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+							  VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+	_device->bufferCopy(_indexBuffer, stagingBuffer, bufferSize);
+
+	_device->destroyBuffer(stagingBuffer, stagingBufferMemory);
+}
+
+void MeshNode::_destroyIndexBuffer() {
+	if (_device) {
+		_device->destroyBuffer(_indexBuffer, _indexBufferMemory);
+	}
+}
 
 } // namespace Stone::Render::Vulkan
