@@ -4,6 +4,7 @@
 
 #include "Utils/Glm.hpp"
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/io.hpp>
 
 namespace Stone::Core {

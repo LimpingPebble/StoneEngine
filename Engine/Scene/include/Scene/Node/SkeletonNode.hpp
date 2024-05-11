@@ -9,6 +9,13 @@ namespace Stone::Scene {
 
 class PivotNode;
 
+/**
+ * @class SkeletonNode
+ * @brief A node that contains a list of bones that can be used with animations.
+ *
+ * The `SkeletonNode` class contains a list of bones that are used by skeletal animations.
+ * Each bone is represented by a pivot node and its rest pose.
+ */
 class SkeletonNode : public Node {
 public:
 	STONE_NODE(SkeletonNode);

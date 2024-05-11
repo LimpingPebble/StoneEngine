@@ -144,4 +144,4 @@ readability-string-compare,
 readability-uniqueptr-delete-release,
 readability-use-anyofallof'
 
-HeaderFilterRegex: 'Engine/.*'
+HeaderFilterRegex: ''

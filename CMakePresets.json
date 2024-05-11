@@ -16,7 +16,7 @@
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "USE_SYSTEM_GLM": {
           "type": "BOOL",
-          "value": "ON"
+          "value": "OFF"
         },
         "USE_SYSTEM_PAUSE": {
           "type": "BOOL",
