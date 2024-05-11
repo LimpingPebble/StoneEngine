@@ -4,26 +4,25 @@
 
 using namespace Stone;
 
-int add(int a, int b) {
-	return a + b;
+static int global_result = 0;
+void add(int a, int b) {
+	global_result = a + b;
 }
 
 TEST(Slot, PerformFunction) {
-	Slot<int(int, int)> slot(add);
-	int result = slot.perform(5, 8);
-	EXPECT_EQ(result, 13);
+	Slot<int, int> slot(add);
+	slot(5, 8);
+	EXPECT_EQ(global_result, 13);
 }
 
 TEST(Slot, PerformLambda) {
 	int result = 0;
 	auto addition = [&result](int a, int b) {
 		result = a + b;
-		return result;
 	};
 
-	Slot<int(int, int)> slot(addition);
-	int res = slot.perform(5, 8);
-	EXPECT_EQ(res, 13);
+	Slot<int, int> slot(addition);
+	slot(5, 8);
 	EXPECT_EQ(result, 13);
 }
 
@@ -32,33 +31,34 @@ TEST(Slot, PerformMethod) {
 	public:
 		int internal;
 
-		int docalc(int a, int b) {
-			return internal + a + b;
+		void docalc(int a, int b) {
+			internal = a + b;
 		}
 	};
 
 	Calc calc;
-	calc.internal = 10;
+	calc.internal = 0;
 
-	Slot<int(int, int)> slot(&calc, &Calc::docalc);
-	int result = slot.perform(5, 8);
-	EXPECT_EQ(result, 23);
+	Slot<int, int> slot(&calc, &Calc::docalc);
+	slot.perform(5, 8);
+	EXPECT_EQ(calc.internal, 13);
 }
 
 TEST(Slot, PerformMethodConst) {
 	struct Calc {
-		Calc(int intern) : internal(intern) {
+		Calc(int &intern) : internal(intern) {
 		}
-		int internal;
+		int &internal;
 
-		int docalc(int a, int b) const {
-			return internal + a + b;
+		void docalc(int a, int b) const {
+			internal = a + b;
 		}
 	};
 
-	const Calc calc(10);
+	int result = 0;
+	const Calc calc(result);
 
-	Slot<int(int, int)> slot(&calc, &Calc::docalc);
-	int result = slot.perform(5, 8);
-	EXPECT_EQ(result, 23);
+	Slot<int, int> slot(&calc, &Calc::docalc);
+	slot.perform(5, 8);
+	EXPECT_EQ(result, 13);
 }

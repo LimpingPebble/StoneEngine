@@ -2,29 +2,25 @@
 
 #include "Utils/DispatchQueue.hpp"
 
+#include <cassert>
+
 namespace Stone {
 
-void DispatchQueue::async(Task task) {
-	std::unique_lock<std::mutex> lock(_mutex);
-	_tasks.push(task);
-	if (_tasks.size() == 1) {
-		_condition.notify_one();
-	}
+DispatchQueue &DispatchQueue::main() {
+	static DispatchQueue mainQueue;
+	return mainQueue;
 }
 
-void DispatchQueue::sync(Task task) {
-	std::unique_lock<std::mutex> lock(_mutex);
-	_tasks.push(task);
-	_condition.wait(lock, [this] { return _tasks.empty(); });
+DispatchQueue::DispatchQueue() : _running(false), _threadId(std::this_thread::get_id()) {
 }
 
 void DispatchQueue::execute() {
 	std::unique_lock<std::mutex> lock(_mutex);
 	_running = true;
 	while (!_tasks.empty()) {
-		Task task = _tasks.front();
+		Task task = _tasks.top();
 		_tasks.pop();
-		task();
+		task.task();
 	}
 	_running = false;
 }
@@ -32,11 +28,11 @@ void DispatchQueue::execute() {
 void DispatchQueue::run() {
 	_running = true;
 	while (_running) {
-		Task task;
+		TaskType task;
 		{
 			std::unique_lock<std::mutex> lock(_mutex);
 			_condition.wait(lock, [this] { return !_tasks.empty(); });
-			task = _tasks.front();
+			task = _tasks.top().task;
 			_tasks.pop();
 		}
 		task();

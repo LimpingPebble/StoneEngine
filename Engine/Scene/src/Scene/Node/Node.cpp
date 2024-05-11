@@ -27,6 +27,7 @@ void Node::update(float deltaTime) {
 	}
 }
 
+// TODO: Benchmark using `RenderContext &context` as a reference or as a pointer and dynamic cast
 void Node::render(RenderContext &context) {
 	for (auto &child : _children) {
 		child->render(context);
