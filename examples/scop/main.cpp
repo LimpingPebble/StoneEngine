@@ -9,13 +9,18 @@
 
 class RotatingNode : public Stone::Scene::PivotNode {
 public:
-	RotatingNode() = default;
+	STONE_NODE(RotatingNode)
+
+	RotatingNode(const std::string &name = "rotating_node") : PivotNode(name) {
+	}
 
 	void update(float deltaTime) override {
 		getTransform().rotate({0.0f, deltaTime * 0.1f, 0.0f});
 		std::cout << "angle = " << getTransform().getEulerAngles().y << std::endl;
 	}
 };
+
+STONE_NODE_IMPLEMENTATION(RotatingNode)
 
 int main() {
 #ifdef _WIN32

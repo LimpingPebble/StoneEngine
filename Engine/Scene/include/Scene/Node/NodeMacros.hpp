@@ -35,7 +35,8 @@
 		auto constructor = [](const std::string &nodeName) {                                                           \
 			return std::make_shared<NewClassName>(nodeName);                                                           \
 		};                                                                                                             \
-		DynamicObjectFactory<Node, const std::string &>::getInstance().add(#NewClassName, constructor);                \
+		Stone::DynamicObjectFactory<Stone::Scene::Node, const std::string &>::getInstance().add(#NewClassName,         \
+																								constructor);          \
 		return #NewClassName;                                                                                          \
 	}();
 
