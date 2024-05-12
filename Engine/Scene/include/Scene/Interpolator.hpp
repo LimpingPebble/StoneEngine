@@ -23,11 +23,11 @@ template <typename KeyValue, typename Time = float>
 class Interpolator {
 public:
 	Interpolator() = default;
-	Interpolator(const Interpolator<KeyValue> &copy) = default;
+	Interpolator(const Interpolator &copy) = default;
 
 	virtual ~Interpolator() = default;
 
-	Interpolator &operator=(const Interpolator<KeyValue> &copy) = default;
+	Interpolator &operator=(const Interpolator &copy) = default;
 
 	/**
 	 * @brief Check if the Interpolator does not contains any key values.
