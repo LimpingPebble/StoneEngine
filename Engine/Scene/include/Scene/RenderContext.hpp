@@ -10,9 +10,10 @@ namespace Stone::Scene {
 class ISceneRenderer;
 
 struct MvpMatrices {
-	glm::mat4 modelMatrix = glm::mat4(1.0f);	  /**< The parent node world position matrix to use. */
-	glm::mat4 viewMatrix = glm::mat4(1.0f);		  /**< The view matrix of the camera used for rendering. */
-	glm::mat4 projectionMatrix = glm::mat4(1.0f); /**< The projection matrix of the camera used for rendering. */
+	alignas(16) glm::mat4 modelMatrix = glm::mat4(1.0f); /**< The parent node world position matrix to use. */
+	alignas(16) glm::mat4 viewMatrix = glm::mat4(1.0f);	 /**< The view matrix of the camera used for rendering. */
+	alignas(16) glm::mat4 projectionMatrix =
+		glm::mat4(1.0f); /**< The projection matrix of the camera used for rendering. */
 };
 
 /**
