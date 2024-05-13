@@ -20,7 +20,7 @@ public:
 	void destroyWindow(const std::shared_ptr<Window> &window);
 
 	/** Run the application loop */
-	void run();
+	int run();
 
 private:
 	std::vector<std::shared_ptr<Window>> _windows;
