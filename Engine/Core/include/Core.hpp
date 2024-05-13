@@ -2,5 +2,4 @@
 
 #pragma once
 
-#include "Core/Image.hpp"
 #include "Core/Object.hpp"

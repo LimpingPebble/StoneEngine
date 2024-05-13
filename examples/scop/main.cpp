@@ -5,6 +5,7 @@
 #endif
 
 #include "Scene.hpp"
+#include "Utils/Image.hpp"
 #include "Window.hpp"
 
 class RotatingNode : public Stone::Scene::PivotNode {
@@ -59,6 +60,13 @@ int main() {
 		mesh->verticesRef().back().uv = {0.0f, 1.0f};
 
 		meshNode->setMesh(mesh);
+
+		auto stone_image = Stone::Image::load("docs/img/stone-engine.png", Stone::Image::Channel::RgbAlpha);
+		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
+		stone_texture->setImage(stone_image);
+		auto stone_material = std::make_shared<Stone::Scene::Material>();
+		stone_material->setTextureParameter("diffuse", stone_texture);
+		meshNode->setMaterial(stone_material);
 
 		auto meshRotatingNode = window->getWorld()->addChild<RotatingNode>();
 		auto secondMeshNode = meshRotatingNode->addChild<Stone::Scene::MeshNode>();

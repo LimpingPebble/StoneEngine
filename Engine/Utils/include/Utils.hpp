@@ -6,4 +6,5 @@
 #include "Utils/Delegate.hpp"
 #include "Utils/DynamicObjectFactory.hpp"
 #include "Utils/Glm.hpp"
+#include "Utils/Image.hpp"
 #include "Utils/SigSlot.hpp"
