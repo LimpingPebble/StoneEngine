@@ -15,9 +15,15 @@ public:
 	}
 
 	void update(float deltaTime) override {
-		getTransform().rotate({0.0f, deltaTime * 0.1f, 0.0f});
-		std::cout << "angle = " << getTransform().getEulerAngles().y << std::endl;
+		getTransform().rotate(deltaTime * rotationSpeeds);
 	}
+
+	void setRotationSpeed(glm::vec3 speeds) {
+		rotationSpeeds = speeds;
+	}
+
+private:
+	glm::vec3 rotationSpeeds = {0.0f, 0.4f, 0.0f};
 };
 
 STONE_NODE_IMPLEMENTATION(RotatingNode)
@@ -54,9 +60,15 @@ int main() {
 
 		meshNode->setMesh(mesh);
 
+		auto meshRotatingNode = window->getWorld()->addChild<RotatingNode>();
+		auto secondMeshNode = meshRotatingNode->addChild<Stone::Scene::MeshNode>();
+		meshRotatingNode->setRotationSpeed({0.0f, 0.4f, 0.0f});
+		secondMeshNode->setMesh(mesh);
+
 		auto rotatingNode = window->getWorld()->addChild<RotatingNode>();
 		auto cameraNode = rotatingNode->addChild<Stone::Scene::PerspectiveCameraNode>();
-		cameraNode->getTransform().setPosition({0.0f, 0.0f, -2.0f});
+		cameraNode->getTransform().setPosition({0.0f, 1.0f, 3.0f});
+		cameraNode->getTransform().rotate({-0.5f, 0.0f, 0.0f});
 
 		window->getWorld()->setActiveCamera(cameraNode);
 

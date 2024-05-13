@@ -26,9 +26,13 @@ MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::
 	_createVertexBuffer();
 	_createIndexBuffer();
 	_createUniformBuffers(swapChain);
+	_createDescriptorPool(swapChain);
+	_createDescriptorSets(swapChain);
 }
 
 MeshNode::~MeshNode() {
+	_destroyDescriptorSets();
+	_destroyDescriptorPool();
 	_destroyUniformBuffers();
 	_destroyVertexBuffer();
 	_destroyIndexBuffer();
@@ -49,6 +53,9 @@ void MeshNode::render(Scene::RenderContext &context) {
 	vkCmdBindVertexBuffers(vulkanContext->commandBuffer, 0, 1, vertexBuffers, offsets);
 
 	vkCmdBindIndexBuffer(vulkanContext->commandBuffer, _indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+
+	vkCmdBindDescriptorSets(vulkanContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout, 0, 1,
+							&_descriptorSets[vulkanContext->imageIndex], 0, nullptr);
 
 	vkCmdDrawIndexed(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getIndices().size(), 1, 0, 0, 0);
 }
@@ -329,6 +336,65 @@ void MeshNode::_destroyUniformBuffers() {
 			_device->destroyBuffer(_uniformBuffers[i], _uniformBuffersMemory[i]);
 		}
 	}
+}
+
+void MeshNode::_createDescriptorPool(const std::shared_ptr<SwapChain> &swapChain) {
+	std::array<VkDescriptorPoolSize, 1> poolSizes = {};
+	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	poolSizes[0].descriptorCount = swapChain->getImageCount();
+
+	VkDescriptorPoolCreateInfo poolInfo = {};
+	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+	poolInfo.pPoolSizes = poolSizes.data();
+	poolInfo.maxSets = swapChain->getImageCount();
+
+	if (vkCreateDescriptorPool(_device->getDevice(), &poolInfo, nullptr, &_descriptorPool) != VK_SUCCESS) {
+		throw std::runtime_error("failed to create descriptor pool!");
+	}
+}
+
+void MeshNode::_destroyDescriptorPool() {
+	if (_device) {
+		vkDestroyDescriptorPool(_device->getDevice(), _descriptorPool, nullptr);
+	}
+}
+
+void MeshNode::_createDescriptorSets(const std::shared_ptr<SwapChain> &swapChain) {
+	std::vector<VkDescriptorSetLayout> layouts(swapChain->getImageCount(), _descriptorSetLayout);
+	VkDescriptorSetAllocateInfo allocInfo = {};
+	allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+	allocInfo.descriptorPool = _descriptorPool;
+	allocInfo.descriptorSetCount = swapChain->getImageCount();
+	allocInfo.pSetLayouts = layouts.data();
+
+	_descriptorSets.resize(swapChain->getImageCount());
+	if (vkAllocateDescriptorSets(_device->getDevice(), &allocInfo, _descriptorSets.data()) != VK_SUCCESS) {
+		throw std::runtime_error("failed to allocate descriptor sets!");
+	}
+
+	for (size_t i = 0; i < _descriptorSets.size(); ++i) {
+		VkDescriptorBufferInfo bufferInfo = {};
+		bufferInfo.buffer = _uniformBuffers[i];
+		bufferInfo.offset = 0;
+		bufferInfo.range = sizeof(Scene::MvpMatrices);
+
+		VkWriteDescriptorSet descriptorWrite = {};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = _descriptorSets[i];
+		descriptorWrite.dstBinding = 0;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pBufferInfo = &bufferInfo;
+		descriptorWrite.pImageInfo = nullptr;
+		descriptorWrite.pTexelBufferView = nullptr;
+
+		vkUpdateDescriptorSets(_device->getDevice(), 1, &descriptorWrite, 0, nullptr);
+	}
+}
+
+void MeshNode::_destroyDescriptorSets() {
 }
 
 } // namespace Stone::Render::Vulkan

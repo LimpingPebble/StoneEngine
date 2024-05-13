@@ -45,6 +45,12 @@ private:
 	void _createUniformBuffers(const std::shared_ptr<SwapChain> &swapChain);
 	void _destroyUniformBuffers();
 
+	void _createDescriptorPool(const std::shared_ptr<SwapChain> &swapChain);
+	void _destroyDescriptorPool();
+
+	void _createDescriptorSets(const std::shared_ptr<SwapChain> &swapChain);
+	void _destroyDescriptorSets();
+
 	std::shared_ptr<Device> _device;
 
 	std::weak_ptr<Scene::MeshNode> _sceneMeshNode;
@@ -63,6 +69,9 @@ private:
 	std::vector<VkBuffer> _uniformBuffers;
 	std::vector<VkDeviceMemory> _uniformBuffersMemory;
 	std::vector<void *> _uniformBuffersMapped;
+
+	VkDescriptorPool _descriptorPool = VK_NULL_HANDLE;
+	std::vector<VkDescriptorSet> _descriptorSets;
 };
 
 } // namespace Stone::Render::Vulkan
