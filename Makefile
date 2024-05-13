@@ -19,15 +19,18 @@ LIST_PRESETS_TYPE			=	configure
 
 ALL_EXAMPLES 				=	$(subst examples/,,$(shell find examples/ -maxdepth 1 -type d))
 
-all:		libs
+all: libs				## make libs
 
-libs:		| init_configure
+help:					## Show this help.
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  %-10s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+
+libs: | init_configure	## Build all libraries
 	@${CMAKE} --preset ${PRESET}
 
-clean:
+clean:					## Clean build directory
 	@rm -rf ${BUILD_DIR}
 
-re:			clean all
+re: clean all			## Clean and build all
 
 init_configure:
 	@${CMAKE} --preset ${PRESET}
@@ -35,10 +38,10 @@ init_configure:
 list-presets:
 	@${CMAKE} --list-presets=${LIST_PRESETS_TYPE}
 
-test:
+test:					## Run tests
 	@${CMAKE} --build --preset=${PRESET}-tests
 
-examples:
+examples:				## Build all examples (use make `example_name` to run a specific example)
 	@${CMAKE} --build --preset=${PRESET}-examples
 
 ${ALL_EXAMPLES}: examples
