@@ -12,6 +12,7 @@ int main() {
 	SetConsoleOutputCP(CP_UTF8);
 #endif
 
+	int retCode;
 	{
 		auto app = std::make_shared<Stone::Window::App>();
 
@@ -39,7 +40,7 @@ int main() {
 
 		window->getWorld()->setActiveCamera(cameraNode);
 
-		app->run();
+		retCode = app->run();
 	}
 
 	std::cout << "Bye!" << std::endl;
@@ -48,5 +49,5 @@ int main() {
 	system("pause");
 #endif
 
-	return 0;
+	return retCode;
 }

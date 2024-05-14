@@ -6,6 +6,7 @@
 #include "Window/Window.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace Stone::Window {
 
@@ -30,17 +31,23 @@ void App::destroyWindow(const std::shared_ptr<Window> &window) {
 	}
 }
 
-void App::run() {
-	while (_windows.empty() == false) {
-		for (int i = static_cast<int>(_windows.size()) - 1; i >= 0; --i) {
-			if (_windows[i] == nullptr || _windows[i]->shouldClose()) {
-				_windows.erase(_windows.begin() + i);
-				continue;
-			}
+int App::run() {
+	try {
+		while (_windows.empty() == false) {
+			for (int i = static_cast<int>(_windows.size()) - 1; i >= 0; --i) {
+				if (_windows[i] == nullptr || _windows[i]->shouldClose()) {
+					_windows.erase(_windows.begin() + i);
+					continue;
+				}
 
-			_windows[i]->loopOnce();
+				_windows[i]->loopOnce();
+			}
 		}
+	} catch (const std::exception &e) {
+		std::cerr << "Stone Application ends with Exception: " << e.what() << std::endl;
+		return 1;
 	}
+	return 0;
 }
 
 } // namespace Stone::Window
