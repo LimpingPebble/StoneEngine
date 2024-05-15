@@ -73,6 +73,17 @@ public:
 	void bufferCopy(VkBuffer dstBuffer, VkBuffer srcBuffer, VkDeviceSize size,
 					std::optional<VkCommandBuffer> commandBuffer = std::nullopt) const;
 
+	std::pair<VkImage, VkDeviceMemory> createImage(uint32_t width, uint32_t height, uint32_t mipLevels,
+												   VkSampleCountFlagBits numSamples, VkFormat format,
+												   VkImageTiling tiling, VkImageUsageFlags usage,
+												   VkMemoryPropertyFlags properties) const;
+
+	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout,
+							   std::optional<VkCommandBuffer> commandBuffer = std::nullopt) const;
+
+	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height,
+						   std::optional<VkCommandBuffer> commandBuffer = std::nullopt) const;
+
 private:
 	void _createInstance(VulkanSettings &settings);
 	void _destroyInstance();
