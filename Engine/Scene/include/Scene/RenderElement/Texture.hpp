@@ -5,8 +5,8 @@
 #include "Core/Object.hpp"
 #include "Scene/RenderElement/IRenderElement.hpp"
 
-namespace Stone {
-class Image;
+namespace Stone::Image {
+class ImageSource;
 }
 
 namespace Stone::Scene {
@@ -49,17 +49,17 @@ public:
 	 *
 	 * @param image The image to set.
 	 */
-	void setImage(std::shared_ptr<Image> image);
+	void setImage(const std::shared_ptr<Image::ImageSource> &image);
 
 	/**
 	 * @brief Get the image associated with the Texture.
 	 *
 	 * @return The image associated with the Texture.
 	 */
-	[[nodiscard]] std::shared_ptr<Image> getImage() const;
+	[[nodiscard]] const std::shared_ptr<Image::ImageSource> &getImage() const;
 
 protected:
-	std::shared_ptr<Image> _image; /**< The image associated with the Texture. */
+	std::shared_ptr<Image::ImageSource> _image; /**< The image associated with the Texture. */
 };
 
 } // namespace Stone::Scene

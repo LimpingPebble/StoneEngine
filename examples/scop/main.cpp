@@ -4,8 +4,8 @@
 #include <Windows.h>
 #endif
 
+#include "Core/Image/ImageSource.hpp"
 #include "Scene.hpp"
-#include "Utils/Image.hpp"
 #include "Window.hpp"
 
 class RotatingNode : public Stone::Scene::PivotNode {
@@ -61,9 +61,10 @@ int main() {
 
 		meshNode->setMesh(mesh);
 
-		auto stone_image = Stone::Image::load("docs/img/stone-engine.png", Stone::Image::Channel::RgbAlpha);
+		auto stone_image_source =
+			std::make_shared<Stone::Image::ImageSource>("docs/img/stone-engine.png", Stone::Image::Channel::RGBA);
 		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
-		stone_texture->setImage(stone_image);
+		stone_texture->setImage(stone_image_source);
 		auto stone_material = std::make_shared<Stone::Scene::Material>();
 		stone_material->setTextureParameter("diffuse", stone_texture);
 		meshNode->setMaterial(stone_material);
