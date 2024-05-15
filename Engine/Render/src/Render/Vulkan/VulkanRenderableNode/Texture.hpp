@@ -27,6 +27,15 @@ public:
 	void render(Scene::RenderContext &context) override;
 
 private:
+	void _createTextureImage();
+	void _destroyTextureImage();
+
+	std::shared_ptr<Device> _device;
+
+	std::weak_ptr<Scene::Texture> _sceneTexture;
+
+	VkImage _textureImage = VK_NULL_HANDLE;
+	VkDeviceMemory _textureImageMemory = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render::Vulkan
