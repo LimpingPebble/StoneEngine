@@ -22,6 +22,8 @@ public:
 
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;
 
+	void updateTexture(const std::shared_ptr<Scene::Texture> &texture) override;
+
 private:
 	std::shared_ptr<Device> _device;
 	std::shared_ptr<RenderPass> _renderPass;
