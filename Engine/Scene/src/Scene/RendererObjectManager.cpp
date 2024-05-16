@@ -31,6 +31,10 @@ void RendererObjectManager::updateSkinMeshNode(const std::shared_ptr<SkinMeshNod
 }
 
 void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &material) {
+	material->forEachTextures([this](std::pair<const std::string, std::shared_ptr<Texture>> &it) {
+		if (it.second->isDirty())
+			updateTexture(it.second);
+	});
 	material->markUndirty();
 }
 
