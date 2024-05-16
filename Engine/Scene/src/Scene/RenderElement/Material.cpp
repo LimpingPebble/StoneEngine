@@ -72,4 +72,24 @@ float Material::getScalarParameter(const std::string &name) const {
 	return 0.0f;
 }
 
+void Material::forEachTextures(
+	const std::function<void(std::pair<const std::string, std::shared_ptr<Texture>> &)> &lambda) {
+	for (auto &it : _textures) {
+		lambda(it);
+	}
+}
+
+void Material::forEachVectors(const std::function<void(std::pair<const std::string, glm::vec3> &)> &lambda) {
+	for (auto &it : _vectors) {
+		lambda(it);
+	}
+}
+
+void Material::forEachScalars(const std::function<void(std::pair<const std::string, float> &)> &lambda) {
+	for (auto &it : _scalars) {
+		it.second += 1;
+		lambda(it);
+	}
+}
+
 } // namespace Stone::Scene

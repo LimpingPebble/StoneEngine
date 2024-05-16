@@ -5,6 +5,7 @@
 #include "Core/Object.hpp"
 #include "Scene/RenderElement/IRenderElement.hpp"
 
+#include <functional>
 #include <glm/vec3.hpp>
 #include <unordered_map>
 
@@ -95,6 +96,27 @@ public:
 	 * @return The scalar parameter as a float.
 	 */
 	[[nodiscard]] float getScalarParameter(const std::string &name) const;
+
+	/**
+	 * @brief Iterate over all texture parameters in the Material.
+	 *
+	 * @param lambda The lambda function to call for each texture parameter.
+	 */
+	void forEachTextures(const std::function<void(std::pair<const std::string, std::shared_ptr<Texture>> &)> &lambda);
+
+	/**
+	 * @brief Iterate over all vector parameters in the Material.
+	 *
+	 * @param lambda The lambda function to call for each vector parameter.
+	 */
+	void forEachVectors(const std::function<void(std::pair<const std::string, glm::vec3> &)> &lambda);
+
+	/**
+	 * @brief Iterate over all scalar parameters in the Material.
+	 *
+	 * @param lambda The lambda function to call for each scalar parameter.
+	 */
+	void forEachScalars(const std::function<void(std::pair<const std::string, float> &)> &lambda);
 
 protected:
 	std::unordered_map<std::string, std::shared_ptr<Texture>> _textures; /**< Map of texture parameters. */
