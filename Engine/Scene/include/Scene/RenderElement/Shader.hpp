@@ -22,6 +22,7 @@ public:
 	};
 
 	Shader() = default;
+	explicit Shader(const std::string &content);
 	Shader(ContentType contentType, std::string content);
 	Shader(const Shader &other) = default;
 
@@ -53,6 +54,18 @@ public:
 	 * information.
 	 */
 	[[nodiscard]] std::pair<ContentType, const std::string &> getContent() const;
+
+	/**
+	 * @brief Get the function to call in the shader.
+	 */
+	[[nodiscard]] const std::string &getFunction() const;
+
+	/**
+	 * @brief Set the function to call in the shader.
+	 *
+	 * @param function The function to call in the shader.
+	 */
+	void setFunction(const std::string &function);
 
 	/**
 	 * @brief Get the maximum location used in the shader.
@@ -87,6 +100,7 @@ public:
 private:
 	ContentType _contentType = ContentType::SourceCode; /** The type of the content. */
 	std::string _content = "#version 450 core\n";		/** The content of the shader. */
+	std::string _function = "main";						/** The function to call in the shader. */
 
 	std::unordered_map<std::string, int> _locations = {}; /** The binding locations of the variables in the shader. */
 	int _maxLocation = -1;								  /** The cached maximum value from the locations. */
