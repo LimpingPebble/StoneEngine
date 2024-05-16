@@ -7,26 +7,26 @@
 namespace Stone::Scene {
 
 void RendererObjectManager::updateMeshNode(const std::shared_ptr<MeshNode> &meshNode) {
-	if (meshNode->getMesh() && meshNode->getMesh()->isDirty())
-		updateMesh(meshNode->getMesh());
 	if (meshNode->getMaterial() && meshNode->getMaterial()->isDirty())
 		updateMaterial(meshNode->getMaterial());
+	if (meshNode->getMesh() && meshNode->getMesh()->isDirty())
+		updateMesh(meshNode->getMesh());
 	meshNode->markUndirty();
 }
 
 void RendererObjectManager::updateInstancedMeshNode(const std::shared_ptr<InstancedMeshNode> &instancedMeshNode) {
-	if (instancedMeshNode->getMesh() && instancedMeshNode->getMesh()->isDirty())
-		updateMesh(instancedMeshNode->getMesh());
 	if (instancedMeshNode->getMaterial() && instancedMeshNode->getMaterial()->isDirty())
 		updateMaterial(instancedMeshNode->getMaterial());
+	if (instancedMeshNode->getMesh() && instancedMeshNode->getMesh()->isDirty())
+		updateMesh(instancedMeshNode->getMesh());
 	instancedMeshNode->markUndirty();
 }
 
 void RendererObjectManager::updateSkinMeshNode(const std::shared_ptr<SkinMeshNode> &skinMeshNode) {
-	if (skinMeshNode->getSkinMesh() && skinMeshNode->getSkinMesh()->isDirty())
-		updateSkinMesh(skinMeshNode->getSkinMesh());
 	if (skinMeshNode->getMaterial() && skinMeshNode->getMaterial()->isDirty())
 		updateMaterial(skinMeshNode->getMaterial());
+	if (skinMeshNode->getSkinMesh() && skinMeshNode->getSkinMesh()->isDirty())
+		updateSkinMesh(skinMeshNode->getSkinMesh());
 	skinMeshNode->markUndirty();
 }
 
