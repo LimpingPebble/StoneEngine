@@ -27,6 +27,7 @@ class WorldNode;
 /** RenderElement */
 class Texture;
 class Material;
+class Shader;
 
 class Mesh;
 class Skeleton;

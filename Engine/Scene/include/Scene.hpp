@@ -15,6 +15,7 @@
 #include "Scene/RenderContext.hpp"
 #include "Scene/RenderElement/Material.hpp"
 #include "Scene/RenderElement/Mesh.hpp"
+#include "Scene/RenderElement/Shader.hpp"
 #include "Scene/RenderElement/SkinMesh.hpp"
 #include "Scene/RenderElement/Texture.hpp"
 #include "Scene/Transform.hpp"
