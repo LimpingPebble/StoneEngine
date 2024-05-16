@@ -32,4 +32,31 @@ const std::shared_ptr<Image::ImageSource> &Texture::getImage() const {
 	return _image;
 }
 
+void Texture::setWrap(TextureWrap wrap) {
+	_wrap = wrap;
+	markDirty();
+}
+
+TextureWrap Texture::getWrap() const {
+	return _wrap;
+}
+
+void Texture::setMinFilter(TextureFilter filter) {
+	_minFilter = filter;
+	markDirty();
+}
+
+TextureFilter Texture::getMinFilter() const {
+	return _minFilter;
+}
+
+void Texture::setMagFilter(TextureFilter filter) {
+	_magFilter = filter;
+	markDirty();
+}
+
+TextureFilter Texture::getMagFilter() const {
+	return _magFilter;
+}
+
 } // namespace Stone::Scene

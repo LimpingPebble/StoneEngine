@@ -23,13 +23,13 @@ Texture::Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shar
 
 	_createTextureImage();
 	_createTextureImageView();
-	std::cout << "texture created" << std::endl;
+	_createTextureSampler();
 }
 
 Texture::~Texture() {
 	_destroyTextureImageView();
 	_destroyTextureImage();
-	std::cout << "texture destroyed" << std::endl;
+	_destroyTextureSampler();
 }
 
 void Texture::render(Scene::RenderContext &context) {
@@ -83,6 +83,37 @@ void Texture::_createTextureImageView() {
 
 void Texture::_destroyTextureImageView() {
 	vkDestroyImageView(_device->getDevice(), _textureImageView, nullptr);
+}
+
+void Texture::_createTextureSampler() {
+	auto texture = _sceneTexture.lock();
+
+	VkSamplerCreateInfo samplerInfo{};
+	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+	samplerInfo.magFilter = textureFilterToVkFilter(texture->getMagFilter());
+	samplerInfo.minFilter = textureFilterToVkFilter(texture->getMinFilter());
+	VkSamplerAddressMode samplerMode = textureWrapToVkSamplerAddressMode(texture->getWrap());
+	samplerInfo.addressModeU = samplerMode;
+	samplerInfo.addressModeV = samplerMode;
+	samplerInfo.addressModeW = samplerMode;
+	samplerInfo.anisotropyEnable = VK_TRUE;
+	samplerInfo.maxAnisotropy = 16;
+	samplerInfo.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
+	samplerInfo.unnormalizedCoordinates = VK_FALSE;
+	samplerInfo.compareEnable = VK_FALSE;
+	samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
+	samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+	samplerInfo.mipLodBias = 0.0f;
+	samplerInfo.minLod = 0.0f;
+	samplerInfo.maxLod = 0.0f;
+
+	if (vkCreateSampler(_device->getDevice(), &samplerInfo, nullptr, &_textureSampler) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create texture sampler");
+	}
+}
+
+void Texture::_destroyTextureSampler() {
+	vkDestroySampler(_device->getDevice(), _textureSampler, nullptr);
 }
 
 } // namespace Stone::Render::Vulkan
