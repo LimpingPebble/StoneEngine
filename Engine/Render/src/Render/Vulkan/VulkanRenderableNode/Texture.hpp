@@ -30,12 +30,17 @@ private:
 	void _createTextureImage();
 	void _destroyTextureImage();
 
+	void _createTextureImageView();
+	void _destroyTextureImageView();
+
 	std::shared_ptr<Device> _device;
 
 	std::weak_ptr<Scene::Texture> _sceneTexture;
 
 	VkImage _textureImage = VK_NULL_HANDLE;
 	VkDeviceMemory _textureImageMemory = VK_NULL_HANDLE;
+
+	VkImageView _textureImageView = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render::Vulkan

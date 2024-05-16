@@ -22,6 +22,18 @@ Texture::Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shar
 	(void)swapChain;
 
 	_createTextureImage();
+	_createTextureImageView();
+	std::cout << "texture created" << std::endl;
+}
+
+Texture::~Texture() {
+	_destroyTextureImageView();
+	_destroyTextureImage();
+	std::cout << "texture destroyed" << std::endl;
+}
+
+void Texture::render(Scene::RenderContext &context) {
+	(void)context;
 }
 
 void Texture::_createTextureImage() {
@@ -62,12 +74,15 @@ void Texture::_destroyTextureImage() {
 	vkFreeMemory(_device->getDevice(), _textureImageMemory, nullptr);
 }
 
-Texture::~Texture() {
-	_destroyTextureImage();
+void Texture::_createTextureImageView() {
+	auto texture = _sceneTexture.lock();
+	const std::shared_ptr<Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
+
+	_textureImageView = _device->createImageView(_textureImage, imageChannelToVkFormat(image->getChannels()));
 }
 
-void Texture::render(Scene::RenderContext &context) {
-	(void)context;
+void Texture::_destroyTextureImageView() {
+	vkDestroyImageView(_device->getDevice(), _textureImageView, nullptr);
 }
 
 } // namespace Stone::Render::Vulkan
