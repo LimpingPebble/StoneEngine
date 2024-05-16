@@ -8,7 +8,10 @@
 #include "../SwapChain.hpp"
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/RenderContext.hpp"
+#include "Scene/RenderElement/Material.hpp"
 #include "Scene/RenderElement/Mesh.hpp"
+#include "Scene/RenderElement/Texture.hpp"
+#include "Texture.hpp"
 #include "Utils/FileSystem.hpp"
 #include "VertexBinding.hpp"
 
@@ -65,17 +68,32 @@ void MeshNode::_updateUniformBuffers(Vulkan::RenderContext &context) {
 }
 
 void MeshNode::_createDescriptorSetLayout() {
-	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
+	std::vector<VkDescriptorSetLayoutBinding> bindings = {};
+
+	bindings.push_back({});
+	VkDescriptorSetLayoutBinding &uboLayoutBinding = bindings.back();
 	uboLayoutBinding.binding = 0;
 	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	uboLayoutBinding.descriptorCount = 1;
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr;
 
+	// TODO: use smarter system than this
+	std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+	if (material) {
+		bindings.push_back({});
+		VkDescriptorSetLayoutBinding &samplerLayoutBinding = bindings.back();
+		samplerLayoutBinding.binding = 1;
+		samplerLayoutBinding.descriptorCount = 1;
+		samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		samplerLayoutBinding.pImmutableSamplers = nullptr;
+	}
+
 	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	layoutInfo.bindingCount = 1;
-	layoutInfo.pBindings = &uboLayoutBinding;
+	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
+	layoutInfo.pBindings = bindings.data();
 
 	if (vkCreateDescriptorSetLayout(_device->getDevice(), &layoutInfo, nullptr, &_descriptorSetLayout) != VK_SUCCESS) {
 		throw std::runtime_error("failed to create descriptor set layout!");
@@ -339,9 +357,18 @@ void MeshNode::_destroyUniformBuffers() {
 }
 
 void MeshNode::_createDescriptorPool(const std::shared_ptr<SwapChain> &swapChain) {
-	std::array<VkDescriptorPoolSize, 1> poolSizes = {};
+	std::vector<VkDescriptorPoolSize> poolSizes = {};
+	poolSizes.push_back({});
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSizes[0].descriptorCount = swapChain->getImageCount();
+
+	// TODO: use smarter system than this
+	std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+	if (material) {
+		poolSizes.push_back({});
+		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		poolSizes[1].descriptorCount = swapChain->getImageCount();
+	}
 
 	VkDescriptorPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -379,18 +406,38 @@ void MeshNode::_createDescriptorSets(const std::shared_ptr<SwapChain> &swapChain
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(Scene::MvpMatrices);
 
-		VkWriteDescriptorSet descriptorWrite = {};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = _descriptorSets[i];
-		descriptorWrite.dstBinding = 0;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
-		descriptorWrite.pImageInfo = nullptr;
-		descriptorWrite.pTexelBufferView = nullptr;
+		std::vector<VkWriteDescriptorSet> descriptorWrites = {};
+		descriptorWrites.push_back({});
 
-		vkUpdateDescriptorSets(_device->getDevice(), 1, &descriptorWrite, 0, nullptr);
+		descriptorWrites[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrites[0].dstSet = _descriptorSets[i];
+		descriptorWrites[0].dstBinding = 0;
+		descriptorWrites[0].dstArrayElement = 0;
+		descriptorWrites[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		descriptorWrites[0].descriptorCount = 1;
+		descriptorWrites[0].pBufferInfo = &bufferInfo;
+
+		// TODO: use smarter system than this
+		std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+		if (material) {
+			VkDescriptorImageInfo imageInfo = {};
+			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+			imageInfo.imageView =
+				material->getTextureParameter("diffuse")->getRendererObject<Texture>()->getImageView();
+			imageInfo.sampler = material->getTextureParameter("diffuse")->getRendererObject<Texture>()->getSampler();
+
+			descriptorWrites.push_back({});
+			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrites[1].dstSet = _descriptorSets[i];
+			descriptorWrites[1].dstBinding = 1;
+			descriptorWrites[1].dstArrayElement = 0;
+			descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+			descriptorWrites[1].descriptorCount = 1;
+			descriptorWrites[1].pImageInfo = &imageInfo;
+		}
+
+		vkUpdateDescriptorSets(_device->getDevice(), static_cast<uint32_t>(descriptorWrites.size()),
+							   descriptorWrites.data(), 0, nullptr);
 	}
 }
 

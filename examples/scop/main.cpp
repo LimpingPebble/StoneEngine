@@ -63,21 +63,25 @@ int main() {
 
 		auto stone_image_source =
 			std::make_shared<Stone::Image::ImageSource>("docs/img/stone-engine.png", Stone::Image::Channel::RGBA);
+
 		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
 		stone_texture->setImage(stone_image_source);
+
 		auto stone_material = std::make_shared<Stone::Scene::Material>();
 		stone_material->setTextureParameter("diffuse", stone_texture);
 		meshNode->setMaterial(stone_material);
 
 		auto meshRotatingNode = window->getWorld()->addChild<RotatingNode>();
+		meshRotatingNode->getTransform().setPosition({0.0f, 1.0f, 0.0f});
 		auto secondMeshNode = meshRotatingNode->addChild<Stone::Scene::MeshNode>();
 		meshRotatingNode->setRotationSpeed({0.0f, 0.4f, 0.0f});
 		secondMeshNode->setMesh(mesh);
+		secondMeshNode->setMaterial(stone_material);
 
 		auto rotatingNode = window->getWorld()->addChild<RotatingNode>();
 		auto cameraNode = rotatingNode->addChild<Stone::Scene::PerspectiveCameraNode>();
-		cameraNode->getTransform().setPosition({0.0f, 1.0f, 3.0f});
-		cameraNode->getTransform().rotate({-0.5f, 0.0f, 0.0f});
+		cameraNode->getTransform().setPosition({0.0f, 3.0f, 3.0f});
+		cameraNode->getTransform().rotate({-0.6f, 0.0f, 0.0f});
 
 		window->getWorld()->setActiveCamera(cameraNode);
 
