@@ -49,6 +49,11 @@ public:
 
 	[[nodiscard]] uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
 
+	[[nodiscard]] VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling,
+											   VkFormatFeatureFlags features) const;
+
+	[[nodiscard]] VkFormat findDepthFormat() const;
+
 	/**
 	 * Executes the provided lambda function with a single Vulkan command buffer.
 	 *
@@ -84,7 +89,8 @@ public:
 	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height,
 						   std::optional<VkCommandBuffer> commandBuffer = std::nullopt) const;
 
-	VkImageView createImageView(VkImage image, VkFormat format);
+	VkImageView createImageView(VkImage image, VkFormat format,
+								VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT) const;
 
 private:
 	void _createInstance(VulkanSettings &settings);
