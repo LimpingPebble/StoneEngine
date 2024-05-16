@@ -72,7 +72,7 @@ int main() {
 		meshNode->setMaterial(stone_material);
 
 		auto meshRotatingNode = window->getWorld()->addChild<RotatingNode>();
-		meshRotatingNode->getTransform().setPosition({0.0f, 1.0f, 0.0f});
+		meshRotatingNode->getTransform().setPosition({0.0f, 0.0f, 0.0f});
 		auto secondMeshNode = meshRotatingNode->addChild<Stone::Scene::MeshNode>();
 		meshRotatingNode->setRotationSpeed({0.0f, 0.4f, 0.0f});
 		secondMeshNode->setMesh(mesh);

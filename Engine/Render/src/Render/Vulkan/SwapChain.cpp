@@ -13,6 +13,7 @@ SwapChain::SwapChain(const std::shared_ptr<Device> &device, const VkRenderPass &
 	std::cout << "Creating swap chain" << std::endl;
 	_createSwapChain(props);
 	_createImageViews();
+	_createDepthResources();
 	_createFramebuffers(renderPass);
 }
 
@@ -22,6 +23,7 @@ SwapChain::~SwapChain() {
 	}
 
 	_destroyFramebuffers();
+	_destroyDepthResources();
 	_destroyImageViews();
 	_destroySwapChain();
 	std::cout << "Destroying swap chain" << std::endl;
@@ -110,19 +112,43 @@ void SwapChain::_destroyImageViews() {
 }
 
 
+/** Depth Resources */
+
+void SwapChain::_createDepthResources() {
+	VkFormat depthFormat = _device->findDepthFormat();
+
+	std::tie(_depthImage, _depthImageMemory) = _device->createImage(
+		_extent.width, _extent.height, 1, VK_SAMPLE_COUNT_1_BIT, depthFormat, VK_IMAGE_TILING_OPTIMAL,
+		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+	_depthImageView = _device->createImageView(_depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+	_device->transitionImageLayout(_depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED,
+								   VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+}
+
+void SwapChain::_destroyDepthResources() {
+	vkDestroyImageView(_device->getDevice(), _depthImageView, nullptr);
+	vkDestroyImage(_device->getDevice(), _depthImage, nullptr);
+	vkFreeMemory(_device->getDevice(), _depthImageMemory, nullptr);
+	_depthImageView = VK_NULL_HANDLE;
+	_depthImage = VK_NULL_HANDLE;
+	_depthImageMemory = VK_NULL_HANDLE;
+}
+
+
 /** Framebuffers */
 
 void SwapChain::_createFramebuffers(const VkRenderPass &renderPass) {
 	_framebuffers.resize(_imageCount);
 
 	for (size_t i = 0; i < _imageCount; ++i) {
-		VkImageView attachments[] = {_imageViews[i]};
+
+		std::array<VkImageView, 2> attachments = {_imageViews[i], _depthImageView};
 
 		VkFramebufferCreateInfo framebufferInfo = {};
 		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 		framebufferInfo.renderPass = renderPass;
-		framebufferInfo.attachmentCount = 1;
-		framebufferInfo.pAttachments = attachments;
+		framebufferInfo.attachmentCount = static_cast<uint32_t>(attachments.size());
+		framebufferInfo.pAttachments = attachments.data();
 		framebufferInfo.width = _extent.width;
 		framebufferInfo.height = _extent.height;
 		framebufferInfo.layers = 1;

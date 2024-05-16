@@ -55,6 +55,9 @@ private:
 	void _createFramebuffers(const VkRenderPass &renderPass);
 	void _destroyFramebuffers();
 
+	void _createDepthResources();
+	void _destroyDepthResources();
+
 	std::shared_ptr<Device> _device;
 
 	VkSwapchainKHR _swapChain = VK_NULL_HANDLE;
@@ -66,6 +69,10 @@ private:
 	std::vector<VkImageView> _imageViews = {};
 
 	std::vector<VkFramebuffer> _framebuffers = {};
+
+	VkImage _depthImage = VK_NULL_HANDLE;
+	VkDeviceMemory _depthImageMemory = VK_NULL_HANDLE;
+	VkImageView _depthImageView = VK_NULL_HANDLE;
 };
 
 } // namespace Stone::Render::Vulkan
