@@ -26,6 +26,9 @@ public:
 
 	void render(Scene::RenderContext &context) override;
 
+	[[nodiscard]] VkImageView getImageView() const;
+	[[nodiscard]] VkSampler getSampler() const;
+
 private:
 	void _createTextureImage();
 	void _destroyTextureImage();

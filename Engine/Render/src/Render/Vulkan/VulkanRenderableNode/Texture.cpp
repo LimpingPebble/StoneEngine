@@ -36,6 +36,14 @@ void Texture::render(Scene::RenderContext &context) {
 	(void)context;
 }
 
+VkImageView Texture::getImageView() const {
+	return _textureImageView;
+}
+VkSampler Texture::getSampler() const {
+	return _textureSampler;
+}
+
+
 void Texture::_createTextureImage() {
 	auto texture = _sceneTexture.lock();
 	const std::shared_ptr<Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
