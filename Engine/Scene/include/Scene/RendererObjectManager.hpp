@@ -61,6 +61,12 @@ public:
 	 */
 	virtual void updateTexture(const std::shared_ptr<Texture> &texture);
 
+	/**
+	 * @brief Updates the renderer data for a given shader.
+	 * @param shader The shader to be updated.
+	 */
+	virtual void updateShader(const std::shared_ptr<Shader> &shader);
+
 protected:
 	/**
 	 * @brief Sets the IRendererObject value to the given IRenderElement.

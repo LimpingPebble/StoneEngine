@@ -31,6 +31,14 @@ void RendererObjectManager::updateSkinMeshNode(const std::shared_ptr<SkinMeshNod
 }
 
 void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &material) {
+	auto vertexShader = material->getVertexShader();
+	if (vertexShader && vertexShader->isDirty()) {
+		updateShader(vertexShader);
+	}
+	auto fragmentShader = material->getFragmentShader();
+	if (fragmentShader && fragmentShader->isDirty()) {
+		updateShader(fragmentShader);
+	}
 	material->forEachTextures([this](std::pair<const std::string, std::shared_ptr<Texture>> &it) {
 		if (it.second->isDirty())
 			updateTexture(it.second);
@@ -48,6 +56,10 @@ void RendererObjectManager::updateSkinMesh(const std::shared_ptr<SkinMesh> &skin
 
 void RendererObjectManager::updateTexture(const std::shared_ptr<Texture> &texture) {
 	texture->markUndirty();
+}
+
+void RendererObjectManager::updateShader(const std::shared_ptr<Shader> &shader) {
+	shader->markUndirty();
 }
 
 void RendererObjectManager::setRendererObjectTo(IRenderElement *element,
