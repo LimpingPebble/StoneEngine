@@ -32,6 +32,12 @@ public:
 
 	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
 
+	/** VulkanRenderer */
+
+	[[nodiscard]] const std::shared_ptr<Device> &getDevice() const;
+	[[nodiscard]] const std::shared_ptr<RenderPass> &getRenderPass() const;
+	[[nodiscard]] const std::shared_ptr<FramesRenderer> &getFramesRenderer() const;
+	[[nodiscard]] const std::shared_ptr<SwapChain> &getSwapChain() const;
 
 private:
 	void _recreateSwapChain(std::pair<uint32_t, uint32_t> size);

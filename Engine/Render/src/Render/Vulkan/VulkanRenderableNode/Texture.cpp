@@ -10,17 +10,14 @@
 #include "Core/Image/ImageSource.hpp"
 #include "RenderableUtils.hpp"
 #include "Scene/RenderElement/Texture.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 
 #include <cstring>
 
 namespace Stone::Render::Vulkan {
 
-Texture::Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shared_ptr<Device> &device,
-				 const std::shared_ptr<RenderPass> &renderPass, const std::shared_ptr<SwapChain> &swapChain)
-	: _device(device), _sceneTexture(texture) {
-	(void)renderPass;
-	(void)swapChain;
-
+Texture::Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shared_ptr<VulkanRenderer> &renderer)
+	: _device(renderer->getDevice()), _sceneTexture(texture) {
 	_createTextureImage();
 	_createTextureImageView();
 	_createTextureSampler();

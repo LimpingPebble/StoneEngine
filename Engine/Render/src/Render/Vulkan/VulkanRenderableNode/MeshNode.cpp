@@ -14,6 +14,7 @@
 #include "Texture.hpp"
 #include "Utils/FileSystem.hpp"
 #include "VertexBinding.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 
 #include <cstring>
 #include <stdexcept>
@@ -21,16 +22,15 @@
 namespace Stone::Render::Vulkan {
 
 
-MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<Device> &device,
-				   const std::shared_ptr<RenderPass> &renderPass, const std::shared_ptr<SwapChain> &swapChain)
-	: _device(device), _sceneMeshNode(meshNode) {
+MeshNode::MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<VulkanRenderer> &renderer)
+	: _device(renderer->getDevice()), _sceneMeshNode(meshNode) {
 	_createDescriptorSetLayout();
-	_createGraphicPipeline(renderPass, swapChain->getExtent());
+	_createGraphicPipeline(renderer->getRenderPass(), renderer->getSwapChain()->getExtent());
 	_createVertexBuffer();
 	_createIndexBuffer();
-	_createUniformBuffers(swapChain);
-	_createDescriptorPool(swapChain);
-	_createDescriptorSets(swapChain);
+	_createUniformBuffers(renderer->getSwapChain());
+	_createDescriptorPool(renderer->getSwapChain());
+	_createDescriptorSets(renderer->getSwapChain());
 }
 
 MeshNode::~MeshNode() {

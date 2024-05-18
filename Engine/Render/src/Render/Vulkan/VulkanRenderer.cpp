@@ -59,5 +59,22 @@ void VulkanRenderer::_recreateSwapChain(std::pair<uint32_t, uint32_t> size) {
 	assert(_framesRenderer->getImageCount() == _swapChain->getImageCount());
 }
 
+const std::shared_ptr<Device> &VulkanRenderer::getDevice() const {
+	return _device;
+}
+
+const std::shared_ptr<RenderPass> &VulkanRenderer::getRenderPass() const {
+	return _renderPass;
+}
+
+const std::shared_ptr<FramesRenderer> &VulkanRenderer::getFramesRenderer() const {
+	return _framesRenderer;
+}
+
+const std::shared_ptr<SwapChain> &VulkanRenderer::getSwapChain() const {
+	return _swapChain;
+}
+
+
 
 } // namespace Stone::Render::Vulkan

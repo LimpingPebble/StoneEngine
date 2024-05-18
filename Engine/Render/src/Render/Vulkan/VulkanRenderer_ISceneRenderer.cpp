@@ -14,7 +14,7 @@ namespace Stone::Render::Vulkan {
 
 void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) {
 	std::shared_ptr<RendererObjectManager> manager =
-		std::make_shared<RendererObjectManager>(_device, _renderPass, _swapChain);
+		std::make_shared<RendererObjectManager>(std::dynamic_pointer_cast<VulkanRenderer>(shared_from_this()));
 	world->traverseTopDown([manager](const std::shared_ptr<Scene::Node> &node) {
 		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderElement>(node);
 		if (renderElement && renderElement->isDirty()) {

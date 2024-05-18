@@ -14,14 +14,14 @@ class MeshNode;
 
 namespace Stone::Render::Vulkan {
 
+class VulkanRenderer;
 class Device;
 class RenderPass;
 class SwapChain;
 
 class MeshNode : public Scene::IRendererObject {
 public:
-	MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<Device> &device,
-			 const std::shared_ptr<RenderPass> &renderPass, const std::shared_ptr<SwapChain> &swapChain);
+	MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<VulkanRenderer> &renderer);
 
 	~MeshNode() override;
 

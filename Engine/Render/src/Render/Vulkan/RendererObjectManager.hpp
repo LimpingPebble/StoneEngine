@@ -8,15 +8,12 @@
 
 namespace Stone::Render::Vulkan {
 
-class Device;
-class RenderPass;
-class SwapChain;
+class VulkanRenderer;
 
 class RendererObjectManager : public Scene::RendererObjectManager {
 
 public:
-	RendererObjectManager(const std::shared_ptr<Device> &device, const std::shared_ptr<RenderPass> &renderPass,
-						  const std::shared_ptr<SwapChain> &swapChain);
+	RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
 
 	~RendererObjectManager() override = default;
 
@@ -25,9 +22,7 @@ public:
 	void updateTexture(const std::shared_ptr<Scene::Texture> &texture) override;
 
 private:
-	std::shared_ptr<Device> _device;
-	std::shared_ptr<RenderPass> _renderPass;
-	std::shared_ptr<SwapChain> _swapChain;
+	std::shared_ptr<VulkanRenderer> _renderer;
 };
 
 } // namespace Stone::Render::Vulkan

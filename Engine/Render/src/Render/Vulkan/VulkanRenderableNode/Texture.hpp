@@ -13,14 +13,14 @@ class Texture;
 
 namespace Stone::Render::Vulkan {
 
+class VulkanRenderer;
 class Device;
 class RenderPass;
 class SwapChain;
 
 class Texture : public Scene::IRendererObject {
 public:
-	Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shared_ptr<Device> &device,
-			const std::shared_ptr<RenderPass> &renderPass, const std::shared_ptr<SwapChain> &swapChain);
+	Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shared_ptr<VulkanRenderer> &renderer);
 
 	~Texture() override;
 
