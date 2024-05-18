@@ -16,9 +16,9 @@ public:
 
 	~ImageData() override;
 
-	virtual const char *getClassName() const;
+	const char *getClassName() const override;
 
-	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	[[nodiscard]] const Size &getSize() const;
 	[[nodiscard]] Channel getChannels() const;
