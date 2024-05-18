@@ -39,4 +39,15 @@ void RendererObjectManager::updateTexture(const std::shared_ptr<Scene::Texture> 
 	setRendererObjectTo(texture.get(), newTexture);
 }
 
+void RendererObjectManager::updateShader(const std::shared_ptr<Scene::Shader> &shader) {
+	Scene::RendererObjectManager::updateShader(shader);
+
+	if (shader->getRendererObject<Vulkan::Shader>()) {
+		return;
+	}
+
+	auto newShader = std::make_shared<Vulkan::Shader>(shader, _renderer);
+	setRendererObjectTo(shader.get(), newShader);
+}
+
 } // namespace Stone::Render::Vulkan

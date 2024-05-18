@@ -21,6 +21,8 @@ public:
 
 	void updateTexture(const std::shared_ptr<Scene::Texture> &texture) override;
 
+	void updateShader(const std::shared_ptr<Scene::Shader> &shader) override;
+
 private:
 	std::shared_ptr<VulkanRenderer> _renderer;
 };
