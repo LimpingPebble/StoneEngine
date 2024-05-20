@@ -17,9 +17,9 @@ class VulkanRenderer;
 class Shader : public Scene::IRendererObject {
 public:
 	Shader(const std::shared_ptr<Scene::Shader> &shader, const std::shared_ptr<VulkanRenderer> &renderer);
-    ~Shader() override;
+	~Shader() override;
 
-    void render(Scene::RenderContext &context) override;
+	void render(Scene::RenderContext &context) override;
 };
 
 } // namespace Stone::Render::Vulkan

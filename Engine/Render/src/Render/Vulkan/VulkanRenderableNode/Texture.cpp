@@ -8,9 +8,9 @@
 #include "../SwapChain.hpp"
 #include "Core/Image/ImageData.hpp"
 #include "Core/Image/ImageSource.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 #include "RenderableUtils.hpp"
 #include "Scene/RenderElement/Texture.hpp"
-#include "Render/Vulkan/VulkanRenderer.hpp"
 
 #include <cstring>
 

@@ -76,5 +76,4 @@ const std::shared_ptr<SwapChain> &VulkanRenderer::getSwapChain() const {
 }
 
 
-
 } // namespace Stone::Render::Vulkan
