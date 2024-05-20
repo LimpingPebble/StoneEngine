@@ -31,7 +31,7 @@ public:
 	/**
 	 * @brief Get the class name of the Shader object.
 	 */
-	[[nodiscard]] const char *getClassName() const override;
+	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Shader object to an output stream.

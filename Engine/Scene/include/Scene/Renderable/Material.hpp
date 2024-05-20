@@ -32,7 +32,7 @@ public:
 	 *
 	 * @return The class name as a null-terminated string.
 	 */
-	[[nodiscard]] const char *getClassName() const override;
+	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Material object to an output stream.

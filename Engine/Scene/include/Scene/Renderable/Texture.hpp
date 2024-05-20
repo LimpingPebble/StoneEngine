@@ -37,7 +37,7 @@ public:
 	/**
 	 * @brief Get the class name of the Texture object.
 	 */
-	[[nodiscard]] const char *getClassName() const override;
+	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Texture object to an output stream.
