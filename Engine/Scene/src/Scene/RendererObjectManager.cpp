@@ -62,12 +62,12 @@ void RendererObjectManager::updateShader(const std::shared_ptr<Shader> &shader) 
 	shader->markUndirty();
 }
 
-void RendererObjectManager::setRendererObjectTo(IRenderElement *element,
+void RendererObjectManager::setRendererObjectTo(IRenderable *element,
 												const std::shared_ptr<IRendererObject> &rendererObject) {
 	element->setRendererObject(rendererObject);
 }
 
-void RendererObjectManager::markElementUndirty(IRenderElement *element) {
+void RendererObjectManager::markElementUndirty(IRenderable *element) {
 	element->markUndirty();
 }
 

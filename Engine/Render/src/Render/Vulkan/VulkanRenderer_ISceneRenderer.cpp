@@ -16,7 +16,7 @@ void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 	std::shared_ptr<RendererObjectManager> manager =
 		std::make_shared<RendererObjectManager>(std::dynamic_pointer_cast<VulkanRenderer>(shared_from_this()));
 	world->traverseTopDown([manager](const std::shared_ptr<Scene::Node> &node) {
-		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderElement>(node);
+		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderable>(node);
 		if (renderElement && renderElement->isDirty()) {
 			renderElement->updateRenderObject(manager);
 		}

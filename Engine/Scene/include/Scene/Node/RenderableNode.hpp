@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Scene/Node/Node.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/RenderElement/IRenderable.hpp"
 
 namespace Stone::Scene {
 
@@ -11,7 +11,7 @@ namespace Stone::Scene {
  * @class RenderableNode
  * @brief Represents a node that can be rendered.
  */
-class RenderableNode : public Node, public IRenderElement {
+class RenderableNode : public Node, public IRenderable {
 public:
 	STONE_ABSTRACT_NODE(RenderableNode)
 

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Object.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/RenderElement/IRenderable.hpp"
 
 #include <unordered_map>
 
@@ -12,7 +12,7 @@ namespace Stone::Scene {
 /**
  * @brief The Shader class represents a shader used in rendering.
  */
-class Shader : public Core::Object, public IRenderElement {
+class Shader : public Core::Object, public IRenderable {
 public:
 	enum class ContentType {
 		SourceCode,	  /** The content is the full shader code in a readable shading language (cf. `.glsl`, `.metal`) */

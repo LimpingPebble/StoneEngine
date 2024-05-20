@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/RenderElement/IRenderable.hpp"
 #include "SceneTypes.hpp"
 
 namespace Stone::Scene {
@@ -11,9 +11,9 @@ namespace Stone::Scene {
  * @class RendererObjectManager
  * @brief Provide basic overridable methods to manage the renderables objects elements in the scene.
  *
- * This class provides basic methods to update the renderer data of classes implementing the IRenderElement interface.
- * It will store an instance of IRendererObject in the IRenderElement::_rendererObject proprety.
- * Each IRenderElement objects will use the appropriate method in this interface to update itself.
+ * This class provides basic methods to update the renderer data of classes implementing the IRenderable interface.
+ * It will store an instance of IRendererObject in the IRenderable::_rendererObject proprety.
+ * Each IRenderable objects will use the appropriate method in this interface to update itself.
  */
 class RendererObjectManager {
 public:
@@ -69,25 +69,25 @@ public:
 
 protected:
 	/**
-	 * @brief Sets the IRendererObject value to the given IRenderElement.
+	 * @brief Sets the IRendererObject value to the given IRenderable.
 	 *
-	 * This class is friend with IRenderElement, so it can access the protected method setRendererObject but its
+	 * This class is friend with IRenderable, so it can access the protected method setRendererObject but its
 	 * inheriting classes can't.
 	 *
 	 * @param element The render element to set the renderer object to.
 	 * @param rendererObject The renderer object to set.
 	 */
-	static void setRendererObjectTo(IRenderElement *element, const std::shared_ptr<IRendererObject> &rendererObject);
+	static void setRendererObjectTo(IRenderable *element, const std::shared_ptr<IRendererObject> &rendererObject);
 
 	/**
 	 * @brief Marks the given element as undirty.
 	 *
-	 * This class is friend with IRenderElement, so it can access the protected method markUndirty but its
+	 * This class is friend with IRenderable, so it can access the protected method markUndirty but its
 	 * inheriting classes can't.
 	 *
 	 * @param element The render element to mark as undirty.
 	 */
-	static void markElementUndirty(IRenderElement *element);
+	static void markElementUndirty(IRenderable *element);
 };
 
 } // namespace Stone::Scene

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Object.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/RenderElement/IRenderable.hpp"
 
 #include <functional>
 #include <glm/vec3.hpp>
@@ -20,7 +20,7 @@ class Shader;
  * It contains various parameters such as textures, vectors, and scalars that can be used
  * to configure the appearance of rendered objects.
  */
-class Material : public Core::Object, public IRenderElement {
+class Material : public Core::Object, public IRenderable {
 public:
 	Material() = default;
 	Material(const Material &other) = default;

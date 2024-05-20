@@ -10,7 +10,7 @@
 namespace Stone::Scene {
 
 Shader::Shader(const std::string &content)
-	: Object(), IRenderElement(), _contentType(ContentType::SourceFile), _content(content) {
+	: Object(), IRenderable(), _contentType(ContentType::SourceFile), _content(content) {
 	if (string_ends_with(content, ".glsl")) {
 		_contentType = ContentType::SourceFile;
 	} else if (string_ends_with(content, ".spv") || string_ends_with(content, ".metal")) {
@@ -23,7 +23,7 @@ Shader::Shader(const std::string &content)
 }
 
 Shader::Shader(ContentType contentType, std::string content)
-	: Object(), IRenderElement(), _contentType(contentType), _content(std::move(content)) {
+	: Object(), IRenderable(), _contentType(contentType), _content(std::move(content)) {
 }
 
 const char *Shader::getClassName() const {

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Object.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/RenderElement/IRenderable.hpp"
 
 namespace Stone::Image {
 class ImageSource;
@@ -27,7 +27,7 @@ enum class TextureWrap {
 /**
  * @brief The Texture class represents a texture used in rendering.
  */
-class Texture : public Core::Object, public IRenderElement {
+class Texture : public Core::Object, public IRenderable {
 public:
 	Texture() = default;
 	Texture(const Texture &other) = default;
