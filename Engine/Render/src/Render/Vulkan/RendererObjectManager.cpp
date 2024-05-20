@@ -5,8 +5,12 @@
 #include "Device.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Scene/Node/MeshNode.hpp"
+#include "Scene/RenderElement/Material.hpp"
+#include "Scene/RenderElement/Mesh.hpp"
 #include "Scene/RenderElement/Shader.hpp"
 #include "Scene/RenderElement/Texture.hpp"
+#include "VulkanRenderable/Material.hpp"
+#include "VulkanRenderable/Mesh.hpp"
 #include "VulkanRenderable/MeshNode.hpp"
 #include "VulkanRenderable/Shader.hpp"
 #include "VulkanRenderable/Texture.hpp"
@@ -26,6 +30,28 @@ void RendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode
 
 	auto newMeshNode = std::make_shared<Vulkan::MeshNode>(meshNode, _renderer);
 	setRendererObjectTo(meshNode.get(), newMeshNode);
+}
+
+void RendererObjectManager::updateMaterial(const std::shared_ptr<Scene::Material> &material) {
+	Scene::RendererObjectManager::updateMaterial(material);
+
+	if (material->getRendererObject<Vulkan::Material>()) {
+		return;
+	}
+
+	auto newMaterial = std::make_shared<Vulkan::Material>(material, _renderer);
+	setRendererObjectTo(material.get(), newMaterial);
+}
+
+void RendererObjectManager::updateMesh(const std::shared_ptr<Scene::Mesh> &mesh) {
+	Scene::RendererObjectManager::updateMesh(mesh);
+
+	if (mesh->getRendererObject<Vulkan::Mesh>()) {
+		return;
+	}
+
+	auto newMesh = std::make_shared<Vulkan::Mesh>(mesh, _renderer);
+	setRendererObjectTo(mesh.get(), newMesh);
 }
 
 void RendererObjectManager::updateTexture(const std::shared_ptr<Scene::Texture> &texture) {

@@ -44,8 +44,8 @@ MeshNode::~MeshNode() {
 }
 
 void MeshNode::render(Scene::RenderContext &context) {
-	auto vulkanContext = dynamic_cast<Vulkan::RenderContext *>(&context);
-	assert(vulkanContext);
+	assert(dynamic_cast<Vulkan::RenderContext *>(&context));
+	auto vulkanContext = reinterpret_cast<Vulkan::RenderContext *>(&context);
 
 	_updateUniformBuffers(*vulkanContext);
 

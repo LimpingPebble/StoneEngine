@@ -17,7 +17,18 @@ public:
 
 	~RendererObjectManager() override = default;
 
+
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;
+
+	// void updateInstancedMeshNode(const std::shared_ptr<Scene::InstancedMeshNode> &instancedMeshNode) override;
+
+	// void updateSkinMeshNode(const std::shared_ptr<Scene::SkinMeshNode> &skinMeshNode) override;
+
+	void updateMaterial(const std::shared_ptr<Scene::Material> &material) override;
+
+	void updateMesh(const std::shared_ptr<Scene::Mesh> &mesh) override;
+
+	// void updateSkinMesh(const std::shared_ptr<Scene::SkinMesh> &skinmesh) override;
 
 	void updateTexture(const std::shared_ptr<Scene::Texture> &texture) override;
 
