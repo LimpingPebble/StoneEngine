@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/Renderable/Texture.hpp"
 
 #include "Core/Image/ImageSource.hpp"
 #include "Scene/RendererObjectManager.hpp"

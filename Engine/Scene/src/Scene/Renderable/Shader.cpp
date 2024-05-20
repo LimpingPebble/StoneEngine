@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/Shader.hpp"
+#include "Scene/Renderable/Shader.hpp"
 
 #include "Scene/RendererObjectManager.hpp"
 #include "Utils/StringExt.hpp"

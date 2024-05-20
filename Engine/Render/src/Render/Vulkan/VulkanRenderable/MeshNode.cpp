@@ -9,10 +9,10 @@
 #include "../Utilities/VertexBinding.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Scene/Node/MeshNode.hpp"
+#include "Scene/Renderable/Material.hpp"
+#include "Scene/Renderable/Mesh.hpp"
+#include "Scene/Renderable/Texture.hpp"
 #include "Scene/RenderContext.hpp"
-#include "Scene/RenderElement/Material.hpp"
-#include "Scene/RenderElement/Mesh.hpp"
-#include "Scene/RenderElement/Texture.hpp"
 #include "Texture.hpp"
 #include "Utils/FileSystem.hpp"
 

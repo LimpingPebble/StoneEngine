@@ -10,7 +10,7 @@
 #include "Core/Image/ImageSource.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
 #include "RenderableUtils.hpp"
-#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/Renderable/Texture.hpp"
 
 #include <cstring>
 

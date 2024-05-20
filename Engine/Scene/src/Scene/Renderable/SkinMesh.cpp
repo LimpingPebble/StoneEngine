@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/SkinMesh.hpp"
+#include "Scene/Renderable/SkinMesh.hpp"
 
 #include "Scene/Node/SkeletonNode.hpp"
 #include "Scene/RendererObjectManager.hpp"

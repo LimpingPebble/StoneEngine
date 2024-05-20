@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Object.hpp"
-#include "Scene/RenderElement/IRenderable.hpp"
+#include "Scene/Renderable/IRenderable.hpp"
 
 #include <unordered_map>
 

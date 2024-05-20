@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Image/ImageTypes.hpp"
-#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/Renderable/Texture.hpp"
 
 #include <vulkan/vulkan.h>
 

@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/Material.hpp"
+#include "Scene/Renderable/Material.hpp"
 
-#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/Renderable/Texture.hpp"
 #include "Scene/RendererObjectManager.hpp"
 #include "Utils/Glm.hpp"
 

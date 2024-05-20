@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RenderElement/IRenderable.hpp"
+#include "Scene/Renderable/IRenderable.hpp"
 
 #include <vulkan/vulkan.h>
 

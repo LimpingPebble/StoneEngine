@@ -3,7 +3,7 @@
 #pragma once
 
 #include "../RenderContext.hpp"
-#include "Scene/RenderElement/IRenderable.hpp"
+#include "Scene/Renderable/IRenderable.hpp"
 
 #include <vector>
 #include <vulkan/vulkan.h>

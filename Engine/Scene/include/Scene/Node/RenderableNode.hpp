@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Scene/Node/Node.hpp"
-#include "Scene/RenderElement/IRenderable.hpp"
+#include "Scene/Renderable/IRenderable.hpp"
 
 namespace Stone::Scene {
 
