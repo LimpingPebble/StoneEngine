@@ -7,9 +7,9 @@
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/RenderElement/Shader.hpp"
 #include "Scene/RenderElement/Texture.hpp"
-#include "VulkanRenderableNode/MeshNode.hpp"
-#include "VulkanRenderableNode/Shader.hpp"
-#include "VulkanRenderableNode/Texture.hpp"
+#include "VulkanRenderable/MeshNode.hpp"
+#include "VulkanRenderable/Shader.hpp"
+#include "VulkanRenderable/Texture.hpp"
 
 namespace Stone::Render::Vulkan {
 

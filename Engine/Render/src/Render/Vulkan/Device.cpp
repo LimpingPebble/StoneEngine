@@ -2,7 +2,7 @@
 
 #include "Render/Vulkan/Device.hpp"
 
-#include "VulkanUtilities.hpp"
+#include "Utilities/VulkanUtilities.hpp"
 
 #include <iostream>
 #include <set>

@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Render/Vulkan/VulkanUtilities.hpp"
+#include "VulkanUtilities.hpp"
 
 #include <algorithm>
 #include <cstring>

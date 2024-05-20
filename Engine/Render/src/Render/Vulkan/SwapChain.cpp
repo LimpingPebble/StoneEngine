@@ -3,7 +3,7 @@
 #include "Render/Vulkan/SwapChain.hpp"
 
 #include "Render/Vulkan/Device.hpp"
-#include "VulkanUtilities.hpp"
+#include "Utilities/VulkanUtilities.hpp"
 
 namespace Stone::Render::Vulkan {
 

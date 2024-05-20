@@ -6,6 +6,7 @@
 #include "../RenderContext.hpp"
 #include "../RenderPass.hpp"
 #include "../SwapChain.hpp"
+#include "../Utilities/VertexBinding.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/RenderContext.hpp"
@@ -14,7 +15,6 @@
 #include "Scene/RenderElement/Texture.hpp"
 #include "Texture.hpp"
 #include "Utils/FileSystem.hpp"
-#include "VertexBinding.hpp"
 
 #include <cstring>
 #include <stdexcept>
