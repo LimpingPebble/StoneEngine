@@ -11,6 +11,7 @@
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Mesh.hpp"
+#include "Scene/Renderable/Shader.hpp"
 #include "Scene/Renderable/Texture.hpp"
 #include "Scene/RenderContext.hpp"
 #include "Texture.hpp"
@@ -78,16 +79,21 @@ void MeshNode::_createDescriptorSetLayout() {
 	uboLayoutBinding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	uboLayoutBinding.pImmutableSamplers = nullptr;
 
-	// TODO: use smarter system than this
-	std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+	auto material = _sceneMeshNode.lock()->getMaterial();
 	if (material) {
-		bindings.push_back({});
-		VkDescriptorSetLayoutBinding &samplerLayoutBinding = bindings.back();
-		samplerLayoutBinding.binding = 1;
-		samplerLayoutBinding.descriptorCount = 1;
-		samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-		samplerLayoutBinding.pImmutableSamplers = nullptr;
+		auto shader = material->getFragmentShader();
+		if (shader) {
+			material->forEachTextures(
+				[&](const std::pair<const std::string, std::shared_ptr<Scene::Texture>> &texture) {
+					VkDescriptorSetLayoutBinding samplerLayoutBinding;
+					samplerLayoutBinding.binding = shader->getLocation(texture.first);
+					samplerLayoutBinding.descriptorCount = 1;
+					samplerLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					samplerLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+					samplerLayoutBinding.pImmutableSamplers = nullptr;
+					bindings.push_back(samplerLayoutBinding);
+				});
+		}
 	}
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
@@ -374,12 +380,18 @@ void MeshNode::_createDescriptorPool(const std::shared_ptr<SwapChain> &swapChain
 	poolSizes[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 	poolSizes[0].descriptorCount = swapChain->getImageCount();
 
-	// TODO: use smarter system than this
-	std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+	auto material = _sceneMeshNode.lock()->getMaterial();
 	if (material) {
-		poolSizes.push_back({});
-		poolSizes[1].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		poolSizes[1].descriptorCount = swapChain->getImageCount();
+		auto shader = material->getFragmentShader();
+		if (shader) {
+			material->forEachTextures(
+				[&](const std::pair<const std::string, std::shared_ptr<Scene::Texture>> &texture) {
+					VkDescriptorPoolSize poolSize = {};
+					poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+					poolSize.descriptorCount = swapChain->getImageCount();
+					poolSizes.push_back(poolSize);
+				});
+		}
 	}
 
 	VkDescriptorPoolCreateInfo poolInfo = {};
@@ -429,23 +441,32 @@ void MeshNode::_createDescriptorSets(const std::shared_ptr<SwapChain> &swapChain
 		descriptorWrites[0].descriptorCount = 1;
 		descriptorWrites[0].pBufferInfo = &bufferInfo;
 
-		// TODO: use smarter system than this
-		std::shared_ptr<Scene::Material> material = _sceneMeshNode.lock()->getMaterial();
+		std::vector<VkDescriptorImageInfo> imagesInfo;
+		auto material = _sceneMeshNode.lock()->getMaterial();
 		if (material) {
-			VkDescriptorImageInfo imageInfo = {};
-			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView =
-				material->getTextureParameter("diffuse")->getRendererObject<Texture>()->getImageView();
-			imageInfo.sampler = material->getTextureParameter("diffuse")->getRendererObject<Texture>()->getSampler();
+			auto shader = material->getFragmentShader();
+			if (shader) {
+				material->forEachTextures(
+					[&](const std::pair<const std::string, std::shared_ptr<Scene::Texture>> &texture) {
+						auto textureObject = texture.second->getRendererObject<Texture>();
 
-			descriptorWrites.push_back({});
-			descriptorWrites[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrites[1].dstSet = _descriptorSets[i];
-			descriptorWrites[1].dstBinding = 1;
-			descriptorWrites[1].dstArrayElement = 0;
-			descriptorWrites[1].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-			descriptorWrites[1].descriptorCount = 1;
-			descriptorWrites[1].pImageInfo = &imageInfo;
+						imagesInfo.push_back({});
+						VkDescriptorImageInfo &imageInfo(imagesInfo.back());
+						imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+						imageInfo.imageView = textureObject->getImageView();
+						imageInfo.sampler = textureObject->getSampler();
+
+						VkWriteDescriptorSet descriptorWrite = {};
+						descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+						descriptorWrite.dstSet = _descriptorSets[i];
+						descriptorWrite.dstBinding = shader->getLocation(texture.first);
+						descriptorWrite.dstArrayElement = 0;
+						descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+						descriptorWrite.descriptorCount = 1;
+						descriptorWrite.pImageInfo = &imageInfo;
+						descriptorWrites.push_back(descriptorWrite);
+					});
+			}
 		}
 
 		vkUpdateDescriptorSets(_device->getDevice(), static_cast<uint32_t>(descriptorWrites.size()),

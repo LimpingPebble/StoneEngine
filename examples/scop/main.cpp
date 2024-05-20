@@ -77,6 +77,7 @@ int main() {
 
 		// Create a shader from a file
 		auto stone_shader = std::make_shared<Stone::Scene::Shader>("shaders/frag.spv");
+		stone_shader->setLocation("diffuse", 1);
 		stone_material->setFragmentShader(stone_shader);
 
 		// Create a second MeshNode with the same mesh
