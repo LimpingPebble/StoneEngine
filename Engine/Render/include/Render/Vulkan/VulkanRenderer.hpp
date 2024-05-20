@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Render/Renderer.hpp"
-#include "Render/Vulkan/VulkanSettings.hpp"
+#include "Render/Vulkan/RendererSettings.hpp"
 
 namespace Stone::Scene {
 class WorldNode;
@@ -20,7 +20,7 @@ struct ImageContext;
 class VulkanRenderer : public Renderer {
 public:
 	VulkanRenderer() = delete;
-	explicit VulkanRenderer(VulkanSettings &settings);
+	explicit VulkanRenderer(RendererSettings &settings);
 	VulkanRenderer(const VulkanRenderer &) = delete;
 
 	~VulkanRenderer() override;

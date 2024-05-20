@@ -14,7 +14,7 @@
 
 namespace Stone::Render::Vulkan {
 
-struct VulkanSettings {
+struct RendererSettings {
 	std::string app_name = "Stone";
 	uint32_t app_version = VK_MAKE_VERSION(1, 0, 0);
 	std::vector<const char *> instanceExt = {};

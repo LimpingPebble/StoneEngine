@@ -39,7 +39,7 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 	_elapsedTime = glfwGetTime();
 
 	if (!_renderer) {
-		Render::Vulkan::VulkanSettings rendererSettings;
+		Render::Vulkan::RendererSettings rendererSettings;
 		rendererSettings.app_name = settings.title;
 
 		uint32_t glfwExtensionCount = 0;

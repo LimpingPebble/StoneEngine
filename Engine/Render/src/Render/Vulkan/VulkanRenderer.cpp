@@ -9,7 +9,7 @@
 
 namespace Stone::Render::Vulkan {
 
-VulkanRenderer::VulkanRenderer(VulkanSettings &settings) : Renderer() {
+VulkanRenderer::VulkanRenderer(RendererSettings &settings) : Renderer() {
 	std::cout << "VulkanRenderer created" << std::endl;
 
 	_device = std::make_shared<Device>(settings);

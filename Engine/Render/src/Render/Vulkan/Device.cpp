@@ -23,7 +23,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBits
 	return VK_FALSE;
 }
 
-Device::Device(VulkanSettings &settings) {
+Device::Device(RendererSettings &settings) {
 	std::cout << "Device created" << std::endl;
 	_createInstance(settings);
 	_setupDebugMessenger();
@@ -370,7 +370,7 @@ VkImageView Device::createImageView(VkImage image, VkFormat format, VkImageAspec
 
 /** Instance */
 
-void Device::_createInstance(VulkanSettings &settings) {
+void Device::_createInstance(RendererSettings &settings) {
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = settings.app_name.c_str();
@@ -455,7 +455,7 @@ void Device::_destroyDebugMessenger() {
 
 /** Surface */
 
-void Device::_createSurface(VulkanSettings &settings) {
+void Device::_createSurface(RendererSettings &settings) {
 	if (settings.createSurface != nullptr) {
 		if (settings.createSurface(_instance, nullptr, &_surface) == VK_SUCCESS) {
 			return;
@@ -528,7 +528,7 @@ int deviceSuitability(VkPhysicalDevice device, VkSurfaceKHR surface,
 	return score;
 }
 
-void Device::_pickPhysicalDevice(VulkanSettings &settings) {
+void Device::_pickPhysicalDevice(RendererSettings &settings) {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(_instance, &deviceCount, nullptr);
 	if (deviceCount == 0) {
@@ -555,7 +555,7 @@ void Device::_pickPhysicalDevice(VulkanSettings &settings) {
 
 /** Logical device */
 
-void Device::_createLogicalDevice(VulkanSettings &settings) {
+void Device::_createLogicalDevice(RendererSettings &settings) {
 	QueueFamilyIndices indices = findQueueFamilies(_physicalDevice, _surface);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;

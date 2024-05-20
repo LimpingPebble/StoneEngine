@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Render/Vulkan/VulkanSettings.hpp"
+#include "Render/Vulkan/RendererSettings.hpp"
 #include "SwapChainProperties.hpp"
 
 #include <optional>
@@ -12,7 +12,7 @@ namespace Stone::Render::Vulkan {
 class Device {
 public:
 	Device() = delete;
-	explicit Device(VulkanSettings &settings);
+	explicit Device(RendererSettings &settings);
 	Device(const Device &) = delete;
 
 	virtual ~Device();
@@ -93,18 +93,18 @@ public:
 								VkImageAspectFlags aspectFlags = VK_IMAGE_ASPECT_COLOR_BIT) const;
 
 private:
-	void _createInstance(VulkanSettings &settings);
+	void _createInstance(RendererSettings &settings);
 	void _destroyInstance();
 
 	void _setupDebugMessenger();
 	void _destroyDebugMessenger();
 
-	void _createSurface(VulkanSettings &settings);
+	void _createSurface(RendererSettings &settings);
 	void _destroySurface();
 
-	void _pickPhysicalDevice(VulkanSettings &settings);
+	void _pickPhysicalDevice(RendererSettings &settings);
 
-	void _createLogicalDevice(VulkanSettings &settings);
+	void _createLogicalDevice(RendererSettings &settings);
 	void _destroyLogicalDevice();
 
 	void _createCommandPool();
