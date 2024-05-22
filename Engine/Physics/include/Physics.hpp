@@ -6,6 +6,8 @@
 
 namespace Stone::Physics {
 
+using namespace Stone::Scene;
+
 struct Particle {
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -14,20 +16,6 @@ struct Particle {
 
 	Particle(const glm::vec3& pos, float m)
 		: position(pos), mass(m), velocity(0.0f), acceleration(0.0f) {}
-};
-
-struct Plane {
-	glm::vec3 normal;
-	float distance;
-
-	Plane(const glm::vec3& n, float d) : normal(n), distance(d) {}
-};
-
-struct Sphere {
-	glm::vec3 center;
-	float radius;
-
-	Sphere(const glm::vec3& c, float r) : center(c), radius(r) {}
 };
 
 class PhysicsEngine {

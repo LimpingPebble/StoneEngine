@@ -4,21 +4,21 @@
 
 namespace Stone::Physics {
 
-void PhysicsEngine::update(Sphere& sphere, float deltaTime) {
+void PhysicsEngine::update(Stone::Scene::Sphere& sphere, float deltaTime) {
 	integrate(sphere, deltaTime);
 }
 
-void PhysicsEngine::applyForce(Sphere& sphere, const glm::vec3& force) {
+void PhysicsEngine::applyForce(Stone::Scene::Sphere& sphere, const glm::vec3& force) {
 	sphere.acceleration += force / sphere.mass;
 }
 
-void PhysicsEngine::integrate(Sphere& sphere, float deltaTime) {
+void PhysicsEngine::integrate(Stone::Scene::Sphere& sphere, float deltaTime) {
 	sphere.velocity += sphere.acceleration * deltaTime;
 	sphere.center += sphere.velocity * deltaTime;
 	sphere.acceleration = glm::vec3(0.0f);
 }
 
-bool PhysicsEngine::detectCollision(const Sphere& sphere1, const Sphere& sphere2, glm::vec3& collisionPoint) {
+bool PhysicsEngine::detectCollision(const Stone::Scene::Sphere& sphere1, const Stone::Scene::Sphere& sphere2, glm::vec3& collisionPoint) {
 	glm::vec3 delta = sphere2.center - sphere1.center;
 	float distance = glm::length(delta);
 	if (distance < sphere1.radius + sphere2.radius) {
@@ -28,7 +28,7 @@ bool PhysicsEngine::detectCollision(const Sphere& sphere1, const Sphere& sphere2
 	return false;
 }
 
-bool PhysicsEngine::detectCollision(const Sphere& sphere, const Plane& plane, glm::vec3& collisionPoint) {
+bool PhysicsEngine::detectCollision(const Stone::Scene::Sphere& sphere, const Stone::Scene::Plane& plane, glm::vec3& collisionPoint) {
 	float distanceFromPlane = glm::dot(sphere.center, plane.normal) - plane.distance;
 	if (distanceFromPlane < sphere.radius) {
 		collisionPoint = sphere.center - plane.normal * distanceFromPlane;
@@ -37,7 +37,7 @@ bool PhysicsEngine::detectCollision(const Sphere& sphere, const Plane& plane, gl
 	return false;
 }
 
-void PhysicsEngine::resolveCollision(Sphere& sphere1, Sphere& sphere2, const glm::vec3& collisionPoint) {
+void PhysicsEngine::resolveCollision(Stone::Scene::Sphere& sphere1, Stone::Scene::Sphere& sphere2, const glm::vec3& collisionPoint) {
 	glm::vec3 collisionNormal = glm::normalize(sphere2.center - sphere1.center);
 	glm::vec3 relativeVelocity = sphere2.velocity - sphere1.velocity;
 	float normalVelocity = glm::dot(relativeVelocity, collisionNormal);
@@ -55,7 +55,7 @@ void PhysicsEngine::resolveCollision(Sphere& sphere1, Sphere& sphere2, const glm
 	}
 }
 
-void PhysicsEngine::resolveCollision(Sphere& sphere, const Plane& plane, const glm::vec3& collisionPoint) {
+void PhysicsEngine::resolveCollision(Stone::Scene::Sphere& sphere, const Stone::Scene::Plane& plane, const glm::vec3& collisionPoint) {
 	glm::vec3 relativeVelocity = sphere.velocity;
 	float normalVelocity = glm::dot(relativeVelocity, plane.normal);
 
