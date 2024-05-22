@@ -1,5 +1,6 @@
 setup_module(
 		NAME physics
-		TARGET_DEPS scene logging utils
+		TARGET_DEPS glm scene logging utils
+		ENABLE_TESTS
 		FATAL_ERROR
 )
