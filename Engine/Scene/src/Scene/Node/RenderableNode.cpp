@@ -6,7 +6,7 @@ namespace Stone::Scene {
 
 STONE_ABSTRACT_NODE_IMPLEMENTATION(RenderableNode)
 
-RenderableNode::RenderableNode(const std::string &name) : Node(name), IRenderElement() {
+RenderableNode::RenderableNode(const std::string &name) : Node(name), IRenderable() {
 }
 
 void RenderableNode::render(RenderContext &context) {

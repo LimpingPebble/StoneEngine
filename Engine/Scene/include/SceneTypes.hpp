@@ -24,9 +24,10 @@ class SkeletonNode;
 class SkinMeshNode;
 class WorldNode;
 
-/** RenderElement */
+/** Renderable */
 class Texture;
 class Material;
+class Shader;
 
 class Mesh;
 class Skeleton;

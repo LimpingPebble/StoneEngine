@@ -32,21 +32,20 @@ public:
 
 class RendererObjectManager;
 
-// TODO: Rename to IRenderable
 /**
  * @brief Interface for renderable elements
  *
  * This interface adds two properties to a class that are used by the renderer to manage its rendering behavior.
  */
-class IRenderElement {
+class IRenderable {
 public:
-	IRenderElement() : _rendererObject(nullptr), _dirty(true) {
+	IRenderable() : _rendererObject(nullptr), _dirty(true) {
 	}
 
-	IRenderElement(const IRenderElement &other) : _rendererObject(other._rendererObject), _dirty(true) {
+	IRenderable(const IRenderable &other) : _rendererObject(other._rendererObject), _dirty(true) {
 	}
 
-	virtual ~IRenderElement() = default;
+	virtual ~IRenderable() = default;
 
 	/**
 	 * @brief Update the render object associated with the render element
