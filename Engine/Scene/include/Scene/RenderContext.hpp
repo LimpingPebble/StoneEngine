@@ -9,11 +9,16 @@ namespace Stone::Scene {
 
 class ISceneRenderer;
 
+
+/**
+ * @brief Represents the model-view-projection matrices used for rendering.
+ *
+ * The elements are aligned to 16 bytes to ensure that the data is correctly aligned for the GPU.
+ */
 struct MvpMatrices {
-	alignas(16) glm::mat4 modelMatrix = glm::mat4(1.0f); /**< The parent node world position matrix to use. */
-	alignas(16) glm::mat4 viewMatrix = glm::mat4(1.0f);	 /**< The view matrix of the camera used for rendering. */
-	alignas(16) glm::mat4 projectionMatrix =
-		glm::mat4(1.0f); /**< The projection matrix of the camera used for rendering. */
+	alignas(16) glm::mat4 modelMatrix = glm::mat4(1.0f); // The parent node world position matrix to use.
+	alignas(16) glm::mat4 viewMatrix = glm::mat4(1.0f);	 // The view matrix of the camera used for rendering.
+	alignas(16) glm::mat4 projMatrix = glm::mat4(1.0f);	 // The projection matrix of the camera.
 };
 
 /**
