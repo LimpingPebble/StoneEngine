@@ -44,7 +44,7 @@ std::shared_ptr<CameraNode> WorldNode::getActiveCamera() const {
 void WorldNode::initializeRenderContext(RenderContext &context) const {
 	if (auto camera = _activeCamera.lock()) {
 		context.mvp.viewMatrix = glm::inverse(camera->getWorldTransformMatrix());
-		context.mvp.projectionMatrix = camera->getProjectionMatrix();
+		context.mvp.projMatrix = camera->getProjectionMatrix();
 	}
 }
 
