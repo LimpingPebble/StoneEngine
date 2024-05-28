@@ -260,7 +260,7 @@ public:
 
 	/**
 	 * @brief Creates a linear function.
-     * The linear function is a straight line with a slope of 1.
+	 * The linear function is a straight line with a slope of 1.
 	 *
 	 * @return Function A Function object representing the linear function.
 	 */
@@ -270,7 +270,7 @@ public:
 
 	/**
 	 * @brief Creates an ease-in function.
-     * The ease-in function starts slow and accelerates towards the end.
+	 * The ease-in function starts slow and accelerates towards the end.
 	 *
 	 * @return Function A Function object representing the ease-in function.
 	 */
@@ -280,7 +280,7 @@ public:
 
 	/**
 	 * @brief Creates an ease-out function.
-     * The ease-out function starts fast and decelerates towards the end.
+	 * The ease-out function starts fast and decelerates towards the end.
 	 *
 	 * @return Function A Function object representing the ease-out function.
 	 */
@@ -290,7 +290,7 @@ public:
 
 	/**
 	 * @brief Creates an ease-in-out function.
-     * The ease-in-out function starts slow, accelerates in the middle, and decelerates towards the end.
+	 * The ease-in-out function starts slow, accelerates in the middle, and decelerates towards the end.
 	 *
 	 * @return Function A Function object representing the ease-in-out function.
 	 */
@@ -300,9 +300,9 @@ public:
 
 	/**
 	 * @brief Creates an elastic function.
-     * The elastic function simulates an elastic band that stretches and snaps back into place.
-     * It has a bouncy effect that overshoots the target value before settling.
-     * 
+	 * The elastic function simulates an elastic band that stretches and snaps back into place.
+	 * It has a bouncy effect that overshoots the target value before settling.
+	 *
 	 * @return Function A Function object representing the elastic function.
 	 */
 	static Function elastic() {
@@ -311,8 +311,8 @@ public:
 
 	/**
 	 * @brief Creates a bounce function.
-     * The bounce function simulates a bouncing ball that bounces up and down before coming to rest.
-     * It has a bouncy effect that overshoots the target value before settling.
+	 * The bounce function simulates a bouncing ball that bounces up and down before coming to rest.
+	 * It has a bouncy effect that overshoots the target value before settling.
 	 *
 	 * @return Function A Function object representing the bounce function.
 	 */
