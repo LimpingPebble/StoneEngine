@@ -2,7 +2,8 @@
 
 #include "Window/GlfwWindow.hpp"
 
-#include "Render/VulkanRenderer.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
+#include "Scene/Node/WorldNode.hpp"
 
 #include <iostream>
 #include <stdexcept>
@@ -38,7 +39,7 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 	_elapsedTime = glfwGetTime();
 
 	if (!_renderer) {
-		Render::VulkanRenderer::Settings rendererSettings;
+		Render::Vulkan::RendererSettings rendererSettings;
 		rendererSettings.app_name = settings.title;
 
 		uint32_t glfwExtensionCount = 0;
@@ -54,7 +55,7 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 			static_cast<uint32_t>(settings.height),
 		};
 
-		_renderer = std::make_shared<Render::VulkanRenderer>(rendererSettings);
+		_renderer = std::make_shared<Render::Vulkan::VulkanRenderer>(rendererSettings);
 	}
 
 	_world->setRenderer(_renderer);
