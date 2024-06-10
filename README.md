@@ -10,7 +10,7 @@ make
 
 ## How to use
 
-Todo
+Checkout our beautiful documentation [here](https://limpingpebble.github.io/Docs/).
 
 ## Authors
 
