@@ -2,8 +2,8 @@
 
 #include "Scene/Node/MeshNode.hpp"
 
-#include "Scene/RenderElement/Material.hpp"
-#include "Scene/RenderElement/Mesh.hpp"
+#include "Scene/Renderable/Material.hpp"
+#include "Scene/Renderable/Mesh.hpp"
 #include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {

@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/Mesh.hpp"
+#include "Scene/Renderable/Mesh.hpp"
 
 #include "Scene/RendererObjectManager.hpp"
 

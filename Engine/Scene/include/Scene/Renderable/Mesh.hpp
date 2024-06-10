@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Core/Object.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
+#include "Scene/Renderable/IRenderable.hpp"
 #include "Scene/Vertex.hpp"
 
 #include <vector>
@@ -15,7 +15,7 @@
  */
 namespace Stone::Scene {
 
-class Mesh : public Core::Object, public IRenderElement {
+class Mesh : public Core::Object, public IRenderable {
 public:
 	Mesh() = default;
 	Mesh(const Mesh &other) = default;

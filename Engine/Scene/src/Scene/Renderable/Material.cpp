@@ -1,8 +1,8 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RenderElement/Material.hpp"
+#include "Scene/Renderable/Material.hpp"
 
-#include "Scene/RenderElement/Texture.hpp"
+#include "Scene/Renderable/Texture.hpp"
 #include "Scene/RendererObjectManager.hpp"
 #include "Utils/Glm.hpp"
 
@@ -70,6 +70,44 @@ float Material::getScalarParameter(const std::string &name) const {
 		return it->second;
 	}
 	return 0.0f;
+}
+
+void Material::forEachTextures(
+	const std::function<void(std::pair<const std::string, std::shared_ptr<Texture>> &)> &lambda) {
+	for (auto &it : _textures) {
+		lambda(it);
+	}
+}
+
+void Material::forEachVectors(const std::function<void(std::pair<const std::string, glm::vec3> &)> &lambda) {
+	for (auto &it : _vectors) {
+		lambda(it);
+	}
+}
+
+void Material::forEachScalars(const std::function<void(std::pair<const std::string, float> &)> &lambda) {
+	for (auto &it : _scalars) {
+		it.second += 1;
+		lambda(it);
+	}
+}
+
+void Material::setVertexShader(std::shared_ptr<Shader> vertexShader) {
+	_vertexShader = std::move(vertexShader);
+	markDirty();
+}
+
+std::shared_ptr<Shader> Material::getVertexShader() const {
+	return _vertexShader;
+}
+
+void Material::setFragmentShader(std::shared_ptr<Shader> fragmentShader) {
+	_fragmentShader = std::move(fragmentShader);
+	markDirty();
+}
+
+std::shared_ptr<Shader> Material::getFragmentShader() const {
+	return _fragmentShader;
 }
 
 } // namespace Stone::Scene

@@ -22,12 +22,12 @@ Vertex::Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv)
 }
 
 WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b,
-						   const glm::vec2 &uv, const glm::ivec4 &bIds, const glm::vec4 &bWs)
-	: Vertex(p, n, t, b, uv), boneIDs(bIds), boneWeights(bWs) {
+						   const glm::vec2 &uv, const glm::vec4 &w, const glm::ivec4 &i)
+	: Vertex(p, n, t, b, uv), weights(w), ids(i) {
 }
 
 WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv)
-	: Vertex(p, n, uv), boneIDs(), boneWeights() {
+	: Vertex(p, n, uv), weights(), ids() {
 }
 
 } // namespace Stone::Scene
