@@ -3,7 +3,6 @@
 #pragma once
 
 #include "Render/VulkanRenderer.hpp"
-#include "Scene/RenderElement/IRenderElement.hpp"
 #include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Render {

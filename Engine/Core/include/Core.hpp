@@ -2,5 +2,7 @@
 
 #pragma once
 
-#include "Core/Image.hpp"
+#include "Core/Image/ImageData.hpp"
+#include "Core/Image/ImageSource.hpp"
+#include "Core/Image/ImageTypes.hpp"
 #include "Core/Object.hpp"
