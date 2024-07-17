@@ -2,6 +2,7 @@
 
 #include "Utils/StringExt.hpp"
 
+#include <algorithm>
 #include <cctype>
 
 
@@ -20,10 +21,7 @@ bool string_starts_with(const std::string &str, const std::string &prefix) {
 }
 
 bool string_contains_non_printable(const std::string &str) {
-	for (char c : str) {
-		if (!isprint(static_cast<unsigned char>(c)) && !isspace(static_cast<unsigned char>(c))) {
-			return true;
-		}
-	}
-	return false;
+	return std::any_of(str.begin(), str.end(), [](char c) {
+		return !std::isprint(static_cast<unsigned char>(c)) && !std::isspace(static_cast<unsigned char>(c));
+	});
 }
