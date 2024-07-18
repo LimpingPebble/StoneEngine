@@ -382,7 +382,10 @@ void Device::_createInstance(RendererSettings &settings) {
 	VkInstanceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
+#ifdef __APPLE__
 	createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+	settings.instanceExt.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+#endif
 
 #ifdef VALIDATION_LAYERS
 	if (!checkValidationLayerSupport(settings.validationLayers)) {
@@ -395,7 +398,6 @@ void Device::_createInstance(RendererSettings &settings) {
 	createInfo.enabledLayerCount = 0;
 #endif
 
-	settings.instanceExt.emplace_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(settings.instanceExt.size());
 	createInfo.ppEnabledExtensionNames = settings.instanceExt.data();
 
