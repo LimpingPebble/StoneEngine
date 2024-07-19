@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <optional>
 #include <vulkan/vulkan.h>
 
 #ifndef NDEBUG

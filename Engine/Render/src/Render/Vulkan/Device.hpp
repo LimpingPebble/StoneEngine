@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Render/Vulkan/RendererSettings.hpp"
-#include "SwapChainProperties.hpp"
+#include "Utilities/SwapChainProperties.hpp"
 
 #include <optional>
 

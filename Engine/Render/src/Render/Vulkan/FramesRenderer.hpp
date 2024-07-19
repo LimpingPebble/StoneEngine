@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SwapChainProperties.hpp"
+#include "Utilities/SwapChainProperties.hpp"
 
 #include <memory>
 #include <vector>
