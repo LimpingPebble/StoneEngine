@@ -6,7 +6,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/io.hpp>
-#include <Utils/stb_image.h>
+#include <stb_image.h>
 
 namespace Stone::Image {
 
