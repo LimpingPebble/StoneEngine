@@ -9,18 +9,20 @@
 #include "Scene/Renderable/Mesh.hpp"
 #include "Scene/Renderable/SkinMesh.hpp"
 #include "Scene/Renderable/Material.hpp"
+#include "Scene/Renderable/Texture.hpp"
 
 #include <assimp/Importer.hpp>
+#include <assimp/Exporter.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
 namespace Stone::Scene {
 
-static std::shared_ptr<Assimp::Importer> _assimpImporter = nullptr;
+static std::unique_ptr<Assimp::Importer> _assimpImporter = nullptr;
 
 static Assimp::Importer &getAssimpImporter() {
 	if (!_assimpImporter) {
-		_assimpImporter = std::make_shared<Assimp::Importer>();
+		_assimpImporter = std::make_unique<Assimp::Importer>();
 	}
 	return *_assimpImporter;
 }
@@ -57,16 +59,13 @@ void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
 
 	newMesh->verticesRef().reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-		Vertex vertex;
-		vertex.position = convert(mesh->mVertices[i]);
-		vertex.normal = convert(mesh->mNormals[i]);
-		if (mesh->mTextureCoords[0]) {
-			vertex.uv = {mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y};
-		}
-        vertex.tangent = convert(mesh->mTangents[i]);
-        vertex.bitangent = convert(mesh->mBitangents[i]);
-
-		newMesh->verticesRef().push_back(vertex);
+		newMesh->verticesRef().emplace_back(
+            convert(mesh->mVertices[i]),
+            convert(mesh->mNormals[i]),
+            convert(mesh->mTangents[i]),
+            convert(mesh->mBitangents[i]),
+            mesh->mTextureCoords[0] ? convert(mesh->mTextureCoords[0][i]) : glm::vec2(0.0f)
+        );
 	}
 
 	newMesh->indicesRef().reserve(mesh->mNumFaces * 3);
@@ -101,7 +100,12 @@ void loadMeshes(AssetResource &assetResource, const aiScene *scene) {
 }
 
 void loadTexture(AssetResource &assetResource, const aiTexture *texture) {
-    assetResource.imagesAlbum->loadImage(texture->mFilename.C_Str());
+    auto image = assetResource.imagesAlbum->loadImage(texture->mFilename.C_Str());
+    
+    std::shared_ptr<Texture> newTexture = std::make_shared<Texture>();
+    newTexture->setImage(image);
+
+    assetResource.textures.push_back(newTexture);
 }
 
 void loadTextures(AssetResource &assetResource, const aiScene *scene) {
@@ -113,6 +117,9 @@ void loadTextures(AssetResource &assetResource, const aiScene *scene) {
 
 void loadMaterial(AssetResource &assetResource, const aiMaterial *material) {
     std::shared_ptr<Material> newMaterial = std::make_shared<Material>();
+
+    material->Get();
+    newMaterial->setTextureParameter("diffuse", assetResource.imagesAlbum->getImage(material->GetTexture(aiTextureType_DIFFUSE, 0)->mFilename.C_Str()));
 
     assetResource.materials.push_back(newMaterial);
 }
@@ -157,6 +164,10 @@ std::shared_ptr<Node> Node::load(const std::string &path) {
 
 	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs |
 													   aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
+
+    // Additional flags:
+    // aiProcess_OptimizeMeshes
+    // aiProcess_SplitLargeMeshes
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
 		throw Core::FileLoadingError(path, importer.GetErrorString());

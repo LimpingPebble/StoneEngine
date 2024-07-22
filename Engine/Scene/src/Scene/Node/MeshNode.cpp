@@ -26,11 +26,11 @@ std::ostream &MeshNode::writeToStream(std::ostream &stream, bool closing_bracer)
 	return stream;
 }
 
-std::shared_ptr<Mesh> MeshNode::getMesh() const {
+std::shared_ptr<IMeshInterface> MeshNode::getMesh() const {
 	return _mesh;
 }
 
-void MeshNode::setMesh(std::shared_ptr<Mesh> mesh) {
+void MeshNode::setMesh(std::shared_ptr<IMeshInterface> mesh) {
 	_mesh = std::move(mesh);
 	markDirty();
 }

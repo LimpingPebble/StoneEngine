@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "Core/Object.hpp"
-#include "Scene/Renderable/IRenderable.hpp"
+#include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Vertex.hpp"
 
 #include <vector>
@@ -15,19 +14,22 @@
  */
 namespace Stone::Scene {
 
-class SkinMesh : public Core::Object, public IRenderable {
-public:
-	SkinMesh() = default;
-	SkinMesh(const SkinMesh &other) = default;
+class ISkinMeshInterface : public IMeshObject {
+};
 
-	~SkinMesh() override = default;
+class DynamicSkinMesh : public ISkinMeshInterface {
+public:
+	DynamicSkinMesh() = default;
+	DynamicSkinMesh(const DynamicSkinMesh &other) = default;
+
+	~DynamicSkinMesh() override = default;
 
 	/**
-	 * @brief Writes the SkinMesh object to the output stream.
+	 * @brief Writes the DynamicSkinMesh object to the output stream.
 	 *
 	 * @param stream The output stream to write to.
 	 * @param closing_bracer Flag indicating whether to write the closing brace.
-	 * @return The output stream after writing the SkinMesh object.
+	 * @return The output stream after writing the DynamicSkinMesh object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

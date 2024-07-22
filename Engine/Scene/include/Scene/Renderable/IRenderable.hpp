@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Scene/RenderContext.hpp"
+#include "Utils/SigSlot.hpp"
 
 namespace Stone::Scene {
 
@@ -39,6 +40,8 @@ class RendererObjectManager;
  */
 class IRenderable {
 public:
+	Signal<IRenderable *, bool> onDirty; /**< Signal that is emitted when the render element is marked as dirty */
+
 	IRenderable() : _rendererObject(nullptr), _dirty(true) {
 	}
 
@@ -71,6 +74,7 @@ public:
 	 */
 	void markDirty() {
 		_dirty = true;
+		onDirty.broadcast(this, true);
 	}
 
 	/**
@@ -107,6 +111,7 @@ protected:
 	 */
 	void markUndirty() {
 		_dirty = false;
+		onDirty.broadcast(this, false);
 	}
 
 	std::shared_ptr<IRendererObject> _rendererObject; /**< The renderer object associated with the render element */

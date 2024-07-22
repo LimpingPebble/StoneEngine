@@ -6,7 +6,7 @@
 
 namespace Stone::Scene {
 
-class Mesh;
+class IMeshInterface;
 class Material;
 
 class MeshNode : public RenderableNode {
@@ -22,14 +22,14 @@ public:
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	[[nodiscard]] std::shared_ptr<Mesh> getMesh() const;
-	void setMesh(std::shared_ptr<Mesh> mesh);
+	[[nodiscard]] std::shared_ptr<IMeshInterface> getMesh() const;
+	void setMesh(std::shared_ptr<IMeshInterface> mesh);
 
 	[[nodiscard]] std::shared_ptr<Material> getMaterial() const;
 	void setMaterial(std::shared_ptr<Material> material);
 
 protected:
-	std::shared_ptr<Mesh> _mesh;
+	std::shared_ptr<IMeshInterface> _mesh;
 	std::shared_ptr<Material> _material;
 
 	[[nodiscard]] const char *_termClassColor() const override;

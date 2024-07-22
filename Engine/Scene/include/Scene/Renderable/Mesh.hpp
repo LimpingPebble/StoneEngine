@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include "Core/Object.hpp"
-#include "Scene/Renderable/IRenderable.hpp"
+#include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Vertex.hpp"
 
 #include <vector>
@@ -15,12 +14,15 @@
  */
 namespace Stone::Scene {
 
-class Mesh : public Core::Object, public IRenderable {
-public:
-	Mesh() = default;
-	Mesh(const Mesh &other) = default;
+class IMeshInterface : public IMeshObject {
+};
 
-	~Mesh() override = default;
+class DynamicMesh : public IMeshInterface {
+public:
+	DynamicMesh() = default;
+	DynamicMesh(const DynamicMesh &other) = default;
+
+	~DynamicMesh() override = default;
 
 	/**
 	 * @brief Writes the mesh data to the given output stream.
@@ -74,5 +76,50 @@ protected:
 	std::vector<Vertex> _vertices;	/**< The vector of vertices. */
 	std::vector<uint32_t> _indices; /**< The vector of indices. */
 };
+
+
+class StaticMesh : public IMeshInterface {
+public:
+	StaticMesh() = default;
+	StaticMesh(const StaticMesh &other) = default;
+
+	~StaticMesh() override = default;
+
+	/**
+	 * @brief Writes the mesh data to the given output stream.
+	 *
+	 * @param stream The output stream to write to.
+	 * @param closing_bracer Flag indicating whether to write a closing bracer after the mesh data.
+	 * @return The modified output stream.
+	 */
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+
+	/**
+	 * @brief Updates the render object associated with the mesh.
+	 *
+	 * @param manager The renderer object manager used to update the render object.
+	 */
+	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+
+	/**
+	 * @brief Retrieves the source mesh used to generate the static mesh.
+	 * 
+	 * @return The source mesh used to generate the static mesh.
+	 */
+	[[nodiscard]] const std::shared_ptr<DynamicMesh>& getSourceMesh() const;
+
+	/**
+	 * @brief Sets the source mesh used to generate the static mesh.
+	 * 
+	 * @param sourceMesh The source mesh used to generate the static mesh.
+	 */
+	void setSourceMesh(const std::shared_ptr<DynamicMesh> &sourceMesh);
+
+
+protected:
+	std::shared_ptr<DynamicMesh> _dynamicMesh; /**< The dynamic mesh used for rendering. */
+
+};
+
 
 } // namespace Stone::Scene
