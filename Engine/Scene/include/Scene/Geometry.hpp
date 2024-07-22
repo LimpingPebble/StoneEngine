@@ -10,14 +10,16 @@ struct Plane {
 	glm::vec3 normal;
 	float distance;
 
-	Plane(const glm::vec3& n, float d) : normal(n), distance(d) {}
+	Plane(const glm::vec3 &n, float d) : normal(n), distance(d) {
+	}
 };
 
 struct Sphere {
 	glm::vec3 center;
 	float radius;
 
-	Sphere(const glm::vec3& c, float r) : center(c), radius(r) {}
+	Sphere(const glm::vec3 &c, float r) : center(c), radius(r) {
+	}
 };
 
 } // namespace Stone::Scene
