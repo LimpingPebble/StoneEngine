@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 		auto window = app->createWindow(win_settings);
 
 		// Generate a Mesh
-		auto mesh = std::make_shared<Stone::Scene::Mesh>();
+		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
 		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};

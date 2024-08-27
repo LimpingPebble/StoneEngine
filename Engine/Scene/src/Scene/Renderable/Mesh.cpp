@@ -15,8 +15,8 @@ std::ostream &DynamicMesh::writeToStream(std::ostream &stream, bool closing_brac
 	return stream;
 }
 
-void DynamicMesh::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
-	manager->updateDynamicMesh(std::static_pointer_cast<DynamicMesh>(shared_from_this()));
+void DynamicMesh::updateRenderObject(RendererObjectManager &manager) {
+	manager.updateDynamicMesh(std::static_pointer_cast<DynamicMesh>(shared_from_this()));
 }
 
 const std::vector<Vertex> &DynamicMesh::getVertices() const {
@@ -46,8 +46,8 @@ std::ostream &StaticMesh::writeToStream(std::ostream &stream, bool closing_brace
 	return stream;
 }
 
-void StaticMesh::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
-	manager->updateStaticMesh(std::static_pointer_cast<StaticMesh>(shared_from_this()));
+void StaticMesh::updateRenderObject(RendererObjectManager &manager) {
+	manager.updateStaticMesh(std::static_pointer_cast<StaticMesh>(shared_from_this()));
 }
 
 const std::shared_ptr<DynamicMesh> &StaticMesh::getSourceMesh() const {

@@ -13,7 +13,7 @@ void testNode() {
 	std::shared_ptr<Material> blank_material = std::make_shared<Material>();
 	blank_material->setTextureParameter("diffuse", blank_texture);
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+	std::shared_ptr<DynamicMesh> mesh = std::make_shared<DynamicMesh>();
 
 	// Create child nodes
 	std::shared_ptr<PivotNode> child1 = world->addChild<PivotNode>("child1");

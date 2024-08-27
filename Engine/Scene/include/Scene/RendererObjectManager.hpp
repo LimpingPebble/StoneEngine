@@ -17,6 +17,8 @@ namespace Stone::Scene {
  */
 class RendererObjectManager {
 public:
+
+	RendererObjectManager() = default;
 	virtual ~RendererObjectManager() = default;
 
 	/**
@@ -50,16 +52,22 @@ public:
 	virtual void updateDynamicMesh(const std::shared_ptr<DynamicMesh> &mesh);
 
 	/**
-	 * @brief Updates the renderer data for a given mesh.
+	 * @brief Updates the renderer data for a given static mesh.
 	 * @param mesh The mesh to be updated.
 	 */
 	virtual void updateStaticMesh(const std::shared_ptr<StaticMesh> &mesh);
 
 	/**
-	 * @brief Updates the renderer data for a given skin mesh.
+	 * @brief Updates the renderer data for a given dynamic skin mesh.
 	 * @param skinmesh The skin mesh to be updated.
 	 */
-	virtual void updateSkinMesh(const std::shared_ptr<SkinMesh> &skinmesh);
+	virtual void updateDynamicSkinMesh(const std::shared_ptr<DynamicSkinMesh> &skinmesh);
+
+	/**
+	 * @brief Updates the renderer data for a given static skin mesh.
+	 * @param skinmesh The skin mesh to be updated.
+	 */
+	virtual void updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh);
 
 	/**
 	 * @brief Updates the renderer data for a given texture.

@@ -38,7 +38,7 @@ public:
 	 *
 	 * @param manager The RendererObjectManager used to update the render object.
 	 */
-	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Returns a const reference to the vector of WeightVertex objects representing the vertices of the mesh.
@@ -76,5 +76,55 @@ protected:
 	std::vector<WeightVertex> _vertices; /**< The vector of weighted vertices. */
 	std::vector<uint32_t> _indices;		 /**< The vector of indices. */
 };
+
+
+class StaticSkinMesh : public ISkinMeshInterface {
+public:
+	StaticSkinMesh() = default;
+	StaticSkinMesh(const StaticSkinMesh &other) = default;
+
+	~StaticSkinMesh() override = default;
+
+	/**
+	 * @brief Writes the StaticSkinMesh object to the output stream.
+	 *
+	 * @param stream The output stream to write to.
+	 * @param closing_bracer Flag indicating whether to write the closing brace.
+	 * @return The output stream after writing the StaticSkinMesh object.
+	 */
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+
+	/**
+	 * @brief Updates the render object using the specified RendererObjectManager.
+	 *
+	 * @param manager The RendererObjectManager used to update the render object.
+	 */
+	void updateRenderObject(RendererObjectManager &manager) override;
+
+	/**
+	 * @brief Retrieves the source mesh used to generate the static mesh.
+	 * 
+	 * @return The source mesh used to generate the static mesh.
+	 */
+	[[nodiscard]] const std::shared_ptr<DynamicSkinMesh>& getSourceMesh() const;
+
+	/**
+	 * @brief Sets the source mesh used to generate the static mesh.
+	 * 
+	 * @param sourceMesh The source mesh used to generate the static mesh.
+	 */
+	void setSourceMesh(const std::shared_ptr<DynamicSkinMesh> &sourceMesh);
+
+
+protected:
+
+	/**
+	 * The dynamic mesh used for rendering.
+	 * This pointer will be reset by the renderer once the buffers are initialized.
+	 */
+	std::shared_ptr<DynamicSkinMesh> _dynamicMesh;
+
+};
+
 
 } // namespace Stone::Scene

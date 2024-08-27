@@ -55,7 +55,7 @@ glm::vec4 convert(const aiColor4D &color) {
 }
 
 void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
-	std::shared_ptr<Mesh> newMesh = std::make_shared<Mesh>();
+	std::shared_ptr<DynamicMesh> newMesh = std::make_shared<DynamicMesh>();
 
 	newMesh->verticesRef().reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -77,11 +77,14 @@ void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
 		}
 	}
 
+    std::shared_ptr<StaticMesh> newStaticMesh = std::make_shared<StaticMesh>();
+    newStaticMesh->setSourceMesh(newMesh);
+
 	AssetResource.meshes.push_back(newMesh);
 }
 
 void loadSkinMesh(AssetResource &AssetResource, const aiMesh *mesh) {
-	std::shared_ptr<SkinMesh> newMesh = std::make_shared<SkinMesh>();
+	std::shared_ptr<DynamicSkinMesh> newMesh = std::make_shared<DynamicSkinMesh>();
 
     // TODO: Load skin mesh
 
@@ -118,8 +121,9 @@ void loadTextures(AssetResource &assetResource, const aiScene *scene) {
 void loadMaterial(AssetResource &assetResource, const aiMaterial *material) {
     std::shared_ptr<Material> newMaterial = std::make_shared<Material>();
 
-    material->Get();
-    newMaterial->setTextureParameter("diffuse", assetResource.imagesAlbum->getImage(material->GetTexture(aiTextureType_DIFFUSE, 0)->mFilename.C_Str()));
+    // TODO: Load Material
+    // material->Get();
+    // newMaterial->setTextureParameter("diffuse", assetResource.imagesAlbum->getImage(material->GetTexture(aiTextureType_DIFFUSE, 0)->mFilename.C_Str()));
 
     assetResource.materials.push_back(newMaterial);
 }
@@ -146,11 +150,11 @@ void loadNode(AssetResource &assetResource, const aiNode *node, const std::share
         auto assetMesh = assetResource.meshes[meshIndex];
         assert(meshIndex >= 0 && meshIndex < assetResource.meshes.size());
 
-        if (auto asSkinMesh = std::dynamic_pointer_cast<SkinMesh>(assetMesh)) {
+        if (auto asSkinMesh = std::dynamic_pointer_cast<ISkinMeshInterface>(assetMesh)) {
             std::shared_ptr<SkinMeshNode> skinMeshNode = std::make_shared<SkinMeshNode>("mesh_" + std::to_string(i));
             skinMeshNode->setSkinMesh(asSkinMesh);
             sceneNode->addChild(skinMeshNode);
-        } else if (auto asMesh = std::dynamic_pointer_cast<Mesh>(assetMesh)) {
+        } else if (auto asMesh = std::dynamic_pointer_cast<IMeshInterface>(assetMesh)) {
             std::shared_ptr<MeshNode> meshNode = std::make_shared<MeshNode>("mesh_" + std::to_string(i));
             meshNode->setMesh(asMesh);
             sceneNode->addChild(meshNode);

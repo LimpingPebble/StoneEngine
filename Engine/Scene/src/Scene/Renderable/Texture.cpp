@@ -19,8 +19,8 @@ std::ostream &Texture::writeToStream(std::ostream &stream, bool closing_bracer) 
 	return stream;
 }
 
-void Texture::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
-	manager->updateTexture(std::static_pointer_cast<Texture>(shared_from_this()));
+void Texture::updateRenderObject(RendererObjectManager &manager) {
+	manager.updateTexture(std::static_pointer_cast<Texture>(shared_from_this()));
 }
 
 void Texture::setImage(const std::shared_ptr<Image::ImageSource> &image) {

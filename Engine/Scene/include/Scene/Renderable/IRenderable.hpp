@@ -58,7 +58,7 @@ public:
 	 *
 	 * @param manager The renderer object manager
 	 */
-	virtual void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) = 0;
+	virtual void updateRenderObject(RendererObjectManager &manager) = 0;
 
 	/**
 	 * @brief Check if the render element is dirty

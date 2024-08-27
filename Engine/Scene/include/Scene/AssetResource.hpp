@@ -36,7 +36,7 @@ struct AssetResource {
 	/**
 	 * @brief The meshes of the asset
 	 */
-	std::vector<std::shared_ptr<Core::Object>> meshes;
+	std::vector<std::shared_ptr<IMeshObject>> meshes;
 	std::vector<std::shared_ptr<Texture>> textures;
     std::vector<std::shared_ptr<Material>> materials;
     std::shared_ptr<PivotNode> rootNode;

@@ -13,8 +13,8 @@ STONE_NODE_IMPLEMENTATION(MeshNode)
 MeshNode::MeshNode(const std::string &name) : RenderableNode(name), _mesh(nullptr), _material(nullptr) {
 }
 
-void MeshNode::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
-	manager->updateMeshNode(std::dynamic_pointer_cast<MeshNode>(shared_from_this()));
+void MeshNode::updateRenderObject(RendererObjectManager &manager) {
+	manager.updateMeshNode(std::dynamic_pointer_cast<MeshNode>(shared_from_this()));
 }
 
 std::ostream &MeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
