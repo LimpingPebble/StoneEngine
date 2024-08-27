@@ -16,7 +16,7 @@ public:
 
 	~InstancedMeshNode() override = default;
 
-	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+	void updateRenderObject(RendererObjectManager &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

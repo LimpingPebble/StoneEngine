@@ -61,7 +61,8 @@ void MeshNode::render(Scene::RenderContext &context) {
 	vkCmdBindDescriptorSets(vulkanContext->commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout, 0, 1,
 							&_descriptorSets[vulkanContext->imageIndex], 0, nullptr);
 
-	vkCmdDrawIndexed(vulkanContext->commandBuffer, _sceneMeshNode.lock()->getMesh()->getIndices().size(), 1, 0, 0, 0);
+	auto mesh = std::dynamic_pointer_cast<Scene::DynamicMesh>(_sceneMeshNode.lock()->getMesh());
+	vkCmdDrawIndexed(vulkanContext->commandBuffer, mesh->getIndices().size(), 1, 0, 0, 0);
 }
 
 void MeshNode::_updateUniformBuffers(Vulkan::RenderContext &context) {
@@ -285,7 +286,8 @@ void MeshNode::_createVertexBuffer() {
 	std::shared_ptr<Scene::MeshNode> meshNode = _sceneMeshNode.lock();
 	assert(meshNode);
 
-	const std::vector<Scene::Vertex> &vertices = meshNode->getMesh()->getVertices();
+	auto mesh = std::dynamic_pointer_cast<Scene::DynamicMesh>(meshNode->getMesh());
+	const std::vector<Scene::Vertex> &vertices = mesh->getVertices();
 
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 
@@ -317,7 +319,8 @@ void MeshNode::_createIndexBuffer() {
 	std::shared_ptr<Scene::MeshNode> meshNode = _sceneMeshNode.lock();
 	assert(meshNode);
 
-	const std::vector<uint32_t> &indices = meshNode->getMesh()->getIndices();
+	auto mesh = std::dynamic_pointer_cast<Scene::DynamicMesh>(meshNode->getMesh());
+	const std::vector<uint32_t> &indices = mesh->getIndices();
 
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 

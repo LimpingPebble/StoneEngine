@@ -280,6 +280,14 @@ public:
 	void writeHierarchy(std::ostream &stream, bool colored = true, const std::string &linePrefix = "",
 						const std::string &firstPrefix = "", const std::string &lastPrefix = "") const;
 
+	/**
+	 * Loads a node from the specified path.
+	 *
+	 * @param path The path to the node file.
+	 * @return A shared pointer to the loaded node.
+	 */
+	[[nodiscard]] static std::shared_ptr<Node> load(const std::string &path);
+
 protected:
 	std::string _name;							  /**< The name of the node. */
 	std::vector<std::shared_ptr<Node>> _children; /**< The children nodes of this node. */

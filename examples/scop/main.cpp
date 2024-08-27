@@ -29,7 +29,7 @@ private:
 
 STONE_NODE_IMPLEMENTATION(RotatingNode)
 
-int main() {
+int main(int argc, char **argv) {
 #ifdef _WIN32
 	SetConsoleOutputCP(CP_UTF8);
 #endif
@@ -45,7 +45,7 @@ int main() {
 		auto window = app->createWindow(win_settings);
 
 		// Generate a Mesh
-		auto mesh = std::make_shared<Stone::Scene::Mesh>();
+		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
 		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};
@@ -99,6 +99,13 @@ int main() {
 		cameraNode->getTransform().setPosition({0.0f, 3.0f, 3.0f});
 		cameraNode->getTransform().rotate({-0.6f, 0.0f, 0.0f});
 		window->getWorld()->setActiveCamera(cameraNode);
+
+        // Load a node from a file
+        if (argc > 1) {
+            auto node = Stone::Scene::Node::load(argv[1]);
+            window->getWorld()->addChild(node);
+            node->writeHierarchy(std::cout);
+        }
 
 		// Run the App
 		retCode = app->run();

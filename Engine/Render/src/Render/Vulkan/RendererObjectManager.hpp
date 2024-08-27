@@ -14,7 +14,7 @@ class RendererObjectManager : public Scene::RendererObjectManager {
 
 public:
 	RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
-
+	RendererObjectManager(const RendererObjectManager &other) = default;
 	~RendererObjectManager() override = default;
 
 
@@ -26,7 +26,7 @@ public:
 
 	void updateMaterial(const std::shared_ptr<Scene::Material> &material) override;
 
-	void updateMesh(const std::shared_ptr<Scene::Mesh> &mesh) override;
+	void updateDynamicMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh) override;
 
 	// void updateSkinMesh(const std::shared_ptr<Scene::SkinMesh> &skinmesh) override;
 

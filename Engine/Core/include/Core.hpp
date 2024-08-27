@@ -6,3 +6,4 @@
 #include "Core/Image/ImageSource.hpp"
 #include "Core/Image/ImageTypes.hpp"
 #include "Core/Object.hpp"
+#include "Core/Exceptions.hpp"

@@ -43,8 +43,8 @@ void RendererObjectManager::updateMaterial(const std::shared_ptr<Scene::Material
 	setRendererObjectTo(material.get(), newMaterial);
 }
 
-void RendererObjectManager::updateMesh(const std::shared_ptr<Scene::Mesh> &mesh) {
-	Scene::RendererObjectManager::updateMesh(mesh);
+void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh) {
+	Scene::RendererObjectManager::updateDynamicMesh(mesh);
 
 	if (mesh->getRendererObject<Vulkan::Mesh>()) {
 		return;

@@ -10,7 +10,7 @@ void RendererObjectManager::updateMeshNode(const std::shared_ptr<MeshNode> &mesh
 	if (meshNode->getMaterial() && meshNode->getMaterial()->isDirty())
 		updateMaterial(meshNode->getMaterial());
 	if (meshNode->getMesh() && meshNode->getMesh()->isDirty())
-		updateMesh(meshNode->getMesh());
+		meshNode->getMesh()->updateRenderObject(*this);
 	meshNode->markUndirty();
 }
 
@@ -18,7 +18,7 @@ void RendererObjectManager::updateInstancedMeshNode(const std::shared_ptr<Instan
 	if (instancedMeshNode->getMaterial() && instancedMeshNode->getMaterial()->isDirty())
 		updateMaterial(instancedMeshNode->getMaterial());
 	if (instancedMeshNode->getMesh() && instancedMeshNode->getMesh()->isDirty())
-		updateMesh(instancedMeshNode->getMesh());
+		instancedMeshNode->getMesh()->updateRenderObject(*this);
 	instancedMeshNode->markUndirty();
 }
 
@@ -26,7 +26,7 @@ void RendererObjectManager::updateSkinMeshNode(const std::shared_ptr<SkinMeshNod
 	if (skinMeshNode->getMaterial() && skinMeshNode->getMaterial()->isDirty())
 		updateMaterial(skinMeshNode->getMaterial());
 	if (skinMeshNode->getSkinMesh() && skinMeshNode->getSkinMesh()->isDirty())
-		updateSkinMesh(skinMeshNode->getSkinMesh());
+		skinMeshNode->getSkinMesh()->updateRenderObject(*this);
 	skinMeshNode->markUndirty();
 }
 
@@ -46,11 +46,19 @@ void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &mate
 	material->markUndirty();
 }
 
-void RendererObjectManager::updateMesh(const std::shared_ptr<Mesh> &mesh) {
+void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<DynamicMesh> &mesh) {
 	mesh->markUndirty();
 }
 
-void RendererObjectManager::updateSkinMesh(const std::shared_ptr<SkinMesh> &skinmesh) {
+void RendererObjectManager::updateStaticMesh(const std::shared_ptr<StaticMesh> &mesh) {
+	mesh->markUndirty();
+}
+
+void RendererObjectManager::updateDynamicSkinMesh(const std::shared_ptr<DynamicSkinMesh> &skinmesh) {
+	skinmesh->markUndirty();
+}
+
+void RendererObjectManager::updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh) {
 	skinmesh->markUndirty();
 }
 

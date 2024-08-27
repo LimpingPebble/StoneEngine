@@ -9,7 +9,7 @@
 #include <vulkan/vulkan.h>
 
 namespace Stone::Scene {
-class Mesh;
+class DynamicMesh;
 } // namespace Stone::Scene
 
 namespace Stone::Render::Vulkan {
@@ -21,7 +21,7 @@ class SwapChain;
 
 class Mesh : public Scene::IRendererObject {
 public:
-	Mesh(const std::shared_ptr<Scene::Mesh> &mesh, const std::shared_ptr<VulkanRenderer> &renderer);
+	Mesh(const std::shared_ptr<Scene::DynamicMesh> &mesh, const std::shared_ptr<VulkanRenderer> &renderer);
 
 	~Mesh() override;
 
