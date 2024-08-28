@@ -34,6 +34,7 @@ class IMeshInterface;
 class DynamicMesh;
 class StaticMesh;
 class Skeleton;
+class ISkinMeshInterface;
 class DynamicSkinMesh;
 class StaticSkinMesh;
 

@@ -27,30 +27,30 @@ static Assimp::Importer &getAssimpImporter() {
 	return *_assimpImporter;
 }
 
-glm::vec3 convert(const aiVector3D &vector) {
+inline glm::vec3 convert(const aiVector3D &vector) {
 	return {vector.x, vector.y, vector.z};
 }
 
-glm::vec2 convert(const aiVector2D &vector) {
+inline glm::vec2 convert(const aiVector2D &vector) {
     return {vector.x, vector.y};
 }
 
-glm::mat4 convert(const aiMatrix4x4 &matrix) {
+inline glm::mat4 convert(const aiMatrix4x4 &matrix) {
     return {matrix.a1, matrix.a2, matrix.a3, matrix.a4,
                      matrix.b1, matrix.b2, matrix.b3, matrix.b4,
                      matrix.c1, matrix.c2, matrix.c3, matrix.c4,
                      matrix.d1, matrix.d2, matrix.d3, matrix.d4};
 }
 
-glm::quat convert(const aiQuaternion &quaternion) {
+inline glm::quat convert(const aiQuaternion &quaternion) {
     return {quaternion.w, quaternion.x, quaternion.y, quaternion.z};
 }
 
-glm::vec3 convert(const aiColor3D &color) {
+inline glm::vec3 convert(const aiColor3D &color) {
     return {color.r, color.g, color.b};
 }
 
-glm::vec4 convert(const aiColor4D &color) {
+inline glm::vec4 convert(const aiColor4D &color) {
     return {color.r, color.g, color.b, color.a};
 }
 
@@ -118,12 +118,101 @@ void loadTextures(AssetResource &assetResource, const aiScene *scene) {
     }
 }
 
+void addMaterialScalar(
+    const aiMaterial *material,
+    const std::shared_ptr<Material> &newMaterial,
+    const char *key,
+    unsigned int type,
+    unsigned int idx,
+    const std::string &name) {
+
+    float scalar;
+    if (material->Get(key, type, idx, scalar) == AI_SUCCESS) {
+        newMaterial->setScalarParameter(name, scalar);
+    }
+}
+
+void addMaterialColor(
+    const aiMaterial *material,
+    const std::shared_ptr<Material> &newMaterial,
+    const char *key,
+    unsigned int type,
+    unsigned int idx,
+    const std::string &name) {
+
+    aiColor3D color;
+    if (material->Get(key, type, idx, color) == AI_SUCCESS) {
+        newMaterial->setVectorParameter(name, convert(color));
+    }
+}
+
+void addMaterialTexture(
+    AssetResource &assetResource,
+    const aiMaterial *material,
+    const std::shared_ptr<Material> &newMaterial,
+    aiTextureType type,
+    const std::string &name) {
+
+    if (material->GetTextureCount(type) <= 0)
+        return;
+
+    aiString texturePath;
+    if (material->GetTexture(type, 0, &texturePath) != AI_SUCCESS)
+        return;
+
+    std::string texturePathStr = texturePath.C_Str();
+    if (texturePathStr.empty())
+        return;
+
+    if (texturePathStr[0] == '*') {
+        int textureIndex = std::stoi(texturePathStr.substr(1));
+        if (textureIndex >= 0
+            && textureIndex < static_cast<int>(assetResource.textures.size())) {
+            std::shared_ptr<Texture> texture = assetResource.textures[textureIndex];
+            newMaterial->setTextureParameter(name, texture);
+        }
+    } else {
+        std::shared_ptr<Image::ImageSource> textureSource = assetResource.imagesAlbum->loadImage(texturePathStr);
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+        texture->setImage(textureSource);
+        newMaterial->setTextureParameter(name, texture);
+    }
+}
+
 void loadMaterial(AssetResource &assetResource, const aiMaterial *material) {
     std::shared_ptr<Material> newMaterial = std::make_shared<Material>();
 
-    // TODO: Load Material
-    // material->Get();
-    // newMaterial->setTextureParameter("diffuse", assetResource.imagesAlbum->getImage(material->GetTexture(aiTextureType_DIFFUSE, 0)->mFilename.C_Str()));
+    addMaterialColor(material, newMaterial, AI_MATKEY_COLOR_DIFFUSE, "diffuse");
+    addMaterialColor(material, newMaterial, AI_MATKEY_COLOR_SPECULAR, "specular");
+    addMaterialColor(material, newMaterial, AI_MATKEY_COLOR_AMBIENT, "ambient");
+    addMaterialColor(material, newMaterial, AI_MATKEY_COLOR_EMISSIVE, "emissive");
+    addMaterialScalar(material, newMaterial, AI_MATKEY_SHININESS, "shininess");
+    addMaterialScalar(material, newMaterial, AI_MATKEY_OPACITY, "opacity");
+
+    addMaterialScalar(material, newMaterial, AI_MATKEY_ROUGHNESS_FACTOR, "roughness");
+    addMaterialScalar(material, newMaterial, AI_MATKEY_METALLIC_FACTOR, "metallic");
+    addMaterialScalar(material, newMaterial, AI_MATKEY_REFLECTIVITY, "reflectivity");
+
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_DIFFUSE, "diffuse");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_SPECULAR, "specular");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_AMBIENT, "ambient");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_EMISSIVE, "emissive");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_HEIGHT, "height");   
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_NORMALS, "normals");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_SHININESS, "shininess");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_OPACITY, "opacity");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_DISPLACEMENT, "displacement");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_LIGHTMAP, "lightmap");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_REFLECTION, "reflection");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_BASE_COLOR, "color");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_NORMAL_CAMERA, "normal_camera");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_EMISSION_COLOR, "emission_color");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_METALNESS, "metalness");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_DIFFUSE_ROUGHNESS, "roughness");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_AMBIENT_OCCLUSION, "occlusion");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_SHEEN, "sheen");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_CLEARCOAT, "clearcoat");
+    addMaterialTexture(assetResource, material, newMaterial, aiTextureType_TRANSMISSION, "transmission");
 
     assetResource.materials.push_back(newMaterial);
 }
@@ -148,7 +237,7 @@ void loadNode(AssetResource &assetResource, const aiNode *node, const std::share
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         const unsigned int meshIndex = node->mMeshes[i];
         auto assetMesh = assetResource.meshes[meshIndex];
-        assert(meshIndex >= 0 && meshIndex < assetResource.meshes.size());
+        assert(meshIndex < assetResource.meshes.size());
 
         if (auto asSkinMesh = std::dynamic_pointer_cast<ISkinMeshInterface>(assetMesh)) {
             std::shared_ptr<SkinMeshNode> skinMeshNode = std::make_shared<SkinMeshNode>("mesh_" + std::to_string(i));
