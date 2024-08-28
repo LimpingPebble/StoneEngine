@@ -21,6 +21,7 @@ struct Vertex {
 	Vertex() = default;
 	Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b, const glm::vec2 &uv);
 	Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv);
+	Vertex(const glm::vec3 &p, const glm::vec2 &uv);
 };
 
 /**
@@ -32,8 +33,9 @@ struct WeightVertex : Vertex {
 
 	WeightVertex() = default;
 	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b, const glm::vec2 &uv,
-				 const glm::vec4 &w, const glm::ivec4 &i);
+				 const glm::vec4 &w = glm::vec4(0), const glm::ivec4 &i = glm::ivec4(0));
 	WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv);
+	WeightVertex(const glm::vec3 &p, const glm::vec2 &uv);
 };
 
 /**

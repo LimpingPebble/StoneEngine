@@ -54,41 +54,74 @@ inline glm::vec4 convert(const aiColor4D &color) {
     return {color.r, color.g, color.b, color.a};
 }
 
+template <typename VertexType>
+void emplace_vertices(std::vector<VertexType> &vertices, const aiMesh *mesh) {
+    vertices.reserve(mesh->mNumVertices);
+    if (mesh->HasNormals()) {
+        if (mesh->HasTangentsAndBitangents()) {
+            for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+                vertices.emplace_back(
+                    convert(mesh->mVertices[i]),
+                    convert(mesh->mNormals[i]),
+                    convert(mesh->mTangents[i]),
+                    convert(mesh->mBitangents[i]),
+                    mesh->mTextureCoords[0] ? convert(mesh->mTextureCoords[0][i]) : glm::vec2(0.0f)
+                );
+            }
+        } else {
+            for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+                vertices.emplace_back(
+                    convert(mesh->mVertices[i]),
+                    convert(mesh->mNormals[i]),
+                    mesh->mTextureCoords[0] ? convert(mesh->mTextureCoords[0][i]) : glm::vec2(0.0f)
+                );
+            }
+        }
+    } else {
+        for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+            vertices.emplace_back(
+                convert(mesh->mVertices[i]),
+                mesh->mTextureCoords[0] ? convert(mesh->mTextureCoords[0][i]) : glm::vec2(0.0f)
+            );
+        }
+    }
+}
+
+void emplace_indices(std::vector<uint32_t> &indices, const aiMesh *mesh) {
+    indices.reserve(mesh->mNumFaces * 3);
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        const aiFace &face = mesh->mFaces[i];
+        assert(face.mNumIndices == 3);
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            indices.push_back(face.mIndices[j]);
+        }
+    }
+}
+
 void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicMesh> newMesh = std::make_shared<DynamicMesh>();
 
-	newMesh->verticesRef().reserve(mesh->mNumVertices);
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-		newMesh->verticesRef().emplace_back(
-            convert(mesh->mVertices[i]),
-            convert(mesh->mNormals[i]),
-            convert(mesh->mTangents[i]),
-            convert(mesh->mBitangents[i]),
-            mesh->mTextureCoords[0] ? convert(mesh->mTextureCoords[0][i]) : glm::vec2(0.0f)
-        );
-	}
-
-	newMesh->indicesRef().reserve(mesh->mNumFaces * 3);
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
-		const aiFace &face = mesh->mFaces[i];
-		assert(face.mNumIndices == 3);
-		for (unsigned int j = 0; j < face.mNumIndices; j++) {
-			newMesh->indicesRef().push_back(face.mIndices[j]);
-		}
-	}
+    emplace_vertices(newMesh->verticesRef(), mesh);
+    emplace_indices(newMesh->indicesRef(), mesh);
 
     std::shared_ptr<StaticMesh> newStaticMesh = std::make_shared<StaticMesh>();
     newStaticMesh->setSourceMesh(newMesh);
 
-	AssetResource.meshes.push_back(newMesh);
+	AssetResource.meshes.push_back(newStaticMesh);
 }
 
 void loadSkinMesh(AssetResource &AssetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicSkinMesh> newMesh = std::make_shared<DynamicSkinMesh>();
 
-    // TODO: Load skin mesh
+    emplace_vertices(newMesh->verticesRef(), mesh);
+    emplace_indices(newMesh->indicesRef(), mesh);
 
-	AssetResource.meshes.push_back(newMesh);
+    // TODO: Load bones and weights. REQUIREMENT: Skeleton must be loaded first.
+
+    std::shared_ptr<StaticSkinMesh> newStaticMesh = std::make_shared<StaticSkinMesh>();
+    newStaticMesh->setSourceMesh(newMesh);
+
+	AssetResource.meshes.push_back(newStaticMesh);
 }
 
 void loadMeshes(AssetResource &assetResource, const aiScene *scene) {
@@ -163,6 +196,8 @@ void addMaterialTexture(
     std::string texturePathStr = texturePath.C_Str();
     if (texturePathStr.empty())
         return;
+
+    texturePathStr = assetResource.directory + "/" + texturePathStr;
 
     if (texturePathStr[0] == '*') {
         int textureIndex = std::stoi(texturePathStr.substr(1));
