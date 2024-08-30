@@ -1,6 +1,6 @@
 // Copyrighted 2024 Stone-Engine
 
-#include "Scene/AssetResource.hpp"
+#include "Scene/AssetsManager.hpp"
 
 namespace Stone::Scene {
 
@@ -17,5 +17,14 @@ AssetResource::AssetResource(const std::string &filepath, const std::shared_ptr<
 		this->imagesAlbum = std::make_shared<Image::Album>();
 	}
 };
+
+std::shared_ptr<AssetResource> AssetResource::load(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum)
+{
+	if (filepath.ends_with(".stone")) {
+		return loadStone(filepath, imagesAlbum);
+	} else {
+		return loadAssimp(filepath, imagesAlbum);
+	}
+}
 
 } // namespace Stone::Scene

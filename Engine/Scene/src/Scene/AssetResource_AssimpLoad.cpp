@@ -1,7 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "Core/Exceptions.hpp"
-#include "Scene/AssetResource.hpp"
+#include "Scene/AssetsManager.hpp"
 #include "Scene/Node/Node.hpp"
 #include "Scene/Node/PivotNode.hpp"
 #include "Scene/Node/MeshNode.hpp"
@@ -287,10 +287,11 @@ void loadNode(AssetResource &assetResource, const aiNode *node, const std::share
 
 }
 
-std::shared_ptr<Node> Node::load(const std::string &path) {
+std::shared_ptr<AssetResource> AssetResource::loadAssimp(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum)
+{
 	Assimp::Importer &importer = getAssimpImporter();
 
-	const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs |
+	const aiScene *scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs |
 													   aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
 
     // Additional flags:
@@ -298,12 +299,12 @@ std::shared_ptr<Node> Node::load(const std::string &path) {
     // aiProcess_SplitLargeMeshes
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		throw Core::FileLoadingError(path, importer.GetErrorString());
+		throw Core::FileLoadingError(filepath, importer.GetErrorString());
 	}
 
-	AssetResource assetResource(path);
+	std::shared_ptr<AssetResource> assetResource = std::make_shared<AssetResource>(filepath);
 
-    assetResource.rootNode = std::make_shared<PivotNode>(scene->mRootNode->mName.C_Str());
+    assetResource->rootNode = std::make_shared<PivotNode>(scene->mRootNode->mName.C_Str());
 
 	std::cout << "scene "
 			  << "validated: " << (scene->mFlags & AI_SCENE_FLAGS_VALIDATED) << " | "
@@ -343,13 +344,15 @@ std::shared_ptr<Node> Node::load(const std::string &path) {
     */
 
 
-	loadMeshes(assetResource, scene);
-    loadTextures(assetResource, scene);
-    loadMaterials(assetResource, scene);
+	loadMeshes(*assetResource, scene);
+    loadTextures(*assetResource, scene);
+    loadMaterials(*assetResource, scene);
 
-    loadNode(assetResource, scene->mRootNode, assetResource.rootNode);
+    loadNode(*assetResource, scene->mRootNode, assetResource->rootNode);
 
-	return assetResource.rootNode;
+    
+
+	return assetResource;
 }
 
 } // namespace Stone::Scene

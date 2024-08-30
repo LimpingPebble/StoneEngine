@@ -4,9 +4,11 @@
 #include <Windows.h>
 #endif
 
+#include <filesystem>
 #include "Core/Image/ImageSource.hpp"
 #include "Scene.hpp"
 #include "Window.hpp"
+#include "Scene/AssetsManager.hpp"
 
 class RotatingNode : public Stone::Scene::PivotNode {
 public:
@@ -33,6 +35,8 @@ int main(int argc, char **argv) {
 #ifdef _WIN32
 	SetConsoleOutputCP(CP_UTF8);
 #endif
+
+	std::cout << "Starting in directory " << std::filesystem::current_path() << std::endl;
 
 	int retCode;
 	{
@@ -102,7 +106,8 @@ int main(int argc, char **argv) {
 
         // Load a node from a file
         if (argc > 1) {
-            auto node = Stone::Scene::Node::load(argv[1]);
+			auto asset = Stone::Scene::AssetResource::load(argv[1]);
+            auto node = asset->rootNode;
             window->getWorld()->addChild(node);
             node->writeHierarchy(std::cout);
         }

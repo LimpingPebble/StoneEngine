@@ -40,6 +40,14 @@ struct AssetResource {
 	std::vector<std::shared_ptr<Texture>> textures;
     std::vector<std::shared_ptr<Material>> materials;
     std::shared_ptr<PivotNode> rootNode;
+
+	static std::shared_ptr<AssetResource> load(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum = nullptr);
+
+private:
+
+	static std::shared_ptr<AssetResource> loadAssimp(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum);
+	static std::shared_ptr<AssetResource> loadStone(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum);
+
 };
 
 } // namespace Stone::Scene
