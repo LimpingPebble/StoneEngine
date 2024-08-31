@@ -1,7 +1,9 @@
 // Copyright 2024 Stone-Engine
 
+#include "Core/Assets/Bundle.hpp"
+#include "Core/Image/ImageSource.hpp"
 #include "Core/Exceptions.hpp"
-#include "Scene/AssetsManager.hpp"
+#include "Scene/Assets/AssetResource.hpp"
 #include "Scene/Node/Node.hpp"
 #include "Scene/Node/PivotNode.hpp"
 #include "Scene/Node/MeshNode.hpp"
@@ -98,7 +100,7 @@ void emplace_indices(std::vector<uint32_t> &indices, const aiMesh *mesh) {
     }
 }
 
-void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
+void loadMesh(AssetResource &assetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicMesh> newMesh = std::make_shared<DynamicMesh>();
 
     emplace_vertices(newMesh->verticesRef(), mesh);
@@ -107,10 +109,10 @@ void loadMesh(AssetResource &AssetResource, const aiMesh *mesh) {
     std::shared_ptr<StaticMesh> newStaticMesh = std::make_shared<StaticMesh>();
     newStaticMesh->setSourceMesh(newMesh);
 
-	AssetResource.meshes.push_back(newStaticMesh);
+	assetResource.getMeshesRef().push_back(newStaticMesh);
 }
 
-void loadSkinMesh(AssetResource &AssetResource, const aiMesh *mesh) {
+void loadSkinMesh(AssetResource &assetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicSkinMesh> newMesh = std::make_shared<DynamicSkinMesh>();
 
     emplace_vertices(newMesh->verticesRef(), mesh);
@@ -121,7 +123,7 @@ void loadSkinMesh(AssetResource &AssetResource, const aiMesh *mesh) {
     std::shared_ptr<StaticSkinMesh> newStaticMesh = std::make_shared<StaticSkinMesh>();
     newStaticMesh->setSourceMesh(newMesh);
 
-	AssetResource.meshes.push_back(newStaticMesh);
+	assetResource.getMeshesRef().push_back(newStaticMesh);
 }
 
 void loadMeshes(AssetResource &assetResource, const aiScene *scene) {
@@ -136,12 +138,12 @@ void loadMeshes(AssetResource &assetResource, const aiScene *scene) {
 }
 
 void loadTexture(AssetResource &assetResource, const aiTexture *texture) {
-    auto image = assetResource.imagesAlbum->loadImage(texture->mFilename.C_Str());
+    auto image = assetResource.getBundle()->loadResource<Core::Image::ImageSource>(texture->mFilename.C_Str());
     
     std::shared_ptr<Texture> newTexture = std::make_shared<Texture>();
     newTexture->setImage(image);
 
-    assetResource.textures.push_back(newTexture);
+    assetResource.getTexturesRef().push_back(newTexture);
 }
 
 void loadTextures(AssetResource &assetResource, const aiScene *scene) {
@@ -197,17 +199,17 @@ void addMaterialTexture(
     if (texturePathStr.empty())
         return;
 
-    texturePathStr = assetResource.directory + "/" + texturePathStr;
+    texturePathStr = assetResource.getSubDirectory() + "/" + texturePathStr;
 
     if (texturePathStr[0] == '*') {
         int textureIndex = std::stoi(texturePathStr.substr(1));
         if (textureIndex >= 0
-            && textureIndex < static_cast<int>(assetResource.textures.size())) {
-            std::shared_ptr<Texture> texture = assetResource.textures[textureIndex];
+            && textureIndex < static_cast<int>(assetResource.getTextures().size())) {
+            std::shared_ptr<Texture> texture = assetResource.getTextures()[textureIndex];
             newMaterial->setTextureParameter(name, texture);
         }
     } else {
-        std::shared_ptr<Image::ImageSource> textureSource = assetResource.imagesAlbum->loadImage(texturePathStr);
+        std::shared_ptr<Core::Image::ImageSource> textureSource = assetResource.getBundle()->loadResource<Core::Image::ImageSource>(texturePathStr);
         std::shared_ptr<Texture> texture = std::make_shared<Texture>();
         texture->setImage(textureSource);
         newMaterial->setTextureParameter(name, texture);
@@ -249,7 +251,7 @@ void loadMaterial(AssetResource &assetResource, const aiMaterial *material) {
     addMaterialTexture(assetResource, material, newMaterial, aiTextureType_CLEARCOAT, "clearcoat");
     addMaterialTexture(assetResource, material, newMaterial, aiTextureType_TRANSMISSION, "transmission");
 
-    assetResource.materials.push_back(newMaterial);
+    assetResource.getMaterialsRef().push_back(newMaterial);
 }
 
 void loadMaterials(AssetResource &assetResource, const aiScene *scene) {
@@ -271,8 +273,8 @@ void loadNode(AssetResource &assetResource, const aiNode *node, const std::share
 
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         const unsigned int meshIndex = node->mMeshes[i];
-        auto assetMesh = assetResource.meshes[meshIndex];
-        assert(meshIndex < assetResource.meshes.size());
+        auto assetMesh = assetResource.getMeshes()[meshIndex];
+        assert(meshIndex < assetResource.getMeshes().size());
 
         if (auto asSkinMesh = std::dynamic_pointer_cast<ISkinMeshInterface>(assetMesh)) {
             std::shared_ptr<SkinMeshNode> skinMeshNode = std::make_shared<SkinMeshNode>("mesh_" + std::to_string(i));
@@ -287,11 +289,10 @@ void loadNode(AssetResource &assetResource, const aiNode *node, const std::share
 
 }
 
-std::shared_ptr<AssetResource> AssetResource::loadAssimp(const std::string &filepath, const std::shared_ptr<Image::Album> &imagesAlbum)
-{
+void AssetResource::loadFromAssimp() {
 	Assimp::Importer &importer = getAssimpImporter();
 
-	const aiScene *scene = importer.ReadFile(filepath, aiProcess_Triangulate | aiProcess_FlipUVs |
+	const aiScene *scene = importer.ReadFile(getFullPath(), aiProcess_Triangulate | aiProcess_FlipUVs |
 													   aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
 
     // Additional flags:
@@ -299,12 +300,10 @@ std::shared_ptr<AssetResource> AssetResource::loadAssimp(const std::string &file
     // aiProcess_SplitLargeMeshes
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		throw Core::FileLoadingError(filepath, importer.GetErrorString());
+		throw Core::FileLoadingError(getFullPath(), importer.GetErrorString());
 	}
 
-	std::shared_ptr<AssetResource> assetResource = std::make_shared<AssetResource>(filepath);
-
-    assetResource->rootNode = std::make_shared<PivotNode>(scene->mRootNode->mName.C_Str());
+    _rootNode = std::make_shared<PivotNode>(scene->mRootNode->mName.C_Str());
 
 	std::cout << "scene "
 			  << "validated: " << (scene->mFlags & AI_SCENE_FLAGS_VALIDATED) << " | "
@@ -344,15 +343,11 @@ std::shared_ptr<AssetResource> AssetResource::loadAssimp(const std::string &file
     */
 
 
-	loadMeshes(*assetResource, scene);
-    loadTextures(*assetResource, scene);
-    loadMaterials(*assetResource, scene);
+	loadMeshes(*this, scene);
+    loadTextures(*this, scene);
+    loadMaterials(*this, scene);
 
-    loadNode(*assetResource, scene->mRootNode, assetResource->rootNode);
-
-    
-
-	return assetResource;
+    loadNode(*this, scene->mRootNode, _rootNode);
 }
 
 } // namespace Stone::Scene

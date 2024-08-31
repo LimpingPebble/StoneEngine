@@ -9,7 +9,7 @@
 
 namespace Stone::Render::Vulkan {
 
-VkFormat imageChannelToVkFormat(Image::Channel channel);
+VkFormat imageChannelToVkFormat(Core::Image::Channel channel);
 
 VkFilter textureFilterToVkFilter(Scene::TextureFilter filter);
 

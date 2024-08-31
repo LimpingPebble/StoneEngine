@@ -8,7 +8,8 @@
 #include "Core/Image/ImageSource.hpp"
 #include "Scene.hpp"
 #include "Window.hpp"
-#include "Scene/AssetsManager.hpp"
+#include "Core/Assets/Bundle.hpp"
+#include "Scene/Assets/AssetResource.hpp"
 
 class RotatingNode : public Stone::Scene::PivotNode {
 public:
@@ -48,6 +49,9 @@ int main(int argc, char **argv) {
 		win_settings.title = "Scop";
 		auto window = app->createWindow(win_settings);
 
+        // Create the assets bundle
+        auto assetsBundle = std::make_shared<Stone::Core::Assets::Bundle>();
+
 		// Generate a Mesh
 		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
 		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
@@ -70,8 +74,7 @@ int main(int argc, char **argv) {
 
 		// Create a Texture
 		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
-		auto stone_image_source =
-			std::make_shared<Stone::Image::ImageSource>("docs/img/stone-engine.png", Stone::Image::Channel::RGBA);
+		auto stone_image_source = assetsBundle->loadResource<Stone::Core::Image::ImageSource>("docs/img/stone-engine.png", Stone::Core::Image::Channel::RGBA);
 		stone_texture->setImage(stone_image_source);
 
 		// Create a Material using the texture
@@ -106,8 +109,8 @@ int main(int argc, char **argv) {
 
         // Load a node from a file
         if (argc > 1) {
-			auto asset = Stone::Scene::AssetResource::load(argv[1]);
-            auto node = asset->rootNode;
+			auto asset = assetsBundle->loadResource<Stone::Scene::AssetResource>(argv[1]);
+            auto node = asset->getRootNode();
             window->getWorld()->addChild(node);
             node->writeHierarchy(std::cout);
         }

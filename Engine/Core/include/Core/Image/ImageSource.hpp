@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "Core/Object.hpp"
+#include "Core/Assets/Resource.hpp"
 #include "ImageTypes.hpp"
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
 class ImageData;
 
@@ -14,15 +14,10 @@ class ImageData;
  * it is used to hold reference to the image file and the channels of the image.
  * It is used to load the image data when needed and hold the reference to the loaded image data.
  */
-class ImageSource : public Core::Object {
+class ImageSource : public Assets::Resource {
 public:
-	/**
-	 * @brief Construct a new Image Header object
-	 *
-	 * @param path The path to the image file
-	 * @param channels The number of channels in the image
-	 */
-	explicit ImageSource(std::string path, Channel channels = Channel::RGBA);
+
+    ImageSource(const std::shared_ptr<Assets::Bundle>& bundle, const std::string &filepath, Channel channels = Channel::RGBA);
 
 	ImageSource() = delete;
 	ImageSource(const ImageSource &other) = delete;
@@ -37,8 +32,8 @@ public:
 	[[nodiscard]] Channel getChannels() const;
 	[[nodiscard]] Size getSize() const;
 
-	void loadData(bool force = false);
-	void unloadData();
+	void unloadData() override;
+	void loadData(bool force) override;
 
 	[[nodiscard]] bool isLoaded() const;
 	[[nodiscard]] std::shared_ptr<ImageData> getLoadedImage() const;
@@ -52,4 +47,4 @@ protected:
 	std::shared_ptr<ImageData> _loadedImage = nullptr;
 };
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

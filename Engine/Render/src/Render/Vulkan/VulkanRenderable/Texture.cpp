@@ -43,7 +43,7 @@ VkSampler Texture::getSampler() const {
 
 void Texture::_createTextureImage() {
 	auto texture = _sceneTexture.lock();
-	const std::shared_ptr<Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
+	const std::shared_ptr<Core::Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
 
 	VkDeviceSize imageSize = image->getSize().x * image->getSize().y * static_cast<int>(image->getChannels());
 	auto [stagingBuffer, stagingBufferMemory] =
@@ -81,7 +81,7 @@ void Texture::_destroyTextureImage() {
 
 void Texture::_createTextureImageView() {
 	auto texture = _sceneTexture.lock();
-	const std::shared_ptr<Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
+	const std::shared_ptr<Core::Image::ImageData> &image = texture->getImage()->getLoadedImage(true);
 
 	_textureImageView = _device->createImageView(_textureImage, imageChannelToVkFormat(image->getChannels()));
 }

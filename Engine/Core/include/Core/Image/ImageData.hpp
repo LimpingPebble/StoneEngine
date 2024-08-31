@@ -5,18 +5,18 @@
 #include "Core/Object.hpp"
 #include "ImageTypes.hpp"
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
 class ImageSource;
 
-class ImageData : public Core::Object {
+class ImageData : public Object {
 public:
 	ImageData() = delete;
 	ImageData(const ImageData &other) = delete;
 
 	~ImageData() override;
 
-	const char *getClassName() const override;
+	[[nodiscard]] const char *getClassName() const override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -38,4 +38,4 @@ protected:
 	friend ImageSource;
 };
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

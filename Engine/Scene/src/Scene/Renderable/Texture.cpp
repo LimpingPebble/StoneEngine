@@ -23,12 +23,12 @@ void Texture::updateRenderObject(RendererObjectManager &manager) {
 	manager.updateTexture(std::static_pointer_cast<Texture>(shared_from_this()));
 }
 
-void Texture::setImage(const std::shared_ptr<Image::ImageSource> &image) {
+void Texture::setImage(const std::shared_ptr<Core::Image::ImageSource> &image) {
 	_image = image;
 	markDirty();
 }
 
-const std::shared_ptr<Image::ImageSource> &Texture::getImage() const {
+const std::shared_ptr<Core::Image::ImageSource> &Texture::getImage() const {
 	return _image;
 }
 

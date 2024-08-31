@@ -5,7 +5,7 @@
 #include "Core/Object.hpp"
 #include "Scene/Renderable/IRenderable.hpp"
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 class ImageSource;
 }
 
@@ -60,12 +60,12 @@ public:
 	 *
 	 * @param image The image to set.
 	 */
-	void setImage(const std::shared_ptr<Image::ImageSource> &image);
+	void setImage(const std::shared_ptr<Core::Image::ImageSource> &image);
 
 	/**
 	 * @brief Get the image associated with the Texture.
 	 */
-	[[nodiscard]] const std::shared_ptr<Image::ImageSource> &getImage() const;
+	[[nodiscard]] const std::shared_ptr<Core::Image::ImageSource> &getImage() const;
 
 	/**
 	 * @brief Set the wrap mode for the Texture.
@@ -104,7 +104,7 @@ public:
 	[[nodiscard]] TextureFilter getMagFilter() const;
 
 protected:
-	std::shared_ptr<Image::ImageSource> _image; /**< The image associated with the Texture. */
+	std::shared_ptr<Core::Image::ImageSource> _image; /**< The image associated with the Texture. */
 
 	TextureWrap _wrap = TextureWrap::Repeat;		  /**< The wrap mode for the Texture. */
 	TextureFilter _minFilter = TextureFilter::Linear; /**< The minification filter for the Texture. */
