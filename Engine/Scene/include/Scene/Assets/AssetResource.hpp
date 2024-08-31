@@ -19,15 +19,11 @@ public:
 
     AssetResource(const std::shared_ptr<Core::Assets::Bundle>& bundle, const std::string &filepath);
 
-    ~AssetResource() override;
+    ~AssetResource() override = default;
 
     const char *getClassName() const override;
 
     std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-
-    void unloadData() override;
-    void loadData(bool force) override;
 
     const std::vector<std::shared_ptr<IMeshObject>>& getMeshes() const;
     std::vector<std::shared_ptr<IMeshObject>>& getMeshesRef();
@@ -47,6 +43,7 @@ protected:
     std::vector<std::shared_ptr<Material>> _materials;
     std::shared_ptr<PivotNode> _rootNode;
 
+    void loadData();
 	void loadFromAssimp();
 	void loadFromStone();
 

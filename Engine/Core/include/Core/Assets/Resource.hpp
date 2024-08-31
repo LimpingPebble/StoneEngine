@@ -17,9 +17,6 @@ public:
 
     Resource(const std::shared_ptr<Bundle>& bundle, const std::string &filepath);
 
-    virtual void unloadData() = 0;
-    virtual void loadData(bool force = false) = 0;
-
     std::shared_ptr<Bundle> getBundle() const;
 
     const std::string &getFilename() const;

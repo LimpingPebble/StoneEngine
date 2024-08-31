@@ -32,8 +32,8 @@ public:
 	[[nodiscard]] Channel getChannels() const;
 	[[nodiscard]] Size getSize() const;
 
-	void unloadData() override;
-	void loadData(bool force) override;
+	void unloadData();
+	void loadData(bool force);
 
 	[[nodiscard]] bool isLoaded() const;
 	[[nodiscard]] std::shared_ptr<ImageData> getLoadedImage() const;
