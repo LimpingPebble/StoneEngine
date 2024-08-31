@@ -54,8 +54,8 @@ const std::shared_ptr<DynamicMesh> &StaticMesh::getSourceMesh() const {
 	return _dynamicMesh;
 }
 
-void StaticMesh::setSourceMesh(const std::shared_ptr<DynamicMesh> &dynamicMesh) {
-	_dynamicMesh = dynamicMesh;
+void StaticMesh::setSourceMesh(const std::shared_ptr<DynamicMesh> &sourceMesh) {
+	_dynamicMesh = sourceMesh;
 	markDirty();
 }
 

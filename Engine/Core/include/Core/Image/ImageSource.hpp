@@ -16,8 +16,8 @@ class ImageData;
  */
 class ImageSource : public Assets::Resource {
 public:
-
-    ImageSource(const std::shared_ptr<Assets::Bundle>& bundle, const std::string &filepath, Channel channels = Channel::RGBA);
+	ImageSource(const std::shared_ptr<Assets::Bundle> &bundle, const std::string &filepath,
+				Channel channels = Channel::RGBA);
 
 	ImageSource() = delete;
 	ImageSource(const ImageSource &other) = delete;

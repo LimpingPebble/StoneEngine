@@ -4,9 +4,7 @@
 
 namespace Stone::Scene {
 
-void AssetResource::loadFromStone()
-{
-    
+void AssetResource::loadFromStone() {
 }
 
 } // namespace Stone::Scene

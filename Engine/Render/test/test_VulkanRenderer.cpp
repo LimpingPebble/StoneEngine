@@ -1,5 +1,5 @@
-#include "Render/Vulkan/VulkanRenderer.hpp"
 #include "Render/Vulkan/RendererSettings.hpp"
+#include "Render/Vulkan/VulkanRenderer.hpp"
 
 #include <gtest/gtest.h>
 
@@ -8,7 +8,7 @@ using namespace Stone::Scene;
 
 TEST(VulkanRender, InstanciateCore) {
 	RendererSettings settings;
-	
+
 	try {
 		VulkanRenderer renderer(settings);
 	} catch (const std::runtime_error &e) {
@@ -17,8 +17,7 @@ TEST(VulkanRender, InstanciateCore) {
 		} else {
 			FAIL() << e.what();
 		}
-	}
-	catch (const std::exception &e) {
+	} catch (const std::exception &e) {
 		FAIL() << e.what();
 	}
 }

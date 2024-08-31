@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "VulkanCore.hpp"
+
 #include "../Utilities/VulkanUtilities.hpp"
 
 #include <iostream>
@@ -9,9 +10,9 @@
 namespace Stone::Render::Vulkan {
 
 VKAPI_ATTR VkBool32 VKAPI_CALL validationLayerMessageCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-											 VkDebugUtilsMessageTypeFlagsEXT messageType,
-											 const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
-											 void *pUserData) {
+															  VkDebugUtilsMessageTypeFlagsEXT messageType,
+															  const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
+															  void *pUserData) {
 	(void)pUserData;
 	// TODO: Log message with logging module
 	if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
@@ -44,7 +45,7 @@ VulkanCore::~VulkanCore() {
 }
 
 void VulkanCore::waitIdle() const {
-    vkDeviceWaitIdle(_device);
+	vkDeviceWaitIdle(_device);
 }
 
 
@@ -172,7 +173,7 @@ bool checkDeviceExtensionSupport(VkPhysicalDevice device, const std::vector<cons
 int deviceSuitability(VkPhysicalDevice device, VkSurfaceKHR surface,
 					  const std::vector<const char *> &deviceExtensions) {
 
-    // TODO: Implement scoring system structure
+	// TODO: Implement scoring system structure
 
 	if (device == VK_NULL_HANDLE) {
 		return -1;

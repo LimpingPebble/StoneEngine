@@ -4,12 +4,13 @@
 #include <Windows.h>
 #endif
 
-#include <filesystem>
+#include "Core/Assets/Bundle.hpp"
 #include "Core/Image/ImageSource.hpp"
 #include "Scene.hpp"
-#include "Window.hpp"
-#include "Core/Assets/Bundle.hpp"
 #include "Scene/Assets/AssetResource.hpp"
+#include "Window.hpp"
+
+#include <filesystem>
 
 class RotatingNode : public Stone::Scene::PivotNode {
 public:
@@ -49,8 +50,8 @@ int main(int argc, char **argv) {
 		win_settings.title = "Scop";
 		auto window = app->createWindow(win_settings);
 
-        // Create the assets bundle
-        auto assetsBundle = std::make_shared<Stone::Core::Assets::Bundle>();
+		// Create the assets bundle
+		auto assetsBundle = std::make_shared<Stone::Core::Assets::Bundle>();
 
 		// Generate a Mesh
 		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
@@ -74,7 +75,8 @@ int main(int argc, char **argv) {
 
 		// Create a Texture
 		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
-		auto stone_image_source = assetsBundle->loadResource<Stone::Core::Image::ImageSource>("docs/img/stone-engine.png", Stone::Core::Image::Channel::RGBA);
+		auto stone_image_source = assetsBundle->loadResource<Stone::Core::Image::ImageSource>(
+			"docs/img/stone-engine.png", Stone::Core::Image::Channel::RGBA);
 		stone_texture->setImage(stone_image_source);
 
 		// Create a Material using the texture
@@ -107,13 +109,13 @@ int main(int argc, char **argv) {
 		cameraNode->getTransform().rotate({-0.6f, 0.0f, 0.0f});
 		window->getWorld()->setActiveCamera(cameraNode);
 
-        // Load a node from a file
-        if (argc > 1) {
+		// Load a node from a file
+		if (argc > 1) {
 			auto asset = assetsBundle->loadResource<Stone::Scene::AssetResource>(argv[1]);
-            auto node = asset->getRootNode();
-            window->getWorld()->addChild(node);
-            node->writeHierarchy(std::cout);
-        }
+			auto node = asset->getRootNode();
+			window->getWorld()->addChild(node);
+			node->writeHierarchy(std::cout);
+		}
 
 		// Run the App
 		retCode = app->run();

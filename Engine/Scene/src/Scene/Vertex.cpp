@@ -21,8 +21,7 @@ Vertex::Vertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec2 &uv)
 	bitangent = glm::cross(tangent, normal);
 }
 
-Vertex::Vertex(const glm::vec3 &p, const glm::vec2 &uv)
-	: Vertex(p, glm::vec3(0, 1, 0), uv) {
+Vertex::Vertex(const glm::vec3 &p, const glm::vec2 &uv) : Vertex(p, glm::vec3(0, 1, 0), uv) {
 }
 
 WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::vec3 &t, const glm::vec3 &b,
@@ -34,8 +33,7 @@ WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec3 &n, const glm::ve
 	: Vertex(p, n, uv), weights(), ids() {
 }
 
-WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec2 &uv)
-	: WeightVertex(p, glm::vec3(0, 1, 0), uv) {
+WeightVertex::WeightVertex(const glm::vec3 &p, const glm::vec2 &uv) : WeightVertex(p, glm::vec3(0, 1, 0), uv) {
 }
 
 } // namespace Stone::Scene

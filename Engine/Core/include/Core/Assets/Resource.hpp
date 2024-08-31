@@ -14,23 +14,21 @@ class Bundle;
 class Resource : public Object {
 
 public:
+	Resource(const std::shared_ptr<Bundle> &bundle, const std::string &filepath);
 
-    Resource(const std::shared_ptr<Bundle>& bundle, const std::string &filepath);
+	std::shared_ptr<Bundle> getBundle() const;
 
-    std::shared_ptr<Bundle> getBundle() const;
+	const std::string &getFilename() const;
 
-    const std::string &getFilename() const;
+	const std::string &getSubDirectory() const;
 
-    const std::string &getSubDirectory() const;
-
-    std::string getFullPath() const;
+	std::string getFullPath() const;
 
 protected:
-
-    /**
-     * @brief The workspace that contains the resource
-     */
-    std::weak_ptr<Bundle> _bundle;
+	/**
+	 * @brief The workspace that contains the resource
+	 */
+	std::weak_ptr<Bundle> _bundle;
 
 	/**
 	 * @brief The filename of the asset without it's path
@@ -42,8 +40,7 @@ protected:
 	 */
 	std::string _subdirectory;
 
-    friend class Bundle;
-
+	friend class Bundle;
 };
 
-} // namespace Stone::Core
+} // namespace Stone::Core::Assets

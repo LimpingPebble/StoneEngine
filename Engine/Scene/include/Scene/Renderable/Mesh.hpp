@@ -14,12 +14,11 @@
  */
 namespace Stone::Scene {
 
-class IMeshInterface : public IMeshObject {
-};
+class IMeshInterface : public IMeshObject {};
 
 /**
  * @brief Represents a dynamic mesh used for rendering in the scene.
- * 
+ *
  * A dynamic mesh is a mesh that can be modified at runtime.
  * It provides functionality for managing vertices and indices of the mesh.
  */
@@ -86,7 +85,7 @@ protected:
 
 /**
  * @brief Represents a static mesh used for rendering in the scene.
- * 
+ *
  * A static mesh is a mesh that cannot be modified at runtime.
  * It is generated from a dynamic mesh.
  */
@@ -116,27 +115,25 @@ public:
 	/**
 	 * @brief Retrieves the source mesh being used to generate the static mesh.
 	 * It's expected to be a nullptr once the buffers are initialized.
-	 * 
+	 *
 	 * @return The source mesh used to generate the static mesh.
 	 */
-	[[nodiscard]] const std::shared_ptr<DynamicMesh>& getSourceMesh() const;
+	[[nodiscard]] const std::shared_ptr<DynamicMesh> &getSourceMesh() const;
 
 	/**
 	 * @brief Sets the source mesh used to generate the static mesh.
-	 * 
+	 *
 	 * @param sourceMesh The source mesh used to generate the static mesh.
 	 */
 	void setSourceMesh(const std::shared_ptr<DynamicMesh> &sourceMesh);
 
 
 protected:
-
 	/**
 	 * The dynamic mesh used for rendering.
 	 * This pointer will be reset by the renderer once the buffers are initialized.
 	 */
 	std::shared_ptr<DynamicMesh> _dynamicMesh;
-
 };
 
 

@@ -17,7 +17,6 @@ namespace Stone::Scene {
  */
 class RendererObjectManager {
 public:
-
 	RendererObjectManager() = default;
 	virtual ~RendererObjectManager() = default;
 

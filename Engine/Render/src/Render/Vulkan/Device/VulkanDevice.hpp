@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "Render/Vulkan/RendererSettings.hpp"
 #include "../Utilities/SwapChainProperties.hpp"
+#include "Render/Vulkan/RendererSettings.hpp"
 
 /**
  * @brief The VulkanDevice class represents a Vulkan device.
- * 
+ *
  * This class provides functionality for interacting with a Vulkan device, such as creating shader modules,
  * managing buffers and images, and executing commands on the device.
  */
@@ -17,10 +17,9 @@ class VulkanCore;
 
 class VulkanDevice {
 public:
-
 	/**
 	 * @brief Constructs a VulkanDevice object with the specified VulkanCore instance.
-	 * 
+	 *
 	 * @param core The VulkanCore instance associated with the device.
 	 */
 	explicit VulkanDevice(std::shared_ptr<VulkanCore> core);
@@ -37,7 +36,7 @@ public:
 
 	/**
 	 * @brief Creates a Vulkan shader module from the provided shader code.
-	 * 
+	 *
 	 * @param code The shader code as a vector of characters.
 	 * @return The created VkShaderModule object.
 	 */
@@ -45,7 +44,7 @@ public:
 
 	/**
 	 * @brief Creates swap chain properties for the specified size.
-	 * 
+	 *
 	 * @param size The size of the swap chain.
 	 * @return The created SwapChainProperties object.
 	 */
@@ -53,7 +52,7 @@ public:
 
 	/**
 	 * @brief Finds a memory type that matches the specified filter and properties.
-	 * 
+	 *
 	 * @param typeFilter The memory type filter.
 	 * @param properties The desired memory properties.
 	 * @return The index of the matching memory type.
@@ -62,7 +61,7 @@ public:
 
 	/**
 	 * @brief Finds a supported format from the provided candidates.
-	 * 
+	 *
 	 * @param candidates The list of candidate formats.
 	 * @param tiling The desired image tiling.
 	 * @param features The desired format features.
@@ -73,21 +72,21 @@ public:
 
 	/**
 	 * @brief Finds a suitable depth format for the device.
-	 * 
+	 *
 	 * @return The suitable VkFormat for depth.
 	 */
 	[[nodiscard]] VkFormat findDepthFormat() const;
 
 	/**
 	 * @brief Executes the provided lambda function with a single Vulkan command buffer.
-	 * 
+	 *
 	 * @param lambda The lambda function to be executed with the command buffer.
 	 */
 	void withSingleCommandBuffer(const std::function<void(VkCommandBuffer)> &lambda) const;
 
 	/**
 	 * @brief Creates a Vulkan buffer with the specified size, usage, and memory properties.
-	 * 
+	 *
 	 * @param size The size of the buffer.
 	 * @param usage The usage flags for the buffer.
 	 * @param properties The memory properties for the buffer.
@@ -98,7 +97,7 @@ public:
 
 	/**
 	 * @brief Destroys the specified Vulkan buffer and associated device memory.
-	 * 
+	 *
 	 * @param buffer The VkBuffer to be destroyed.
 	 * @param memory The VkDeviceMemory associated with the buffer.
 	 */
@@ -106,7 +105,7 @@ public:
 
 	/**
 	 * @brief Copies data from one Vulkan buffer to another.
-	 * 
+	 *
 	 * @param dstBuffer The destination buffer to copy data to.
 	 * @param srcBuffer The source buffer to copy data from.
 	 * @param size The size of the data to be copied.
@@ -118,7 +117,7 @@ public:
 
 	/**
 	 * @brief Creates a Vulkan image with the specified parameters.
-	 * 
+	 *
 	 * @param width The width of the image.
 	 * @param height The height of the image.
 	 * @param mipLevels The number of mip levels for the image.
@@ -136,7 +135,7 @@ public:
 
 	/**
 	 * @brief Transitions the layout of a Vulkan image.
-	 * 
+	 *
 	 * @param image The VkImage to transition.
 	 * @param format The format of the image.
 	 * @param oldLayout The old layout of the image.
@@ -149,7 +148,7 @@ public:
 
 	/**
 	 * @brief Copies data from a Vulkan buffer to an image.
-	 * 
+	 *
 	 * @param buffer The VkBuffer containing the data.
 	 * @param image The VkImage to copy the data to.
 	 * @param width The width of the image.
@@ -162,7 +161,7 @@ public:
 
 	/**
 	 * @brief Creates a VkImageView for the specified VkImage.
-	 * 
+	 *
 	 * @param image The VkImage to create the view for.
 	 * @param format The format of the image.
 	 * @param aspectFlags The aspect flags for the view. Default is VK_IMAGE_ASPECT_COLOR_BIT.
@@ -173,23 +172,22 @@ public:
 
 	/**
 	 * @brief Returns the VulkanCore instance associated with the device.
-	 * 
+	 *
 	 * @return The VulkanCore instance.
 	 */
-	const std::shared_ptr<VulkanCore>& getCore() const;
+	const std::shared_ptr<VulkanCore> &getCore() const;
 
 
 protected:
 	/**
 	 * @brief Returns the VkDevice object associated with the device.
-	 * 
+	 *
 	 * @return The VkDevice object.
 	 */
-	[[nodiscard]] const VkDevice& getVkDevice() const;
+	[[nodiscard]] const VkDevice &getVkDevice() const;
 
 private:
 	std::shared_ptr<VulkanCore> _core;
-
 };
 
 } // namespace Stone::Render::Vulkan

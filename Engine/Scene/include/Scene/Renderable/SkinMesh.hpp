@@ -14,8 +14,7 @@
  */
 namespace Stone::Scene {
 
-class ISkinMeshInterface : public IMeshObject {
-};
+class ISkinMeshInterface : public IMeshObject {};
 
 class DynamicSkinMesh : public ISkinMeshInterface {
 public:
@@ -103,27 +102,25 @@ public:
 
 	/**
 	 * @brief Retrieves the source mesh used to generate the static mesh.
-	 * 
+	 *
 	 * @return The source mesh used to generate the static mesh.
 	 */
-	[[nodiscard]] const std::shared_ptr<DynamicSkinMesh>& getSourceMesh() const;
+	[[nodiscard]] const std::shared_ptr<DynamicSkinMesh> &getSourceMesh() const;
 
 	/**
 	 * @brief Sets the source mesh used to generate the static mesh.
-	 * 
+	 *
 	 * @param sourceMesh The source mesh used to generate the static mesh.
 	 */
 	void setSourceMesh(const std::shared_ptr<DynamicSkinMesh> &sourceMesh);
 
 
 protected:
-
 	/**
 	 * The dynamic mesh used for rendering.
 	 * This pointer will be reset by the renderer once the buffers are initialized.
 	 */
 	std::shared_ptr<DynamicSkinMesh> _dynamicMesh;
-
 };
 
 

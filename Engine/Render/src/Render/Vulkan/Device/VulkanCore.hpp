@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Render/Vulkan/RendererSettings.hpp"
 #include "../Utilities/SwapChainProperties.hpp"
+#include "Render/Vulkan/RendererSettings.hpp"
 
 namespace Stone::Render::Vulkan {
 
