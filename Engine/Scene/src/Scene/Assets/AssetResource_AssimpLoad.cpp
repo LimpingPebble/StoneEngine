@@ -280,18 +280,18 @@ void AssetResource::loadFromAssimp() {
 
 	_rootNode = std::make_shared<PivotNode>(scene->mRootNode->mName.C_Str());
 
-	std::cout << "scene "
-			  << "validated: " << (scene->mFlags & AI_SCENE_FLAGS_VALIDATED) << " | "
-			  << "incomplete: " << (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) << " | "
-			  << "mNumMeshes " << scene->mNumMeshes << " | "
-			  << "mNumMaterials " << scene->mNumMaterials << " | "
-			  << "mNumAnimations " << scene->mNumAnimations << " | "
-			  << "mNumTextures " << scene->mNumTextures << " | "
-			  << "mNumLights " << scene->mNumLights << " | "
-			  << "mNumCameras " << scene->mNumCameras << " | "
-			  << "mNumSkeletons " << scene->mNumSkeletons << " | "
-			  << "mMetaData " << scene->mMetaData << " | "
-			  << "mName" << scene->mName.C_Str() << " | " << std::endl;
+	std::cout << "scene ";
+	std::cout << "validated: " << (scene->mFlags & AI_SCENE_FLAGS_VALIDATED) << " | ";
+	std::cout << "incomplete: " << (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) << " | ";
+	std::cout << "mNumMeshes " << scene->mNumMeshes << " | ";
+	std::cout << "mNumMaterials " << scene->mNumMaterials << " | ";
+	std::cout << "mNumAnimations " << scene->mNumAnimations << " | ";
+	std::cout << "mNumTextures " << scene->mNumTextures << " | ";
+	std::cout << "mNumLights " << scene->mNumLights << " | ";
+	std::cout << "mNumCameras " << scene->mNumCameras << " | ";
+	std::cout << "mNumSkeletons " << scene->mNumSkeletons << " | ";
+	std::cout << "mMetaData " << scene->mMetaData << " | ";
+	std::cout << "mName" << scene->mName.C_Str() << " | " << std::endl;
 
 	/*
 	 * TODO:

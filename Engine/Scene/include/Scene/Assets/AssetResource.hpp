@@ -13,40 +13,37 @@ namespace Stone::Scene {
 class AssetResource : public Core::Assets::Resource {
 
 public:
+	AssetResource() = delete;
+	AssetResource(const AssetResource &other) = delete;
 
-    AssetResource() = delete;
-    AssetResource(const AssetResource &other) = delete;
+	AssetResource(const std::shared_ptr<Core::Assets::Bundle> &bundle, const std::string &filepath);
 
-    AssetResource(const std::shared_ptr<Core::Assets::Bundle>& bundle, const std::string &filepath);
+	~AssetResource() override = default;
 
-    ~AssetResource() override = default;
+	const char *getClassName() const override;
 
-    const char *getClassName() const override;
+	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-    std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	const std::vector<std::shared_ptr<IMeshObject>> &getMeshes() const;
+	std::vector<std::shared_ptr<IMeshObject>> &getMeshesRef();
 
-    const std::vector<std::shared_ptr<IMeshObject>>& getMeshes() const;
-    std::vector<std::shared_ptr<IMeshObject>>& getMeshesRef();
+	const std::vector<std::shared_ptr<Texture>> &getTextures() const;
+	std::vector<std::shared_ptr<Texture>> &getTexturesRef();
 
-    const std::vector<std::shared_ptr<Texture>>& getTextures() const;
-    std::vector<std::shared_ptr<Texture>>& getTexturesRef();
+	const std::vector<std::shared_ptr<Material>> &getMaterials() const;
+	std::vector<std::shared_ptr<Material>> &getMaterialsRef();
 
-    const std::vector<std::shared_ptr<Material>>& getMaterials() const;
-    std::vector<std::shared_ptr<Material>>& getMaterialsRef();
-
-    const std::shared_ptr<PivotNode>& getRootNode() const;
+	const std::shared_ptr<PivotNode> &getRootNode() const;
 
 protected:
-
 	std::vector<std::shared_ptr<IMeshObject>> _meshes;
 	std::vector<std::shared_ptr<Texture>> _textures;
-    std::vector<std::shared_ptr<Material>> _materials;
-    std::shared_ptr<PivotNode> _rootNode;
+	std::vector<std::shared_ptr<Material>> _materials;
+	std::shared_ptr<PivotNode> _rootNode;
 
-    void loadData();
+	void loadData();
 	void loadFromAssimp();
 	void loadFromStone();
-
 };
 
 
