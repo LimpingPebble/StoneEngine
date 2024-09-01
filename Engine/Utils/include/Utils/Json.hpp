@@ -2,10 +2,7 @@
 
 #pragma once
 
-#include <iostream>
 #include <memory>
-#include <sstream>
-#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <variant>
@@ -47,6 +44,9 @@ struct Value {
 	const bool &asBool() const;
 	std::nullptr_t &asNull();
 	const std::nullptr_t &asNull() const;
+
+	static std::shared_ptr<Value> parse(const std::string &input);
+	std::string serialize() const;
 };
 
 enum class TokenType {
@@ -99,6 +99,17 @@ private:
 	std::shared_ptr<Value> _parseArray();
 	std::shared_ptr<Value> _parsePrimitive();
 	void _consume(TokenType expected);
+};
+
+class Serializer {
+public:
+	static std::string serialize(const Value &value);
+
+private:
+	static void _serializeValue(std::stringstream &ss, const Value &value);
+	static void _serializeObject(std::stringstream &ss, const Object &object);
+	static void _serializeArray(std::stringstream &ss, const Array &array);
+	static void _serializePrimitive(std::stringstream &ss, const Primitive &primitive);
 };
 
 } // namespace Stone::Json

@@ -2,15 +2,10 @@
 
 #include "Utils/Json.hpp"
 
-#include <cctype>
-#include <iostream>
-#include <memory>
+#include "Utils/StringExt.hpp"
+
 #include <sstream>
-#include <stdexcept>
-#include <string>
-#include <unordered_map>
-#include <variant>
-#include <vector>
+
 
 namespace Stone::Json {
 
@@ -77,6 +72,15 @@ std::nullptr_t &Value::asNull() {
 
 const std::nullptr_t &Value::asNull() const {
 	return std::get<std::nullptr_t>(asPrimitive());
+}
+
+std::shared_ptr<Value> Value::parse(const std::string &input) {
+	Parser parser(input);
+	return parser.parse();
+}
+
+std::string Value::serialize() const {
+	return Serializer::serialize(*this);
 }
 
 
@@ -226,5 +230,56 @@ void Parser::_consume(TokenType expected) {
 	_currentToken = _lexer.nextToken();
 }
 
+
+std::string Serializer::serialize(const Value &value) {
+	std::stringstream ss;
+	_serializeValue(ss, value);
+	return ss.str();
+}
+
+void Serializer::_serializeValue(std::stringstream &ss, const Value &value) {
+	switch (value.type) {
+	case Value::Type::Object: _serializeObject(ss, value.asObject()); break;
+	case Value::Type::Array: _serializeArray(ss, value.asArray()); break;
+	case Value::Type::Primitive: _serializePrimitive(ss, value.asPrimitive()); break;
+	}
+}
+
+void Serializer::_serializeObject(std::stringstream &ss, const Object &object) {
+	ss << "{";
+	bool first = true;
+	for (const auto &pair : object) {
+		if (!first)
+			ss << ",";
+		ss << "\"" << pair.first << "\":";
+		_serializeValue(ss, *pair.second);
+		first = false;
+	}
+	ss << "}";
+}
+
+void Serializer::_serializeArray(std::stringstream &ss, const Array &array) {
+	ss << "[";
+	bool first = true;
+	for (const auto &item : array) {
+		if (!first)
+			ss << ",";
+		_serializeValue(ss, *item);
+		first = false;
+	}
+	ss << "]";
+}
+
+void Serializer::_serializePrimitive(std::stringstream &ss, const Primitive &primitive) {
+	if (std::holds_alternative<std::string>(primitive)) {
+		ss << "\"" << escape_string(std::get<std::string>(primitive)) << "\"";
+	} else if (std::holds_alternative<double>(primitive)) {
+		ss << std::get<double>(primitive);
+	} else if (std::holds_alternative<bool>(primitive)) {
+		ss << (std::get<bool>(primitive) ? "true" : "false");
+	} else if (std::holds_alternative<std::nullptr_t>(primitive)) {
+		ss << "null";
+	}
+}
 
 } // namespace Stone::Json
