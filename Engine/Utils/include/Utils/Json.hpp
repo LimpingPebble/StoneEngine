@@ -11,7 +11,6 @@
 #include <variant>
 #include <vector>
 
-
 namespace Stone::Json {
 
 struct Value;
@@ -33,6 +32,21 @@ struct Value {
 	explicit Value(Object obj);
 	explicit Value(Array arr);
 	explicit Value(Primitive prim);
+
+	Object &asObject();
+	const Object &asObject() const;
+	Array &asArray();
+	const Array &asArray() const;
+	Primitive &asPrimitive();
+	const Primitive &asPrimitive() const;
+	std::string &asString();
+	const std::string &asString() const;
+	double &asNumber();
+	const double &asNumber() const;
+	bool &asBool();
+	const bool &asBool() const;
+	std::nullptr_t &asNull();
+	const std::nullptr_t &asNull() const;
 };
 
 enum class TokenType {

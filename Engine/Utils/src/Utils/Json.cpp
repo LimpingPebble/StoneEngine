@@ -23,6 +23,62 @@ Value::Value(Array arr) : type(Type::Array), value(std::move(arr)) {
 Value::Value(Primitive prim) : type(Type::Primitive), value(std::move(prim)) {
 }
 
+Object &Value::asObject() {
+	return std::get<Object>(value);
+}
+
+const Object &Value::asObject() const {
+	return std::get<Object>(value);
+}
+
+Array &Value::asArray() {
+	return std::get<Array>(value);
+}
+
+const Array &Value::asArray() const {
+	return std::get<Array>(value);
+}
+
+Primitive &Value::asPrimitive() {
+	return std::get<Primitive>(value);
+}
+
+const Primitive &Value::asPrimitive() const {
+	return std::get<Primitive>(value);
+}
+
+std::string &Value::asString() {
+	return std::get<std::string>(asPrimitive());
+}
+
+const std::string &Value::asString() const {
+	return std::get<std::string>(asPrimitive());
+}
+
+double &Value::asNumber() {
+	return std::get<double>(asPrimitive());
+}
+
+const double &Value::asNumber() const {
+	return std::get<double>(asPrimitive());
+}
+
+bool &Value::asBool() {
+	return std::get<bool>(asPrimitive());
+}
+
+const bool &Value::asBool() const {
+	return std::get<bool>(asPrimitive());
+}
+
+std::nullptr_t &Value::asNull() {
+	return std::get<std::nullptr_t>(asPrimitive());
+}
+
+const std::nullptr_t &Value::asNull() const {
+	return std::get<std::nullptr_t>(asPrimitive());
+}
+
 
 Lexer::Lexer(const std::string &input) : _input(input) {
 }
