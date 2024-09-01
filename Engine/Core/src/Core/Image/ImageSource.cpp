@@ -2,11 +2,13 @@
 
 #include "Core/Image/ImageSource.hpp"
 
+#include "Core/Assets/Bundle.hpp"
 #include "Core/Image/ImageData.hpp"
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
-ImageSource::ImageSource(std::string path, Channel channels) : _filepath(std::move(path)), _channels(channels) {
+ImageSource::ImageSource(const std::shared_ptr<Assets::Bundle> &bundle, const std::string &filepath, Channel channels)
+	: Assets::Resource(bundle, filepath), _channels(channels) {
 }
 
 const char *ImageSource::getClassName() const {
@@ -34,7 +36,7 @@ Size ImageSource::getSize() const {
 
 void ImageSource::loadData(bool force) {
 	if (force || _loadedImage == nullptr) {
-		_loadedImage = std::make_shared<ImageData>(_filepath, _channels);
+		_loadedImage = std::make_shared<ImageData>(getFullPath(), _channels);
 		_loadedImage->_source = std::dynamic_pointer_cast<ImageSource>(shared_from_this());
 		_channels = _loadedImage->getChannels();
 		_size = _loadedImage->getSize();
@@ -55,9 +57,9 @@ std::shared_ptr<ImageData> ImageSource::getLoadedImage() const {
 
 std::shared_ptr<ImageData> ImageSource::getLoadedImage(bool loadIfNeeded) {
 	if (loadIfNeeded && !isLoaded()) {
-		loadData();
+		loadData(false);
 	}
 	return _loadedImage;
 }
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

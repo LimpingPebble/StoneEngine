@@ -81,6 +81,11 @@ if ( FULL_CONFIGURE )
 		FetchContent_MakeAvailable(glm)
 		set(GLM_FOUND ON)
 		set_target_properties(glm PROPERTIES SYSTEM ON)
+		target_compile_definitions(glm
+				INTERFACE GLM_FORCE_DEPTH_ZERO_TO_ONE
+				INTERFACE GLM_FORCE_RADIANS
+				INTERFACE GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+		)
 	endif ()
 
 	# Fetches GoogleTest only if needed

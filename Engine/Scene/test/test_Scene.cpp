@@ -9,7 +9,7 @@ TEST(Scene, Nodes) {
 	std::shared_ptr<WorldNode> world = WorldNode::create();
 
 	// Create some assets
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+	auto mesh = std::make_shared<DynamicMesh>();
 
 	std::shared_ptr<Texture> blank_texture = std::make_shared<Texture>();
 	std::shared_ptr<Material> blank_material = std::make_shared<Material>();

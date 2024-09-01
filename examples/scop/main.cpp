@@ -4,9 +4,13 @@
 #include <Windows.h>
 #endif
 
+#include "Core/Assets/Bundle.hpp"
 #include "Core/Image/ImageSource.hpp"
 #include "Scene.hpp"
+#include "Scene/Assets/AssetResource.hpp"
 #include "Window.hpp"
+
+#include <filesystem>
 
 class RotatingNode : public Stone::Scene::PivotNode {
 public:
@@ -29,10 +33,12 @@ private:
 
 STONE_NODE_IMPLEMENTATION(RotatingNode)
 
-int main() {
+int main(int argc, char **argv) {
 #ifdef _WIN32
 	SetConsoleOutputCP(CP_UTF8);
 #endif
+
+	std::cout << "Starting in directory " << std::filesystem::current_path() << std::endl;
 
 	int retCode;
 	{
@@ -44,8 +50,11 @@ int main() {
 		win_settings.title = "Scop";
 		auto window = app->createWindow(win_settings);
 
+		// Create the assets bundle
+		auto assetsBundle = std::make_shared<Stone::Core::Assets::Bundle>();
+
 		// Generate a Mesh
-		auto mesh = std::make_shared<Stone::Scene::Mesh>();
+		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
 		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
 		mesh->verticesRef().emplace_back();
 		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};
@@ -66,8 +75,8 @@ int main() {
 
 		// Create a Texture
 		auto stone_texture = std::make_shared<Stone::Scene::Texture>();
-		auto stone_image_source =
-			std::make_shared<Stone::Image::ImageSource>("docs/img/stone-engine.png", Stone::Image::Channel::RGBA);
+		auto stone_image_source = assetsBundle->loadResource<Stone::Core::Image::ImageSource>(
+			"docs/img/stone-engine.png", Stone::Core::Image::Channel::RGBA);
 		stone_texture->setImage(stone_image_source);
 
 		// Create a Material using the texture
@@ -99,6 +108,14 @@ int main() {
 		cameraNode->getTransform().setPosition({0.0f, 3.0f, 3.0f});
 		cameraNode->getTransform().rotate({-0.6f, 0.0f, 0.0f});
 		window->getWorld()->setActiveCamera(cameraNode);
+
+		// Load a node from a file
+		if (argc > 1) {
+			auto asset = assetsBundle->loadResource<Stone::Scene::AssetResource>(argv[1]);
+			auto node = asset->getRootNode();
+			window->getWorld()->addChild(node);
+			node->writeHierarchy(std::cout);
+		}
 
 		// Run the App
 		retCode = app->run();

@@ -275,7 +275,7 @@ public:
 	 * @return Time The duration of the interpolation.
 	 */
 	Time duration() const {
-		return std::max({_keyPositions.duration(), _keyRotations.duration(), _keyScales.duration()});
+		return std::max(std::max(_keyPositions.duration(), _keyRotations.duration()), _keyScales.duration());
 	}
 
 private:
@@ -438,7 +438,7 @@ public:
 	 * @return Time The duration of the interpolator.
 	 */
 	Time duration() const {
-		return std::max({_keyPositions.duration(), _keyRotations.duration(), _keyScales.duration()});
+		return std::max(std::max(_keyPositions.duration(), _keyRotations.duration()), _keyScales.duration());
 	}
 
 private:

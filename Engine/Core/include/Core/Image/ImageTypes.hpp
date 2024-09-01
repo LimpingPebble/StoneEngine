@@ -5,7 +5,7 @@
 #include <glm/vec2.hpp>
 #include <iostream>
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
 using Size = glm::ivec2;
 
@@ -18,4 +18,4 @@ enum class Channel : int {
 
 std::ostream &operator<<(std::ostream &stream, Channel channel);
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

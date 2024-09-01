@@ -48,7 +48,7 @@ public:
 	 *
 	 * @param manager The RendererObjectManager used to update the render object.
 	 */
-	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Set a texture parameter for the Material.

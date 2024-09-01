@@ -8,7 +8,7 @@
 #include <glm/gtx/io.hpp>
 #include <stb_image.h>
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
 ImageData::~ImageData() {
 	if (_data) {
@@ -52,4 +52,4 @@ ImageData::ImageData(const std::string &filepath, Channel channels) {
 	assert(_channels >= 1 && _channels <= 4);
 }
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

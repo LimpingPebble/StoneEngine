@@ -1,3 +1,4 @@
+/*
 #include "Physics/Physics.hpp"
 
 #include <gtest/gtest.h>
@@ -13,3 +14,4 @@ TEST(ParticleTest, UpdateParticlePosition) {
 
 	EXPECT_EQ(particle.position.x, 0.5f);
 }
+*/

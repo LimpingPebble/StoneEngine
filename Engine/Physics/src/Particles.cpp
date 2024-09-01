@@ -1,5 +1,6 @@
 // Copyright 2024 Stone-Engine
 
+/*
 #include "Physics/Physics.hpp"
 
 namespace Stone::Physics {
@@ -19,3 +20,4 @@ void PhysicsEngine::integrate(Particle &particle, float deltaTime) {
 }
 
 } // namespace Stone::Physics
+*/

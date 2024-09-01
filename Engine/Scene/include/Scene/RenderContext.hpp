@@ -9,6 +9,7 @@ namespace Stone::Scene {
 
 class ISceneRenderer;
 
+
 /**
  * @brief Represents the model-view-projection matrices used for rendering.
  *

@@ -6,7 +6,7 @@
 
 namespace Stone::Scene {
 
-class SkinMesh;
+class ISkinMeshInterface;
 class SkeletonNode;
 class Material;
 
@@ -19,12 +19,12 @@ public:
 
 	~SkinMeshNode() override = default;
 
-	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+	void updateRenderObject(RendererObjectManager &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
-	[[nodiscard]] std::shared_ptr<SkinMesh> getSkinMesh() const;
-	void setSkinMesh(std::shared_ptr<SkinMesh> mesh);
+	[[nodiscard]] std::shared_ptr<ISkinMeshInterface> getSkinMesh() const;
+	void setSkinMesh(std::shared_ptr<ISkinMeshInterface> mesh);
 
 	[[nodiscard]] std::shared_ptr<Material> getMaterial() const;
 	void setMaterial(std::shared_ptr<Material> material);
@@ -33,7 +33,7 @@ public:
 	void setSkeleton(const std::shared_ptr<SkeletonNode> &skeleton);
 
 protected:
-	std::shared_ptr<SkinMesh> _mesh;
+	std::shared_ptr<ISkinMeshInterface> _mesh;
 	std::shared_ptr<Material> _material;
 	std::weak_ptr<SkeletonNode> _skeleton;
 
