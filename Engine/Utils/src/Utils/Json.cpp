@@ -33,8 +33,27 @@ std::shared_ptr<Value> Value::parse(const std::string &input) {
 }
 
 std::string Value::serialize() const {
-    Serializer serializer;
+	Serializer serializer;
 	return serializer.serialize(*this);
+}
+
+std::shared_ptr<Value> object(const Object &obj) {
+	return std::make_shared<Value>(obj);
+}
+std::shared_ptr<Value> array(const Array &arr) {
+	return std::make_shared<Value>(arr);
+}
+std::shared_ptr<Value> string(const std::string &str) {
+	return std::make_shared<Value>(str);
+}
+std::shared_ptr<Value> number(double num) {
+	return std::make_shared<Value>(num);
+}
+std::shared_ptr<Value> boolean(bool b) {
+	return std::make_shared<Value>(b);
+}
+std::shared_ptr<Value> null() {
+	return std::make_shared<Value>();
 }
 
 
@@ -215,19 +234,19 @@ void Serializer::operator()(const Array &array) {
 }
 
 void Serializer::operator()(const std::string &str) {
-    _ss << "\"" << escape_string(str) << "\"";
+	_ss << "\"" << escape_string(str) << "\"";
 }
 
 void Serializer::operator()(double num) {
-    _ss << num;
+	_ss << num;
 }
 
 void Serializer::operator()(bool b) {
-    _ss << (b ? "true" : "false");
+	_ss << (b ? "true" : "false");
 }
 
 void Serializer::operator()(std::nullptr_t) {
-    _ss << "null";
+	_ss << "null";
 }
 
 } // namespace Stone::Json

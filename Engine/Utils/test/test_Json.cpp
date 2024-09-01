@@ -90,7 +90,7 @@ TEST(Json, MalformedJsonThrowsException2) {
 TEST(JsonSerializer, SerializeEmptyObject) {
 
 	Json::Object obj;
-	auto value = std::make_shared<Json::Value>(obj);
+	auto value = Json::object(obj);
 
 	std::string result = value->serialize();
 	ASSERT_EQ(result, "{}");
@@ -102,11 +102,11 @@ TEST(JsonSerializer, SerializeSimpleObject) {
 
 	{
 		Json::Object obj;
-		obj["name"] = std::make_shared<Json::Value>(std::string("John"));
-		obj["age"] = std::make_shared<Json::Value>(30.0);
-		obj["isStudent"] = std::make_shared<Json::Value>(false);
+		obj["name"] = Json::string("John");
+		obj["age"] = Json::number(30.0);
+		obj["isStudent"] = Json::boolean(false);
 
-		auto value = std::make_shared<Json::Value>(obj);
+		auto value = Json::object(obj);
 
 		result = value->serialize();
 	}
@@ -132,10 +132,7 @@ TEST(JsonSerializer, SerializeArray) {
 	std::string result;
 
 	{
-		Json::Array arr = {std::make_shared<Json::Value>(1.0), std::make_shared<Json::Value>(std::string("two")),
-						   std::make_shared<Json::Value>(true), std::make_shared<Json::Value>(nullptr)};
-
-		auto value = std::make_shared<Json::Value>(arr);
+		auto value = Json::array({Json::number(1.0), Json::string("two"), Json::boolean(true), Json::null()});
 
 		result = value->serialize();
 	}
@@ -164,14 +161,9 @@ TEST(JsonSerializer, SerializeNestedObject) {
 	std::string result;
 
 	{
-		Json::Object personObj;
-		personObj["name"] = std::make_shared<Json::Value>(std::string("John"));
-		personObj["age"] = std::make_shared<Json::Value>(30.0);
-
-		Json::Object obj;
-		obj["person"] = std::make_shared<Json::Value>(personObj);
-
-		auto value = std::make_shared<Json::Value>(obj);
+		auto value = Json::object({
+			{"person", Json::object({{"name", Json::string("John")}, {"age", Json::number(30.0)}})}
+		   });
 
 		result = value->serialize();
 	}
@@ -198,21 +190,17 @@ TEST(JsonSerializer, SerializeComplexObject) {
 	std::string result;
 	{
 		Json::Object addressObj;
-		addressObj["city"] = std::make_shared<Json::Value>(std::string("New York"));
-		addressObj["zip"] = std::make_shared<Json::Value>(std::string("10001"));
+		addressObj["city"] = Json::string("New York");
+		addressObj["zip"] = Json::string("10001");
 
 		Json::Object obj;
-		obj["name"] = std::make_shared<Json::Value>(std::string("John"));
-		obj["age"] = std::make_shared<Json::Value>(30.0);
-		obj["isStudent"] = std::make_shared<Json::Value>(false);
-		obj["scores"] = std::make_shared<Json::Value>(Json::Array{
-			std::make_shared<Json::Value>(85.5),
-            std::make_shared<Json::Value>(92.0),
-			std::make_shared<Json::Value>(78.5)
-        });
-		obj["address"] = std::make_shared<Json::Value>(addressObj);
+		obj["name"] = Json::string("John");
+		obj["age"] = Json::number(30.0);
+		obj["isStudent"] = Json::boolean(false);
+		obj["scores"] = Json::array({Json::number(85.5), Json::number(92.0), Json::number(78.5)});
+		obj["address"] = Json::object(addressObj);
 
-		auto value = std::make_shared<Json::Value>(obj);
+		auto value = Json::object(obj);
 
 		result = value->serialize();
 	}
