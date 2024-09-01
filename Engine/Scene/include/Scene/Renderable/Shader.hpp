@@ -47,7 +47,7 @@ public:
 	 *
 	 * @param manager The RendererObjectManager used to update the render object.
 	 */
-	void updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) override;
+	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Get the content of the shader paired with its type. See `Stone::Scene::Shader::ContentType` for more

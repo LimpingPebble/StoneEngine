@@ -14,8 +14,8 @@ STONE_NODE_IMPLEMENTATION(SkinMeshNode)
 SkinMeshNode::SkinMeshNode(const std::string &name) : RenderableNode(name), _mesh(), _material(), _skeleton() {
 }
 
-void SkinMeshNode::updateRenderObject(const std::shared_ptr<RendererObjectManager> &manager) {
-	manager->updateSkinMeshNode(std::dynamic_pointer_cast<SkinMeshNode>(shared_from_this()));
+void SkinMeshNode::updateRenderObject(RendererObjectManager &manager) {
+	manager.updateSkinMeshNode(std::dynamic_pointer_cast<SkinMeshNode>(shared_from_this()));
 }
 
 std::ostream &SkinMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
@@ -28,11 +28,11 @@ std::ostream &SkinMeshNode::writeToStream(std::ostream &stream, bool closing_bra
 	return stream;
 }
 
-std::shared_ptr<SkinMesh> SkinMeshNode::getSkinMesh() const {
+std::shared_ptr<ISkinMeshInterface> SkinMeshNode::getSkinMesh() const {
 	return _mesh;
 }
 
-void SkinMeshNode::setSkinMesh(std::shared_ptr<SkinMesh> mesh) {
+void SkinMeshNode::setSkinMesh(std::shared_ptr<ISkinMeshInterface> mesh) {
 	_mesh = std::move(mesh);
 	markDirty();
 }

@@ -94,12 +94,15 @@ if (FULL_CONFIGURE)
     if (USE_SYSTEM_GLM)
         find_package(glm)
 
-        if (NOT GLM_FOUND)
-            message(STATUS "Couldn't find glm in system, will use online source instead")
-        endif ()
-    else ()
-        message(STATUS "Will fetch glm from online source")
-    endif ()
+		FetchContent_MakeAvailable(glm)
+		set(GLM_FOUND ON)
+		set_target_properties(glm PROPERTIES SYSTEM ON)
+		target_compile_definitions(glm
+				INTERFACE GLM_FORCE_DEPTH_ZERO_TO_ONE
+				INTERFACE GLM_FORCE_RADIANS
+				INTERFACE GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
+		)
+	endif ()
 
     if (NOT GLM_FOUND)
         FetchContent_Declare(

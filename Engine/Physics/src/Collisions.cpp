@@ -1,5 +1,6 @@
 // Copyright 2024 Stone-Engine
 
+/*
 #include "Physics/Physics.hpp"
 
 namespace Stone::Physics {
@@ -73,3 +74,4 @@ void PhysicsEngine::resolveCollision(Stone::Scene::Sphere &sphere, const Stone::
 }
 
 } // namespace Stone::Physics
+*/

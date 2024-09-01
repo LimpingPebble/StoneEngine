@@ -1,5 +1,6 @@
 // Copyright 2024 Stone-Engine
 
+/*
 #pragma once
 
 #include <glm/glm.hpp>
@@ -36,3 +37,4 @@ private:
 };
 
 } // namespace Stone::Physics
+*/

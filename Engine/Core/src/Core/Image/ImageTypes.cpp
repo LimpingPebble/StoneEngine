@@ -2,7 +2,7 @@
 
 #include "Core/Image/ImageTypes.hpp"
 
-namespace Stone::Image {
+namespace Stone::Core::Image {
 
 std::ostream &operator<<(std::ostream &stream, Channel channel) {
 	switch (channel) {
@@ -14,4 +14,4 @@ std::ostream &operator<<(std::ostream &stream, Channel channel) {
 	return stream;
 }
 
-} // namespace Stone::Image
+} // namespace Stone::Core::Image

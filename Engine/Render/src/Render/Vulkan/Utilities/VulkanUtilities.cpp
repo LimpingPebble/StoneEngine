@@ -1,12 +1,12 @@
 // Copyright 2024 Stone-Engine
 
-#pragma once
+#include "VulkanUtilities.hpp"
 
 #include <algorithm>
 #include <cstring>
-#include <optional>
-#include <vector>
-#include <vulkan/vulkan.h>
+#include <limits>
+
+namespace Stone::Render::Vulkan {
 
 void enumerateExtensions(std::ostream &stream) {
 	uint32_t extensionCount = 0;
@@ -64,15 +64,6 @@ const char *to_string(VkDebugUtilsMessageTypeFlagsEXT messageType) {
 	}
 }
 
-struct QueueFamilyIndices {
-	std::optional<uint32_t> graphicsFamily = {};
-	std::optional<uint32_t> presentFamily = {};
-
-	[[nodiscard]] bool isComplete() const {
-		return graphicsFamily.has_value() && presentFamily.has_value();
-	}
-};
-
 QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface) {
 	QueueFamilyIndices indices;
 
@@ -103,12 +94,6 @@ QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surfa
 
 	return indices;
 }
-
-struct SwapChainSupportDetails {
-	VkSurfaceCapabilitiesKHR capabilities = {};
-	std::vector<VkSurfaceFormatKHR> formats = {};
-	std::vector<VkPresentModeKHR> presentModes = {};
-};
 
 SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface) {
 	SwapChainSupportDetails details;
@@ -165,3 +150,9 @@ VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR &capabilities, uint32
 
 	return actualExtent;
 }
+
+bool hasStencilComponent(VkFormat format) {
+	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
+}
+
+} // namespace Stone::Render::Vulkan
