@@ -26,17 +26,17 @@ std::vector<char> readBinaryFile(const std::string &filename) {
 }
 
 std::string readTextFile(const std::string &filename) {
-    std::ifstream file(filename);
+	std::ifstream file(filename);
 
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filename);
-    }
+	if (!file.is_open()) {
+		throw std::runtime_error("Failed to open file: " + filename);
+	}
 
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
-    file.close();
+	file.close();
 
-    return content;
+	return content;
 }
 
 void writeFile(const std::string &filename, const std::vector<char> &data) {
