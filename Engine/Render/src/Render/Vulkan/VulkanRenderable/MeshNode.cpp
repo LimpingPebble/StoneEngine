@@ -114,8 +114,8 @@ void MeshNode::_destroyDescriptorSetLayout() {
 }
 
 void MeshNode::_createGraphicPipeline(const std::shared_ptr<RenderPass> &renderPass, VkExtent2D extent) {
-	auto vertShaderCode = Utils::readFile("shaders/vert.spv");
-	auto fragShaderCode = Utils::readFile("shaders/frag.spv");
+	auto vertShaderCode = Utils::readBinaryFile("shaders/vert.spv");
+	auto fragShaderCode = Utils::readBinaryFile("shaders/frag.spv");
 
 	auto vertShaderModule = _device->createShaderModule(vertShaderCode);
 	auto fragShaderModule = _device->createShaderModule(fragShaderCode);

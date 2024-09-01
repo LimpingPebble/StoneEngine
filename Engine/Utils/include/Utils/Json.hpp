@@ -46,7 +46,8 @@ struct Value {
 		return std::get<T>(value);
 	}
 
-	static std::shared_ptr<Value> parse(const std::string &input);
+	static std::shared_ptr<Value> parseString(const std::string &input);
+    static std::shared_ptr<Value> parseFile(const std::string &path);
 	std::string serialize() const;
 };
 

@@ -7,7 +7,7 @@
 
 namespace Stone::Utils {
 
-std::vector<char> readFile(const std::string &filename) {
+std::vector<char> readBinaryFile(const std::string &filename) {
 	std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
 	if (!file.is_open()) {
@@ -23,6 +23,20 @@ std::vector<char> readFile(const std::string &filename) {
 	file.close();
 
 	return buffer;
+}
+
+std::string readTextFile(const std::string &filename) {
+    std::ifstream file(filename);
+
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filename);
+    }
+
+    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+    file.close();
+
+    return content;
 }
 
 void writeFile(const std::string &filename, const std::vector<char> &data) {

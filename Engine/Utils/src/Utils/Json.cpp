@@ -2,6 +2,7 @@
 
 #include "Utils/Json.hpp"
 
+#include "Utils/FileSystem.hpp"
 #include "Utils/StringExt.hpp"
 
 #include <sstream>
@@ -27,9 +28,13 @@ Value::Value(bool b) : value(b) {
 Value::Value(std::nullptr_t n) : value(n) {
 }
 
-std::shared_ptr<Value> Value::parse(const std::string &input) {
+std::shared_ptr<Value> Value::parseString(const std::string &input) {
 	Parser parser(input);
 	return parser.parse();
+}
+
+std::shared_ptr<Value> Value::parseFile(const std::string &path) {
+	return parseString(Utils::readTextFile(path));
 }
 
 std::string Value::serialize() const {
