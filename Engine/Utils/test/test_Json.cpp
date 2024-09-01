@@ -9,8 +9,8 @@ TEST(Json, ParseEmptyObject) {
 
 	auto json = Json::Value::parse(jsonString);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Object);
-	ASSERT_TRUE(json->asObject().empty());
+	ASSERT_TRUE(json->is<Json::Object>());
+	ASSERT_TRUE(json->get<Json::Object>().empty());
 }
 
 TEST(Json, ParseSimpleObject) {
@@ -18,17 +18,17 @@ TEST(Json, ParseSimpleObject) {
 
 	auto json = Json::Value::parse(jsonString);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Object);
+	ASSERT_TRUE(json->is<Json::Object>());
 
-	Json::Object obj = json->asObject();
-	ASSERT_EQ(obj["name"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["name"]->asString(), "John");
+	Json::Object obj = json->get<Json::Object>();
+	ASSERT_TRUE(obj["name"]->is<std::string>());
+	ASSERT_EQ(obj["name"]->get<std::string>(), "John");
 
-	ASSERT_EQ(obj["age"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["age"]->asNumber(), 30);
+	ASSERT_TRUE(obj["age"]->is<double>());
+	ASSERT_EQ(obj["age"]->get<double>(), 30);
 
-	ASSERT_EQ(obj["isStudent"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["isStudent"]->asBool(), false);
+	ASSERT_TRUE(obj["isStudent"]->is<bool>());
+	ASSERT_EQ(obj["isStudent"]->get<bool>(), false);
 }
 
 TEST(Json, ParseArray) {
@@ -36,22 +36,21 @@ TEST(Json, ParseArray) {
 
 	auto json = Json::Value::parse(jsonString);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Array);
+	ASSERT_TRUE(json->is<Json::Array>());
 
-	Json::Array arr = std::get<Json::Array>(json->value);
+	Json::Array arr = json->get<Json::Array>();
 	ASSERT_EQ(arr.size(), 4);
 
-	ASSERT_EQ(arr[0]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(arr[0]->asNumber(), 1);
+	ASSERT_TRUE(arr[0]->is<double>());
+	ASSERT_EQ(arr[0]->get<double>(), 1);
 
-	ASSERT_EQ(arr[1]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(arr[1]->asString(), "two");
+	ASSERT_TRUE(arr[1]->is<std::string>());
+	ASSERT_EQ(arr[1]->get<std::string>(), "two");
 
-	ASSERT_EQ(arr[2]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(arr[2]->asBool(), true);
+	ASSERT_TRUE(arr[2]->is<bool>());
+	ASSERT_EQ(arr[2]->get<bool>(), true);
 
-	ASSERT_EQ(arr[3]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(arr[3]->asNull(), nullptr);
+	ASSERT_TRUE(arr[3]->isNull());
 }
 
 TEST(Json, ParseNestedObject) {
@@ -59,31 +58,29 @@ TEST(Json, ParseNestedObject) {
 
 	auto json = Json::Value::parse(jsonString);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Object);
+	ASSERT_TRUE(json->is<Json::Object>());
 
-	Json::Object obj = std::get<Json::Object>(json->value);
-	ASSERT_EQ(obj["person"]->type, Json::Value::Type::Object);
+	Json::Object obj = json->get<Json::Object>();
+	ASSERT_TRUE(obj["person"]->is<Json::Object>());
 
-	Json::Object personObj = std::get<Json::Object>(obj["person"]->value);
-	ASSERT_EQ(personObj["name"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(personObj["name"]->asString(), "John");
+	Json::Object personObj = obj["person"]->get<Json::Object>();
+	ASSERT_TRUE(personObj["name"]->is<std::string>());
+	ASSERT_EQ(personObj["name"]->get<std::string>(), "John");
 
-	ASSERT_EQ(personObj["age"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(personObj["age"]->asNumber(), 30);
+	ASSERT_TRUE(personObj["age"]->is<double>());
+	ASSERT_EQ(personObj["age"]->get<double>(), 30);
 }
 
 TEST(Json, MalformedJsonThrowsException) {
 	std::string jsonString = R"({"name": "John")"; // Missing closing brace
 
-	Json::Parser parser(jsonString);
-	EXPECT_THROW({ auto json = parser.parse(); }, std::runtime_error);
+	EXPECT_THROW({ auto json = Json::Value::parse(jsonString); }, std::runtime_error);
 }
 
 TEST(Json, MalformedJsonThrowsException2) {
 	std::string jsonString = R"({"name": John})"; // No quotes around string
 
-	Json::Parser parser(jsonString);
-	EXPECT_THROW({ auto json = parser.parse(); }, std::runtime_error);
+	EXPECT_THROW({ auto json = Json::Value::parse(jsonString); }, std::runtime_error);
 }
 
 /*
@@ -105,9 +102,9 @@ TEST(JsonSerializer, SerializeSimpleObject) {
 
 	{
 		Json::Object obj;
-		obj["name"] = std::make_shared<Json::Value>(Json::Primitive("John"));
-		obj["age"] = std::make_shared<Json::Value>(Json::Primitive(30.0));
-		obj["isStudent"] = std::make_shared<Json::Value>(Json::Primitive(false));
+		obj["name"] = std::make_shared<Json::Value>(std::string("John"));
+		obj["age"] = std::make_shared<Json::Value>(30.0);
+		obj["isStudent"] = std::make_shared<Json::Value>(false);
 
 		auto value = std::make_shared<Json::Value>(obj);
 
@@ -116,17 +113,18 @@ TEST(JsonSerializer, SerializeSimpleObject) {
 
 	auto json = Json::Value::parse(result);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Object);
+	ASSERT_TRUE(json->is<Json::Object>());
 
-	Json::Object obj = std::get<Json::Object>(json->value);
-	ASSERT_EQ(obj["name"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["name"]->asString(), "John");
+	auto obj = json->get<Json::Object>();
 
-	ASSERT_EQ(obj["age"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["age"]->asNumber(), 30);
+	ASSERT_TRUE(obj["name"]->is<std::string>());
+	ASSERT_EQ(obj["name"]->get<std::string>(), "John");
 
-	ASSERT_EQ(obj["isStudent"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj["isStudent"]->asBool(), false);
+	ASSERT_TRUE(obj["age"]->is<double>());
+	ASSERT_EQ(obj["age"]->get<double>(), 30);
+
+	ASSERT_TRUE(obj["isStudent"]->is<bool>());
+	ASSERT_EQ(obj["isStudent"]->get<bool>(), false);
 }
 
 TEST(JsonSerializer, SerializeArray) {
@@ -134,10 +132,8 @@ TEST(JsonSerializer, SerializeArray) {
 	std::string result;
 
 	{
-		Json::Array arr = {std::make_shared<Json::Value>(Json::Primitive(1.0)),
-						   std::make_shared<Json::Value>(Json::Primitive("two")),
-						   std::make_shared<Json::Value>(Json::Primitive(true)),
-						   std::make_shared<Json::Value>(Json::Primitive(nullptr))};
+		Json::Array arr = {std::make_shared<Json::Value>(1.0), std::make_shared<Json::Value>(std::string("two")),
+						   std::make_shared<Json::Value>(true), std::make_shared<Json::Value>(nullptr)};
 
 		auto value = std::make_shared<Json::Value>(arr);
 
@@ -146,22 +142,21 @@ TEST(JsonSerializer, SerializeArray) {
 
 	auto json = Json::Value::parse(result);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Array);
+	ASSERT_TRUE(json->is<Json::Array>());
 
-	Json::Array obj = std::get<Json::Array>(json->value);
+	auto obj = json->get<Json::Array>();
 	ASSERT_EQ(obj.size(), 4);
 
-	ASSERT_EQ(obj[0]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj[0]->asNumber(), 1);
+	ASSERT_TRUE(obj[0]->is<double>());
+	ASSERT_EQ(obj[0]->get<double>(), 1);
 
-	ASSERT_EQ(obj[1]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj[1]->asString(), "two");
+	ASSERT_TRUE(obj[1]->is<std::string>());
+	ASSERT_EQ(obj[1]->get<std::string>(), "two");
 
-	ASSERT_EQ(obj[2]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj[2]->asBool(), true);
+	ASSERT_TRUE(obj[2]->is<bool>());
+	ASSERT_EQ(obj[2]->get<bool>(), true);
 
-	ASSERT_EQ(obj[3]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(obj[3]->asNull(), nullptr);
+	ASSERT_TRUE(obj[3]->isNull());
 }
 
 TEST(JsonSerializer, SerializeNestedObject) {
@@ -170,8 +165,8 @@ TEST(JsonSerializer, SerializeNestedObject) {
 
 	{
 		Json::Object personObj;
-		personObj["name"] = std::make_shared<Json::Value>(Json::Primitive("John"));
-		personObj["age"] = std::make_shared<Json::Value>(Json::Primitive(30.0));
+		personObj["name"] = std::make_shared<Json::Value>(std::string("John"));
+		personObj["age"] = std::make_shared<Json::Value>(30.0);
 
 		Json::Object obj;
 		obj["person"] = std::make_shared<Json::Value>(personObj);
@@ -183,19 +178,19 @@ TEST(JsonSerializer, SerializeNestedObject) {
 
 	auto json = Json::Value::parse(result);
 
-	ASSERT_EQ(json->type, Json::Value::Type::Object);
+	ASSERT_TRUE(json->is<Json::Object>());
 
-	auto obj = json->asObject();
+	auto obj = json->get<Json::Object>();
 
-    ASSERT_EQ(obj["person"]->type, Json::Value::Type::Object);
+	ASSERT_TRUE(obj["person"]->is<Json::Object>());
 
-    auto personObj = obj["person"]->asObject();
+	auto personObj = obj["person"]->get<Json::Object>();
 
-	ASSERT_EQ(personObj["name"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(personObj["name"]->asString(), "John");
+	ASSERT_TRUE(personObj["name"]->is<std::string>());
+	ASSERT_EQ(personObj["name"]->get<std::string>(), "John");
 
-	ASSERT_EQ(personObj["age"]->type, Json::Value::Type::Primitive);
-	ASSERT_EQ(personObj["age"]->asNumber(), 30);
+	ASSERT_TRUE(personObj["age"]->is<double>());
+	ASSERT_EQ(personObj["age"]->get<double>(), 30);
 }
 
 TEST(JsonSerializer, SerializeComplexObject) {
@@ -203,16 +198,18 @@ TEST(JsonSerializer, SerializeComplexObject) {
 	std::string result;
 	{
 		Json::Object addressObj;
-		addressObj["city"] = std::make_shared<Json::Value>(Json::Primitive("New York"));
-		addressObj["zip"] = std::make_shared<Json::Value>(Json::Primitive("10001"));
+		addressObj["city"] = std::make_shared<Json::Value>(std::string("New York"));
+		addressObj["zip"] = std::make_shared<Json::Value>(std::string("10001"));
 
 		Json::Object obj;
-		obj["name"] = std::make_shared<Json::Value>(Json::Primitive("John"));
-		obj["age"] = std::make_shared<Json::Value>(Json::Primitive(30.0));
-		obj["isStudent"] = std::make_shared<Json::Value>(Json::Primitive(false));
+		obj["name"] = std::make_shared<Json::Value>(std::string("John"));
+		obj["age"] = std::make_shared<Json::Value>(30.0);
+		obj["isStudent"] = std::make_shared<Json::Value>(false);
 		obj["scores"] = std::make_shared<Json::Value>(Json::Array{
-			std::make_shared<Json::Value>(Json::Primitive(85.5)), std::make_shared<Json::Value>(Json::Primitive(92.0)),
-			std::make_shared<Json::Value>(Json::Primitive(78.5))});
+			std::make_shared<Json::Value>(85.5),
+            std::make_shared<Json::Value>(92.0),
+			std::make_shared<Json::Value>(78.5)
+        });
 		obj["address"] = std::make_shared<Json::Value>(addressObj);
 
 		auto value = std::make_shared<Json::Value>(obj);
@@ -220,30 +217,29 @@ TEST(JsonSerializer, SerializeComplexObject) {
 		result = value->serialize();
 	}
 
-    auto json = Json::Value::parse(result);
+	auto json = Json::Value::parse(result);
 
-    ASSERT_EQ(json->type, Json::Value::Type::Object);
+	ASSERT_TRUE(json->is<Json::Object>());
 
-    auto obj = json->asObject();
-    ASSERT_EQ(obj["name"]->type, Json::Value::Type::Primitive);
-    ASSERT_EQ(obj["name"]->asString(), "John");
+	auto obj = json->get<Json::Object>();
+	ASSERT_TRUE(obj["name"]->is<std::string>());
+	ASSERT_EQ(obj["name"]->get<std::string>(), "John");
 
-    ASSERT_EQ(obj["age"]->type, Json::Value::Type::Primitive);
-    ASSERT_EQ(obj["age"]->asNumber(), 30);
+	ASSERT_TRUE(obj["age"]->is<double>());
+	ASSERT_EQ(obj["age"]->get<double>(), 30);
 
-    ASSERT_EQ(obj["isStudent"]->type, Json::Value::Type::Primitive);
-    ASSERT_EQ(obj["isStudent"]->asBool(), false);
+	ASSERT_TRUE(obj["isStudent"]->is<bool>());
+	ASSERT_EQ(obj["isStudent"]->get<bool>(), false);
 
-    ASSERT_EQ(obj["scores"]->type, Json::Value::Type::Array);
-    auto scores = obj["scores"]->asArray();
-    ASSERT_EQ(scores.size(), 3);
-    ASSERT_EQ(scores[0]->asNumber(), 85.5);
-    ASSERT_EQ(scores[1]->asNumber(), 92);
-    ASSERT_EQ(scores[2]->asNumber(), 78.5);
+	ASSERT_TRUE(obj["scores"]->is<Json::Array>());
+	auto scores = obj["scores"]->get<Json::Array>();
+	ASSERT_EQ(scores.size(), 3);
+	ASSERT_EQ(scores[0]->get<double>(), 85.5);
+	ASSERT_EQ(scores[1]->get<double>(), 92);
+	ASSERT_EQ(scores[2]->get<double>(), 78.5);
 
-    ASSERT_EQ(obj["address"]->type, Json::Value::Type::Object);
-    auto address = obj["address"]->asObject();
-    ASSERT_EQ(address["city"]->asString(), "New York");
-    ASSERT_EQ(address["zip"]->asString(), "10001");
-
+	ASSERT_TRUE(obj["address"]->is<Json::Object>());
+	auto address = obj["address"]->get<Json::Object>();
+	ASSERT_EQ(address["city"]->get<std::string>(), "New York");
+	ASSERT_EQ(address["zip"]->get<std::string>(), "10001");
 }

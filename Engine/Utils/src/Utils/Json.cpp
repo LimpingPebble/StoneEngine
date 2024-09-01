@@ -9,69 +9,22 @@
 
 namespace Stone::Json {
 
-Value::Value(Object obj) : type(Type::Object), value(std::move(obj)) {
+Value::Value(Object obj) : value(std::move(obj)) {
 }
 
-Value::Value(Array arr) : type(Type::Array), value(std::move(arr)) {
+Value::Value(Array arr) : value(std::move(arr)) {
 }
 
-Value::Value(Primitive prim) : type(Type::Primitive), value(std::move(prim)) {
+Value::Value(std::string str) : value(std::move(str)) {
 }
 
-Object &Value::asObject() {
-	return std::get<Object>(value);
+Value::Value(double num) : value(num) {
 }
 
-const Object &Value::asObject() const {
-	return std::get<Object>(value);
+Value::Value(bool b) : value(b) {
 }
 
-Array &Value::asArray() {
-	return std::get<Array>(value);
-}
-
-const Array &Value::asArray() const {
-	return std::get<Array>(value);
-}
-
-Primitive &Value::asPrimitive() {
-	return std::get<Primitive>(value);
-}
-
-const Primitive &Value::asPrimitive() const {
-	return std::get<Primitive>(value);
-}
-
-std::string &Value::asString() {
-	return std::get<std::string>(asPrimitive());
-}
-
-const std::string &Value::asString() const {
-	return std::get<std::string>(asPrimitive());
-}
-
-double &Value::asNumber() {
-	return std::get<double>(asPrimitive());
-}
-
-const double &Value::asNumber() const {
-	return std::get<double>(asPrimitive());
-}
-
-bool &Value::asBool() {
-	return std::get<bool>(asPrimitive());
-}
-
-const bool &Value::asBool() const {
-	return std::get<bool>(asPrimitive());
-}
-
-std::nullptr_t &Value::asNull() {
-	return std::get<std::nullptr_t>(asPrimitive());
-}
-
-const std::nullptr_t &Value::asNull() const {
-	return std::get<std::nullptr_t>(asPrimitive());
+Value::Value(std::nullptr_t n) : value(n) {
 }
 
 std::shared_ptr<Value> Value::parse(const std::string &input) {
@@ -80,7 +33,8 @@ std::shared_ptr<Value> Value::parse(const std::string &input) {
 }
 
 std::string Value::serialize() const {
-	return Serializer::serialize(*this);
+    Serializer serializer;
+	return serializer.serialize(*this);
 }
 
 
@@ -209,18 +163,17 @@ std::shared_ptr<Value> Parser::_parseArray() {
 }
 
 std::shared_ptr<Value> Parser::_parsePrimitive() {
-	Primitive value;
+	std::shared_ptr<Value> value;
 	switch (_currentToken.type) {
-	case TokenType::String: value = _currentToken.value; break;
-	case TokenType::Number: value = std::stod(_currentToken.value); break;
-	case TokenType::True: value = true; break;
-	case TokenType::False: value = false; break;
-	case TokenType::Null: value = nullptr; break;
+	case TokenType::String: value = std::make_shared<Value>(_currentToken.value); break;
+	case TokenType::Number: value = std::make_shared<Value>(std::stod(_currentToken.value)); break;
+	case TokenType::True: value = std::make_shared<Value>(true); break;
+	case TokenType::False: value = std::make_shared<Value>(false); break;
+	case TokenType::Null: value = std::make_shared<Value>(); break;
 	default: throw std::runtime_error("Unexpected token in input");
 	}
-	auto result = std::make_shared<Value>(value);
 	_currentToken = _lexer.nextToken();
-	return result;
+	return value;
 }
 
 void Parser::_consume(TokenType expected) {
@@ -232,54 +185,49 @@ void Parser::_consume(TokenType expected) {
 
 
 std::string Serializer::serialize(const Value &value) {
-	std::stringstream ss;
-	_serializeValue(ss, value);
-	return ss.str();
+	std::visit(*this, value.value);
+	return _ss.str();
 }
 
-void Serializer::_serializeValue(std::stringstream &ss, const Value &value) {
-	switch (value.type) {
-	case Value::Type::Object: _serializeObject(ss, value.asObject()); break;
-	case Value::Type::Array: _serializeArray(ss, value.asArray()); break;
-	case Value::Type::Primitive: _serializePrimitive(ss, value.asPrimitive()); break;
-	}
-}
-
-void Serializer::_serializeObject(std::stringstream &ss, const Object &object) {
-	ss << "{";
+void Serializer::operator()(const Object &object) {
+	_ss << "{";
 	bool first = true;
 	for (const auto &pair : object) {
 		if (!first)
-			ss << ",";
-		ss << "\"" << pair.first << "\":";
-		_serializeValue(ss, *pair.second);
+			_ss << ",";
+		_ss << "\"" << pair.first << "\":";
+		std::visit(*this, pair.second->value);
 		first = false;
 	}
-	ss << "}";
+	_ss << "}";
 }
 
-void Serializer::_serializeArray(std::stringstream &ss, const Array &array) {
-	ss << "[";
+void Serializer::operator()(const Array &array) {
+	_ss << "[";
 	bool first = true;
 	for (const auto &item : array) {
 		if (!first)
-			ss << ",";
-		_serializeValue(ss, *item);
+			_ss << ",";
+		std::visit(*this, item->value);
 		first = false;
 	}
-	ss << "]";
+	_ss << "]";
 }
 
-void Serializer::_serializePrimitive(std::stringstream &ss, const Primitive &primitive) {
-	if (std::holds_alternative<std::string>(primitive)) {
-		ss << "\"" << escape_string(std::get<std::string>(primitive)) << "\"";
-	} else if (std::holds_alternative<double>(primitive)) {
-		ss << std::get<double>(primitive);
-	} else if (std::holds_alternative<bool>(primitive)) {
-		ss << (std::get<bool>(primitive) ? "true" : "false");
-	} else if (std::holds_alternative<std::nullptr_t>(primitive)) {
-		ss << "null";
-	}
+void Serializer::operator()(const std::string &str) {
+    _ss << "\"" << escape_string(str) << "\"";
+}
+
+void Serializer::operator()(double num) {
+    _ss << num;
+}
+
+void Serializer::operator()(bool b) {
+    _ss << (b ? "true" : "false");
+}
+
+void Serializer::operator()(std::nullptr_t) {
+    _ss << "null";
 }
 
 } // namespace Stone::Json
