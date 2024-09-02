@@ -5,6 +5,10 @@
 #include "Scene/Renderable/IRenderable.hpp"
 #include "SceneTypes.hpp"
 
+namespace Stone::Core {
+class Object;
+}
+
 namespace Stone::Scene {
 
 /**
@@ -19,6 +23,13 @@ class RendererObjectManager {
 public:
 	RendererObjectManager() = default;
 	virtual ~RendererObjectManager() = default;
+
+	/**
+	 * Updates the renderable object with the given node.
+	 *
+	 * @param node The shared pointer to the renderable object.
+	 */
+	virtual void updateRenderable(const std::shared_ptr<Core::Object> &renderable);
 
 	/**
 	 * @brief Updates the renderer data for a given mesh node.
