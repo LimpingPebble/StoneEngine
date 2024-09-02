@@ -14,10 +14,6 @@ STONE_NODE_IMPLEMENTATION(SkinMeshNode)
 SkinMeshNode::SkinMeshNode(const std::string &name) : RenderableNode(name), _mesh(), _material(), _skeleton() {
 }
 
-void SkinMeshNode::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateSkinMeshNode(std::dynamic_pointer_cast<SkinMeshNode>(shared_from_this()));
-}
-
 std::ostream &SkinMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	RenderableNode::writeToStream(stream, false);
 	stream << ",mesh:" << (_mesh == nullptr ? "null" : std::to_string(_mesh->getId()));

@@ -8,10 +8,6 @@
 
 namespace Stone::Scene {
 
-const char *Material::getClassName() const {
-	return "Material";
-}
-
 std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",textures:{";
@@ -27,10 +23,6 @@ std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer)
 	if (closing_bracer)
 		stream << "}";
 	return stream;
-}
-
-void Material::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateMaterial(std::static_pointer_cast<Material>(shared_from_this()));
 }
 
 void Material::setTextureParameter(const std::string &name, std::shared_ptr<Texture> texture) {

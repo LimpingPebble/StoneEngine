@@ -17,6 +17,8 @@ class Material;
  * @see StaticMesh, DynamicMesh, SkinMesh, SkinMeshSource
  */
 class IMeshObject : public Core::Object, public IRenderable {
+	STONE_ABSTRACT_OBJECT(IMeshObject)
+
 public:
 	/**
 	 * @brief Destructor

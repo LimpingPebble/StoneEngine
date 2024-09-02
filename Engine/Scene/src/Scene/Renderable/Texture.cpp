@@ -7,20 +7,12 @@
 
 namespace Stone::Scene {
 
-const char *Texture::getClassName() const {
-	return "Texture";
-}
-
 std::ostream &Texture::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",image:" << *_image;
 	if (closing_bracer)
 		stream << "}";
 	return stream;
-}
-
-void Texture::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateTexture(std::static_pointer_cast<Texture>(shared_from_this()));
 }
 
 void Texture::setImage(const std::shared_ptr<Core::Image::ImageSource> &image) {

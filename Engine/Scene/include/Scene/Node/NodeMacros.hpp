@@ -4,34 +4,47 @@
 
 #include <string>
 
+#define __STONE_NODE_BASE(NewClassName)                                                                                \
+                                                                                                                       \
+public:                                                                                                                \
+	static const std::string nodeClassName;                                                                            \
+	virtual const char *getNodeClassName() const;
+
 /**
  * @brief Macro to use inside an abstract node class to make the engine reconize this class as a node.
  */
 #define STONE_ABSTRACT_NODE(NewClassName)                                                                              \
-	static const std::string className;                                                                                \
-	virtual const char *getClassName() const override;
+	STONE_ABSTRACT_OBJECT(NewClassName)                                                                                \
+	__STONE_NODE_BASE(NewClassName)                                                                                    \
+                                                                                                                       \
+private:
+
 
 /**
  * @brief Macro to use inside a node class to make the engine reconize this class as a node.
  */
-#define STONE_NODE(NewClassName) STONE_ABSTRACT_NODE(NewClassName)
+#define STONE_NODE(NewClassName)                                                                                       \
+	STONE_OBJECT(NewClassName)                                                                                         \
+	__STONE_NODE_BASE(NewClassName)                                                                                    \
+                                                                                                                       \
+private:
 
 /* Cpp Implementations */
 
 #include "Utils/DynamicObjectFactory.hpp"
 
-#define STONE_NODE_BASE_IMPLEMENTATION(NewClassName)                                                                   \
-	const char *NewClassName::getClassName() const {                                                                   \
-		return NewClassName::className.c_str();                                                                        \
+#define __STONE_NODE_IMPLEMENTATION_BASE(NewClassName)                                                                 \
+	const char *NewClassName::getNodeClassName() const {                                                               \
+		return NewClassName::nodeClassName.c_str();                                                                    \
 	}
 
 /**
  * @brief Macro to use inside the cpp implementation of a node class that have used the STONE_NODE macro in its class.
  */
 #define STONE_NODE_IMPLEMENTATION(NewClassName)                                                                        \
-	STONE_NODE_BASE_IMPLEMENTATION(NewClassName)                                                                       \
+	__STONE_NODE_IMPLEMENTATION_BASE(NewClassName)                                                                     \
                                                                                                                        \
-	const std::string NewClassName::className = [] {                                                                   \
+	const std::string NewClassName::nodeClassName = [] {                                                               \
 		auto constructor = [](const std::string &nodeName) {                                                           \
 			return std::make_shared<NewClassName>(nodeName);                                                           \
 		};                                                                                                             \
@@ -45,6 +58,6 @@
  * macro in its class.
  */
 #define STONE_ABSTRACT_NODE_IMPLEMENTATION(NewClassName)                                                               \
-	STONE_NODE_BASE_IMPLEMENTATION(NewClassName)                                                                       \
+	__STONE_NODE_IMPLEMENTATION_BASE(NewClassName)                                                                     \
                                                                                                                        \
-	const std::string NewClassName::className = #NewClassName;
+	const std::string NewClassName::nodeClassName = #NewClassName;

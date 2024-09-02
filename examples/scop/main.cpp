@@ -13,9 +13,9 @@
 #include <filesystem>
 
 class RotatingNode : public Stone::Scene::PivotNode {
-public:
 	STONE_NODE(RotatingNode)
 
+public:
 	RotatingNode(const std::string &name = "rotating_node") : PivotNode(name) {
 	}
 

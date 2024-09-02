@@ -21,18 +21,13 @@ class Shader;
  * to configure the appearance of rendered objects.
  */
 class Material : public Core::Object, public IRenderable {
+	STONE_OBJECT(Material)
+
 public:
 	Material() = default;
 	Material(const Material &other) = default;
 
 	~Material() override = default;
-
-	/**
-	 * @brief Get the class name of the Material object.
-	 *
-	 * @return The class name as a null-terminated string.
-	 */
-	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Material object to an output stream.
@@ -42,13 +37,6 @@ public:
 	 * @return The output stream after writing the Material object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Update the render object associated with the Material.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Set a texture parameter for the Material.

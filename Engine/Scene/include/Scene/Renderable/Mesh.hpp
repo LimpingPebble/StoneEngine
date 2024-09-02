@@ -23,6 +23,8 @@ class IMeshInterface : public IMeshObject {};
  * It provides functionality for managing vertices and indices of the mesh.
  */
 class DynamicMesh : public IMeshInterface {
+	STONE_OBJECT(DynamicMesh);
+
 public:
 	DynamicMesh() = default;
 	DynamicMesh(const DynamicMesh &other) = default;
@@ -37,13 +39,6 @@ public:
 	 * @return The modified output stream.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Updates the render object associated with the mesh.
-	 *
-	 * @param manager The renderer object manager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Retrieves the vertices of the mesh.
@@ -90,6 +85,8 @@ protected:
  * It is generated from a dynamic mesh.
  */
 class StaticMesh : public IMeshInterface {
+	STONE_OBJECT(StaticMesh);
+
 public:
 	StaticMesh() = default;
 	StaticMesh(const StaticMesh &other) = default;
@@ -104,13 +101,6 @@ public:
 	 * @return The modified output stream.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Updates the render object associated with the mesh.
-	 *
-	 * @param manager The renderer object manager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Retrieves the source mesh being used to generate the static mesh.

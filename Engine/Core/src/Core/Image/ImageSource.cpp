@@ -11,10 +11,6 @@ ImageSource::ImageSource(const std::shared_ptr<Assets::Bundle> &bundle, const st
 	: Assets::Resource(bundle, filepath), _channels(channels) {
 }
 
-const char *ImageSource::getClassName() const {
-	return "ImageSource";
-}
-
 std::ostream &ImageSource::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	stream << "{path:" << _filepath << ",channels:" << _channels;
 	if (closing_bracer)

@@ -28,16 +28,13 @@ enum class TextureWrap {
  * @brief The Texture class represents a texture used in rendering.
  */
 class Texture : public Core::Object, public IRenderable {
+	STONE_OBJECT(Texture);
+
 public:
 	Texture() = default;
 	Texture(const Texture &other) = default;
 
 	~Texture() override = default;
-
-	/**
-	 * @brief Get the class name of the Texture object.
-	 */
-	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Texture object to an output stream.
@@ -47,13 +44,6 @@ public:
 	 * @return The output stream after writing the Texture object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Update the render object associated with the Texture.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Set the image associated with the Texture.
