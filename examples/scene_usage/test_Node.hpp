@@ -71,10 +71,10 @@ void testNode() {
 	// getc(stdin);
 }
 
-template <typename T>
-std::shared_ptr<T> makeNode(const std::string &type, const std::string &name) {
+template <typename T, typename... Args>
+std::shared_ptr<T> makeNode(const std::string &type, Args... args) {
 	return std::dynamic_pointer_cast<T>(
-		Stone::DynamicObjectFactory<Node, const std::string &>::getInstance().create(type, name));
+		Stone::DynamicObjectFactory<Node, const std::string &>::getInstance().create(type, args...));
 }
 
 void testNodeDynamic() {
