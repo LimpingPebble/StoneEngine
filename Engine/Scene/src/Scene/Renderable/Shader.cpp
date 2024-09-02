@@ -26,10 +26,6 @@ Shader::Shader(ContentType contentType, std::string content)
 	: Object(), IRenderable(), _contentType(contentType), _content(std::move(content)) {
 }
 
-const char *Shader::getClassName() const {
-	return "Shader";
-}
-
 std::ostream &Shader::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",function:\"" << _function << '"';

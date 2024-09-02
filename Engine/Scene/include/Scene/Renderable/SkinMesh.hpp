@@ -17,6 +17,8 @@ namespace Stone::Scene {
 class ISkinMeshInterface : public IMeshObject {};
 
 class DynamicSkinMesh : public ISkinMeshInterface {
+	STONE_OBJECT(DynamicSkinMesh);
+
 public:
 	DynamicSkinMesh() = default;
 	DynamicSkinMesh(const DynamicSkinMesh &other) = default;
@@ -78,6 +80,8 @@ protected:
 
 
 class StaticSkinMesh : public ISkinMeshInterface {
+	STONE_OBJECT(StaticSkinMesh);
+
 public:
 	StaticSkinMesh() = default;
 	StaticSkinMesh(const StaticSkinMesh &other) = default;

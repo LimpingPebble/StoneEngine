@@ -11,9 +11,9 @@ class SkeletonNode;
 class Material;
 
 class SkinMeshNode : public RenderableNode {
-public:
 	STONE_NODE(SkinMeshNode);
 
+public:
 	explicit SkinMeshNode(const std::string &name = "skinmesh");
 	SkinMeshNode(const SkinMeshNode &other) = default;
 

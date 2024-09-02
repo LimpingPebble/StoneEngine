@@ -17,9 +17,9 @@ class PivotNode;
  * Each bone is represented by a pivot node and its rest pose.
  */
 class SkeletonNode : public Node {
-public:
 	STONE_NODE(SkeletonNode);
 
+public:
 	struct Bone {
 		std::weak_ptr<PivotNode> pivot;
 		glm::mat4 inverseBindMatrix;

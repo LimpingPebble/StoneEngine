@@ -8,10 +8,6 @@
 
 namespace Stone::Scene {
 
-const char *Material::getClassName() const {
-	return "Material";
-}
-
 std::ostream &Material::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",textures:{";

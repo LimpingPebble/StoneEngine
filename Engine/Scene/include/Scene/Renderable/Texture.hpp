@@ -28,16 +28,13 @@ enum class TextureWrap {
  * @brief The Texture class represents a texture used in rendering.
  */
 class Texture : public Core::Object, public IRenderable {
+	STONE_OBJECT(Texture);
+
 public:
 	Texture() = default;
 	Texture(const Texture &other) = default;
 
 	~Texture() override = default;
-
-	/**
-	 * @brief Get the class name of the Texture object.
-	 */
-	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Texture object to an output stream.

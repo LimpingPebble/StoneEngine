@@ -15,10 +15,6 @@ AssetResource::AssetResource(const std::shared_ptr<Core::Assets::Bundle> &bundle
 	loadData();
 };
 
-const char *AssetResource::getClassName() const {
-	return "AssetResource";
-}
-
 std::ostream &AssetResource::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Core::Assets::Resource::writeToStream(stream, false);
 	stream << ",meshes:[";

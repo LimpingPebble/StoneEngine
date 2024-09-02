@@ -23,6 +23,8 @@ class IMeshInterface : public IMeshObject {};
  * It provides functionality for managing vertices and indices of the mesh.
  */
 class DynamicMesh : public IMeshInterface {
+	STONE_OBJECT(DynamicMesh);
+
 public:
 	DynamicMesh() = default;
 	DynamicMesh(const DynamicMesh &other) = default;
@@ -90,6 +92,8 @@ protected:
  * It is generated from a dynamic mesh.
  */
 class StaticMesh : public IMeshInterface {
+	STONE_OBJECT(StaticMesh);
+
 public:
 	StaticMesh() = default;
 	StaticMesh(const StaticMesh &other) = default;

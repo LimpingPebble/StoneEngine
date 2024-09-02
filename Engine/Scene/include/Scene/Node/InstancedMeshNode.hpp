@@ -8,9 +8,9 @@
 namespace Stone::Scene {
 
 class InstancedMeshNode : public MeshNode {
-public:
 	STONE_NODE(InstancedMeshNode);
 
+public:
 	explicit InstancedMeshNode(const std::string &name = "instancedmesh");
 	InstancedMeshNode(const InstancedMeshNode &other) = default;
 

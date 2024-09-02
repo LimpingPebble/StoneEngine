@@ -7,10 +7,6 @@
 
 namespace Stone::Scene {
 
-const char *Texture::getClassName() const {
-	return "Texture";
-}
-
 std::ostream &Texture::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",image:" << *_image;

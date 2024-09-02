@@ -7,9 +7,9 @@
 namespace Stone::Scene {
 
 class LightNode : public PivotNode {
-public:
 	STONE_ABSTRACT_NODE(LightNode);
 
+public:
 	explicit LightNode(const std::string &name = "light");
 	LightNode(const LightNode &other) = default;
 
@@ -33,9 +33,9 @@ protected:
 };
 
 class AmbientLightNode : public LightNode {
-public:
 	STONE_NODE(AmbientLightNode);
 
+public:
 	explicit AmbientLightNode(const std::string &name = "ambientlight");
 	AmbientLightNode(const AmbientLightNode &other);
 
@@ -45,9 +45,9 @@ public:
 };
 
 class PointLightNode : public LightNode {
-public:
 	STONE_NODE(PointLightNode);
 
+public:
 	explicit PointLightNode(const std::string &name = "pointlight");
 	PointLightNode(const PointLightNode &other);
 
@@ -67,9 +67,9 @@ protected:
 };
 
 class CastingLightNode : public LightNode {
-public:
 	STONE_ABSTRACT_NODE(CastingLightNode);
 
+public:
 	explicit CastingLightNode(const std::string &name = "castinglight");
 	CastingLightNode(const CastingLightNode &other);
 
@@ -104,9 +104,9 @@ protected:
 };
 
 class DirectionalLightNode : public CastingLightNode {
-public:
 	STONE_NODE(DirectionalLightNode);
 
+public:
 	explicit DirectionalLightNode(const std::string &name = "directionallight");
 	DirectionalLightNode(const DirectionalLightNode &other);
 
@@ -128,9 +128,9 @@ protected:
 };
 
 class SpotLightNode : public CastingLightNode {
-public:
 	STONE_NODE(SpotLightNode);
 
+public:
 	explicit SpotLightNode(const std::string &name = "spotlight");
 	SpotLightNode(const SpotLightNode &other);
 

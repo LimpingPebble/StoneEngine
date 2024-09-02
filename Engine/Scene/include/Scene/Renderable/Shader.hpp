@@ -13,6 +13,8 @@ namespace Stone::Scene {
  * @brief The Shader class represents a shader used in rendering.
  */
 class Shader : public Core::Object, public IRenderable {
+	STONE_OBJECT(Shader);
+
 public:
 	enum class ContentType {
 		SourceCode,	  /** The content is the full shader code in a readable shading language (cf. `.glsl`, `.metal`) */
@@ -27,11 +29,6 @@ public:
 	Shader(const Shader &other) = default;
 
 	~Shader() override = default;
-
-	/**
-	 * @brief Get the class name of the Shader object.
-	 */
-	const char *getClassName() const override;
 
 	/**
 	 * @brief Write the Shader object to an output stream.
