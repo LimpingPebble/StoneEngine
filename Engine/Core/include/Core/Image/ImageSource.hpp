@@ -15,6 +15,8 @@ class ImageData;
  * It is used to load the image data when needed and hold the reference to the loaded image data.
  */
 class ImageSource : public Assets::Resource {
+	STONE_OBJECT(ImageSource)
+
 public:
 	ImageSource(const std::shared_ptr<Assets::Bundle> &bundle, const std::string &filepath,
 				Channel channels = Channel::RGBA);
@@ -23,8 +25,6 @@ public:
 	ImageSource(const ImageSource &other) = delete;
 
 	~ImageSource() override = default;
-
-	const char *getClassName() const override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

@@ -12,6 +12,7 @@ class Bundle;
  * @brief Represents a resource.
  */
 class Resource : public Object {
+	STONE_ABSTRACT_OBJECT(Resource)
 
 public:
 	Resource(const std::shared_ptr<Bundle> &bundle, const std::string &filepath);

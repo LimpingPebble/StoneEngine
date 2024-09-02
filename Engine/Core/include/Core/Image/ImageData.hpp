@@ -10,13 +10,13 @@ namespace Stone::Core::Image {
 class ImageSource;
 
 class ImageData : public Object {
+	STONE_OBJECT(ImageData)
+
 public:
 	ImageData() = delete;
 	ImageData(const ImageData &other) = delete;
 
 	~ImageData() override;
-
-	[[nodiscard]] const char *getClassName() const override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

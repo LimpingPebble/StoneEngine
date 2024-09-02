@@ -14,10 +14,6 @@ Bundle::Bundle(std::string rootDirectory) : _rootDirectory(std::move(rootDirecto
 	}
 }
 
-const char *Bundle::getClassName() const {
-	return "Bundle";
-}
-
 std::ostream &Bundle::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",root_directory:\"" << _rootDirectory << "\"";
