@@ -46,13 +46,6 @@ public:
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	/**
-	 * @brief Update the render object associated with the Texture.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
-
-	/**
 	 * @brief Set the image associated with the Texture.
 	 *
 	 * @param image The image to set.

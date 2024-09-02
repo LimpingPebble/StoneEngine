@@ -16,10 +16,6 @@ std::ostream &DynamicSkinMesh::writeToStream(std::ostream &stream, bool closing_
 	return stream;
 }
 
-void DynamicSkinMesh::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateDynamicSkinMesh(std::static_pointer_cast<DynamicSkinMesh>(shared_from_this()));
-}
-
 const std::vector<WeightVertex> &DynamicSkinMesh::getVertices() const {
 	return _vertices;
 }
@@ -45,10 +41,6 @@ std::ostream &StaticSkinMesh::writeToStream(std::ostream &stream, bool closing_b
 	if (closing_bracer)
 		stream << "}";
 	return stream;
-}
-
-void StaticSkinMesh::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateStaticSkinMesh(std::static_pointer_cast<StaticSkinMesh>(shared_from_this()));
 }
 
 const std::shared_ptr<DynamicSkinMesh> &StaticSkinMesh::getSourceMesh() const {

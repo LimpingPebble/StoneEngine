@@ -11,10 +11,6 @@ STONE_NODE_IMPLEMENTATION(InstancedMeshNode)
 InstancedMeshNode::InstancedMeshNode(const std::string &name) : MeshNode(name), _instancesTransforms() {
 }
 
-void InstancedMeshNode::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateInstancedMeshNode(std::dynamic_pointer_cast<InstancedMeshNode>(shared_from_this()));
-}
-
 std::ostream &InstancedMeshNode::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	MeshNode::writeToStream(stream, false);
 	stream << ",instances:" << _instancesTransforms.size();

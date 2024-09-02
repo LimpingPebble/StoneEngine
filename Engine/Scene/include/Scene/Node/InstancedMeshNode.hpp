@@ -16,8 +16,6 @@ public:
 
 	~InstancedMeshNode() override = default;
 
-	void updateRenderObject(RendererObjectManager &manager) override;
-
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	void addInstance(const Transform3D &transform);

@@ -51,16 +51,6 @@ public:
 	virtual ~IRenderable() = default;
 
 	/**
-	 * @brief Update the render object associated with the render element
-	 *
-	 * This function will call the correct method in the renderer object manager to update the associated renderer
-	 * object.
-	 *
-	 * @param manager The renderer object manager
-	 */
-	virtual void updateRenderObject(RendererObjectManager &manager) = 0;
-
-	/**
 	 * @brief Check if the render element is dirty
 	 */
 	[[nodiscard]] bool isDirty() const {

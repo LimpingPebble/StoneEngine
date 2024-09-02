@@ -18,8 +18,6 @@ public:
 
 	~MeshNode() override = default;
 
-	void updateRenderObject(RendererObjectManager &manager) override;
-
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	[[nodiscard]] std::shared_ptr<IMeshInterface> getMesh() const;

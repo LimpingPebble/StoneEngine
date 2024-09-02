@@ -39,13 +39,6 @@ public:
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	/**
-	 * @brief Update the render object associated with the Material.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
-
-	/**
 	 * @brief Set a texture parameter for the Material.
 	 *
 	 * @param name The name of the texture parameter.

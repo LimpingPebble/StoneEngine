@@ -47,10 +47,6 @@ std::ostream &Shader::writeToStream(std::ostream &stream, bool closing_bracer) c
 	return stream;
 }
 
-void Shader::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateShader(std::static_pointer_cast<Shader>(shared_from_this()));
-}
-
 std::pair<Shader::ContentType, const std::string &> Shader::getContent() const {
 	return {_contentType, _content};
 }

@@ -35,13 +35,6 @@ public:
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
 	/**
-	 * @brief Updates the render object using the specified RendererObjectManager.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
-
-	/**
 	 * @brief Returns a const reference to the vector of WeightVertex objects representing the vertices of the mesh.
 	 *
 	 * @return A const reference to the vector of WeightVertex objects.
@@ -96,13 +89,6 @@ public:
 	 * @return The output stream after writing the StaticSkinMesh object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Updates the render object using the specified RendererObjectManager.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Retrieves the source mesh used to generate the static mesh.
