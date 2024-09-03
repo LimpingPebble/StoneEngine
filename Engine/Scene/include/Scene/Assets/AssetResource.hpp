@@ -11,6 +11,7 @@ namespace Stone::Scene {
  * @brief Represents a resource that contains meshes, textures, and other assets.
  */
 class AssetResource : public Core::Assets::Resource {
+	STONE_OBJECT(AssetResource)
 
 public:
 	AssetResource() = delete;
@@ -19,8 +20,6 @@ public:
 	AssetResource(const std::shared_ptr<Core::Assets::Bundle> &bundle, const std::string &filepath);
 
 	~AssetResource() override = default;
-
-	const char *getClassName() const override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

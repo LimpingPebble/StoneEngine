@@ -17,12 +17,8 @@ uint32_t Object::getId() const {
 	return _id;
 }
 
-const char *Object::getClassName() const {
-	return "Object";
-}
-
 std::ostream &Object::writeToStream(std::ostream &stream, bool closing_bracer) const {
-	stream << "{id:" << _id;
+	stream << "{class:\"" << getClassName() << "\",id:" << _id;
 	if (closing_bracer)
 		stream << "}";
 	return stream;

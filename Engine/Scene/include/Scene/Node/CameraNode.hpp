@@ -15,9 +15,9 @@ namespace Stone::Scene {
  * This class is abstract and cannot be instantiated directly. Use `PerspectiveCameraNode` or `OrthographicCameraNode`
  */
 class CameraNode : public PivotNode {
-public:
 	STONE_ABSTRACT_NODE(CameraNode);
 
+public:
 	explicit CameraNode(const std::string &name = "camera");
 	CameraNode(const CameraNode &other);
 
@@ -41,9 +41,9 @@ protected:
 };
 
 class PerspectiveCameraNode : public CameraNode {
-public:
 	STONE_NODE(PerspectiveCameraNode);
 
+public:
 	explicit PerspectiveCameraNode(const std::string &name = "perspective_camera");
 	PerspectiveCameraNode(const PerspectiveCameraNode &other);
 
@@ -65,9 +65,9 @@ protected:
 };
 
 class OrthographicCameraNode : public CameraNode {
-public:
 	STONE_NODE(OrthographicCameraNode);
 
+public:
 	explicit OrthographicCameraNode(const std::string &name = "orthographic_camera");
 	OrthographicCameraNode(const OrthographicCameraNode &other);
 

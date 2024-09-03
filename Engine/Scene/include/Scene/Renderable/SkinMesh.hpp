@@ -17,6 +17,8 @@ namespace Stone::Scene {
 class ISkinMeshInterface : public IMeshObject {};
 
 class DynamicSkinMesh : public ISkinMeshInterface {
+	STONE_OBJECT(DynamicSkinMesh);
+
 public:
 	DynamicSkinMesh() = default;
 	DynamicSkinMesh(const DynamicSkinMesh &other) = default;
@@ -31,13 +33,6 @@ public:
 	 * @return The output stream after writing the DynamicSkinMesh object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Updates the render object using the specified RendererObjectManager.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Returns a const reference to the vector of WeightVertex objects representing the vertices of the mesh.
@@ -78,6 +73,8 @@ protected:
 
 
 class StaticSkinMesh : public ISkinMeshInterface {
+	STONE_OBJECT(StaticSkinMesh);
+
 public:
 	StaticSkinMesh() = default;
 	StaticSkinMesh(const StaticSkinMesh &other) = default;
@@ -92,13 +89,6 @@ public:
 	 * @return The output stream after writing the StaticSkinMesh object.
 	 */
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
-
-	/**
-	 * @brief Updates the render object using the specified RendererObjectManager.
-	 *
-	 * @param manager The RendererObjectManager used to update the render object.
-	 */
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	/**
 	 * @brief Retrieves the source mesh used to generate the static mesh.

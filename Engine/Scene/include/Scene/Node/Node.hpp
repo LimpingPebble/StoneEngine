@@ -22,9 +22,9 @@ class WorldNode;
  * the node hierarchy, updating and rendering nodes, and accessing node properties.
  */
 class Node : public Core::Object {
-public:
 	STONE_NODE(Node);
 
+public:
 	explicit Node(const std::string &name = "node");
 	Node(const Node &other) = default;
 

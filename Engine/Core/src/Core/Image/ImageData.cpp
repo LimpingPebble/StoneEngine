@@ -16,10 +16,6 @@ ImageData::~ImageData() {
 	}
 }
 
-const char *ImageData::getClassName() const {
-	return "ImageData";
-}
-
 std::ostream &ImageData::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	stream << "{size:" << _size << ",channels:" << _channels;
 	if (closing_bracer)

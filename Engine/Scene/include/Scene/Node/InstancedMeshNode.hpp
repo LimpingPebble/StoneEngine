@@ -8,15 +8,13 @@
 namespace Stone::Scene {
 
 class InstancedMeshNode : public MeshNode {
-public:
 	STONE_NODE(InstancedMeshNode);
 
+public:
 	explicit InstancedMeshNode(const std::string &name = "instancedmesh");
 	InstancedMeshNode(const InstancedMeshNode &other) = default;
 
 	~InstancedMeshNode() override = default;
-
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

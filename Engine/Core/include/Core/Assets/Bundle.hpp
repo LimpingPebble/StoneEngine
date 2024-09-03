@@ -10,6 +10,7 @@
 namespace Stone::Core::Assets {
 
 class Bundle : public Object {
+	STONE_OBJECT(Bundle)
 
 public:
 	Bundle(const Bundle &other) = delete;
@@ -17,8 +18,6 @@ public:
 	explicit Bundle(std::string rootDirectory = "./");
 
 	~Bundle() override = default;
-
-	const char *getClassName() const override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

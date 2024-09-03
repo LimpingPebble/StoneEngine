@@ -18,7 +18,19 @@ public:
 
 	uint32_t getId() const;
 
-	virtual const char *getClassName() const;
+	const static char *StaticClassName() {
+		return "Object";
+	}
+
+	static std::intptr_t StaticHashCode() {
+		return reinterpret_cast<std::intptr_t>(StaticClassName());
+	}
+
+	virtual const char *getClassName() const = 0;
+
+	std::intptr_t getClassHashCode() const {
+		return reinterpret_cast<std::intptr_t>(getClassName());
+	}
 
 	virtual std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const;
 
@@ -27,5 +39,28 @@ protected:
 };
 
 } // namespace Stone::Core
+
+#define STONE_ABSTRACT_OBJECT(ClassName)                                                                               \
+                                                                                                                       \
+public:                                                                                                                \
+	static const char *StaticClassName() {                                                                             \
+		return #ClassName;                                                                                             \
+	}                                                                                                                  \
+	static std::intptr_t StaticHashCode() {                                                                            \
+		return reinterpret_cast<std::intptr_t>(StaticClassName());                                                     \
+	}                                                                                                                  \
+                                                                                                                       \
+private:
+
+#define STONE_OBJECT(ClassName)                                                                                        \
+	STONE_ABSTRACT_OBJECT(ClassName)                                                                                   \
+                                                                                                                       \
+public:                                                                                                                \
+	const char *getClassName() const override {                                                                        \
+		return StaticClassName();                                                                                      \
+	}                                                                                                                  \
+                                                                                                                       \
+private:
+
 
 std::ostream &operator<<(std::ostream &os, const Stone::Core::Object &obj);

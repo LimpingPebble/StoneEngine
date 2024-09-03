@@ -12,9 +12,9 @@ namespace Stone::Scene {
  * @brief Represents a node that can be rendered.
  */
 class RenderableNode : public Node, public IRenderable {
-public:
 	STONE_ABSTRACT_NODE(RenderableNode)
 
+public:
 	explicit RenderableNode(const std::string &name = "renderable");
 	RenderableNode(const RenderableNode &other) = default;
 

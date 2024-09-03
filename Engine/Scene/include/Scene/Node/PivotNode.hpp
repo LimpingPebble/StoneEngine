@@ -18,9 +18,9 @@ namespace Stone::Scene {
  * All transformations applied to the pivot node are also applied to its children but not to its parent.
  */
 class PivotNode : public Node {
-public:
 	STONE_NODE(PivotNode);
 
+public:
 	explicit PivotNode(const std::string &name = "pivot");
 	PivotNode(const PivotNode &other) = default;
 

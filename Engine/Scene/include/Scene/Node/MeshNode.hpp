@@ -10,15 +10,13 @@ class IMeshInterface;
 class Material;
 
 class MeshNode : public RenderableNode {
-public:
 	STONE_NODE(MeshNode);
 
+public:
 	explicit MeshNode(const std::string &name = "mesh");
 	MeshNode(const MeshNode &other) = default;
 
 	~MeshNode() override = default;
-
-	void updateRenderObject(RendererObjectManager &manager) override;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 

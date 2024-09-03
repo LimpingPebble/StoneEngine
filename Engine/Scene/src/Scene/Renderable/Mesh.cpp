@@ -15,10 +15,6 @@ std::ostream &DynamicMesh::writeToStream(std::ostream &stream, bool closing_brac
 	return stream;
 }
 
-void DynamicMesh::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateDynamicMesh(std::static_pointer_cast<DynamicMesh>(shared_from_this()));
-}
-
 const std::vector<Vertex> &DynamicMesh::getVertices() const {
 	return _vertices;
 }
@@ -44,10 +40,6 @@ std::ostream &StaticMesh::writeToStream(std::ostream &stream, bool closing_brace
 	if (closing_bracer)
 		stream << "}";
 	return stream;
-}
-
-void StaticMesh::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateStaticMesh(std::static_pointer_cast<StaticMesh>(shared_from_this()));
 }
 
 const std::shared_ptr<DynamicMesh> &StaticMesh::getSourceMesh() const {

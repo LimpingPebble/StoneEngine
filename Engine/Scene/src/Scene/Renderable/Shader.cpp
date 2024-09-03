@@ -26,10 +26,6 @@ Shader::Shader(ContentType contentType, std::string content)
 	: Object(), IRenderable(), _contentType(contentType), _content(std::move(content)) {
 }
 
-const char *Shader::getClassName() const {
-	return "Shader";
-}
-
 std::ostream &Shader::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	Object::writeToStream(stream, false);
 	stream << ",function:\"" << _function << '"';
@@ -49,10 +45,6 @@ std::ostream &Shader::writeToStream(std::ostream &stream, bool closing_bracer) c
 		stream << "}";
 	}
 	return stream;
-}
-
-void Shader::updateRenderObject(RendererObjectManager &manager) {
-	manager.updateShader(std::static_pointer_cast<Shader>(shared_from_this()));
 }
 
 std::pair<Shader::ContentType, const std::string &> Shader::getContent() const {
