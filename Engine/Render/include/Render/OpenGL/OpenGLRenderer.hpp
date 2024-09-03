@@ -28,11 +28,6 @@ public:
 
 private:
 	std::pair<uint32_t, uint32_t> _frameSize;
-
-	void _initOpenGL();
-
-	unsigned int programID;
-	unsigned int vertexBuffer;
 };
 
 } // namespace Stone::Render::OpenGL
