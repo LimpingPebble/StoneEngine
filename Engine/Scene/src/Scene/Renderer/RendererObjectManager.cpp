@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectManager.hpp"
 
 #include "Scene.hpp"
 

@@ -7,7 +7,6 @@
 #include "RendererObjectManager.hpp"
 #include "RenderPass.hpp"
 #include "Scene.hpp"
-#include "Scene/ISceneRenderer.hpp"
 #include "SwapChain.hpp"
 
 namespace Stone::Render::Vulkan {
@@ -20,6 +19,10 @@ void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 			manager.updateRenderable(node);
 		}
 	});
+}
+
+const std::unique_ptr<Scene::RendererDefaults> &VulkanRenderer::getRendererDefaults() const {
+	return _rendererDefaults;
 }
 
 void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {

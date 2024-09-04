@@ -3,7 +3,7 @@
 #include "Scene/Renderable/Material.hpp"
 
 #include "Scene/Renderable/Texture.hpp"
-#include "Scene/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectManager.hpp"
 #include "Utils/Glm.hpp"
 
 namespace Stone::Scene {
@@ -89,7 +89,7 @@ void Material::setVertexShader(std::shared_ptr<Shader> vertexShader) {
 	markDirty();
 }
 
-std::shared_ptr<Shader> Material::getVertexShader() const {
+const std::shared_ptr<Shader> &Material::getVertexShader() const {
 	return _vertexShader;
 }
 
@@ -98,7 +98,7 @@ void Material::setFragmentShader(std::shared_ptr<Shader> fragmentShader) {
 	markDirty();
 }
 
-std::shared_ptr<Shader> Material::getFragmentShader() const {
+const std::shared_ptr<Shader> &Material::getFragmentShader() const {
 	return _fragmentShader;
 }
 

@@ -119,7 +119,7 @@ public:
 	 *
 	 * @return The vertex shader as a shared pointer to Shader.
 	 */
-	[[nodiscard]] std::shared_ptr<Shader> getVertexShader() const;
+	[[nodiscard]] const std::shared_ptr<Shader> &getVertexShader() const;
 
 	/**
 	 * @brief Set the fragment shader used by the Material.
@@ -133,7 +133,7 @@ public:
 	 *
 	 * @return The fragment shader as a shared pointer to Shader.
 	 */
-	[[nodiscard]] std::shared_ptr<Shader> getFragmentShader() const;
+	[[nodiscard]] const std::shared_ptr<Shader> &getFragmentShader() const;
 
 protected:
 	std::unordered_map<std::string, std::shared_ptr<Texture>> _textures; /**< Map of texture parameters. */

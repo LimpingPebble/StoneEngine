@@ -13,7 +13,6 @@
 #include "Scene/Renderable/Mesh.hpp"
 #include "Scene/Renderable/Shader.hpp"
 #include "Scene/Renderable/Texture.hpp"
-#include "Scene/RenderContext.hpp"
 #include "Texture.hpp"
 #include "Utils/FileSystem.hpp"
 
