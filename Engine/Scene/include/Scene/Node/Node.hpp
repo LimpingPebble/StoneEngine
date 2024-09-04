@@ -5,7 +5,7 @@
 #include "Core/Object.hpp"
 #include "Logging/TermColor.hpp"
 #include "Scene/Node/NodeMacros.hpp"
-#include "Scene/RenderContext.hpp"
+#include "Scene/Renderer/RenderContext.hpp"
 
 #include <functional>
 #include <vector>

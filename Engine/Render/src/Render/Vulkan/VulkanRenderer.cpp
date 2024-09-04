@@ -1,6 +1,7 @@
 // Copyright 2024 Stone-Engine
 
 #include "Render/Vulkan/VulkanRenderer.hpp"
+#include "Scene/Renderer/RendererDefaults.hpp"
 
 #include "Device.hpp"
 #include "FramesRenderer.hpp"
@@ -19,6 +20,7 @@ VulkanRenderer::VulkanRenderer(RendererSettings &settings) : Renderer() {
 	_renderPass = std::make_shared<RenderPass>(_device, swapChainProperties.surfaceFormat.format);
 	_swapChain = std::make_shared<SwapChain>(_device, _renderPass->getRenderPass(), swapChainProperties);
 	_framesRenderer = std::make_shared<FramesRenderer>(_device, _swapChain->getImageCount());
+	_rendererDefaults = std::make_unique<Scene::RendererDefaults>();
 	assert(_framesRenderer->getImageCount() == _swapChain->getImageCount());
 }
 

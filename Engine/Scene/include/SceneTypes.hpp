@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RenderContext.hpp"
+#include "Scene/Renderer/RenderContext.hpp"
 #include "Scene/Transform.hpp"
 #include "Scene/Vertex.hpp"
 

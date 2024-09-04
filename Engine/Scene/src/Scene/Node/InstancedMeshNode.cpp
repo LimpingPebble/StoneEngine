@@ -2,8 +2,6 @@
 
 #include "Scene/Node/InstancedMeshNode.hpp"
 
-#include "Scene/RendererObjectManager.hpp"
-
 namespace Stone::Scene {
 
 STONE_NODE_IMPLEMENTATION(InstancedMeshNode)

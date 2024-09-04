@@ -2,7 +2,6 @@
 
 #include "Scene/Renderable/Shader.hpp"
 
-#include "Scene/RendererObjectManager.hpp"
 #include "Utils/StringExt.hpp"
 
 #include <iomanip>
