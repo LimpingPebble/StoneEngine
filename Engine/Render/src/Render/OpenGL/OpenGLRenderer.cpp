@@ -6,6 +6,8 @@
 #include "RenderContext.hpp"
 #include "RendererObjectManager.hpp"
 #include "Scene/Node/WorldNode.hpp"
+#include "RendererInternals.hpp"
+#include "Scene/Renderer/RendererDefaults.hpp"
 
 #include <GL/glew.h>
 
@@ -32,6 +34,7 @@ OpenGLRenderer::OpenGLRenderer(RendererSettings &settings) : Renderer(), _frameS
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
 
 	_internals = std::make_unique<RendererInternals>();
+	_defaults = std::make_unique<Scene::RendererDefaults>();
 }
 
 OpenGLRenderer::~OpenGLRenderer() {
@@ -48,14 +51,16 @@ void OpenGLRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 	});
 }
 
+const std::unique_ptr<Scene::RendererDefaults> &OpenGLRenderer::getRendererDefaults() const {
+	return _defaults;
+}
+
 void OpenGLRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {
 	glViewport(0, 0, static_cast<GLsizei>(_frameSize.first), static_cast<GLsizei>(_frameSize.second));
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	OpenGL::RenderContext context;
-	context.renderer = this;
-
 	world->initializeRenderContext(context);
 	world->render(context);
 }

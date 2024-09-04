@@ -6,8 +6,14 @@
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Node/MeshNode.hpp"
 #include "Scene/Renderable/Mesh.hpp"
+#include "Scene/Renderer/RendererDefaults.hpp"
 
 #include <GL/glew.h>
+
+template <typename T>
+const std::shared_ptr<T> &first_non_null(const std::shared_ptr<T> &ptr) {
+	return ptr;
+}
 
 template <typename T, typename... Args>
 const std::shared_ptr<T> &first_non_null(const std::shared_ptr<T> &ptr, const Args &...args) {
@@ -29,6 +35,7 @@ public:
 	}
 
 	void render(Scene::RenderContext &context) override {
+		(void)context;
 		assert(_meshNode.expired() == false);
 
 		auto meshNode = _meshNode.lock();
@@ -42,7 +49,7 @@ public:
 			return;
 		}
 
-		auto material = first_non_null(meshNode->getMaterial(), mesh->getDefaultMaterial(), );
+		auto material = first_non_null(meshNode->getMaterial(), mesh->getDefaultMaterial(), _renderer.lock()->getRendererDefaults()->getDefaultMaterial());
 
 		const VRAMMesh &vramMesh = rendererMesh->getVRAMMesh();
 

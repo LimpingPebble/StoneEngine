@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectManager.hpp"
 
 namespace Stone::Render::OpenGL {
 
