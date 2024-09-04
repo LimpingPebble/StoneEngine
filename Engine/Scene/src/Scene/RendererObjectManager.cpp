@@ -70,18 +70,26 @@ void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &mate
 }
 
 void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<DynamicMesh> &mesh) {
+	if (mesh->getDefaultMaterial())
+		updateMaterial(mesh->getDefaultMaterial());
 	mesh->markUndirty();
 }
 
 void RendererObjectManager::updateStaticMesh(const std::shared_ptr<StaticMesh> &mesh) {
+	if (mesh->getDefaultMaterial())
+		updateMaterial(mesh->getDefaultMaterial());
 	mesh->markUndirty();
 }
 
 void RendererObjectManager::updateDynamicSkinMesh(const std::shared_ptr<DynamicSkinMesh> &skinmesh) {
+	if (skinmesh->getDefaultMaterial())
+		updateMaterial(skinmesh->getDefaultMaterial());
 	skinmesh->markUndirty();
 }
 
 void RendererObjectManager::updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh) {
+	if (skinmesh->getDefaultMaterial())
+		updateMaterial(skinmesh->getDefaultMaterial());
 	skinmesh->markUndirty();
 }
 

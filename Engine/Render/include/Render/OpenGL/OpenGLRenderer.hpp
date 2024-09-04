@@ -28,6 +28,9 @@ public:
 
 private:
 	std::pair<uint32_t, uint32_t> _frameSize;
+
+	std::unique_ptr<class RendererInternals> _internals;
+	friend class RendererInternals;
 };
 
 } // namespace Stone::Render::OpenGL

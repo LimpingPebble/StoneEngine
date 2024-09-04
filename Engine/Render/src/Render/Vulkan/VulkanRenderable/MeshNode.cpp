@@ -389,6 +389,7 @@ void MeshNode::_createDescriptorPool(const std::shared_ptr<SwapChain> &swapChain
 		if (shader) {
 			material->forEachTextures(
 				[&](const std::pair<const std::string, std::shared_ptr<Scene::Texture>> &texture) {
+					(void)texture;
 					VkDescriptorPoolSize poolSize = {};
 					poolSize.type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 					poolSize.descriptorCount = swapChain->getImageCount();

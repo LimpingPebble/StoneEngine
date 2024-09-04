@@ -23,12 +23,15 @@ static void initializeOpenGL() {
 	}
 }
 
-OpenGLRenderer::OpenGLRenderer(RendererSettings &settings) : Renderer(), _frameSize(settings.frame_size) {
+OpenGLRenderer::OpenGLRenderer(RendererSettings &settings) : Renderer(), _frameSize(settings.frame_size),
+ 															  _internals(nullptr) {
 
 	initializeOpenGL();
 
 	std::cout << "OpenGLRenderer created" << std::endl;
 	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+
+	_internals = std::make_unique<RendererInternals>();
 }
 
 OpenGLRenderer::~OpenGLRenderer() {
