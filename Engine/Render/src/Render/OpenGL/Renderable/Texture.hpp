@@ -54,7 +54,6 @@ public:
 		imageSource->loadData();
 		std::shared_ptr<Core::Image::ImageData> imageData = imageSource->getLoadedImage();
 
-		int bpp = static_cast<int>(imageData->getChannels());
 		GLuint format = convert(imageData->getChannels());
 		glGenTextures(1, &_buffer);
 		if (_buffer == 0) {
