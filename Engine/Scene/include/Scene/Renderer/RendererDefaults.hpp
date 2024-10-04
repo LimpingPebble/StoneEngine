@@ -11,23 +11,18 @@ namespace Stone::Scene {
  */
 class RendererDefaults {
 public:
+	RendererDefaults();
+	RendererDefaults(const RendererDefaults &) = delete;
 
-    RendererDefaults();
-    RendererDefaults(const RendererDefaults&) = delete;
-    
-    ~RendererDefaults() = default;
+	~RendererDefaults() = default;
 
-    /**
-     * @brief Get the default material used when a mesh has no material set.
-     */
-    const std::shared_ptr<Material>& getDefaultMaterial() const;
+	/**
+	 * @brief Get the default material used when a mesh has no material set.
+	 */
+	const std::shared_ptr<Material> &getDefaultMaterial() const;
 
-    void setDefaultMaterial(const std::shared_ptr<Material> &material);
-
-private:
-
-    std::shared_ptr<Material> _defaultMaterial;
-
+protected:
+	std::shared_ptr<Material> _defaultMaterial;
 };
 
 } // namespace Stone::Scene

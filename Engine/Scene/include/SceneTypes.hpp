@@ -27,7 +27,8 @@ class WorldNode;
 /** Renderable */
 class Texture;
 class Material;
-class Shader;
+class AShader;
+class FragmentShader;
 
 class IMeshObject;
 class IMeshInterface;

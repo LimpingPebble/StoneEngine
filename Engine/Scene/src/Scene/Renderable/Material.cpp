@@ -84,21 +84,12 @@ void Material::forEachScalars(const std::function<void(std::pair<const std::stri
 	}
 }
 
-void Material::setVertexShader(std::shared_ptr<Shader> vertexShader) {
-	_vertexShader = std::move(vertexShader);
-	markDirty();
-}
-
-const std::shared_ptr<Shader> &Material::getVertexShader() const {
-	return _vertexShader;
-}
-
-void Material::setFragmentShader(std::shared_ptr<Shader> fragmentShader) {
+void Material::setFragmentShader(std::shared_ptr<FragmentShader> fragmentShader) {
 	_fragmentShader = std::move(fragmentShader);
 	markDirty();
 }
 
-const std::shared_ptr<Shader> &Material::getFragmentShader() const {
+const std::shared_ptr<FragmentShader> &Material::getFragmentShader() const {
 	return _fragmentShader;
 }
 
