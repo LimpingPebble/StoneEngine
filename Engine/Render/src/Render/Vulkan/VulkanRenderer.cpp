@@ -1,11 +1,11 @@
 // Copyright 2024 Stone-Engine
 
 #include "Render/Vulkan/VulkanRenderer.hpp"
-#include "Scene/Renderer/RendererDefaults.hpp"
 
 #include "Device.hpp"
 #include "FramesRenderer.hpp"
 #include "RenderPass.hpp"
+#include "Scene/Renderer/RendererDefaults.hpp"
 #include "SwapChain.hpp"
 
 namespace Stone::Render::Vulkan {
