@@ -11,8 +11,7 @@ namespace Stone::Render::OpenGL {
 
 class SkinMeshNode : public Scene::IRendererObject {
 public:
-	SkinMeshNode(const std::shared_ptr<Scene::SkinMeshNode> &skinMeshNode,
-				 const std::shared_ptr<OpenGLRenderer> &renderer)
+	SkinMeshNode(Scene::SkinMeshNode &skinMeshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _skinMeshNode(skinMeshNode), _renderer(renderer) {
 	}
 
@@ -24,7 +23,7 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::SkinMeshNode> _skinMeshNode;
+	Scene::SkinMeshNode &_skinMeshNode;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 

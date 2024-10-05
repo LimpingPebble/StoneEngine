@@ -25,7 +25,7 @@ public:
 	void updateDynamicSkinMesh(const std::shared_ptr<Scene::DynamicSkinMesh> &skinmesh) override;
 	void updateStaticSkinMesh(const std::shared_ptr<Scene::StaticSkinMesh> &skinmesh) override;
 	void updateTexture(const std::shared_ptr<Scene::Texture> &texture) override;
-	void updateShader(const std::shared_ptr<Scene::Shader> &shader) override;
+	void updateFragmentShader(const std::shared_ptr<Scene::FragmentShader> &shader) override;
 
 
 private:

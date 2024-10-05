@@ -14,15 +14,15 @@ public:
 	RendererDefaults();
 	RendererDefaults(const RendererDefaults &) = delete;
 
-	~RendererDefaults() = default;
+	virtual ~RendererDefaults() = default;
 
 	/**
 	 * @brief Get the default material used when a mesh has no material set.
 	 */
-	const std::shared_ptr<Material> &getDefaultMaterial() const;
+	const std::shared_ptr<Material> &getMaterial() const;
 
 protected:
-	std::shared_ptr<Material> _defaultMaterial;
+	std::shared_ptr<Material> _material;
 };
 
 } // namespace Stone::Scene

@@ -103,8 +103,9 @@ private:
 
 class DynamicMesh : public RendererMesh {
 public:
-	DynamicMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: RendererMesh(mesh, renderer), _mesh(mesh), _renderer(renderer) {
+	DynamicMesh(Scene::DynamicMesh &mesh, const std::shared_ptr<OpenGLRenderer> &renderer)
+		: RendererMesh(std::static_pointer_cast<Scene::DynamicMesh>(mesh.shared_from_this()), renderer), _mesh(mesh),
+		  _renderer(renderer) {
 	}
 
 	~DynamicMesh() override {
@@ -115,14 +116,14 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::DynamicMesh> _mesh;
+	Scene::DynamicMesh &_mesh;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
 class StaticMesh : public RendererMesh {
 public:
-	StaticMesh(const std::shared_ptr<Scene::StaticMesh> &mesh, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: RendererMesh(mesh->getSourceMesh(), renderer), _mesh(mesh), _renderer(renderer) {
+	StaticMesh(Scene::StaticMesh &mesh, const std::shared_ptr<OpenGLRenderer> &renderer)
+		: RendererMesh(mesh.getSourceMesh(), renderer), _mesh(mesh), _renderer(renderer) {
 	}
 
 	~StaticMesh() override {
@@ -133,7 +134,7 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::StaticMesh> _mesh;
+	Scene::StaticMesh &_mesh;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 

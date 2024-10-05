@@ -4,9 +4,9 @@
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 
 #include "RenderContext.hpp"
+#include "RendererDefaults.hpp"
 #include "RendererObjectManager.hpp"
 #include "Scene/Node/WorldNode.hpp"
-#include "RendererInternals.hpp"
 #include "Scene/Renderer/RendererDefaults.hpp"
 
 #include <GL/glew.h>
@@ -25,16 +25,8 @@ static void initializeOpenGL() {
 	}
 }
 
-OpenGLRenderer::OpenGLRenderer(RendererSettings &settings) : Renderer(), _frameSize(settings.frame_size),
- 															  _internals(nullptr) {
-
-	initializeOpenGL();
-
-	std::cout << "OpenGLRenderer created" << std::endl;
-	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-
-	_internals = std::make_unique<RendererInternals>();
-	_defaults = std::make_unique<Scene::RendererDefaults>();
+OpenGLRenderer::OpenGLRenderer(RendererSettings &settings)
+	: Renderer(), _frameSize(settings.frame_size), _defaults(nullptr) {
 }
 
 OpenGLRenderer::~OpenGLRenderer() {
@@ -42,7 +34,7 @@ OpenGLRenderer::~OpenGLRenderer() {
 }
 
 void OpenGLRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) {
-	OpenGL::RendererObjectManager manager(std::dynamic_pointer_cast<OpenGLRenderer>(shared_from_this()));
+	OpenGL::RendererObjectManager manager(std::static_pointer_cast<OpenGLRenderer>(shared_from_this()));
 	world->traverseTopDown([&manager](const std::shared_ptr<Scene::Node> &node) {
 		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderable>(node);
 		if (renderElement && renderElement->isDirty()) {
@@ -51,8 +43,8 @@ void OpenGLRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 	});
 }
 
-const std::unique_ptr<Scene::RendererDefaults> &OpenGLRenderer::getRendererDefaults() const {
-	return _defaults;
+const Scene::RendererDefaults &OpenGLRenderer::getRendererDefaults() const {
+	return *_defaults;
 }
 
 void OpenGLRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {
@@ -67,6 +59,17 @@ void OpenGLRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 
 void OpenGLRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
 	_frameSize = size;
+}
+
+void OpenGLRenderer::initialize() {
+	initializeOpenGL();
+	std::cout << "OpenGLRenderer created" << std::endl;
+	std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+	_defaults = std::make_unique<RendererDefaults>(std::static_pointer_cast<OpenGLRenderer>(shared_from_this()));
+}
+
+const RendererDefaults &OpenGLRenderer::getOpenGLRendererDefaults() const {
+	return *_defaults;
 }
 
 

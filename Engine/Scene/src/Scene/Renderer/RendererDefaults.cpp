@@ -6,11 +6,11 @@
 
 namespace Stone::Scene {
 
-RendererDefaults::RendererDefaults() : _defaultMaterial(nullptr) {
+RendererDefaults::RendererDefaults() : _material(nullptr) {
 }
 
-const std::shared_ptr<Material> &RendererDefaults::getDefaultMaterial() const {
-	return _defaultMaterial;
+const std::shared_ptr<Material> &RendererDefaults::getMaterial() const {
+	return _material;
 }
 
 } // namespace Stone::Scene

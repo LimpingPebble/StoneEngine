@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Material.hpp"
 #include "Mesh.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Node/MeshNode.hpp"
@@ -10,63 +11,59 @@
 
 #include <GL/glew.h>
 
-template <typename T>
-const std::shared_ptr<T> &first_non_null(const std::shared_ptr<T> &ptr) {
-	return ptr;
-}
-
-template <typename T, typename... Args>
-const std::shared_ptr<T> &first_non_null(const std::shared_ptr<T> &ptr, const Args &...args) {
-	if (ptr != nullptr) {
-		return ptr;
-	}
-	return first_non_null(args...);
-}
-
 namespace Stone::Render::OpenGL {
 
 class MeshNode : public Scene::IRendererObject {
 public:
-	MeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
+	MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _meshNode(meshNode), _renderer(renderer) {
+
+		std::shared_ptr<Scene::Material> usedMaterial =
+			meshNode.getMaterial() ? meshNode.getMaterial()
+			: meshNode.getMesh() != nullptr && meshNode.getMesh()->getDefaultMaterial() != nullptr
+				? meshNode.getMesh()->getDefaultMaterial()
+				: renderer->getRendererDefaults().getMaterial();
+
+		usedMaterial->getRendererObject<Material>()->makeMeshProgram();
 	}
 
-	~MeshNode() override {
-	}
+	~MeshNode() override = default;
 
 	void render(Scene::RenderContext &context) override {
-		(void)context;
-		assert(_meshNode.expired() == false);
-
-		auto meshNode = _meshNode.lock();
-		auto mesh = meshNode->getMesh();
-		if (mesh == nullptr) {
+		auto mesh = _meshNode.getMesh();
+		if (mesh == nullptr)
 			return;
-		}
 
 		auto rendererMesh = mesh->getRendererObject<RendererMesh>();
 		if (rendererMesh == nullptr) {
 			return;
 		}
-
-		auto material = first_non_null(meshNode->getMaterial(), mesh->getDefaultMaterial(), _renderer.lock()->getRendererDefaults()->getDefaultMaterial());
-
 		const VRAMMesh &vramMesh = rendererMesh->getVRAMMesh();
 
-		// TODO: Retrieve the corect shader program to use
+		std::shared_ptr<Scene::Material> sceneMaterial = _meshNode.getMaterial() ? _meshNode.getMaterial()
+														 : mesh->getDefaultMaterial()
+															 ? mesh->getDefaultMaterial()
+															 : context.renderer->getRendererDefaults().getMaterial();
+
+		assert(sceneMaterial != nullptr);
+		assert(sceneMaterial->isDirty() == false);
+
+		std::shared_ptr<Material> material = sceneMaterial->getRendererObject<Material>();
+
+		material->useMeshProgram();
+		material->render(context);
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		// TODO: Send uniforms from context to shader
-
-		// Send material uniforms to program
+		glBindVertexArray(vramMesh.elementsBuffer);
+		glDrawElements(GL_TRIANGLES, vramMesh.numIndices, GL_UNSIGNED_INT, 0);
 	}
 
 private:
-	std::weak_ptr<Scene::MeshNode> _meshNode;
+	Scene::MeshNode &_meshNode;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 

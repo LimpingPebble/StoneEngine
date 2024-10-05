@@ -21,8 +21,8 @@ void VulkanRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> 
 	});
 }
 
-const std::unique_ptr<Scene::RendererDefaults> &VulkanRenderer::getRendererDefaults() const {
-	return _rendererDefaults;
+const Scene::RendererDefaults &VulkanRenderer::getRendererDefaults() const {
+	return *_rendererDefaults;
 }
 
 void VulkanRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {

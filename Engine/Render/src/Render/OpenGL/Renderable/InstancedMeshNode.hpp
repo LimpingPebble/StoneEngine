@@ -11,8 +11,7 @@ namespace Stone::Render::OpenGL {
 
 class InstancedMeshNode : public Scene::IRendererObject {
 public:
-	InstancedMeshNode(const std::shared_ptr<Scene::InstancedMeshNode> &instancedMeshNode,
-					  const std::shared_ptr<OpenGLRenderer> &renderer)
+	InstancedMeshNode(Scene::InstancedMeshNode &instancedMeshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _instancedMeshNode(instancedMeshNode), _renderer(renderer) {
 	}
 
@@ -24,7 +23,7 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::InstancedMeshNode> _instancedMeshNode;
+	Scene::InstancedMeshNode &_instancedMeshNode;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 

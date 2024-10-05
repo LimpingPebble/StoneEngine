@@ -16,7 +16,7 @@
 	void RendererObjectManager::update##RenderableClass(const std::shared_ptr<Scene::RenderableClass> &(object)) {     \
 		Scene::RendererObjectManager::update##RenderableClass((object));                                               \
                                                                                                                        \
-		auto new##RenderableClass = std::make_shared<OpenGL::RenderableClass>((object), _renderer);                    \
+		auto new##RenderableClass = std::make_shared<OpenGL::RenderableClass>(*(object), _renderer);                   \
 		setRendererObjectTo((object).get(), new##RenderableClass);                                                     \
 	}
 
@@ -46,6 +46,6 @@ UPDATE_RENDERER_OBJECT(StaticSkinMesh, staticSkinMesh)
 
 UPDATE_RENDERER_OBJECT(Texture, texture)
 
-UPDATE_RENDERER_OBJECT(Shader, shader)
+UPDATE_RENDERER_OBJECT(FragmentShader, shader)
 
 } // namespace Stone::Render::OpenGL

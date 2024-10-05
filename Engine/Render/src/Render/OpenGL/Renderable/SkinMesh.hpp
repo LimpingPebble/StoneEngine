@@ -11,8 +11,7 @@ namespace Stone::Render::OpenGL {
 
 class DynamicSkinMesh : public Scene::IRendererObject {
 public:
-	DynamicSkinMesh(const std::shared_ptr<Scene::DynamicSkinMesh> &skinMesh,
-					const std::shared_ptr<OpenGLRenderer> &renderer)
+	DynamicSkinMesh(Scene::DynamicSkinMesh &skinMesh, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _skinMesh(skinMesh), _renderer(renderer) {
 	}
 
@@ -24,14 +23,13 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::DynamicSkinMesh> _skinMesh;
+	Scene::DynamicSkinMesh &_skinMesh;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
 class StaticSkinMesh : public Scene::IRendererObject {
 public:
-	StaticSkinMesh(const std::shared_ptr<Scene::StaticSkinMesh> &skinMesh,
-				   const std::shared_ptr<OpenGLRenderer> &renderer)
+	StaticSkinMesh(Scene::StaticSkinMesh &skinMesh, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _skinMesh(skinMesh), _renderer(renderer) {
 	}
 
@@ -43,7 +41,7 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::StaticSkinMesh> _skinMesh;
+	Scene::StaticSkinMesh &_skinMesh;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 

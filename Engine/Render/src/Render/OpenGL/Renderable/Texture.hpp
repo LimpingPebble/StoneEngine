@@ -43,10 +43,10 @@ GLuint convert(Scene::TextureWrap wrap) {
 
 class Texture : public Scene::IRendererObject {
 public:
-	Texture(const std::shared_ptr<Scene::Texture> &texture, const std::shared_ptr<OpenGLRenderer> &renderer)
+	Texture(Scene::Texture &texture, const std::shared_ptr<OpenGLRenderer> &renderer)
 		: _texture(texture), _renderer(renderer) {
 
-		std::shared_ptr<Core::Image::ImageSource> imageSource = texture->getImage();
+		std::shared_ptr<Core::Image::ImageSource> imageSource = texture.getImage();
 		if (imageSource == nullptr) {
 			return;
 		}
@@ -63,10 +63,10 @@ public:
 		glTexImage2D(GL_TEXTURE_2D, 0, format, imageData->getSize().x, imageData->getSize().y, 0, format,
 					 GL_UNSIGNED_BYTE, imageData->getData());
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, convert(texture->getWrap()));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, convert(texture->getWrap()));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert(texture->getMinFilter()));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert(texture->getMagFilter()));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, convert(texture.getWrap()));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, convert(texture.getWrap()));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert(texture.getMinFilter()));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert(texture.getMagFilter()));
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -86,7 +86,7 @@ public:
 	}
 
 private:
-	std::weak_ptr<Scene::Texture> _texture;
+	Scene::Texture &_texture;
 	std::weak_ptr<OpenGLRenderer> _renderer;
 
 	GLuint _buffer = 0;

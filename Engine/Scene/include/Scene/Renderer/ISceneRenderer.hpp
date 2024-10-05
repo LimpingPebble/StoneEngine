@@ -8,6 +8,8 @@
 
 namespace Stone::Scene {
 
+class RendererDefaults;
+
 /**
  * @brief Interface for a scene renderer.
  */
@@ -21,7 +23,7 @@ public:
 	/**
 	 * @brief Get the renderer defaults.
 	 */
-	[[nodiscard]] virtual const class RendererDefaults &getRendererDefaults() const = 0;
+	[[nodiscard]] virtual const RendererDefaults &getRendererDefaults() const = 0;
 
 	/**
 	 * @brief Request the renderer to render the world from the given world root node.

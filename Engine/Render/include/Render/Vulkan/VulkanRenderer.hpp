@@ -28,7 +28,7 @@ public:
 	/** Renderer */
 
 	void updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) override;
-	const std::unique_ptr<Scene::RendererDefaults> &getRendererDefaults() const override;
+	const Scene::RendererDefaults &getRendererDefaults() const override;
 	void renderWorld(const std::shared_ptr<Scene::WorldNode> &world) override;
 
 	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
