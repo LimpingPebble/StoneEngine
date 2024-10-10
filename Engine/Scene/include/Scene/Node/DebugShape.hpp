@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Scene/Geometry.hpp"
 #include "Scene/Node/RenderableNode.hpp"
 
 namespace Stone::Scene {
@@ -11,7 +12,6 @@ namespace Stone::Scene {
  * @brief Represents a debug shape node.
  *
  * The `DebugShape` class represents a debug shape node in the scene graph.
- * It's transform location in the scene graph does not affect the rendering of the shape.
  */
 class DebugShape : public RenderableNode {
 	STONE_NODE(DebugShape);
@@ -29,19 +29,40 @@ public:
 	[[nodiscard]] glm::vec3 getColor() const;
 	void setColor(const glm::vec3 &color);
 
-	[[nodiscard]] float getWidth() const;
-	void setWidth(float width);
+	[[nodiscard]] float getThickness() const;
+	void setThickness(float thickness);
 
-	[[nodiscard]] const std::vector<glm::vec3> &getVertices() const;
-	std::vector<glm::vec3> &getVerticesRef();
+	[[nodiscard]] const std::vector<std::vector<glm::vec3>> &getPoints() const;
+	std::vector<std::vector<glm::vec3>> &pointsRef();
+
+	[[nodiscard]] bool isDrawLine() const;
+	void setDrawLine(bool drawLine);
 
 	[[nodiscard]] float getLifespan() const;
 	void setLifespan(float lifespan);
 
+	template <typename ShapeType, typename... Args>
+	static std::shared_ptr<DebugShape> create(const ShapeType &shape, Args &&...args) {
+		auto debugShape = std::make_shared<DebugShape>();
+
+		auto [indices, vertices] = generateGeometryMesh(shape, std::forward<Args>(args)...);
+
+		auto &points = debugShape->pointsRef().emplace_back();
+		points.reserve(indices.size());
+		for (auto &index : indices) {
+			points.push_back(vertices[index]);
+		}
+
+		return debugShape;
+	}
+
 protected:
-	glm::vec3 _color;				  /** The color of the debug shape. */
-	float _width;					  /** The line width of the debug shape. */
-	std::vector<glm::vec3> _vertices; /** The vertices of the debug shape. */
+	glm::vec3 _color; /** The color of the debug shape. */
+	float _thickness; /** The line thickness of the debug shape. */
+
+	std::vector<std::vector<glm::vec3>> _points; /** The vertices of the debug shape. */
+
+	bool _drawLine; /** Whether to draw the debug shape as a line. */
 
 	float _lifespan; /** The lifespan of the debug shape. */
 };

@@ -1,7 +1,5 @@
 // Copyright 2024 Stone-Engine
 
-#pragma once
-
 #include "Scene/Node/DebugShape.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -12,22 +10,26 @@ namespace Stone::Scene {
 STONE_NODE_IMPLEMENTATION(DebugShape)
 
 DebugShape::DebugShape(const std::string &name)
-	: RenderableNode(name), _color(glm::vec3(1.0f)), _width(1.0f), _vertices(), _lifespan(0.0f) {
+	: RenderableNode(name), _color(glm::vec3(1.0f)), _thickness(1.0f), _points(), _drawLine(true), _lifespan(0.0f) {
 }
 
 std::ostream &DebugShape::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	RenderableNode::writeToStream(stream, false);
 	stream << ",color:" << _color;
-	stream << ",width:" << _width;
-	stream << ",vertices:[";
-	for (std::size_t i = 0; i < _vertices.size(); ++i) {
-		stream << _vertices[i];
-		if (i < _vertices.size() - 1) {
+	stream << ",thickness:" << _thickness;
+	stream << ",points:[";
+	for (std::size_t i = 0; i < _points.size(); i++) {
+		if (i > 0)
 			stream << ",";
+		stream << "[";
+		for (std::size_t j = 0; j < _points[i].size(); j++) {
+			if (j > 0)
+				stream << ",";
+			stream << _points[i][j];
 		}
+		stream << "]";
 	}
-	stream << "]";
-	stream << ",lifespan:" << _lifespan;
+	stream << "],lifespan:" << _lifespan;
 	if (closing_bracer)
 		stream << "}";
 	return stream;
@@ -53,22 +55,22 @@ void DebugShape::setColor(const glm::vec3 &color) {
 	markDirty();
 }
 
-float DebugShape::getWidth() const {
-	return _width;
+float DebugShape::getThickness() const {
+	return _thickness;
 }
 
-void DebugShape::setWidth(float width) {
-	_width = width;
+void DebugShape::setThickness(float thickness) {
+	_thickness = thickness;
 	markDirty();
 }
 
-const std::vector<glm::vec3> &DebugShape::getVertices() const {
-	return _vertices;
+const std::vector<std::vector<glm::vec3>> &DebugShape::getPoints() const {
+	return _points;
 }
 
-std::vector<glm::vec3> &DebugShape::getVerticesRef() {
+std::vector<std::vector<glm::vec3>> &DebugShape::pointsRef() {
 	markDirty();
-	return _vertices;
+	return _points;
 }
 
 float DebugShape::getLifespan() const {
@@ -77,7 +79,6 @@ float DebugShape::getLifespan() const {
 
 void DebugShape::setLifespan(float lifespan) {
 	_lifespan = lifespan;
-	markDirty();
 }
 
 }; // namespace Stone::Scene
