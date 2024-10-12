@@ -10,6 +10,7 @@ apt install vulkan-tools libvulkan-dev vulkan-validationlayers-dev
 apt install libglfw3-dev libglm-dev
 apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev zlib1g-dev
 apt install libboost-all-dev
+apt install glew-utils libglew-dev
 ```
 
 ```bash

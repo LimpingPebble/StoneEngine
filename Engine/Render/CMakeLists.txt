@@ -1,6 +1,6 @@
 setup_module(
 		NAME render
-		TARGET_DEPS logging widgets utils
+		TARGET_DEPS logging widgets utils gfx_api
 		VARIABLE_DEPS Vulkan_LIBRARIES Vulkan_INCLUDE_DIRS
 		SPECIAL_HEADER_PATHS ${Vulkan_INCLUDE_DIRS}
 		SPECIAL_LIBS ${Vulkan_LIBRARIES}

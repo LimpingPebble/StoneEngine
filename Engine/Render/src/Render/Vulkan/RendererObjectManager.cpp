@@ -65,8 +65,8 @@ void RendererObjectManager::updateTexture(const std::shared_ptr<Scene::Texture> 
 	setRendererObjectTo(texture.get(), newTexture);
 }
 
-void RendererObjectManager::updateShader(const std::shared_ptr<Scene::Shader> &shader) {
-	Scene::RendererObjectManager::updateShader(shader);
+void RendererObjectManager::updateFragmentShader(const std::shared_ptr<Scene::FragmentShader> &shader) {
+	Scene::RendererObjectManager::updateFragmentShader(shader);
 
 	if (shader->getRendererObject<Vulkan::Shader>()) {
 		return;

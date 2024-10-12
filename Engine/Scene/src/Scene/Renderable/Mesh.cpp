@@ -2,8 +2,6 @@
 
 #include "Scene/Renderable/Mesh.hpp"
 
-#include "Scene/RendererObjectManager.hpp"
-
 namespace Stone::Scene {
 
 std::ostream &DynamicMesh::writeToStream(std::ostream &stream, bool closing_bracer) const {

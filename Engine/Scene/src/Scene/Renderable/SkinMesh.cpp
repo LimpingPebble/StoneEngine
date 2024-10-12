@@ -3,7 +3,6 @@
 #include "Scene/Renderable/SkinMesh.hpp"
 
 #include "Scene/Node/SkeletonNode.hpp"
-#include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {
 

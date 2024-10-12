@@ -85,9 +85,9 @@ int main(int argc, char **argv) {
 		meshNode->setMaterial(stone_material);
 
 		// Create a shader from a file
-		auto stone_shader = std::make_shared<Stone::Scene::Shader>("shaders/frag.spv");
-		stone_shader->setLocation("diffuse", 1);
-		stone_material->setFragmentShader(stone_shader);
+		// auto stone_shader = std::make_shared<Stone::Scene::FragmentShader>("shaders/frag.spv");
+		// stone_shader->setLocation("diffuse", 1);
+		// stone_material->setFragmentShader(stone_shader);
 
 		// Create a second MeshNode with the same mesh
 		auto meshRotatingNode = window->getWorld()->addChild<RotatingNode>();
@@ -97,9 +97,9 @@ int main(int argc, char **argv) {
 		secondMeshNode->setMesh(mesh);
 
 		// Create a blue material that takes no texture as everything is in the shader code
-		auto blueShader = std::make_shared<Stone::Scene::Shader>("shaders/frag-blue.glsl");
-		auto blueMaterial = std::make_shared<Stone::Scene::Material>();
-		blueMaterial->setFragmentShader(blueShader);
+		// auto blueShader = std::make_shared<Stone::Scene::FragmentShader>("shaders/frag-blue.glsl");
+		// auto blueMaterial = std::make_shared<Stone::Scene::Material>();
+		// blueMaterial->setFragmentShader(blueShader);
 		secondMeshNode->setMaterial(stone_material /* blueMaterial */);
 
 		// Create a camera moving around the scene

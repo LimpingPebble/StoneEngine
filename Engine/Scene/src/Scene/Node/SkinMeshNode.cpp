@@ -5,7 +5,6 @@
 #include "Scene/Node/SkeletonNode.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/SkinMesh.hpp"
-#include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {
 

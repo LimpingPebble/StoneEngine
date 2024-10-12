@@ -89,7 +89,7 @@ public:
 	 * @brief Updates the renderer data for a given shader.
 	 * @param shader The shader to be updated.
 	 */
-	virtual void updateShader(const std::shared_ptr<Shader> &shader);
+	virtual void updateFragmentShader(const std::shared_ptr<FragmentShader> &shader);
 
 protected:
 	/**
