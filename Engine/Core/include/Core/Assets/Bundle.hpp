@@ -26,9 +26,9 @@ public:
 		const std::string &reducedPath = reducePath(filepath);
 		auto it = _resources.find(reducedPath);
 		if (it != _resources.end()) {
-			return std::dynamic_pointer_cast<ResourceType>(it->second);
+			return std::static_pointer_cast<ResourceType>(it->second);
 		}
-		auto thisBundle = std::dynamic_pointer_cast<Bundle>(shared_from_this());
+		auto thisBundle = std::static_pointer_cast<Bundle>(shared_from_this());
 		auto resource = std::make_shared<ResourceType>(thisBundle, reducedPath, std::forward<Args>(args)...);
 		_resources[reducedPath] = resource;
 		return resource;
