@@ -12,7 +12,10 @@ class ObjectPool {
 public:
 	using Id = unsigned int;
 
-	ObjectPool() = default;
+	ObjectPool() : _lastUsableId(1), _objects() {
+		_incrementLastUsableId();
+	};
+
 	ObjectPool(const ObjectPool &) = delete;
 
 	virtual ~ObjectPool() = default;
@@ -40,7 +43,7 @@ public:
 	}
 
 	void refreshId() {
-		_lastUsableId = 0;
+		_lastUsableId = 1;
 		_incrementLastUsableId();
 	}
 
@@ -60,9 +63,9 @@ private:
 		}
 	}
 
-	Id _lastUsableId = 0; // The last id that is usable for the next object
+	Id _lastUsableId; // The last id that is directly usable for the next object
 
-	std::vector<std::weak_ptr<ObjectType>> _objects;
+	std::vector<std::weak_ptr<ObjectType>> _objects; // The objects in the pool
 };
 
 } // namespace Stone::Network

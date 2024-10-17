@@ -67,8 +67,8 @@ TEST(ObjectPool, RefreshId) {
 	auto object2 = std::make_shared<int>(43);
 	PoolId id1 = pool.add(object1);
 	PoolId id2 = pool.add(object2);
-	ASSERT_EQ(id1, 0);
-	ASSERT_EQ(id2, 1);
+	ASSERT_EQ(id1, 1);
+	ASSERT_EQ(id2, 2);
 
 	{
 		auto result1 = pool.get(id1);
@@ -84,7 +84,7 @@ TEST(ObjectPool, RefreshId) {
 
 	auto object3 = std::make_shared<int>(44);
 	PoolId id3 = pool.add(object3);
-	ASSERT_EQ(id3, 2);
+	ASSERT_EQ(id3, 3);
 
 	{
 		auto result3 = pool.get(id3);
@@ -96,6 +96,6 @@ TEST(ObjectPool, RefreshId) {
 	auto newObject2 = std::make_shared<int>(45);
 	PoolId newId1 = pool.add(newObject1);
 	PoolId newId2 = pool.add(newObject2);
-	ASSERT_EQ(newId1, 0);
-	ASSERT_EQ(newId2, 1);
+	ASSERT_EQ(newId1, 1);
+	ASSERT_EQ(newId2, 2);
 }
