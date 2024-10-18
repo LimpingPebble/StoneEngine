@@ -25,6 +25,7 @@ glfw
 boost
 vulkan-extensionlayer
 mesa
+shaderc
 
 clang-format
 brew install glslang
