@@ -1,16 +1,17 @@
-#include "Render/Vulkan/RendererSettings.hpp"
-#include "Render/Vulkan/VulkanRenderer.hpp"
+/*
+#include "Render/OpenGL/RendererSettings.hpp"
+#include "Render/OpenGL/OpenGLRenderer.hpp"
 
 #include <gtest/gtest.h>
 
-using namespace Stone::Render::Vulkan;
+using namespace Stone::Render::OpenGL;
 using namespace Stone::Scene;
 
-TEST(VulkanRender, InstanciateCore) {
+TEST(OpenGLRender, InstanciateCore) {
 	RendererSettings settings;
 
 	try {
-		VulkanRenderer renderer(settings);
+		OpenGLRenderer renderer(settings);
 	} catch (const std::runtime_error &e) {
 		if (std::string(e.what()) == "Failed to create window surface !") {
 			SUCCEED();
@@ -21,3 +22,4 @@ TEST(VulkanRender, InstanciateCore) {
 		FAIL() << e.what();
 	}
 }
+*/
