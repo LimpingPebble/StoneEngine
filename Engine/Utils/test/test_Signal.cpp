@@ -56,7 +56,7 @@ TEST(Signal, SubscribeWithMethod) {
 
 	Signal<int, int> signal;
 	{
-		Slot<int, int> slot(&calc, &Calc::add_numbers);
+		Slot<int, int> slot(std::bind(&Calc::add_numbers, &calc, std::placeholders::_1, std::placeholders::_2));
 		signal.bind(slot);
 		signal(5, 8);
 		EXPECT_EQ(calc.result, 13);
@@ -82,7 +82,7 @@ TEST(Signal, SubscribeWithMethodConst) {
 	Signal<int, int, int &> signal;
 
 	{
-		Slot<int, int, int &> slot(&calc, &Calc::add_numbers);
+		Slot<int, int, int &> slot(std::bind(&Calc::add_numbers, &calc, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
 		signal.bind(slot);
 
@@ -175,7 +175,7 @@ TEST(Signal, BulletGame) {
 		std::shared_ptr<PhysicBody> body;
 		Slot<Actor *> on_body_hit;
 
-		Bullet() : Actor(), body(std::make_shared<PhysicBody>()), on_body_hit(this, &Bullet::on_hit) {
+		Bullet() : Actor(), body(std::make_shared<PhysicBody>()), on_body_hit(std::bind(&Bullet::on_hit, this, std::placeholders::_1)) {
 			body->onHit.bind(on_body_hit);
 		}
 
