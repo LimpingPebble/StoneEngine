@@ -1,19 +1,19 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/Node/DebugShape.hpp"
+#include "Scene/Node/WireframeShape.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/io.hpp>
 
 namespace Stone::Scene {
 
-STONE_NODE_IMPLEMENTATION(DebugShape)
+STONE_NODE_IMPLEMENTATION(WireframeShape)
 
-DebugShape::DebugShape(const std::string &name)
+WireframeShape::WireframeShape(const std::string &name)
 	: RenderableNode(name), _color(glm::vec3(1.0f)), _thickness(1.0f), _points(), _drawLine(true), _lifespan(0.0f) {
 }
 
-std::ostream &DebugShape::writeToStream(std::ostream &stream, bool closing_bracer) const {
+std::ostream &WireframeShape::writeToStream(std::ostream &stream, bool closing_bracer) const {
 	RenderableNode::writeToStream(stream, false);
 	stream << ",color:" << _color;
 	stream << ",thickness:" << _thickness;
@@ -35,7 +35,7 @@ std::ostream &DebugShape::writeToStream(std::ostream &stream, bool closing_brace
 	return stream;
 }
 
-void DebugShape::update(float deltaTime) {
+void WireframeShape::update(float deltaTime) {
 	RenderableNode::update(deltaTime);
 
 	if (_lifespan > 0.0f) {
@@ -46,38 +46,38 @@ void DebugShape::update(float deltaTime) {
 	}
 }
 
-glm::vec3 DebugShape::getColor() const {
+glm::vec3 WireframeShape::getColor() const {
 	return _color;
 }
 
-void DebugShape::setColor(const glm::vec3 &color) {
+void WireframeShape::setColor(const glm::vec3 &color) {
 	_color = color;
 	markDirty();
 }
 
-float DebugShape::getThickness() const {
+float WireframeShape::getThickness() const {
 	return _thickness;
 }
 
-void DebugShape::setThickness(float thickness) {
+void WireframeShape::setThickness(float thickness) {
 	_thickness = thickness;
 	markDirty();
 }
 
-const std::vector<std::vector<glm::vec3>> &DebugShape::getPoints() const {
+const std::vector<std::vector<glm::vec3>> &WireframeShape::getPoints() const {
 	return _points;
 }
 
-std::vector<std::vector<glm::vec3>> &DebugShape::pointsRef() {
+std::vector<std::vector<glm::vec3>> &WireframeShape::pointsRef() {
 	markDirty();
 	return _points;
 }
 
-float DebugShape::getLifespan() const {
+float WireframeShape::getLifespan() const {
 	return _lifespan;
 }
 
-void DebugShape::setLifespan(float lifespan) {
+void WireframeShape::setLifespan(float lifespan) {
 	_lifespan = lifespan;
 }
 

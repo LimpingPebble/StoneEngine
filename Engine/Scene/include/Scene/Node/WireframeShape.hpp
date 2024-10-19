@@ -8,19 +8,19 @@
 namespace Stone::Scene {
 
 /**
- * @class DebugShape
+ * @class WireframeShape
  * @brief Represents a debug shape node.
  *
- * The `DebugShape` class represents a debug shape node in the scene graph.
+ * The `WireframeShape` class represents a debug shape node in the scene graph.
  */
-class DebugShape : public RenderableNode {
-	STONE_NODE(DebugShape);
+class WireframeShape : public RenderableNode {
+	STONE_NODE(WireframeShape);
 
 public:
-	explicit DebugShape(const std::string &name = "debug_shape");
-	DebugShape(const DebugShape &other) = default;
+	explicit WireframeShape(const std::string &name = "debug_shape");
+	WireframeShape(const WireframeShape &other) = default;
 
-	~DebugShape() override = default;
+	~WireframeShape() override = default;
 
 	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
 
@@ -42,18 +42,18 @@ public:
 	void setLifespan(float lifespan);
 
 	template <typename ShapeType, typename... Args>
-	static std::shared_ptr<DebugShape> create(const ShapeType &shape, Args &&...args) {
-		auto debugShape = std::make_shared<DebugShape>();
+	static std::shared_ptr<WireframeShape> create(const ShapeType &shape, Args &&...args) {
+		auto wireframeShape = std::make_shared<WireframeShape>();
 
 		auto [indices, vertices] = generateGeometryMesh(shape, std::forward<Args>(args)...);
 
-		auto &points = debugShape->pointsRef().emplace_back();
+		auto &points = wireframeShape->pointsRef().emplace_back();
 		points.reserve(indices.size());
 		for (auto &index : indices) {
 			points.push_back(vertices[index]);
 		}
 
-		return debugShape;
+		return wireframeShape;
 	}
 
 protected:
@@ -62,7 +62,7 @@ protected:
 
 	std::vector<std::vector<glm::vec3>> _points; /** The vertices of the debug shape. */
 
-	bool _drawLine; /** Whether to draw the debug shape as a line. */
+	bool _drawLine; /** Whether to draw the debug shape as a line or as dots. */
 
 	float _lifespan; /** The lifespan of the debug shape. */
 };
