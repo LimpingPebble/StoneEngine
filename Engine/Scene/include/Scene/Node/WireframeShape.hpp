@@ -11,8 +11,8 @@ namespace Stone::Scene {
  * @class WireframeShape
  * @brief Represents a wireframe shape that can be rendered in a scene.
  *
- * The WireframeShape class is a subclass of RenderableNode and provides functionality for creating and manipulating wireframe shapes.
- * Wireframe shapes are represented by a collection of vertices and can be rendered as lines or dots.
+ * The WireframeShape class is a subclass of RenderableNode and provides functionality for creating and manipulating
+ * wireframe shapes. Wireframe shapes are represented by a collection of vertices and can be rendered as lines or dots.
  * The color, line thickness, and lifespan of the wireframe shape can be customized.
  */
 class WireframeShape : public RenderableNode {
@@ -48,7 +48,7 @@ public:
 
 	/**
 	 * @brief Retrieves the color
-	 * 
+	 *
 	 * @return The color of the wireframe shape as a glm::vec3.
 	 */
 	[[nodiscard]] glm::vec3 getColor() const;
@@ -61,7 +61,7 @@ public:
 
 	/**
 	 * @brief Retrieves the thickness of the wireframe shape.
-	 * 
+	 *
 	 * @return The thickness of the wireframe shape.
 	 */
 	[[nodiscard]] float getThickness() const;
@@ -80,27 +80,27 @@ public:
 	[[nodiscard]] const std::vector<std::vector<glm::vec3>> &getPoints() const;
 	/**
 	 * @brief Returns a reference to the vector of vector of glm::vec3 points.
-	 * 
+	 *
 	 * @return std::vector<std::vector<glm::vec3>>& A reference to the vector of vector of glm::vec3 points.
 	 */
 	std::vector<std::vector<glm::vec3>> &pointsRef();
 
 	/**
 	 * @brief Checks if the wireframe shape should be drawn as a line.
-	 * 
+	 *
 	 * @return true if the wireframe shape should be drawn as a line, false otherwise.
 	 */
 	[[nodiscard]] bool isDrawLine() const;
 	/**
 	 * @brief Sets whether to draw the wireframe shape as a line.
-	 * 
+	 *
 	 * @param drawLine True to draw the wireframe shape as a line, false otherwise.
 	 */
 	void setDrawLine(bool drawLine);
 
 	/**
 	 * @brief Creates a new instance of WireframeShape with the specified shape and arguments.
-	 * 
+	 *
 	 * @tparam ShapeType The type of shape to generate.
 	 * @tparam Args The types of arguments to pass to the shape generator.
 	 * @param shape The shape to generate.
