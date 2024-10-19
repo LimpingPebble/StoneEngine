@@ -10,7 +10,7 @@ namespace Stone::Scene {
 STONE_NODE_IMPLEMENTATION(WireframeShape)
 
 WireframeShape::WireframeShape(const std::string &name)
-	: RenderableNode(name), _color(glm::vec3(1.0f)), _thickness(1.0f), _points(), _drawLine(true), _lifespan(0.0f) {
+	: RenderableNode(name), _color(glm::vec3(1.0f)), _thickness(1.0f), _points(), _drawLine(true) {
 }
 
 std::ostream &WireframeShape::writeToStream(std::ostream &stream, bool closing_bracer) const {
@@ -29,21 +29,10 @@ std::ostream &WireframeShape::writeToStream(std::ostream &stream, bool closing_b
 		}
 		stream << "]";
 	}
-	stream << "],lifespan:" << _lifespan;
+	stream << "]";
 	if (closing_bracer)
 		stream << "}";
 	return stream;
-}
-
-void WireframeShape::update(float deltaTime) {
-	RenderableNode::update(deltaTime);
-
-	if (_lifespan > 0.0f) {
-		_lifespan -= deltaTime;
-		if (_lifespan <= 0.0f) {
-			removeFromParent();
-		}
-	}
 }
 
 glm::vec3 WireframeShape::getColor() const {
@@ -71,14 +60,6 @@ const std::vector<std::vector<glm::vec3>> &WireframeShape::getPoints() const {
 std::vector<std::vector<glm::vec3>> &WireframeShape::pointsRef() {
 	markDirty();
 	return _points;
-}
-
-float WireframeShape::getLifespan() const {
-	return _lifespan;
-}
-
-void WireframeShape::setLifespan(float lifespan) {
-	_lifespan = lifespan;
 }
 
 }; // namespace Stone::Scene
