@@ -99,6 +99,20 @@ public:
 	void setDrawLine(bool drawLine);
 
 	/**
+	 * @brief Checks if the wireframe shape should ignore the depth buffer.
+	 *
+	 * @return true if the wireframe shape should ignore the depth buffer, false otherwise.
+	 */
+	[[nodiscard]] bool isIgnoreDepth() const;
+
+	/**
+	 * @brief Sets whether to ignore the depth buffer when rendering the wireframe shape.
+	 *
+	 * @param ignoreDepth True to ignore the depth buffer, false otherwise.
+	 */
+	void setIgnoreDepth(bool ignoreDepth);
+
+	/**
 	 * @brief Creates a new instance of WireframeShape with the specified shape and arguments.
 	 *
 	 * @tparam ShapeType The type of shape to generate.
@@ -128,7 +142,8 @@ protected:
 
 	std::vector<std::vector<glm::vec3>> _points; /** The vertices of the debug shape. */
 
-	bool _drawLine; /** Whether to draw the debug shape as a line or as dots. */
+	bool _drawLine;	   /** Whether to draw the debug shape as a line or as dots. */
+	bool _ignoreDepth; /** Whether to ignore the depth buffer when rendering the debug shape. */
 };
 
 } // namespace Stone::Scene
