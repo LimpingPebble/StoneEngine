@@ -1,6 +1,6 @@
 /*
-#include "Render/OpenGL/RendererSettings.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
+#include "Render/OpenGL/RendererSettings.hpp"
 
 #include <gtest/gtest.h>
 
