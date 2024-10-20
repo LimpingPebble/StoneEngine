@@ -21,12 +21,12 @@ GLuint convert(Core::Image::Channel channel) {
 	}
 }
 
-GLuint convert(Scene::TextureFilter filter) {
+GLuint convert(Scene::TextureFilter filter, bool mipmap) {
 	switch (filter) {
-	case Scene::TextureFilter::Nearest: return GL_NEAREST;
-	case Scene::TextureFilter::Linear: return GL_LINEAR;
-	case Scene::TextureFilter::Cubic: return GL_LINEAR;
-	default: return GL_LINEAR;
+	case Scene::TextureFilter::Nearest: return mipmap ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
+	case Scene::TextureFilter::Linear: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+	case Scene::TextureFilter::Cubic: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+	default: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 	}
 }
 
@@ -65,8 +65,8 @@ public:
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, convert(texture.getWrap()));
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, convert(texture.getWrap()));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert(texture.getMinFilter()));
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert(texture.getMagFilter()));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, convert(texture.getMinFilter(), true));
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, convert(texture.getMagFilter(), false));
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
