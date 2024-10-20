@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RenderContext.hpp"
+#include "Scene/Renderer/RenderContext.hpp"
 
 #include <vulkan/vulkan.h>
 
