@@ -90,27 +90,27 @@ public:
 	 *
 	 * @return true if the wireframe shape should be drawn as a line, false otherwise.
 	 */
-	[[nodiscard]] bool isDrawLine() const;
+	[[nodiscard]] bool isDrawingLine() const;
 	/**
 	 * @brief Sets whether to draw the wireframe shape as a line.
 	 *
 	 * @param drawLine True to draw the wireframe shape as a line, false otherwise.
 	 */
-	void setDrawLine(bool drawLine);
+	void setDrawingLine(bool drawLine);
 
 	/**
 	 * @brief Checks if the wireframe shape should ignore the depth buffer.
 	 *
 	 * @return true if the wireframe shape should ignore the depth buffer, false otherwise.
 	 */
-	[[nodiscard]] bool isIgnoreDepth() const;
+	[[nodiscard]] bool isIgnoringDepth() const;
 
 	/**
 	 * @brief Sets whether to ignore the depth buffer when rendering the wireframe shape.
 	 *
 	 * @param ignoreDepth True to ignore the depth buffer, false otherwise.
 	 */
-	void setIgnoreDepth(bool ignoreDepth);
+	void setIgnoringDepth(bool ignoreDepth);
 
 	/**
 	 * @brief Creates a new instance of WireframeShape with the specified shape and arguments.

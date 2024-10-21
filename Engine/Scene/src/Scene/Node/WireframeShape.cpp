@@ -63,20 +63,20 @@ std::vector<std::vector<glm::vec3>> &WireframeShape::pointsRef() {
 	return _points;
 }
 
-bool WireframeShape::isDrawLine() const {
+bool WireframeShape::isDrawingLine() const {
 	return _drawLine;
 }
 
-void WireframeShape::setDrawLine(bool drawLine) {
+void WireframeShape::setDrawingLine(bool drawLine) {
 	_drawLine = drawLine;
 	markDirty();
 }
 
-bool WireframeShape::isIgnoreDepth() const {
+bool WireframeShape::isIgnoringDepth() const {
 	return _ignoreDepth;
 }
 
-void WireframeShape::setIgnoreDepth(bool ignoreDepth) {
+void WireframeShape::setIgnoringDepth(bool ignoreDepth) {
 	_ignoreDepth = ignoreDepth;
 	markDirty();
 }
