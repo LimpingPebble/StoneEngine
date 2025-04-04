@@ -16,14 +16,14 @@ public:
 
 	~InstancedMeshNode() override = default;
 
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	void addInstance(const Transform3D &transform);
 	void removeInstance(int index);
 	void clearInstances();
 
 	[[nodiscard]] const std::vector<Transform3D> &getInstancesTransforms() const;
-	[[nodiscard]] Transform3D &instanceTransformRef(size_t index);
+	void withInstanceTransforms(const std::function<void(std::vector<Transform3D> &)> &func);
 
 protected:
 	std::vector<Transform3D> _instancesTransforms;

@@ -1,31 +1,29 @@
-// Copyright 2024 Stone-Engine
-
 #pragma once
 
-#include <memory>
-#include <sstream>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include <variant>
 #include <vector>
 
-namespace Stone::Json {
+namespace Json {
 
 struct Value;
 
-using Object = std::unordered_map<std::string, std::shared_ptr<Value>>;
-using Array = std::vector<std::shared_ptr<Value>>;
+using Object = std::unordered_map<std::string, Value>;
+using Array = std::vector<Value>;
 
 struct Value {
 
 	std::variant<Object, Array, std::string, double, bool, std::nullptr_t> value;
 
-	explicit Value(Object obj);
-	explicit Value(Array arr);
-	explicit Value(std::string str);
-	explicit Value(double num);
-	explicit Value(bool b);
-	explicit Value(std::nullptr_t n = nullptr);
+	Value() : value(nullptr) {
+	}
+
+	template <typename T, typename = std::enable_if_t<std::is_constructible_v<
+							  std::variant<Object, Array, std::string, double, bool, std::nullptr_t>, T>>>
+	Value(T &&val) : value(std::forward<T>(val)) {
+	}
 
 	template <typename T>
 	bool is() const {
@@ -46,17 +44,20 @@ struct Value {
 		return std::get<T>(value);
 	}
 
-	static std::shared_ptr<Value> parseString(const std::string &input);
-	static std::shared_ptr<Value> parseFile(const std::string &path);
+	void serialize(std::ostream &stream) const;
 	std::string serialize() const;
 };
 
-std::shared_ptr<Value> object(const Object &obj = {});
-std::shared_ptr<Value> array(const Array &arr = {});
-std::shared_ptr<Value> string(const std::string &str = "");
-std::shared_ptr<Value> number(double num = 0.0);
-std::shared_ptr<Value> boolean(bool b = false);
-std::shared_ptr<Value> null();
+void parseStream(std::istream &input, Value &out);
+void parseString(const std::string &input, Value &out);
+void parseFile(const std::string &path, Value &out);
+
+Value object(const Object &obj = {});
+Value array(const Array &arr = {});
+Value string(const std::string &str = "");
+Value number(double num = 0.0);
+Value boolean(bool b = false);
+Value null();
 
 
 enum class TokenType {
@@ -74,6 +75,9 @@ enum class TokenType {
 	EndOfFile
 };
 
+std::string to_string(TokenType type);
+std::ostream &operator<<(std::ostream &os, TokenType type);
+
 struct Token {
 	TokenType type;
 	std::string value;
@@ -81,13 +85,13 @@ struct Token {
 
 class Lexer {
 public:
-	explicit Lexer(const std::string &input);
+	explicit Lexer(std::istream &input);
 
 	Token nextToken();
 
 private:
-	const std::string &_input;
-	std::size_t _pos = 0;
+	std::istream &_input;
+	char _currentChar = ' ';
 
 	Token _stringToken();
 	Token _otherTokens();
@@ -96,25 +100,29 @@ private:
 
 class Parser {
 public:
-	explicit Parser(const std::string &input);
+	explicit Parser(std::istream &input);
 
-	std::shared_ptr<Value> parse();
+	void parse(Value &out);
 
 private:
 	Lexer _lexer;
 	Token _currentToken;
 
-	std::shared_ptr<Value> _parseValue();
-	std::shared_ptr<Value> _parseObject();
-	std::shared_ptr<Value> _parseArray();
-	std::shared_ptr<Value> _parsePrimitive();
-	void _consume(TokenType expected);
+	void _parseValue(Value &out);
+	void _parseObject(Value &out);
+	void _parseArray(Value &out);
+	void _parsePrimitive(Value &out);
+
+	void _nextToken();
+	void _expect(TokenType expected) const;
 };
 
 class Serializer {
 
 public:
-	std::string serialize(const Value &value);
+	explicit Serializer(std::ostream &stream);
+
+	void serialize(const Value &value);
 
 	void operator()(const Object &obj);
 	void operator()(const Array &arr);
@@ -124,7 +132,10 @@ public:
 	void operator()(std::nullptr_t);
 
 private:
-	std::stringstream _ss;
+	std::ostream &_stream;
 };
 
-} // namespace Stone::Json
+std::ostream &operator<<(std::ostream &os, const Value &val);
+std::istream &operator>>(std::istream &is, Value &val);
+
+} // namespace Json

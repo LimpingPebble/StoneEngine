@@ -8,7 +8,7 @@
 #include "Scene/RenderContext.hpp"
 
 #include <functional>
-#include <vector>
+#include <list>
 
 namespace Stone::Scene {
 
@@ -37,7 +37,7 @@ public:
 	 * @param closing_bracer Whether to write the closing brace '}' after writing the node.
 	 * @return The output stream.
 	 */
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	/**
 	 * @brief Updates the node.
@@ -138,7 +138,7 @@ public:
 	/**
 	 * @brief Gets the children nodes of this node.
 	 */
-	const std::vector<std::shared_ptr<Node>> &getChildren() const;
+	const std::list<std::shared_ptr<Node>> &getChildren() const;
 
 	/**
 	 * @brief Gets the child node with the given name.
@@ -280,11 +280,27 @@ public:
 	void writeHierarchy(std::ostream &stream, bool colored = true, const std::string &linePrefix = "",
 						const std::string &firstPrefix = "", const std::string &lastPrefix = "") const;
 
+	/**
+	 * @brief Retrieves the metadata associated with the node.
+	 *
+	 * @return A constant reference to the metadata object.
+	 */
+	const Json::Object &getMetadatas() const;
+
+	/**
+	 * @brief Retrieves the metadata associated with the node.
+	 *
+	 * @return A mutable reference to the metadata object.
+	 */
+	Json::Object &getMetadatas();
+
 protected:
-	std::string _name;							  /**< The name of the node. */
-	std::vector<std::shared_ptr<Node>> _children; /**< The children nodes of this node. */
-	std::weak_ptr<Node> _parent;				  /**< The parent node of this node. */
-	std::weak_ptr<WorldNode> _world;			  /**< The world node that this node belongs to. */
+	std::string _name;							/**< The name of the node. */
+	std::list<std::shared_ptr<Node>> _children; /**< The children nodes of this node. */
+	std::weak_ptr<Node> _parent;				/**< The parent node of this node. */
+	std::weak_ptr<WorldNode> _world;			/**< The world node that this node belongs to. */
+
+	Json::Object _metadatas; /**< Metadata of the node */
 
 	/**
 	 * @brief Gets the class color for terminal output.

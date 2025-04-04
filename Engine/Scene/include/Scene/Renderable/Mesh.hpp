@@ -5,8 +5,6 @@
 #include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Vertex.hpp"
 
-#include <vector>
-
 /**
  * @brief Represents a mesh used for rendering in the scene.
  *
@@ -38,7 +36,7 @@ public:
 	 * @param closing_bracer Flag indicating whether to write a closing bracer after the mesh data.
 	 * @return The modified output stream.
 	 */
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	/**
 	 * @brief Retrieves the vertices of the mesh.
@@ -55,22 +53,11 @@ public:
 	[[nodiscard]] const std::vector<uint32_t> &getIndices() const;
 
 	/**
-	 * @brief Retrieves a reference to the vector of vertices.
+	 * @brief Execute a lambda that receives a mutable reference to the vertices and indices.
 	 *
-	 * @note Using this method marks the mesh as dirty.
-	 *
-	 * @return A reference to the vector of vertices.
+	 * @note Using this method marks the mesh as dirty after the lambda is fully executed.
 	 */
-	std::vector<Vertex> &verticesRef();
-
-	/**
-	 * @brief Retrieves a reference to the vector of indices.
-	 *
-	 * @note Using this method marks the mesh as dirty.
-	 *
-	 * @return A reference to the vector of indices.
-	 */
-	std::vector<uint32_t> &indicesRef();
+	void withElementsRef(const std::function<void(std::vector<Vertex> &, std::vector<uint32_t> &)> &func);
 
 protected:
 	std::vector<Vertex> _vertices;	/**< The vector of vertices. */
@@ -100,7 +87,7 @@ public:
 	 * @param closing_bracer Flag indicating whether to write a closing bracer after the mesh data.
 	 * @return The modified output stream.
 	 */
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	/**
 	 * @brief Retrieves the source mesh being used to generate the static mesh.

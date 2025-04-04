@@ -5,8 +5,6 @@
 #include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Vertex.hpp"
 
-#include <vector>
-
 /**
  * @brief Represents a skin mesh used for rendering in the scene.
  *
@@ -32,7 +30,7 @@ public:
 	 * @param closing_bracer Flag indicating whether to write the closing brace.
 	 * @return The output stream after writing the DynamicSkinMesh object.
 	 */
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	/**
 	 * @brief Returns a const reference to the vector of WeightVertex objects representing the vertices of the mesh.
@@ -42,15 +40,6 @@ public:
 	[[nodiscard]] const std::vector<WeightVertex> &getVertices() const;
 
 	/**
-	 * @brief Returns a reference to the vector of WeightVertex objects representing the vertices of the mesh.
-	 *
-	 * @note Using this method marks the skin mesh as dirty.
-	 *
-	 * @return A reference to the vector of WeightVertex objects.
-	 */
-	std::vector<WeightVertex> &verticesRef();
-
-	/**
 	 * @brief Returns a const reference to the vector of uint32_t values representing the indices of the mesh.
 	 *
 	 * @return A const reference to the vector of uint32_t values.
@@ -58,13 +47,11 @@ public:
 	[[nodiscard]] const std::vector<uint32_t> &getIndices() const;
 
 	/**
-	 * @brief Returns a reference to the vector of uint32_t values representing the indices of the mesh.
+	 * @brief Execute a lambda that receives a mutable reference to the vertices and indices.
 	 *
-	 * @note Using this method marks the skin mesh as dirty.
-	 *
-	 * @return A reference to the vector of uint32_t values.
+	 * @note Using this method marks the mesh as dirty after the lambda is fully executed.
 	 */
-	std::vector<uint32_t> &indicesRef();
+	void withElementsRef(const std::function<void(std::vector<WeightVertex> &, std::vector<uint32_t> &)> &func);
 
 protected:
 	std::vector<WeightVertex> _vertices; /**< The vector of weighted vertices. */
@@ -88,7 +75,7 @@ public:
 	 * @param closing_bracer Flag indicating whether to write the closing brace.
 	 * @return The output stream after writing the StaticSkinMesh object.
 	 */
-	std::ostream &writeToStream(std::ostream &stream, bool closing_bracer) const override;
+	void writeToJson(Json::Object &json) const override;
 
 	/**
 	 * @brief Retrieves the source mesh used to generate the static mesh.

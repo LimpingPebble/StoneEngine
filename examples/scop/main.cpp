@@ -55,19 +55,21 @@ int main(int argc, char **argv) {
 
 		// Generate a Mesh
 		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
-		mesh->indicesRef() = {0, 1, 2, 0, 2, 3};
-		mesh->verticesRef().emplace_back();
-		mesh->verticesRef().back().position = {-0.5f, -0.5f, 0.0f};
-		mesh->verticesRef().back().uv = {0.0f, 0.0f};
-		mesh->verticesRef().emplace_back();
-		mesh->verticesRef().back().position = {0.5f, -0.5f, 0.0f};
-		mesh->verticesRef().back().uv = {1.0f, 0.0f};
-		mesh->verticesRef().emplace_back();
-		mesh->verticesRef().back().position = {0.5f, 0.5f, 0.0f};
-		mesh->verticesRef().back().uv = {1.0f, 1.0f};
-		mesh->verticesRef().emplace_back();
-		mesh->verticesRef().back().position = {-0.5f, 0.5f, 0.0f};
-		mesh->verticesRef().back().uv = {0.0f, 1.0f};
+		mesh->withElementsRef([](auto vertices, auto indices) {
+			indices = {0, 1, 2, 0, 2, 3};
+			vertices.emplace_back();
+			vertices.back().position = {-0.5f, -0.5f, 0.0f};
+			vertices.back().uv = {0.0f, 0.0f};
+			vertices.emplace_back();
+			vertices.back().position = {0.5f, -0.5f, 0.0f};
+			vertices.back().uv = {1.0f, 0.0f};
+			vertices.emplace_back();
+			vertices.back().position = {0.5f, 0.5f, 0.0f};
+			vertices.back().uv = {1.0f, 1.0f};
+			vertices.emplace_back();
+			vertices.back().position = {-0.5f, 0.5f, 0.0f};
+			vertices.back().uv = {0.0f, 1.0f};
+		});
 
 		// Create a MeshNode
 		auto meshNode = window->getWorld()->addChild<Stone::Scene::MeshNode>();
@@ -114,6 +116,7 @@ int main(int argc, char **argv) {
 			auto asset = assetsBundle->loadResource<Stone::Scene::AssetResource>(argv[1]);
 			auto node = asset->getRootNode();
 			window->getWorld()->addChild(node);
+			std::cout << asset->getMetadatas() << std::endl;
 			node->writeHierarchy(std::cout);
 		}
 

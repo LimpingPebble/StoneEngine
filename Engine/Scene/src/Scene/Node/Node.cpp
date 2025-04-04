@@ -2,8 +2,11 @@
 
 #include "Scene/Node/Node.hpp"
 
+#include "Scene/Node/WorldNode.hpp"
+
 #include <algorithm>
 #include <cassert>
+#include <list>
 
 namespace Stone::Scene {
 
@@ -14,12 +17,12 @@ Node::Node(const std::string &name) : Object(), _name(name), _children(), _paren
 	assert(name.find('/') == std::string::npos);
 }
 
-std::ostream &Node::writeToStream(std::ostream &stream, bool closing_bracer) const {
-	Object::writeToStream(stream, false);
-	stream << ",name:\"" << _name << "\"";
-	if (closing_bracer)
-		stream << "}";
-	return stream;
+void Node::writeToJson(Json::Object &json) const {
+	Object::writeToJson(json);
+
+	json["name"] = Json::string(_name);
+	json["metadatas"] = Json::Value(_metadatas);
+	json["world"] = _world.expired() ? Json::null() : Json::number(_world.lock()->getId());
 }
 
 void Node::update(float deltaTime) {
@@ -52,8 +55,8 @@ std::string Node::getGlobalName() const {
 
 void Node::addChild(const std::shared_ptr<Node> &child) {
 	// LOG: Error: Cannot add a parent as a child
-	assert(!child->isAncestorOf(std::dynamic_pointer_cast<Node>(shared_from_this())));
-	child->_parent = std::dynamic_pointer_cast<Node>(shared_from_this());
+	assert(!child->isAncestorOf(std::static_pointer_cast<Node>(shared_from_this())));
+	child->_parent = std::static_pointer_cast<Node>(shared_from_this());
 	child->_world = _world;
 	_children.push_back(child);
 }
@@ -69,7 +72,7 @@ void Node::removeChild(const std::shared_ptr<Node> &child) {
 
 void Node::removeFromParent() {
 	if (auto parent = getParent()) {
-		parent->removeChild(std::dynamic_pointer_cast<Node>(shared_from_this()));
+		parent->removeChild(std::static_pointer_cast<Node>(shared_from_this()));
 	}
 }
 
@@ -101,7 +104,7 @@ bool Node::isDescendantOf(const std::shared_ptr<Node> &node) const {
 	return false;
 }
 
-const std::vector<std::shared_ptr<Node>> &Node::getChildren() const {
+const std::list<std::shared_ptr<Node>> &Node::getChildren() const {
 	return _children;
 }
 
@@ -194,7 +197,7 @@ void Node::traverseTopDown(const std::function<void(const std::shared_ptr<Node> 
 		}
 	};
 
-	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+	traverseRecursive(std::static_pointer_cast<Node>(shared_from_this()));
 }
 
 void Node::traverseBottomUp(const std::function<void(const std::shared_ptr<Node> &)> &func) {
@@ -206,7 +209,7 @@ void Node::traverseBottomUp(const std::function<void(const std::shared_ptr<Node>
 		func(node);
 	};
 
-	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+	traverseRecursive(std::static_pointer_cast<Node>(shared_from_this()));
 }
 
 void Node::traverseTopDownBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func) {
@@ -221,7 +224,7 @@ void Node::traverseTopDownBreakable(const std::function<bool(const std::shared_p
 		return true;
 	};
 
-	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+	traverseRecursive(std::static_pointer_cast<Node>(shared_from_this()));
 }
 
 void Node::traverseBottomUpBreakable(const std::function<bool(const std::shared_ptr<Node> &)> &func) {
@@ -236,7 +239,7 @@ void Node::traverseBottomUpBreakable(const std::function<bool(const std::shared_
 		return true;
 	};
 
-	traverseRecursive(std::dynamic_pointer_cast<Node>(shared_from_this()));
+	traverseRecursive(std::static_pointer_cast<Node>(shared_from_this()));
 }
 
 void Node::writeHierarchy(std::ostream &stream, bool colored, const std::string &linePrefix,
@@ -249,13 +252,22 @@ void Node::writeHierarchy(std::ostream &stream, bool colored, const std::string 
 		stream << _name << " [" << getClassName() << "] ";
 	}
 	stream << *this << std::endl;
-	for (size_t i = 0; i < _children.size(); i++) {
-		if (i == _children.size() - 1) {
-			_children[i]->writeHierarchy(stream, colored, linePrefix + lastPrefix, "└─", "  ");
+	const auto last = _children.back();
+	for (auto &child : _children) {
+		if (child == last) {
+			child->writeHierarchy(stream, colored, linePrefix + lastPrefix, "└─", "  ");
 		} else {
-			_children[i]->writeHierarchy(stream, colored, linePrefix + lastPrefix, "├─", "│ ");
+			child->writeHierarchy(stream, colored, linePrefix + lastPrefix, "├─", "│ ");
 		}
 	}
+}
+
+const Json::Object &Node::getMetadatas() const {
+	return _metadatas;
+}
+
+Json::Object &Node::getMetadatas() {
+	return _metadatas;
 }
 
 const char *Node::_termClassColor() const {
