@@ -4,13 +4,11 @@
 
 namespace Stone::Network {
 
-std::ostream &NetworkObject::writeToStream(std::ostream &stream, bool closing_bracer) const {
-	Core::Object::writeToStream(stream, false);
-	stream << ",poolId:" << _poolId;
-	if (closing_bracer) {
-		stream << "}";
-	}
-	return stream;
+
+void NetworkObject::writeToJson(Json::Object &json) const {
+	Core::Object::writeToJson(json);
+
+	json["poolId"] = Json::number(_poolId);
 }
 
 ObjectPool<NetworkObject>::Id NetworkObject::getPoolId() const {
