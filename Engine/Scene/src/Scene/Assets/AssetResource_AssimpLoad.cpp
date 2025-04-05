@@ -92,8 +92,10 @@ void emplace_indices(std::vector<uint32_t> &indices, const aiMesh *mesh) {
 void loadMesh(AssetResource &assetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicMesh> newMesh = std::make_shared<DynamicMesh>();
 
-	emplace_vertices(newMesh->verticesRef(), mesh);
-	emplace_indices(newMesh->indicesRef(), mesh);
+	newMesh->withElementsRef([mesh](auto vertices, auto indices) {
+		emplace_vertices(vertices, mesh);
+		emplace_indices(indices, mesh);
+	});
 
 	std::shared_ptr<StaticMesh> newStaticMesh = std::make_shared<StaticMesh>();
 	newStaticMesh->setSourceMesh(newMesh);
@@ -104,8 +106,10 @@ void loadMesh(AssetResource &assetResource, const aiMesh *mesh) {
 void loadSkinMesh(AssetResource &assetResource, const aiMesh *mesh) {
 	std::shared_ptr<DynamicSkinMesh> newMesh = std::make_shared<DynamicSkinMesh>();
 
-	emplace_vertices(newMesh->verticesRef(), mesh);
-	emplace_indices(newMesh->indicesRef(), mesh);
+	newMesh->withElementsRef([mesh](auto vertices, auto indices) {
+		emplace_vertices(vertices, mesh);
+		emplace_indices(indices, mesh);
+	});
 
 	// TODO: Load bones and weights. REQUIREMENT: Skeleton must be loaded first.
 
@@ -236,7 +240,103 @@ void loadMaterials(AssetResource &assetResource, const aiScene *scene) {
 	}
 }
 
+void loadMetadataEntry(const aiMetadataEntry &entry, Json::Value &out) {
+	switch (entry.mType) {
+	case AI_BOOL:
+		{
+			const bool data = *static_cast<bool *>(entry.mData);
+			out.value = data;
+			return;
+		}
+	case AI_INT32:
+		{
+			const double data = *static_cast<int32_t *>(entry.mData);
+			out.value = data;
+			return;
+		}
+	case AI_UINT64:
+		{
+			const uint64_t data = *static_cast<uint64_t *>(entry.mData);
+			out.value = static_cast<double>(data);
+			return;
+		}
+	case AI_FLOAT:
+		{
+			const double data = *static_cast<float *>(entry.mData);
+			out.value = data;
+			return;
+		}
+	case AI_DOUBLE:
+		{
+			const double data = *static_cast<double *>(entry.mData);
+			out.value = data;
+			return;
+		}
+	case AI_AISTRING:
+		{
+			const aiString *data = static_cast<aiString *>(entry.mData);
+			out.value = data->C_Str();
+			return;
+		}
+	case AI_AIVECTOR3D:
+		{
+			out.value = Json::Array();
+			auto &array(std::get<Json::Array>(out.value));
+			const aiVector3D *data = static_cast<aiVector3D *>(entry.mData);
+			array.emplace_back(data->x);
+			array.emplace_back(data->y);
+			array.emplace_back(data->z);
+			return;
+		}
+	case AI_AIMETADATA:
+		{
+			out.value = Json::Object();
+			auto &object(std::get<Json::Object>(out.value));
+			const aiMetadata *data = static_cast<aiMetadata *>(entry.mData);
+			for (unsigned int i = 0; i < data->mNumProperties; ++i) {
+				const aiString &key(data->mKeys[i]);
+				const aiMetadataEntry &value(data->mValues[i]);
+				assert(key.C_Str() != nullptr);
+				loadMetadataEntry(value, object[key.C_Str()]);
+			}
+			return;
+		}
+	case AI_INT64:
+		{
+			const int64_t data = *static_cast<int64_t *>(entry.mData);
+			out.value = static_cast<double>(data);
+			return;
+		}
+	case AI_UINT32:
+		{
+			const double data = *static_cast<uint32_t *>(entry.mData);
+			out.value = data;
+			return;
+		}
+	default:
+		{
+			out = Json::Value();
+			return;
+		}
+	}
+}
+
+void loadMetadata(const aiMetadata *metadata, Json::Object &out) {
+	if (metadata == nullptr)
+		return;
+
+	for (unsigned int i = 0; i < metadata->mNumProperties; ++i) {
+		const aiString &key(metadata->mKeys[i]);
+		const aiMetadataEntry &value(metadata->mValues[i]);
+
+		assert(key.C_Str() != nullptr);
+		loadMetadataEntry(value, out[key.C_Str()]);
+	}
+}
+
 void loadNode(AssetResource &assetResource, const aiNode *node, const std::shared_ptr<PivotNode> &sceneNode) {
+
+	loadMetadata(node->mMetaData, sceneNode->getMetadatas());
 
 	sceneNode->getTransform().setMatrix(convert(node->mTransformation));
 
@@ -292,6 +392,8 @@ void AssetResource::loadFromAssimp() {
 	std::cout << "mNumSkeletons " << scene->mNumSkeletons << " | ";
 	std::cout << "mMetaData " << scene->mMetaData << " | ";
 	std::cout << "mName" << scene->mName.C_Str() << " | " << std::endl;
+
+	loadMetadata(scene->mMetaData, _metadatas);
 
 	/*
 	 * TODO:

@@ -2,10 +2,8 @@
 
 #pragma once
 
-#include "Utils/Delegate.hpp"
-
-#include <cstdint>
-#include <set>
+#include <functional>
+#include <unordered_set>
 
 namespace Stone {
 
@@ -29,45 +27,11 @@ struct Slot {
 	Slot &operator=(const Slot &) = delete;
 
 	/**
-	 * @brief Constructs a slot with a function pointer as the callback.
-	 *
-	 * @param fn A function pointer to the callback function.
-	 */
-	explicit Slot(void (*fn)(Args... args)) : _signal(nullptr) {
-		new (_delegateptr) FunctionDelegate<void(Args...)>(fn);
-	}
-
-	/**
 	 * @brief Constructs a slot with a lambda expression as the callback.
 	 *
 	 * @param fn A lambda expression representing the callback function.
 	 */
-	explicit Slot(std::function<void(Args...)> fn) : _signal(nullptr) {
-		new (_delegateptr) LambdaDelegate<void(Args...)>(fn);
-	}
-
-	/**
-	 * @brief Constructs a slot with an instance and a member function pointer as the callback.
-	 *
-	 * @tparam C The class type that the member function belongs to.
-	 * @param target A pointer to an instance of the class.
-	 * @param method A pointer to the member function.
-	 */
-	template <typename C>
-	Slot(C *target, void (C::*method)(Args... args)) : _signal(nullptr) {
-		new (_delegateptr) MethodDelegate<void (C::*)(Args...)>(target, method);
-	}
-
-	/**
-	 * @brief Constructs a slot with a const instance and a const member function pointer as the callback.
-	 *
-	 * @tparam C The class type that the member function belongs to.
-	 * @param target A pointer to a const instance of the class.
-	 * @param method A pointer to the const member function.
-	 */
-	template <typename C>
-	Slot(const C *target, void (C::*method)(Args... args) const) : _signal(nullptr) {
-		new (_delegateptr) ConstMethodDelegate<void (C::*)(Args...)>(target, method);
+	explicit Slot(std::function<void(Args...)> fn) : _fn(std::move(fn)), _signal(nullptr) {
 	}
 
 	/**
@@ -85,7 +49,7 @@ struct Slot {
 	 * @param args The arguments to be passed to the callback function.
 	 */
 	void perform(Args... args) {
-		return reinterpret_cast<IDelegate<void(Args...)> *>(_delegateptr)->perform(std::forward<Args>(args)...);
+		_fn(std::forward<Args>(args)...);
 	}
 
 	/**
@@ -108,8 +72,7 @@ struct Slot {
 	}
 
 private:
-	// TODO: Benchmark against using IDelegate* instead of a union
-	uint8_t _delegateptr[sizeof(LambdaDelegate<void()>)]{}; ///< The delegate pointer to the callback function.
+	std::function<void(Args...)> _fn; ///< The callback function of the slot.
 
 	Signal<Args...> *_signal; ///< The signal that the slot is bound to.
 	friend Signal<Args...>;
@@ -190,7 +153,7 @@ struct Signal {
 	}
 
 private:
-	std::set<Slot<Args...> *> _slots; ///< The set of slots bound to this Signal.
+	std::unordered_set<Slot<Args...> *> _slots; ///< The set of slots bound to this Signal.
 };
 
 } // namespace Stone

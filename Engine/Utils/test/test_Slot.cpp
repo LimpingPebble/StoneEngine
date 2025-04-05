@@ -39,7 +39,7 @@ TEST(Slot, PerformMethod) {
 	Calc calc;
 	calc.internal = 0;
 
-	Slot<int, int> slot(&calc, &Calc::docalc);
+	Slot<int, int> slot(std::bind(&Calc::docalc, &calc, std::placeholders::_1, std::placeholders::_2));
 	slot.perform(5, 8);
 	EXPECT_EQ(calc.internal, 13);
 }
@@ -58,7 +58,7 @@ TEST(Slot, PerformMethodConst) {
 	int result = 0;
 	const Calc calc(result);
 
-	Slot<int, int> slot(&calc, &Calc::docalc);
+	Slot<int, int> slot(std::bind(&Calc::docalc, &calc, std::placeholders::_1, std::placeholders::_2));
 	slot.perform(5, 8);
 	EXPECT_EQ(result, 13);
 }
