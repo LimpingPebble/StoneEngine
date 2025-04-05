@@ -2,6 +2,7 @@
 
 #include "Network/Dispatcher/JsonRpcDispatcher.hpp"
 
+#include <sstream>
 
 namespace Stone::Network {
 
@@ -44,13 +45,12 @@ bool JsonRpcDispatcher::hasRequestHandler(const Method &method) const {
 	return _requestHandlers.find(method) != _requestHandlers.end();
 }
 
-Signal<const JsonRpcDispatcher::Result &> &JsonRpcDispatcher::getNotificationSignal(const Method &method) {
-	auto it = _notificationSignals.find(method);
-	if (it != _notificationSignals.end()) {
+JsonRpcDispatcher::NotificationSignal &JsonRpcDispatcher::getNotificationSignal(const Method &method) {
+	if (auto it = _notificationSignals.find(method); it != _notificationSignals.end()) {
 		return *it->second;
 	}
-	_notificationSignals.emplace(method, std::make_unique<NotificationSignal>());
-	return *_notificationSignals[method];
+	auto it = _notificationSignals.emplace(method, std::make_unique<NotificationSignal>());
+	return *it.first->second;
 }
 
 bool JsonRpcDispatcher::handleString(const std::string &message, std::ostream &output) {
@@ -121,14 +121,14 @@ bool JsonRpcDispatcher::handleRequest(Id id, const Method &method, const Params 
 				Json::Object &responseObject(response.get<Json::Object>());
 				responseObject[JSONRPC_ID] = Json::number(id);
 				responseObject[JSONRPC_RESULT] = result;
-				output << response.serialize() << std::endl;
+				output << response;
 			},
 			[&output, id](const Error &error) {
 				Json::Value response = Json::object();
 				Json::Object &responseObject(response.get<Json::Object>());
 				responseObject[JSONRPC_ID] = Json::number(id);
 				responseObject[JSONRPC_ERROR] = Json::string(error.what());
-				output << response.serialize() << std::endl;
+				output << response;
 			});
 		return true;
 	}

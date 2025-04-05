@@ -23,7 +23,7 @@ public:
 	using Result = Json::Value;
 	using Error = std::exception;
 
-	using SuccessCallback = std::function<void(const Params &)>;
+	using SuccessCallback = std::function<void(const Result &)>;
 	using FailureCallback = std::function<void(const Error &)>;
 
 	using SyncRequestHandler = std::function<Result(const Params &)>;
@@ -46,7 +46,7 @@ public:
 	NotificationSignal &getNotificationSignal(const Method &method);
 
 	bool handleString(const std::string &message, std::ostream &output);
-	bool handleStream(std::istream &stream, std::ostream &ouutput);
+	bool handleStream(std::istream &stream, std::ostream &output);
 	bool handleJsonArray(const Json::Array &message, std::ostream &output);
 	bool handleJsonObject(const Json::Object &message, std::ostream &output);
 

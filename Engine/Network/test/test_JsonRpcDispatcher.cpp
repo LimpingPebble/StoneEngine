@@ -81,3 +81,55 @@ TEST(JsonRpcDispatcher, HandleRequestUsingNumberParam) {
 	EXPECT_EQ(outJson.get<Json::Object>()["result"].get<double>(), 18);
 	EXPECT_EQ(outJson.get<Json::Object>().find("error"), outJson.get<Json::Object>().end());
 }
+
+
+TEST(JsonRpcDispatcher, HandleNotificationThatIgnoreParams) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+
+	int zeValue = 0;
+	auto incValue = [&zeValue](const Json::Value &params) {
+		(void)params;
+		zeValue++;
+	};
+	Stone::Slot<const Json::Value &> incSlot(incValue);
+
+	dispatcher.getNotificationSignal("incValue").bind(incSlot);
+
+	EXPECT_EQ(zeValue, 0);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue"})", out));
+	EXPECT_EQ(zeValue, 1);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue", "params": null})", out));
+	EXPECT_EQ(zeValue, 2);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue", "params": {}})", out));
+	EXPECT_EQ(zeValue, 3);
+}
+
+TEST(JsonRpcDispatcher, HandleNotificationUsingParams) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+
+	int zeValue = 0;
+	auto incValue = [&zeValue](const Json::Value &params) {
+		if (!params.is<double>())
+			return;
+		zeValue += params.get<double>();
+	};
+	Stone::Slot<const Json::Value &> incSlot(incValue);
+
+	dispatcher.getNotificationSignal("incValue").bind(incSlot);
+
+	EXPECT_EQ(zeValue, 0);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue"})", out));
+	EXPECT_EQ(zeValue, 0);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue", "params": 2})", out));
+	EXPECT_EQ(zeValue, 2);
+
+	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue", "params": [2]})", out));
+	EXPECT_EQ(zeValue, 2);
+}
