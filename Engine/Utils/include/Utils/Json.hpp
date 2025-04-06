@@ -46,6 +46,14 @@ struct Value {
 
 	void serialize(std::ostream &stream) const;
 	std::string serialize() const;
+
+	bool operator==(const Value &other) const {
+		return value == other.value;
+	}
+
+	bool operator!=(const Value &other) const {
+		return !(*this == other);
+	}
 };
 
 void parseStream(std::istream &input, Value &out);

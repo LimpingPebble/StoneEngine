@@ -4,6 +4,8 @@
 
 #include <sstream>
 
+#define MAX_REQUEST_LOOP 1000000000
+
 namespace Stone::Network {
 
 bool JsonRpcDispatcher::registerRequestHandler(const Method &method, const SyncRequestHandler &syncHandler) {
@@ -13,6 +15,10 @@ bool JsonRpcDispatcher::registerRequestHandler(const Method &method, const SyncR
 				success(syncHandler(params));
 			} catch (const Error &err) {
 				failure(err);
+			} catch (const std::exception &e) {
+				failure(e.what());
+			} catch (...) {
+				failure("Unknown error occurred");
 			}
 		});
 }
@@ -28,6 +34,10 @@ bool JsonRpcDispatcher::registerRequestHandler(const Method &method, const Async
 				success(future.get());
 			} catch (const Error &err) {
 				failure(err);
+			} catch (const std::exception &e) {
+				failure(e.what());
+			} catch (...) {
+				failure("Unknown error occurred");
 			}
 		});
 }
@@ -51,6 +61,26 @@ JsonRpcDispatcher::NotificationSignal &JsonRpcDispatcher::getNotificationSignal(
 	}
 	auto it = _notificationSignals.emplace(method, std::make_unique<NotificationSignal>());
 	return *it.first->second;
+}
+
+bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, const Params &params,
+									const ResponseCallbacks &callbacks) {
+	_nextId++;
+	if (_nextId >= MAX_REQUEST_LOOP)
+		_nextId = 1;
+	Json::Value request = Json::object();
+	Json::Object &requestObject(request.get<Json::Object>());
+	requestObject[JSONRPC_ID] = Json::number(_nextId);
+	requestObject[JSONRPC_METHOD] = Json::string(method);
+	if (!params.isNull())
+		requestObject[JSONRPC_PARAMS] = params;
+	_pendingRequests[_nextId] = callbacks;
+	output << request;
+	if (output.fail() || output.bad()) {
+		_pendingRequests.erase(_nextId);
+		return false;
+	}
+	return true;
 }
 
 bool JsonRpcDispatcher::handleString(const std::string &message, std::ostream &output) {
@@ -106,7 +136,19 @@ bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostre
 			return handleNotification(methodPtr->second.get<std::string>(),
 									  params == message.end() ? Json::null() : params->second);
 	} else {
-		// TODO: Handle request results (or errors)
+		if (hasId) {
+			const auto &resultPtr = message.find(JSONRPC_RESULT);
+			const bool hasResult = resultPtr != message.end() && !resultPtr->second.isNull();
+
+			const auto &errorPtr = message.find(JSONRPC_ERROR);
+			const bool hasError = errorPtr != message.end() && errorPtr->second.is<std::string>();
+
+			if (hasResult && !hasError) {
+				return handleResponseSuccess(idPtr->second.get<double>(), resultPtr->second);
+			} else if (!hasResult && hasError) {
+				return handleResponseError(idPtr->second.get<double>(), errorPtr->second.get<std::string>());
+			}
+		}
 	}
 	return false;
 }
@@ -127,7 +169,7 @@ bool JsonRpcDispatcher::handleRequest(Id id, const Method &method, const Params 
 				Json::Value response = Json::object();
 				Json::Object &responseObject(response.get<Json::Object>());
 				responseObject[JSONRPC_ID] = Json::number(id);
-				responseObject[JSONRPC_ERROR] = Json::string(error.what());
+				responseObject[JSONRPC_ERROR] = Json::string(error);
 				output << response;
 			});
 		return true;
@@ -150,5 +192,24 @@ bool JsonRpcDispatcher::handleNotification(const Method &method, const Params &p
 	return used;
 }
 
+bool JsonRpcDispatcher::handleResponseSuccess(Id id, const Result &result) {
+	auto it = _pendingRequests.find(id);
+	if (it != _pendingRequests.end()) {
+		it->second.first(result);
+		_pendingRequests.erase(it);
+		return true;
+	}
+	return false;
+}
+
+bool JsonRpcDispatcher::handleResponseError(Id id, const Error &error) {
+	auto it = _pendingRequests.find(id);
+	if (it != _pendingRequests.end()) {
+		it->second.second(error);
+		_pendingRequests.erase(it);
+		return true;
+	}
+	return false;
+}
 
 } // namespace Stone::Network

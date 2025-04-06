@@ -133,3 +133,132 @@ TEST(JsonRpcDispatcher, HandleNotificationUsingParams) {
 	EXPECT_TRUE(dispatcher.handleString(R"({"method": "incValue", "params": [2]})", out));
 	EXPECT_EQ(zeValue, 2);
 }
+
+TEST(JsonRpcDispatcher, SendRequestWithParams) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+	Json::Value outJson;
+
+	dispatcher.sendRequest(out, "setValue", Json::number(12),
+						   {[](const Json::Value &result) { (void)result; },
+							[](const std::string &error) {
+								(void)error;
+							}});
+
+	ASSERT_NO_THROW(out >> outJson);
+	ASSERT_TRUE(outJson.is<Json::Object>());
+	ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
+	ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
+	ASSERT_NE(outJson.get<Json::Object>().find("params"), outJson.get<Json::Object>().end());
+
+	EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("setValue"));
+	EXPECT_EQ(outJson.get<Json::Object>()["params"], Json::number(12));
+
+	int firstId = outJson.get<Json::Object>()["id"].get<double>();
+
+	dispatcher.sendRequest(out, "getValue", Json::null(),
+						   {[](const Json::Value &result) { (void)result; },
+							[](const std::string &error) {
+								(void)error;
+							}});
+
+	ASSERT_NO_THROW(out >> outJson);
+	ASSERT_TRUE(outJson.is<Json::Object>());
+	ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
+	ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
+
+	EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
+
+	int secondId = outJson.get<Json::Object>()["id"].get<double>();
+	EXPECT_NE(firstId, secondId);
+}
+
+TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+	Json::Value outJson;
+
+	int zeValue = 0;
+	std::string receivedError = "";
+
+	{
+		EXPECT_TRUE(dispatcher.sendRequest( //
+			out, "getValue", Json::null(),
+			{[&zeValue](const Json::Value &result) {
+				 if (result.is<double>()) {
+					 zeValue = result.get<double>();
+				 }
+			 },
+			 [&receivedError](const std::string &error) {
+				 receivedError = error;
+			 }}));
+
+		ASSERT_NO_THROW(out >> outJson);
+		ASSERT_TRUE(outJson.is<Json::Object>());
+		ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
+		ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
+
+		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<double>());
+		EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
+
+		int requestId = outJson.get<Json::Object>()["id"].get<double>();
+
+		EXPECT_EQ(zeValue, 0);
+
+		auto response = Json::Object({
+			{	 "id", Json::number(requestId)},
+			{"result",		   Json::number(12)},
+		});
+		EXPECT_TRUE(dispatcher.handleJsonObject(response, out));
+
+		EXPECT_EQ(zeValue, 12);
+		EXPECT_EQ(receivedError, "");
+
+		zeValue = 0;
+
+		auto secondResponse = Json::Object({
+			{	 "id", Json::number(requestId)},
+			{"result",		   Json::number(17)},
+		});
+
+		EXPECT_FALSE(dispatcher.handleJsonObject(secondResponse, out));
+
+		EXPECT_NE(zeValue, 17);
+	}
+
+	{
+		zeValue = 10;
+
+		EXPECT_TRUE(dispatcher.sendRequest( //
+			out, "getValue", Json::null(),
+			{[&zeValue](const Json::Value &result) {
+				 if (result.is<double>()) {
+					 zeValue = result.get<double>();
+				 }
+			 },
+			 [&zeValue, &receivedError](const std::string &error) {
+				 //
+				 zeValue = 0;
+				 receivedError = error;
+			 }}));
+
+		ASSERT_NO_THROW(out >> outJson);
+		ASSERT_TRUE(outJson.is<Json::Object>());
+		ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
+		ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
+
+		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<double>());
+		EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
+
+		int requestId = outJson.get<Json::Object>()["id"].get<double>();
+
+		auto response = Json::Object({
+			{	 "id",			   Json::number(requestId)},
+			{"error", Json::string("pas envie cette fois")},
+		});
+		EXPECT_TRUE(dispatcher.handleJsonObject(response, out));
+
+		EXPECT_EQ(zeValue, 0);
+		EXPECT_EQ(receivedError, "pas envie cette fois");
+	}
+}

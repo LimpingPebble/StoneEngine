@@ -21,7 +21,7 @@ public:
 	using Method = std::string;
 	using Params = Json::Value;
 	using Result = Json::Value;
-	using Error = std::exception;
+	using Error = std::string;
 
 	using SuccessCallback = std::function<void(const Result &)>;
 	using FailureCallback = std::function<void(const Error &)>;
@@ -31,6 +31,8 @@ public:
 	using RequestHandler = std::function<void(const Params &, const SuccessCallback &, const FailureCallback &)>;
 
 	using NotificationSignal = Signal<const Params &>;
+
+	using ResponseCallbacks = std::pair<SuccessCallback, FailureCallback>;
 
 	JsonRpcDispatcher() = default;
 	JsonRpcDispatcher(const JsonRpcDispatcher &other) = default;
@@ -45,6 +47,9 @@ public:
 
 	NotificationSignal &getNotificationSignal(const Method &method);
 
+	bool sendRequest(std::ostream &output, const Method &method, const Params &params,
+					 const ResponseCallbacks &callbacks);
+
 	bool handleString(const std::string &message, std::ostream &output);
 	bool handleStream(std::istream &stream, std::ostream &output);
 	bool handleJsonArray(const Json::Array &message, std::ostream &output);
@@ -52,10 +57,15 @@ public:
 
 	bool handleRequest(Id id, const Method &method, const Params &params, std::ostream &output);
 	bool handleNotification(const Method &method, const Params &params);
+	bool handleResponseSuccess(Id id, const Result &result);
+	bool handleResponseError(Id id, const Error &error);
 
 private:
 	std::unordered_map<Method, RequestHandler> _requestHandlers;
 	std::unordered_map<Method, std::unique_ptr<NotificationSignal>> _notificationSignals;
+
+	Id _nextId = 0;
+	std::unordered_map<Id, ResponseCallbacks> _pendingRequests;
 };
 
 } // namespace Stone::Network
