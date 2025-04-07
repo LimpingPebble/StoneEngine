@@ -134,6 +134,23 @@ TEST(JsonRpcDispatcher, HandleNotificationUsingParams) {
 	EXPECT_EQ(zeValue, 2);
 }
 
+TEST(JsonRpcDispatcher, CleanupNotificationSignal) {
+	JsonRpcDispatcher dispatcher;
+
+	{
+		Stone::Slot<const Json::Value &> incSlot([](const Json::Value &) {});
+
+		dispatcher.getNotificationSignal("incValue").bind(incSlot);
+
+		EXPECT_TRUE(dispatcher.hasNotificationSignal("incValue"));
+		dispatcher.cleanupEmptyNotificationSignals();
+		EXPECT_TRUE(dispatcher.hasNotificationSignal("incValue"));
+	}
+
+	dispatcher.cleanupEmptyNotificationSignals();
+	EXPECT_FALSE(dispatcher.hasNotificationSignal("incValue"));
+}
+
 TEST(JsonRpcDispatcher, SendRequestWithParams) {
 	JsonRpcDispatcher dispatcher;
 	std::stringstream out;

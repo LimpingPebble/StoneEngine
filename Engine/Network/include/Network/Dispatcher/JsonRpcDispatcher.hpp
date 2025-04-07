@@ -47,6 +47,8 @@ public:
 
 	NotificationSignal &getNotificationSignal(const Method &method);
 
+	bool hasNotificationSignal(const Method &method) const;
+
 	bool sendRequest(std::ostream &output, const Method &method, const Params &params,
 					 const ResponseCallbacks &callbacks, float timeout = 10.0f);
 
@@ -64,6 +66,7 @@ public:
 
 	void cleanup();
 	void cleanupTimedOutPendingRequests();
+	void cleanupEmptyNotificationSignals();
 
 private:
 	std::unordered_map<Method, RequestHandler> _requestHandlers;

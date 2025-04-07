@@ -63,6 +63,10 @@ JsonRpcDispatcher::NotificationSignal &JsonRpcDispatcher::getNotificationSignal(
 	return *it.first->second;
 }
 
+bool JsonRpcDispatcher::hasNotificationSignal(const Method &method) const {
+	return _notificationSignals.find(method) != _notificationSignals.end();
+}
+
 bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, const Params &params,
 									const ResponseCallbacks &callbacks, float timeout) {
 	_nextId++;
@@ -218,6 +222,7 @@ bool JsonRpcDispatcher::handleResponseError(Id id, const Error &error) {
 
 void JsonRpcDispatcher::cleanup() {
 	cleanupTimedOutPendingRequests();
+	cleanupEmptyNotificationSignals();
 }
 
 void JsonRpcDispatcher::cleanupTimedOutPendingRequests() {
@@ -225,6 +230,16 @@ void JsonRpcDispatcher::cleanupTimedOutPendingRequests() {
 		if (it->second.expiration < std::chrono::steady_clock::now()) {
 			it->second.callbacks.second("request timed out");
 			it = _pendingRequests.erase(it);
+		} else {
+			++it;
+		}
+	}
+}
+
+void JsonRpcDispatcher::cleanupEmptyNotificationSignals() {
+	for (auto it = _notificationSignals.begin(); it != _notificationSignals.end();) {
+		if (!it->second->isBound()) {
+			it = _notificationSignals.erase(it);
 		} else {
 			++it;
 		}
