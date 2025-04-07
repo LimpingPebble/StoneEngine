@@ -64,7 +64,7 @@ JsonRpcDispatcher::NotificationSignal &JsonRpcDispatcher::getNotificationSignal(
 }
 
 bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, const Params &params,
-									const ResponseCallbacks &callbacks) {
+									const ResponseCallbacks &callbacks, float timeout) {
 	_nextId++;
 	if (_nextId >= MAX_REQUEST_LOOP)
 		_nextId = 1;
@@ -74,7 +74,10 @@ bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, 
 	requestObject[JSONRPC_METHOD] = Json::string(method);
 	if (!params.isNull())
 		requestObject[JSONRPC_PARAMS] = params;
-	_pendingRequests[_nextId] = callbacks;
+	_pendingRequests[_nextId] = {
+		callbacks,
+		std::chrono::steady_clock::now() + std::chrono::milliseconds(static_cast<long long>(timeout * 1000)) //
+	};
 	output << request;
 	if (output.fail() || output.bad()) {
 		_pendingRequests.erase(_nextId);
@@ -196,7 +199,7 @@ bool JsonRpcDispatcher::handleNotification(const Method &method, const Params &p
 bool JsonRpcDispatcher::handleResponseSuccess(Id id, const Result &result) {
 	auto it = _pendingRequests.find(id);
 	if (it != _pendingRequests.end()) {
-		it->second.first(result);
+		it->second.callbacks.first(result);
 		_pendingRequests.erase(it);
 		return true;
 	}
@@ -206,11 +209,27 @@ bool JsonRpcDispatcher::handleResponseSuccess(Id id, const Result &result) {
 bool JsonRpcDispatcher::handleResponseError(Id id, const Error &error) {
 	auto it = _pendingRequests.find(id);
 	if (it != _pendingRequests.end()) {
-		it->second.second(error);
+		it->second.callbacks.second(error);
 		_pendingRequests.erase(it);
 		return true;
 	}
 	return false;
 }
+
+void JsonRpcDispatcher::cleanup() {
+	cleanupTimedOutPendingRequests();
+}
+
+void JsonRpcDispatcher::cleanupTimedOutPendingRequests() {
+	for (auto it = _pendingRequests.begin(); it != _pendingRequests.end();) {
+		if (it->second.expiration < std::chrono::steady_clock::now()) {
+			it->second.callbacks.second("request timed out");
+			it = _pendingRequests.erase(it);
+		} else {
+			++it;
+		}
+	}
+}
+
 
 } // namespace Stone::Network

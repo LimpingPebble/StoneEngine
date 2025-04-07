@@ -262,3 +262,31 @@ TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
 		EXPECT_EQ(receivedError, "pas envie cette fois");
 	}
 }
+
+TEST(JsonRpcDispatcher, HandleRequestWithTimeout) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+
+	bool errorReceived = false;
+
+	dispatcher.sendRequest( //
+		out, "getValue", Json::null(),
+		{[](const Json::Value &result) { (void)result; },
+		 [&errorReceived](const std::string &error) {
+			 (void)error;
+			 errorReceived = true;
+		 }},
+		0.005f);
+	// Timeout after 5ms
+
+	dispatcher.cleanupTimedOutPendingRequests();
+	EXPECT_FALSE(errorReceived);
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	dispatcher.cleanupTimedOutPendingRequests();
+	EXPECT_FALSE(errorReceived);
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(5));
+	dispatcher.cleanupTimedOutPendingRequests();
+	EXPECT_TRUE(errorReceived);
+}

@@ -47,9 +47,8 @@ public:
 
 	NotificationSignal &getNotificationSignal(const Method &method);
 
-	// TODO: Add timeout in send request
 	bool sendRequest(std::ostream &output, const Method &method, const Params &params,
-					 const ResponseCallbacks &callbacks);
+					 const ResponseCallbacks &callbacks, float timeout = 10.0f);
 
 	// TODO: Add sendNotification method
 
@@ -63,16 +62,19 @@ public:
 	bool handleResponseSuccess(Id id, const Result &result);
 	bool handleResponseError(Id id, const Error &error);
 
-	// TODO: Add the purge method that will clear out unused notifications signals and timedout requests
+	void cleanup();
+	void cleanupTimedOutPendingRequests();
 
 private:
 	std::unordered_map<Method, RequestHandler> _requestHandlers;
 	std::unordered_map<Method, std::unique_ptr<NotificationSignal>> _notificationSignals;
 
-	// TODO: define a tuple that contains the response callbacks and the timeout timestamp information
+	struct PendingResponse {
+		ResponseCallbacks callbacks;
+		std::chrono::steady_clock::time_point expiration;
+	};
+	std::unordered_map<Id, PendingResponse> _pendingRequests;
 	Id _nextId = 0;
-	std::unordered_map<Id, ResponseCallbacks> _pendingRequests;
-
 };
 
 } // namespace Stone::Network
