@@ -69,7 +69,7 @@ bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, 
 	if (_nextId >= MAX_REQUEST_LOOP)
 		_nextId = 1;
 	Json::Value request = Json::object();
-	Json::Object &requestObject(request.get<Json::Object>());
+	auto &requestObject(request.get<Json::Object>());
 	requestObject[JSONRPC_ID] = Json::number(_nextId);
 	requestObject[JSONRPC_METHOD] = Json::string(method);
 	if (!params.isNull())
@@ -122,6 +122,7 @@ bool JsonRpcDispatcher::handleJsonArray(const Json::Array &message, std::ostream
 bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostream &output) {
 	const auto &idPtr = message.find(JSONRPC_ID);
 	const bool hasId = idPtr != message.end() && idPtr->second.is<double>();
+	const Id id = hasId ? static_cast<Id>(idPtr->second.get<double>()) : 0;
 
 	const auto &methodPtr = message.find(JSONRPC_METHOD);
 	const bool hasMethod = methodPtr != message.end() && methodPtr->second.is<std::string>();
@@ -130,7 +131,7 @@ bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostre
 		const auto &params = message.find(JSONRPC_PARAMS);
 
 		if (hasId)
-			return handleRequest(idPtr->second.get<double>(), methodPtr->second.get<std::string>(),
+			return handleRequest(id, methodPtr->second.get<std::string>(),
 								 params == message.end() ? Json::null() : params->second, output);
 		else
 			return handleNotification(methodPtr->second.get<std::string>(),
@@ -144,9 +145,9 @@ bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostre
 			const bool hasError = errorPtr != message.end() && errorPtr->second.is<std::string>();
 
 			if (hasResult && !hasError) {
-				return handleResponseSuccess(idPtr->second.get<double>(), resultPtr->second);
+				return handleResponseSuccess(id, resultPtr->second);
 			} else if (!hasResult && hasError) {
-				return handleResponseError(idPtr->second.get<double>(), errorPtr->second.get<std::string>());
+				return handleResponseError(id, errorPtr->second.get<std::string>());
 			}
 		}
 	}
@@ -160,14 +161,14 @@ bool JsonRpcDispatcher::handleRequest(Id id, const Method &method, const Params 
 			params,
 			[&output, id](const Result &result) {
 				Json::Value response = Json::object();
-				Json::Object &responseObject(response.get<Json::Object>());
+				auto &responseObject(response.get<Json::Object>());
 				responseObject[JSONRPC_ID] = Json::number(id);
 				responseObject[JSONRPC_RESULT] = result;
 				output << response;
 			},
 			[&output, id](const Error &error) {
 				Json::Value response = Json::object();
-				Json::Object &responseObject(response.get<Json::Object>());
+				auto &responseObject(response.get<Json::Object>());
 				responseObject[JSONRPC_ID] = Json::number(id);
 				responseObject[JSONRPC_ERROR] = Json::string(error);
 				output << response;
