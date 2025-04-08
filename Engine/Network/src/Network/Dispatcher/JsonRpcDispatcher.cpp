@@ -154,20 +154,20 @@ bool JsonRpcDispatcher::handleJsonArray(const Json::Array &message, std::ostream
 
 bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostream &output) {
 	const auto &idPtr = message.find(JSONRPC_ID);
-	const bool hasId = idPtr != message.end() && idPtr->second.is<double>();
-	const Id id = hasId ? static_cast<Id>(idPtr->second.get<double>()) : 0;
+	const bool hasId = idPtr != message.end() && idPtr->second.is<Json::Number>();
+	const Id id = hasId ? static_cast<Id>(idPtr->second.get<Json::Number>()) : 0;
 
 	const auto &methodPtr = message.find(JSONRPC_METHOD);
-	const bool hasMethod = methodPtr != message.end() && methodPtr->second.is<std::string>();
+	const bool hasMethod = methodPtr != message.end() && methodPtr->second.is<Json::String>();
 
 	if (hasMethod) {
 		const auto &params = message.find(JSONRPC_PARAMS);
 
 		if (hasId)
-			return handleRequest(id, methodPtr->second.get<std::string>(),
+			return handleRequest(id, methodPtr->second.get<Json::String>(),
 								 params == message.end() ? Json::null() : params->second, output);
 		else
-			return handleNotification(methodPtr->second.get<std::string>(),
+			return handleNotification(methodPtr->second.get<Json::String>(),
 									  params == message.end() ? Json::null() : params->second);
 	} else {
 		if (hasId) {
@@ -175,12 +175,12 @@ bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostre
 			const bool hasResult = resultPtr != message.end() && !resultPtr->second.isNull();
 
 			const auto &errorPtr = message.find(JSONRPC_ERROR);
-			const bool hasError = errorPtr != message.end() && errorPtr->second.is<std::string>();
+			const bool hasError = errorPtr != message.end() && errorPtr->second.is<Json::String>();
 
 			if (hasResult && !hasError) {
 				return handleResponseSuccess(id, resultPtr->second);
 			} else if (!hasResult && hasError) {
-				return handleResponseError(id, errorPtr->second.get<std::string>());
+				return handleResponseError(id, errorPtr->second.get<Json::String>());
 			}
 			if (_sendErrorMessage) {
 				output << Json::object({

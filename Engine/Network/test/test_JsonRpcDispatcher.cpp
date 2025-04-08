@@ -51,9 +51,9 @@ TEST(JsonRpcDispatcher, HandleRequestUsingNumberParam) {
 	int zeValue = 0;
 
 	dispatcher.registerRequestHandler("incValue", [&zeValue](const Json::Value &params) {
-		if (!params.is<double>())
+		if (!params.is<Json::Number>())
 			throw std::runtime_error("invalid params type");
-		zeValue += params.get<double>();
+		zeValue += params.get<Json::Number>();
 		return Json::number(zeValue);
 	});
 
@@ -64,7 +64,7 @@ TEST(JsonRpcDispatcher, HandleRequestUsingNumberParam) {
 	EXPECT_STRNE(out.str().c_str(), "");
 	ASSERT_NO_THROW(out >> outJson);
 	ASSERT_TRUE(outJson.is<Json::Object>());
-	EXPECT_STREQ(outJson.get<Json::Object>()["error"].get<std::string>().c_str(), "invalid params type");
+	EXPECT_STREQ(outJson.get<Json::Object>()["error"].get<Json::String>().c_str(), "invalid params type");
 	out = std::stringstream();
 	EXPECT_STREQ(out.str().c_str(), "");
 
@@ -77,8 +77,8 @@ TEST(JsonRpcDispatcher, HandleRequestUsingNumberParam) {
 	EXPECT_STRNE(out.str().c_str(), "");
 	ASSERT_NO_THROW(out >> outJson);
 	ASSERT_TRUE(outJson.is<Json::Object>());
-	EXPECT_EQ(outJson.get<Json::Object>()["id"].get<double>(), 1);
-	EXPECT_EQ(outJson.get<Json::Object>()["result"].get<double>(), 18);
+	EXPECT_EQ(outJson.get<Json::Object>()["id"].get<Json::Number>(), 1);
+	EXPECT_EQ(outJson.get<Json::Object>()["result"].get<Json::Number>(), 18);
 	EXPECT_EQ(outJson.get<Json::Object>().find("error"), outJson.get<Json::Object>().end());
 }
 
@@ -114,9 +114,9 @@ TEST(JsonRpcDispatcher, HandleNotificationUsingParams) {
 
 	int zeValue = 0;
 	auto incValue = [&zeValue](const Json::Value &params) {
-		if (!params.is<double>())
+		if (!params.is<Json::Number>())
 			return;
-		zeValue += params.get<double>();
+		zeValue += params.get<Json::Number>();
 	};
 	Stone::Slot<const Json::Value &> incSlot(incValue);
 
@@ -171,7 +171,7 @@ TEST(JsonRpcDispatcher, SendRequestWithParams) {
 	EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("setValue"));
 	EXPECT_EQ(outJson.get<Json::Object>()["params"], Json::number(12));
 
-	int firstId = outJson.get<Json::Object>()["id"].get<double>();
+	int firstId = outJson.get<Json::Object>()["id"].get<Json::Number>();
 
 	dispatcher.sendRequest(out, "getValue", Json::null(),
 						   {[](const Json::Value &result) { (void)result; },
@@ -186,7 +186,7 @@ TEST(JsonRpcDispatcher, SendRequestWithParams) {
 
 	EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
 
-	int secondId = outJson.get<Json::Object>()["id"].get<double>();
+	int secondId = outJson.get<Json::Object>()["id"].get<Json::Number>();
 	EXPECT_NE(firstId, secondId);
 }
 
@@ -202,8 +202,8 @@ TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
 		EXPECT_TRUE(dispatcher.sendRequest( //
 			out, "getValue", Json::null(),
 			{[&zeValue](const Json::Value &result) {
-				 if (result.is<double>()) {
-					 zeValue = result.get<double>();
+				 if (result.is<Json::Number>()) {
+					 zeValue = result.get<Json::Number>();
 				 }
 			 },
 			 [&receivedError](const std::string &error) {
@@ -215,10 +215,10 @@ TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
 		ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
 		ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
 
-		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<double>());
+		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<Json::Number>());
 		EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
 
-		int requestId = outJson.get<Json::Object>()["id"].get<double>();
+		int requestId = outJson.get<Json::Object>()["id"].get<Json::Number>();
 
 		EXPECT_EQ(zeValue, 0);
 
@@ -249,8 +249,8 @@ TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
 		EXPECT_TRUE(dispatcher.sendRequest( //
 			out, "getValue", Json::null(),
 			{[&zeValue](const Json::Value &result) {
-				 if (result.is<double>()) {
-					 zeValue = result.get<double>();
+				 if (result.is<Json::Number>()) {
+					 zeValue = result.get<Json::Number>();
 				 }
 			 },
 			 [&zeValue, &receivedError](const std::string &error) {
@@ -264,10 +264,10 @@ TEST(JsonRpcDispatcher, SendRequestWithParamsAndReceiveResponse) {
 		ASSERT_NE(outJson.get<Json::Object>().find("id"), outJson.get<Json::Object>().end());
 		ASSERT_NE(outJson.get<Json::Object>().find("method"), outJson.get<Json::Object>().end());
 
-		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<double>());
+		ASSERT_TRUE(outJson.get<Json::Object>()["id"].is<Json::Number>());
 		EXPECT_EQ(outJson.get<Json::Object>()["method"], Json::string("getValue"));
 
-		int requestId = outJson.get<Json::Object>()["id"].get<double>();
+		int requestId = outJson.get<Json::Object>()["id"].get<Json::Number>();
 
 		auto response = Json::Object({
 			{	 "id",			   Json::number(requestId)},
