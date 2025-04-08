@@ -78,6 +78,8 @@ private:
 	};
 	std::unordered_map<Id, PendingResponse> _pendingRequests;
 	Id _nextId = 0;
+
+	bool _sendErrorMessage = false;
 };
 
 } // namespace Stone::Network

@@ -5,6 +5,10 @@
 #include <sstream>
 
 #define MAX_REQUEST_LOOP 1000000000
+#define ERROR_HANDLER_THROWN "Unknown error occurred"
+#define ERROR_FAILED_TO_SEND "Failed to send request"
+#define ERROR_INVALID_JSON "Failed to parse JSON"
+#define ERROR_INVALID_MESSAGE "Invalid JSON-RPC message format"
 
 namespace Stone::Network {
 
@@ -18,7 +22,7 @@ bool JsonRpcDispatcher::registerRequestHandler(const Method &method, const SyncR
 			} catch (const std::exception &e) {
 				failure(e.what());
 			} catch (...) {
-				failure("Unknown error occurred");
+				failure(ERROR_HANDLER_THROWN);
 			}
 		});
 }
@@ -37,7 +41,7 @@ bool JsonRpcDispatcher::registerRequestHandler(const Method &method, const Async
 			} catch (const std::exception &e) {
 				failure(e.what());
 			} catch (...) {
-				failure("Unknown error occurred");
+				failure(ERROR_HANDLER_THROWN);
 			}
 		});
 }
@@ -72,26 +76,26 @@ bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, 
 	_nextId++;
 	if (_nextId >= MAX_REQUEST_LOOP)
 		_nextId = 1;
-	Json::Value request = Json::object();
-	auto &requestObject(request.get<Json::Object>());
-	requestObject[JSONRPC_ID] = Json::number(_nextId);
-	requestObject[JSONRPC_METHOD] = Json::string(method);
+	Json::Value request = Json::object({
+		{	 JSONRPC_ID, Json::number(_nextId)},
+		{JSONRPC_METHOD,	 Json::string(method)},
+	});
 	if (!params.isNull())
-		requestObject[JSONRPC_PARAMS] = params;
+		request[JSONRPC_PARAMS] = params;
 	_pendingRequests[_nextId] = {
 		callbacks,
 		std::chrono::steady_clock::now() + std::chrono::milliseconds(static_cast<long long>(timeout * 1000)) //
 	};
 	output << request;
 	if (output.fail() || output.bad()) {
-		handleResponseError(_nextId, "failed to send request");
+		handleResponseError(_nextId, ERROR_FAILED_TO_SEND);
 		return false;
 	}
 	return true;
 }
 
 bool JsonRpcDispatcher::sendNotification(std::ostream &output, const Method &method, const Params &params) {
-	output << Json::Object({
+	output << Json::object({
 		{JSONRPC_METHOD, Json::string(method)},
 		{JSONRPC_PARAMS,				 params},
 	});
@@ -108,17 +112,27 @@ bool JsonRpcDispatcher::handleStream(std::istream &stream, std::ostream &output)
 	try {
 		Json::parseStream(stream, jsonValue);
 	} catch (const std::exception &e) {
-		output << "Failed to parse JSON: " << e.what() << std::endl;
+		if (_sendErrorMessage) {
+			output << Json::object({
+				{ JSONRPC_ERROR,		ERROR_INVALID_JSON},
+				{JSONRPC_PARAMS, Json::string(e.what())},
+			});
+		}
 		return false;
 	}
 	if (jsonValue.is<Json::Object>()) {
-		handleJsonObject(jsonValue.get<Json::Object>(), output);
-		return true;
+		return handleJsonObject(jsonValue.get<Json::Object>(), output);
 	} else if (jsonValue.is<Json::Array>()) {
-		handleJsonArray(jsonValue.get<Json::Array>(), output);
-		return true;
+		return handleJsonArray(jsonValue.get<Json::Array>(), output);
 	}
-	output << "Invalid JSON-RPC message format" << std::endl;
+
+	if (_sendErrorMessage) {
+		output << Json::object({
+			{ JSONRPC_ERROR, ERROR_INVALID_MESSAGE},
+			{JSONRPC_PARAMS,			 jsonValue},
+		});
+	}
+
 	return false;
 }
 
@@ -127,8 +141,12 @@ bool JsonRpcDispatcher::handleJsonArray(const Json::Array &message, std::ostream
 		if (item.is<Json::Object>()) {
 			handleJsonObject(item.get<Json::Object>(), output);
 		} else {
-			output << "Invalid JSON-RPC message format" << std::endl;
-			return false;
+			if (_sendErrorMessage) {
+				output << Json::object({
+					{ JSONRPC_ERROR, ERROR_INVALID_MESSAGE},
+					{JSONRPC_PARAMS,					 item},
+				});
+			}
 		}
 	}
 	return true;
@@ -164,6 +182,12 @@ bool JsonRpcDispatcher::handleJsonObject(const Json::Object &message, std::ostre
 			} else if (!hasResult && hasError) {
 				return handleResponseError(id, errorPtr->second.get<std::string>());
 			}
+			if (_sendErrorMessage) {
+				output << Json::object({
+					{ JSONRPC_ERROR, ERROR_INVALID_MESSAGE},
+					{JSONRPC_PARAMS,				 message},
+				});
+			}
 		}
 	}
 	return false;
@@ -175,18 +199,16 @@ bool JsonRpcDispatcher::handleRequest(Id id, const Method &method, const Params 
 		it->second(
 			params,
 			[&output, id](const Result &result) {
-				Json::Value response = Json::object();
-				auto &responseObject(response.get<Json::Object>());
-				responseObject[JSONRPC_ID] = Json::number(id);
-				responseObject[JSONRPC_RESULT] = result;
-				output << response;
+				output << Json::object({
+					{	 JSONRPC_ID, Json::number(id)},
+					{JSONRPC_RESULT,			 result},
+				});
 			},
 			[&output, id](const Error &error) {
-				Json::Value response = Json::object();
-				auto &responseObject(response.get<Json::Object>());
-				responseObject[JSONRPC_ID] = Json::number(id);
-				responseObject[JSONRPC_ERROR] = Json::string(error);
-				output << response;
+				output << Json::object({
+					{	 JSONRPC_ID, Json::number(id)},
+					{JSONRPC_ERROR,			error},
+				});
 			});
 		return true;
 	}
