@@ -84,10 +84,18 @@ bool JsonRpcDispatcher::sendRequest(std::ostream &output, const Method &method, 
 	};
 	output << request;
 	if (output.fail() || output.bad()) {
-		_pendingRequests.erase(_nextId);
+		handleResponseError(_nextId, "failed to send request");
 		return false;
 	}
 	return true;
+}
+
+bool JsonRpcDispatcher::sendNotification(std::ostream &output, const Method &method, const Params &params) {
+	output << Json::Object({
+		{JSONRPC_METHOD, Json::string(method)},
+		{JSONRPC_PARAMS,				 params},
+	});
+	return !(output.fail() || output.bad());
 }
 
 bool JsonRpcDispatcher::handleString(const std::string &message, std::ostream &output) {

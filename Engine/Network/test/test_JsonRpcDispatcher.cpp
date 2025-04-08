@@ -307,3 +307,19 @@ TEST(JsonRpcDispatcher, HandleRequestWithTimeout) {
 	dispatcher.cleanupTimedOutPendingRequests();
 	EXPECT_TRUE(errorReceived);
 }
+
+TEST(JsonRpcDispatcher, SendNotification) {
+	JsonRpcDispatcher dispatcher;
+	std::stringstream out;
+	Json::Value outJson;
+
+	EXPECT_TRUE(dispatcher.sendNotification(out, "sayHello", Json::array({Json::number(12), Json::string("world")})));
+
+	EXPECT_NO_THROW(out >> outJson);
+	ASSERT_TRUE(outJson.is<Json::Object>());
+	ASSERT_EQ(outJson["method"], Json::string("sayHello"));
+	ASSERT_TRUE(outJson["params"].is<Json::Array>());
+	ASSERT_EQ(outJson["params"].get<Json::Array>().size(), 2);
+	EXPECT_EQ(outJson["params"][0], Json::number(12));
+	EXPECT_EQ(outJson["params"][1], Json::string("world"));
+}

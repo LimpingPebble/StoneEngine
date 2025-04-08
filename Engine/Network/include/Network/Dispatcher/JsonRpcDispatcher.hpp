@@ -52,7 +52,7 @@ public:
 	bool sendRequest(std::ostream &output, const Method &method, const Params &params,
 					 const ResponseCallbacks &callbacks, float timeout = 10.0f);
 
-	// TODO: Add sendNotification method
+	bool sendNotification(std::ostream &output, const Method &method, const Params &params);
 
 	bool handleString(const std::string &message, std::ostream &output);
 	bool handleStream(std::istream &stream, std::ostream &output);
