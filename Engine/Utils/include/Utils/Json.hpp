@@ -47,13 +47,13 @@ struct Value {
 	void serialize(std::ostream &stream) const;
 	std::string serialize() const;
 
-	bool operator==(const Value &other) const {
-		return value == other.value;
-	}
+	bool operator==(const Value &other) const;
+	bool operator!=(const Value &other) const;
 
-	bool operator!=(const Value &other) const {
-		return !(*this == other);
-	}
+	Value &operator[](int index);
+	const Value &operator[](int index) const;
+	Value &operator[](const std::string &key);
+	const Value &operator[](const std::string &key) const;
 };
 
 void parseStream(std::istream &input, Value &out);

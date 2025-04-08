@@ -18,6 +18,30 @@ std::string Value::serialize() const {
 	return ss.str();
 }
 
+bool Value::operator==(const Value &other) const {
+	return value == other.value;
+}
+
+bool Value::operator!=(const Value &other) const {
+	return !(*this == other);
+}
+
+Value &Value::operator[](int index) {
+	return get<Array>()[index];
+}
+
+const Value &Value::operator[](int index) const {
+	return get<Array>()[index];
+}
+
+Value &Value::operator[](const std::string &key) {
+	return get<Object>()[key];
+}
+
+const Value &Value::operator[](const std::string &key) const {
+	return get<Object>().find(key)->second;
+}
+
 void parseStream(std::istream &input, Value &out) {
 	Parser parser(input);
 	parser.parse(out);

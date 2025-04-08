@@ -2,6 +2,55 @@
 
 #include <gtest/gtest.h>
 
+TEST(Json, GetContent) {
+	std::string jsonString = R"({"name": "John", "age": 30, "isStudent": false})";
+
+	Json::Value json = Json::object({
+		{	 "name",															   Json::string("John")},
+		{		 "age",																   Json::number(30)},
+		{"isStudent",															   Json::boolean(false)},
+		{	 "scores",		   Json::array({Json::number(85.5), Json::number(92.0), Json::number(78.5)})},
+		{	 "address", Json::object({{"city", Json::string("New York")}, {"zip", Json::string("10001")}})},
+	});
+
+	ASSERT_TRUE(json.is<Json::Object>());
+
+	Json::Object &obj = json.get<Json::Object>();
+	ASSERT_TRUE(obj["name"].is<std::string>());
+	EXPECT_EQ(obj["name"].get<std::string>(), "John");
+
+	ASSERT_TRUE(obj["age"].is<double>());
+	EXPECT_EQ(obj["age"].get<double>(), 30);
+
+	ASSERT_TRUE(obj["isStudent"].is<bool>());
+	EXPECT_EQ(obj["isStudent"].get<bool>(), false);
+
+	ASSERT_TRUE(obj["scores"].is<Json::Array>());
+	auto scores = obj["scores"].get<Json::Array>();
+	ASSERT_EQ(scores.size(), 3);
+	ASSERT_TRUE(scores[0].is<double>());
+	ASSERT_EQ(scores[0].get<double>(), 85.5);
+	ASSERT_TRUE(scores[1].is<double>());
+	ASSERT_EQ(scores[1].get<double>(), 92.0);
+	ASSERT_TRUE(scores[2].is<double>());
+	ASSERT_EQ(scores[2].get<double>(), 78.5);
+
+	ASSERT_TRUE(obj["address"].is<Json::Object>());
+	auto address = obj["address"].get<Json::Object>();
+	ASSERT_TRUE(address["city"].is<std::string>());
+	ASSERT_EQ(address["city"].get<std::string>(), "New York");
+	ASSERT_TRUE(address["zip"].is<std::string>());
+	ASSERT_EQ(address["zip"].get<std::string>(), "10001");
+
+	const Json::Value constJson = json;
+	ASSERT_TRUE(constJson.is<Json::Object>());
+	ASSERT_TRUE(constJson["name"].is<std::string>());
+	EXPECT_EQ(constJson["name"].get<std::string>(), "John");
+
+	EXPECT_EQ(constJson["address"]["city"].get<std::string>(), "New York");
+	ASSERT_EQ(constJson["scores"][1].get<double>(), 92.0);
+}
+
 TEST(Json, ParseEmptyObject) {
 	std::string jsonString = "{}";
 
