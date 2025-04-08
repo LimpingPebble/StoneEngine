@@ -12,16 +12,20 @@ struct Value;
 
 using Object = std::unordered_map<std::string, Value>;
 using Array = std::vector<Value>;
+using String = std::string;
+using Number = double;
+using Boolean = bool;
+using Null = std::nullptr_t;
 
 struct Value {
 
-	std::variant<Object, Array, std::string, double, bool, std::nullptr_t> value;
+	std::variant<Object, Array, String, Number, Boolean, Null> value;
 
 	Value() : value(nullptr) {
 	}
 
-	template <typename T, typename = std::enable_if_t<std::is_constructible_v<
-							  std::variant<Object, Array, std::string, double, bool, std::nullptr_t>, T>>>
+	template <typename T, typename = std::enable_if_t<
+							  std::is_constructible_v<std::variant<Object, Array, String, Number, Boolean, Null>, T>>>
 	Value(T &&val) : value(std::forward<T>(val)) {
 	}
 
@@ -62,9 +66,9 @@ void parseFile(const std::string &path, Value &out);
 
 Value object(const Object &obj = {});
 Value array(const Array &arr = {});
-Value string(const std::string &str = "");
-Value number(double num = 0.0);
-Value boolean(bool b = false);
+Value string(const String &str = "");
+Value number(Number num = 0.0);
+Value boolean(Boolean b = false);
 Value null();
 
 
@@ -134,10 +138,10 @@ public:
 
 	void operator()(const Object &obj);
 	void operator()(const Array &arr);
-	void operator()(const std::string &str);
-	void operator()(double num);
-	void operator()(bool b);
-	void operator()(std::nullptr_t);
+	void operator()(const String &str);
+	void operator()(Number num);
+	void operator()(Boolean b);
+	void operator()(Null);
 
 private:
 	std::ostream &_stream;

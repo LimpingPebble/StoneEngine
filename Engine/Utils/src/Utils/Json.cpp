@@ -68,15 +68,15 @@ Value array(const Array &arr) {
 	return {arr};
 }
 
-Value string(const std::string &str) {
+Value string(const String &str) {
 	return {str};
 }
 
-Value number(double num) {
+Value number(Number num) {
 	return {num};
 }
 
-Value boolean(bool b) {
+Value boolean(Boolean b) {
 	return {b};
 }
 
@@ -302,19 +302,19 @@ static std::string _escape_string(const std::string &str) {
 	return result;
 }
 
-void Serializer::operator()(const std::string &str) {
+void Serializer::operator()(const String &str) {
 	_stream << "\"" << _escape_string(str) << "\"";
 }
 
-void Serializer::operator()(double num) {
+void Serializer::operator()(Number num) {
 	_stream << num;
 }
 
-void Serializer::operator()(bool b) {
+void Serializer::operator()(Boolean b) {
 	_stream << (b ? "true" : "false");
 }
 
-void Serializer::operator()(std::nullptr_t) {
+void Serializer::operator()(Null) {
 	_stream << "null";
 }
 
