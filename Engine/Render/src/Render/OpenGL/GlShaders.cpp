@@ -149,10 +149,17 @@ std::unique_ptr<GlVertexShader> GlVertexShader::makeStandardInstancedMeshShader(
 	throw std::runtime_error("Not implemented.");
 }
 
-std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardShader(const Scene::ShaderParameters &params) {
+std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardForwardShader(const Scene::ShaderParameters &params) {
 	std::stringstream source;
 	Scene::ShaderGenerator generator;
-	generator.generateFragmentShader(params, source);
+	generator.generateForwardFragmentShader(params, source);
+	return std::make_unique<GlFragmentShader>(source.str().c_str());
+}
+
+std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardDeferredShader(const Scene::ShaderParameters &params) {
+	std::stringstream source;
+	Scene::ShaderGenerator generator;
+	generator.generateDeferredFragmentShader(params, source);
 	return std::make_unique<GlFragmentShader>(source.str().c_str());
 }
 

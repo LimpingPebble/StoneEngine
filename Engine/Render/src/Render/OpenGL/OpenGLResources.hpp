@@ -27,6 +27,8 @@ public:
 
 	const std::unique_ptr<ShaderCollection> &getDefaultShaderCollection();
 
+	const std::weak_ptr<OpenGLRenderer> getRenderer() const;
+
 private:
 	std::weak_ptr<OpenGLRenderer> _renderer;
 

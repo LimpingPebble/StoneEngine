@@ -42,9 +42,16 @@ GlVertexShader *OpenGLResources::getVertexShader(Scene::MeshType meshType) {
 
 
 const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scene::ShaderParameters params) {
+	auto renderer = getRenderer().lock();
+	assert(renderer != nullptr);
 	auto it = _fragmentShaders.find(params);
 	if (it == _fragmentShaders.end()) {
-		return (_fragmentShaders[params] = GlFragmentShader::makeStandardShader(params));
+		switch (renderer->getRenderingMethod()) {
+		case RenderingMethod::Forward:
+			return (_fragmentShaders[params] = GlFragmentShader::makeStandardForwardShader(params));
+		case RenderingMethod::Deferred:
+			return (_fragmentShaders[params] = GlFragmentShader::makeStandardDeferredShader(params));
+		}
 	} else {
 		return it->second;
 	}
@@ -55,6 +62,10 @@ const std::unique_ptr<ShaderCollection> &OpenGLResources::getDefaultShaderCollec
 		_defaultShaderCollection = std::make_unique<ShaderCollection>(shared_from_this());
 	}
 	return _defaultShaderCollection;
+}
+
+const std::weak_ptr<OpenGLRenderer> OpenGLResources::getRenderer() const {
+	return _renderer;
 }
 
 } // namespace Stone::Render::OpenGL

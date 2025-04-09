@@ -54,6 +54,8 @@ std::string to_string(Stone::Scene::ShaderParameters::Type type) {
 	return "";
 }
 
+bool isForwardRender = false;
+
 void generateShaderOutput(const char *input_file, const char *output_file) {
 
 	Json::Value input_json;
@@ -69,7 +71,10 @@ void generateShaderOutput(const char *input_file, const char *output_file) {
 	FOR_EACH_SHADER_PARAMETERS(__PRINT_SHADER_PARAM)
 	std::cout << "}" << std::endl;
 
-	generator.generateFragmentShader(params, output_stream);
+	if (isForwardRender)
+		generator.generateForwardFragmentShader(params, output_stream);
+	else
+		generator.generateDeferredFragmentShader(params, output_stream);
 }
 
 std::string input;
@@ -84,7 +89,9 @@ void generateShader() {
 }
 
 void printUsage() {
-	std::cout << "Usage: glsl_generator <input> <output> [-f]" << std::endl;
+	std::cout << "Usage: glsl_generator <input> <output> [-fd]" << std::endl;
+	std::cout << "-f : Watch for file change" << std::endl;
+	std::cout << "-d : Generate forward rendering" << std::endl;
 }
 
 int main(int argc, const char *argv[]) {
@@ -96,9 +103,12 @@ int main(int argc, const char *argv[]) {
 	input = argv[1];
 	output = argv[2];
 
+	if (argc >= 4 && std::string(argv[3]).find('d') != std::string::npos)
+		isForwardRender = true;
+
 	generateShader();
 
-	if (argc >= 4 && std::string(argv[3]) == "-f") {
+	if (argc >= 4 && std::string(argv[3]).find('f') != std::string::npos) {
 		while (true) {
 			time_t last_modified = getLastmodifiedTimeOfFile(input.c_str());
 			while (last_modified == getLastmodifiedTimeOfFile(input.c_str())) {

@@ -69,7 +69,8 @@ public:
 	GlFragmentShader(const char *source) : GlShaderBase(source, GL_FRAGMENT_SHADER) {
 	}
 
-	static std::unique_ptr<GlFragmentShader> makeStandardShader(const Scene::ShaderParameters &params);
+	static std::unique_ptr<GlFragmentShader> makeStandardDeferredShader(const Scene::ShaderParameters &params);
+	static std::unique_ptr<GlFragmentShader> makeStandardForwardShader(const Scene::ShaderParameters &params);
 };
 
 class GlShaderProgram {

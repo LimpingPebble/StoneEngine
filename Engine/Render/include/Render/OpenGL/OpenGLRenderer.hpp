@@ -30,10 +30,12 @@ public:
 	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
 
 	void initialize();
+	RenderingMethod getRenderingMethod() const;
 	const std::shared_ptr<OpenGLResources> &getOpenGLResources() const;
 
 private:
 	std::pair<uint32_t, uint32_t> _frameSize;
+	const RenderingMethod _method;
 	std::shared_ptr<OpenGLResources> _resources;
 	std::unique_ptr<GBuffer> _gBuffer;
 };

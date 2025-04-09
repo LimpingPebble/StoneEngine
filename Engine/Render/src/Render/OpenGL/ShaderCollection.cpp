@@ -8,6 +8,29 @@
 
 namespace Stone::Render::OpenGL {
 
+ShaderCollection::ShaderCollection(const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
+	Scene::ShaderParameters params;
+	switch (resources->getRenderer().lock()->getRenderingMethod()) {
+	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
+	case RenderingMethod::Deferred: _glFragmentShader = GlFragmentShader::makeStandardDeferredShader(params); break;
+	}
+}
+
+ShaderCollection::ShaderCollection(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources)
+	: _resources(resources) {
+	_glFragmentShader = std::make_unique<GlFragmentShader>(shader);
+}
+
+ShaderCollection::ShaderCollection(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources)
+	: _resources(resources) {
+	Scene::ShaderParameters params;
+	params.setFromMaterial(material);
+	switch (resources->getRenderer().lock()->getRenderingMethod()) {
+	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
+	case RenderingMethod::Deferred: _glFragmentShader = GlFragmentShader::makeStandardDeferredShader(params); break;
+	}
+}
+
 void ShaderCollection::makeMeshProgram() {
 	if (_meshProgram != nullptr)
 		return;
