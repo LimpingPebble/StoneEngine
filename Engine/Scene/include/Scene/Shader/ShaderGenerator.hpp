@@ -14,8 +14,7 @@ public:
 
 	~ShaderGenerator() = default;
 
-	void generateDeferredFragmentShader(const ShaderParameters &params, std::ostream &output);
-	void generateForwardFragmentShader(const ShaderParameters &params, std::ostream &output);
+	void generateFragmentShaderTemplate(const ShaderParameters &params, std::ostream &output);
 };
 
 } // namespace Stone::Scene

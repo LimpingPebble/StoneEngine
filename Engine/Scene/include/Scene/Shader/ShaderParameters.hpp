@@ -16,7 +16,9 @@ struct ShaderParameters {
 	enum class Type : uint8_t {
 		None = 0,
 		Scalar,
-		Vector,
+		Vector2,
+		Vector3,
+		Vector4,
 		Texture,
 	};
 

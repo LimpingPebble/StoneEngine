@@ -2,12 +2,12 @@
     "diffuse": "texture",
     "specular": "texture",
     "ambient": "scalar",
-    "emissive": "vector",
+    "emissive": "vector3",
     "shininess": "scalar",
     "opacity": "texture",
     "roughness": "scalar",
-    "metallic": "vector",
-    "normal": "vector",
+    "metallic": "vector3",
+    "normal": "vector3",
     "occlusion": "scalar",
-    "height": "vector"
+    "height": "vector3"
 }

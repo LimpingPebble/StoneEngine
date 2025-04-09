@@ -30,8 +30,12 @@ Stone::Scene::ShaderParameters parseShaderParameters(const Json::Value &json) {
 			const std::string &type_str = value.get<std::string>();
 			if (type_str == "scalar")
 				type = Stone::Scene::ShaderParameters::Type::Scalar;
-			else if (type_str == "vector")
-				type = Stone::Scene::ShaderParameters::Type::Vector;
+			else if (type_str == "vector2")
+				type = Stone::Scene::ShaderParameters::Type::Vector2;
+			else if (type_str == "vector3")
+				type = Stone::Scene::ShaderParameters::Type::Vector3;
+			else if (type_str == "vector4")
+				type = Stone::Scene::ShaderParameters::Type::Vector4;
 			else if (type_str == "texture")
 				type = Stone::Scene::ShaderParameters::Type::Texture;
 			else
@@ -48,7 +52,9 @@ std::string to_string(Stone::Scene::ShaderParameters::Type type) {
 	switch (type) {
 	case Stone::Scene::ShaderParameters::Type::None: return "none";
 	case Stone::Scene::ShaderParameters::Type::Scalar: return "scalar";
-	case Stone::Scene::ShaderParameters::Type::Vector: return "vector";
+	case Stone::Scene::ShaderParameters::Type::Vector2: return "vector2";
+	case Stone::Scene::ShaderParameters::Type::Vector3: return "vector3";
+	case Stone::Scene::ShaderParameters::Type::Vector4: return "vector4";
 	case Stone::Scene::ShaderParameters::Type::Texture: return "texture";
 	}
 	return "";
