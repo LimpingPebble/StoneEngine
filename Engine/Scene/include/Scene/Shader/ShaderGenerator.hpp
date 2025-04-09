@@ -15,6 +15,8 @@ public:
 	~ShaderGenerator() = default;
 
 	void generateFragmentShaderTemplate(const ShaderParameters &params, std::ostream &output);
+
+	void generateOpenGlForwardFragmentShader(const ShaderParameters &params, std::ostream &output);
 };
 
 } // namespace Stone::Scene

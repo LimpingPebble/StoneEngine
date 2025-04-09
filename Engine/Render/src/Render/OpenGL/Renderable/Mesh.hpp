@@ -25,7 +25,7 @@ struct VRAMMesh {
 		glGenBuffers(1, &verticesBuffer);
 		if (verticesBuffer == 0) {
 			glDeleteVertexArrays(1, &elementsBuffer);
-			throw std::runtime_error("Failed to generate indices buffer");
+			throw std::runtime_error("Failed to generate vertices buffer");
 		}
 
 		glGenBuffers(1, &indicesBuffer);

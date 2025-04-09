@@ -26,22 +26,24 @@ Stone::Scene::ShaderParameters parseShaderParameters(const Json::Value &json) {
 
 	for (auto [key, value] : params_obj) {
 		Stone::Scene::ShaderParameters::Type type;
-		if (value.is<std::string>()) {
-			const std::string &type_str = value.get<std::string>();
-			if (type_str == "scalar")
-				type = Stone::Scene::ShaderParameters::Type::Scalar;
-			else if (type_str == "vector2")
-				type = Stone::Scene::ShaderParameters::Type::Vector2;
-			else if (type_str == "vector3")
-				type = Stone::Scene::ShaderParameters::Type::Vector3;
-			else if (type_str == "vector4")
-				type = Stone::Scene::ShaderParameters::Type::Vector4;
-			else if (type_str == "texture")
-				type = Stone::Scene::ShaderParameters::Type::Texture;
-			else
-				throw std::runtime_error("Invalid type " + type_str);
-		} else
+
+		if (!value.is<std::string>())
 			throw std::runtime_error("Invalid type for key " + key);
+
+		const std::string &type_str = value.get<std::string>();
+		if (type_str == "scalar")
+			type = Stone::Scene::ShaderParameters::Type::Scalar;
+		else if (type_str == "vector2")
+			type = Stone::Scene::ShaderParameters::Type::Vector2;
+		else if (type_str == "vector3")
+			type = Stone::Scene::ShaderParameters::Type::Vector3;
+		else if (type_str == "vector4")
+			type = Stone::Scene::ShaderParameters::Type::Vector4;
+		else if (type_str == "texture")
+			type = Stone::Scene::ShaderParameters::Type::Texture;
+		else
+			throw std::runtime_error("Invalid type " + type_str);
+
 		params.setParamWithName(key, type);
 	}
 
@@ -60,8 +62,6 @@ std::string to_string(Stone::Scene::ShaderParameters::Type type) {
 	return "";
 }
 
-bool isForwardRender = false;
-
 void generateShaderOutput(const char *input_file, const char *output_file) {
 
 	Json::Value input_json;
@@ -77,10 +77,7 @@ void generateShaderOutput(const char *input_file, const char *output_file) {
 	FOR_EACH_SHADER_PARAMETERS(__PRINT_SHADER_PARAM)
 	std::cout << "}" << std::endl;
 
-	if (isForwardRender)
-		generator.generateForwardFragmentShader(params, output_stream);
-	else
-		generator.generateDeferredFragmentShader(params, output_stream);
+	generator.generateOpenGlForwardFragmentShader(params, output_stream);
 }
 
 std::string input;
@@ -91,13 +88,14 @@ void generateShader() {
 		generateShaderOutput(input.c_str(), output.c_str());
 	} catch (const std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;
+	} catch (...) {
+		std::cerr << "Unknown error occurred" << std::endl;
 	}
 }
 
 void printUsage() {
-	std::cout << "Usage: glsl_generator <input> <output> [-fd]" << std::endl;
+	std::cout << "Usage: glsl_generator <input> <output> [-f]" << std::endl;
 	std::cout << "-f : Watch for file change" << std::endl;
-	std::cout << "-d : Generate forward rendering" << std::endl;
 }
 
 int main(int argc, const char *argv[]) {
@@ -108,9 +106,6 @@ int main(int argc, const char *argv[]) {
 
 	input = argv[1];
 	output = argv[2];
-
-	if (argc >= 4 && std::string(argv[3]).find('d') != std::string::npos)
-		isForwardRender = true;
 
 	generateShader();
 

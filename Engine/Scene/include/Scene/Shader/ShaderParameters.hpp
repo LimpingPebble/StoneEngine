@@ -24,10 +24,10 @@ struct ShaderParameters {
 
 	union {
 		struct {
-#define __DECLARE_PARAM(param) Type param : 2;
+#define __DECLARE_PARAM(param) Type param : 3;
 			FOR_EACH_SHADER_PARAMETERS(__DECLARE_PARAM)
 		};
-		uint32_t data; // sizeof() should be greater or equal to the struct size
+		uint64_t data; // sizeof() should be greater or equal to the struct size
 	};
 	bool _;
 

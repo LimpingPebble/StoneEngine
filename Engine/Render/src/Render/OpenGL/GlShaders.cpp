@@ -9,6 +9,8 @@
 
 namespace Stone::Render::OpenGL {
 
+// MARK: Compilation
+
 GLuint compileSource(const std::string &source, GLenum type) {
 	GLuint shaderId = glCreateShader(type);
 	if (shaderId == 0) {
@@ -64,6 +66,8 @@ GLuint loadSpirv(const char *spirv_content, GLsizei spirv_length, GLenum type) {
 
 	return shaderId;
 }
+
+// MARK: Vertex
 
 const char *basicVertexShaderSource = R"shader(
 #version 400 core
@@ -149,20 +153,23 @@ std::unique_ptr<GlVertexShader> GlVertexShader::makeStandardInstancedMeshShader(
 	throw std::runtime_error("Not implemented.");
 }
 
+// MARK: Fragment
+
 std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardForwardShader(const Scene::ShaderParameters &params) {
 	std::stringstream source;
+
 	Scene::ShaderGenerator generator;
-	generator.generateForwardFragmentShader(params, source);
+	generator.generateOpenGlForwardFragmentShader(params, source);
+
 	return std::make_unique<GlFragmentShader>(source.str().c_str());
 }
 
 std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardDeferredShader(const Scene::ShaderParameters &params) {
-	std::stringstream source;
-	Scene::ShaderGenerator generator;
-	generator.generateDeferredFragmentShader(params, source);
-	return std::make_unique<GlFragmentShader>(source.str().c_str());
+	(void)params;
+	throw std::runtime_error("deffered shader is not implemented.");
 }
 
+// MARK: Program
 
 GlShaderProgram::GlShaderProgram(const GlVertexShader &vertexShader, const GlFragmentShader &fragmentShader)
 	: _gl_program(0) {
