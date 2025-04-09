@@ -29,6 +29,7 @@ void Material::render(Scene::RenderContext &context) {
 
 void Material::setUniforms(Scene::MeshType meshType) {
 	GlShaderProgram *program = _shaderCollection->getProgram(meshType);
+	program->use();
 
 	_material.forEachVectors([program](const auto &loc, glm::vec3 vec) { program->setUniform(loc, vec); });
 	_material.forEachScalars([program](const auto &loc, float scalar) { program->setUniform(loc, scalar); });

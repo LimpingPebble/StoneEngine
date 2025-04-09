@@ -213,6 +213,10 @@ GLint GlShaderProgram::getUniformLocation(const Scene::Material::Location &locat
 	return -1;
 }
 
+void GlShaderProgram::setUniform(const Scene::Material::Location &location, int integer) const {
+	glUniform1i(getUniformLocation(location), integer);
+}
+
 void GlShaderProgram::setUniform(const Scene::Material::Location &location, float scalar) const {
 	glUniform1f(getUniformLocation(location), scalar);
 }

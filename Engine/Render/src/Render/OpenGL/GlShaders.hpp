@@ -86,6 +86,7 @@ public:
 	GLint getUniformLocation(const std::string &name) const;
 	GLint getUniformLocation(const Scene::Material::Location &location) const;
 
+	void setUniform(const Scene::Material::Location &location, int integer) const;
 	void setUniform(const Scene::Material::Location &location, float scalar) const;
 	void setUniform(const Scene::Material::Location &location, const glm::vec3 &vec3) const;
 	void setUniform(const Scene::Material::Location &location, const glm::mat4 &mat4) const;

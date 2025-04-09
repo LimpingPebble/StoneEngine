@@ -22,7 +22,6 @@ MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRender
 		assert(_meshNode.getMesh()->getDefaultMaterial()->isDirty() == false);
 		_material = _meshNode.getMesh()->getDefaultMaterial()->getRendererObject<Material>().get();
 	}
-	assert(_material != nullptr);
 
 	if (_material != nullptr) {
 		_shaderCollection = _material->getShaderCollection().get();
@@ -52,6 +51,7 @@ void MeshNode::render(Scene::RenderContext &context) {
 		_material->setUniforms(Scene::MeshType::Standard);
 	}
 
+	program->setUniform("u_lights_count", 0);
 	program->setUniform("u_mat_model", context.mvp.modelMatrix);
 	program->setUniform("u_mat_view", context.mvp.viewMatrix);
 	program->setUniform("u_mat_projection", context.mvp.projMatrix);
