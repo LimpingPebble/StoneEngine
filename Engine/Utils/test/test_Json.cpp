@@ -2,6 +2,55 @@
 
 #include <gtest/gtest.h>
 
+TEST(Json, GetContent) {
+	std::string jsonString = R"({"name": "John", "age": 30, "isStudent": false})";
+
+	Json::Value json = Json::object({
+		{	 "name",															   Json::string("John")},
+		{		 "age",																   Json::number(30)},
+		{"isStudent",															   Json::boolean(false)},
+		{	 "scores",		   Json::array({Json::number(85.5), Json::number(92.0), Json::number(78.5)})},
+		{	 "address", Json::object({{"city", Json::string("New York")}, {"zip", Json::string("10001")}})},
+	});
+
+	ASSERT_TRUE(json.is<Json::Object>());
+
+	Json::Object &obj = json.get<Json::Object>();
+	ASSERT_TRUE(obj["name"].is<Json::String>());
+	EXPECT_EQ(obj["name"].get<Json::String>(), "John");
+
+	ASSERT_TRUE(obj["age"].is<Json::Number>());
+	EXPECT_EQ(obj["age"].get<Json::Number>(), 30);
+
+	ASSERT_TRUE(obj["isStudent"].is<Json::Boolean>());
+	EXPECT_EQ(obj["isStudent"].get<Json::Boolean>(), false);
+
+	ASSERT_TRUE(obj["scores"].is<Json::Array>());
+	auto scores = obj["scores"].get<Json::Array>();
+	ASSERT_EQ(scores.size(), 3);
+	ASSERT_TRUE(scores[0].is<Json::Number>());
+	ASSERT_EQ(scores[0].get<Json::Number>(), 85.5);
+	ASSERT_TRUE(scores[1].is<Json::Number>());
+	ASSERT_EQ(scores[1].get<Json::Number>(), 92.0);
+	ASSERT_TRUE(scores[2].is<Json::Number>());
+	ASSERT_EQ(scores[2].get<Json::Number>(), 78.5);
+
+	ASSERT_TRUE(obj["address"].is<Json::Object>());
+	auto address = obj["address"].get<Json::Object>();
+	ASSERT_TRUE(address["city"].is<Json::String>());
+	ASSERT_EQ(address["city"].get<Json::String>(), "New York");
+	ASSERT_TRUE(address["zip"].is<Json::String>());
+	ASSERT_EQ(address["zip"].get<Json::String>(), "10001");
+
+	const Json::Value constJson = json;
+	ASSERT_TRUE(constJson.is<Json::Object>());
+	ASSERT_TRUE(constJson["name"].is<Json::String>());
+	EXPECT_EQ(constJson["name"].get<Json::String>(), "John");
+
+	EXPECT_EQ(constJson["address"]["city"].get<Json::String>(), "New York");
+	ASSERT_EQ(constJson["scores"][1].get<Json::Number>(), 92.0);
+}
+
 TEST(Json, ParseEmptyObject) {
 	std::string jsonString = "{}";
 
@@ -21,14 +70,14 @@ TEST(Json, ParseSimpleObject) {
 	ASSERT_TRUE(json.is<Json::Object>());
 
 	Json::Object obj = json.get<Json::Object>();
-	ASSERT_TRUE(obj["name"].is<std::string>());
-	ASSERT_EQ(obj["name"].get<std::string>(), "John");
+	ASSERT_TRUE(obj["name"].is<Json::String>());
+	ASSERT_EQ(obj["name"].get<Json::String>(), "John");
 
-	ASSERT_TRUE(obj["age"].is<double>());
-	ASSERT_EQ(obj["age"].get<double>(), 30);
+	ASSERT_TRUE(obj["age"].is<Json::Number>());
+	ASSERT_EQ(obj["age"].get<Json::Number>(), 30);
 
-	ASSERT_TRUE(obj["isStudent"].is<bool>());
-	ASSERT_EQ(obj["isStudent"].get<bool>(), false);
+	ASSERT_TRUE(obj["isStudent"].is<Json::Boolean>());
+	ASSERT_EQ(obj["isStudent"].get<Json::Boolean>(), false);
 }
 
 TEST(Json, ParseArray) {
@@ -42,14 +91,14 @@ TEST(Json, ParseArray) {
 	Json::Array arr = json.get<Json::Array>();
 	ASSERT_EQ(arr.size(), 4);
 
-	ASSERT_TRUE(arr[0].is<double>());
-	ASSERT_EQ(arr[0].get<double>(), 1);
+	ASSERT_TRUE(arr[0].is<Json::Number>());
+	ASSERT_EQ(arr[0].get<Json::Number>(), 1);
 
-	ASSERT_TRUE(arr[1].is<std::string>());
-	ASSERT_EQ(arr[1].get<std::string>(), "two");
+	ASSERT_TRUE(arr[1].is<Json::String>());
+	ASSERT_EQ(arr[1].get<Json::String>(), "two");
 
-	ASSERT_TRUE(arr[2].is<bool>());
-	ASSERT_EQ(arr[2].get<bool>(), true);
+	ASSERT_TRUE(arr[2].is<Json::Boolean>());
+	ASSERT_EQ(arr[2].get<Json::Boolean>(), true);
 
 	ASSERT_TRUE(arr[3].isNull());
 }
@@ -66,11 +115,11 @@ TEST(Json, ParseNestedObject) {
 	ASSERT_TRUE(obj["person"].is<Json::Object>());
 
 	Json::Object personObj = obj["person"].get<Json::Object>();
-	ASSERT_TRUE(personObj["name"].is<std::string>());
-	ASSERT_EQ(personObj["name"].get<std::string>(), "John");
+	ASSERT_TRUE(personObj["name"].is<Json::String>());
+	ASSERT_EQ(personObj["name"].get<Json::String>(), "John");
 
-	ASSERT_TRUE(personObj["age"].is<double>());
-	ASSERT_EQ(personObj["age"].get<double>(), 30);
+	ASSERT_TRUE(personObj["age"].is<Json::Number>());
+	ASSERT_EQ(personObj["age"].get<Json::Number>(), 30);
 }
 
 TEST(Json, MalformedJsonThrowsException) {
@@ -130,14 +179,14 @@ TEST(JsonSerializer, SerializeSimpleObject) {
 
 	auto obj = json.get<Json::Object>();
 
-	ASSERT_TRUE(obj["name"].is<std::string>());
-	ASSERT_EQ(obj["name"].get<std::string>(), "John");
+	ASSERT_TRUE(obj["name"].is<Json::String>());
+	ASSERT_EQ(obj["name"].get<Json::String>(), "John");
 
-	ASSERT_TRUE(obj["age"].is<double>());
-	ASSERT_EQ(obj["age"].get<double>(), 30);
+	ASSERT_TRUE(obj["age"].is<Json::Number>());
+	ASSERT_EQ(obj["age"].get<Json::Number>(), 30);
 
-	ASSERT_TRUE(obj["isStudent"].is<bool>());
-	ASSERT_EQ(obj["isStudent"].get<bool>(), false);
+	ASSERT_TRUE(obj["isStudent"].is<Json::Boolean>());
+	ASSERT_EQ(obj["isStudent"].get<Json::Boolean>(), false);
 }
 
 TEST(JsonSerializer, SerializeArray) {
@@ -158,14 +207,14 @@ TEST(JsonSerializer, SerializeArray) {
 	auto obj = json.get<Json::Array>();
 	ASSERT_EQ(obj.size(), 4);
 
-	ASSERT_TRUE(obj[0].is<double>());
-	ASSERT_EQ(obj[0].get<double>(), 1);
+	ASSERT_TRUE(obj[0].is<Json::Number>());
+	ASSERT_EQ(obj[0].get<Json::Number>(), 1);
 
-	ASSERT_TRUE(obj[1].is<std::string>());
-	ASSERT_EQ(obj[1].get<std::string>(), "two");
+	ASSERT_TRUE(obj[1].is<Json::String>());
+	ASSERT_EQ(obj[1].get<Json::String>(), "two");
 
-	ASSERT_TRUE(obj[2].is<bool>());
-	ASSERT_EQ(obj[2].get<bool>(), true);
+	ASSERT_TRUE(obj[2].is<Json::Boolean>());
+	ASSERT_EQ(obj[2].get<Json::Boolean>(), true);
 
 	ASSERT_TRUE(obj[3].isNull());
 }
@@ -193,11 +242,11 @@ TEST(JsonSerializer, SerializeNestedObject) {
 
 	auto personObj = obj["person"].get<Json::Object>();
 
-	ASSERT_TRUE(personObj["name"].is<std::string>());
-	ASSERT_EQ(personObj["name"].get<std::string>(), "John");
+	ASSERT_TRUE(personObj["name"].is<Json::String>());
+	ASSERT_EQ(personObj["name"].get<Json::String>(), "John");
 
-	ASSERT_TRUE(personObj["age"].is<double>());
-	ASSERT_EQ(personObj["age"].get<double>(), 30);
+	ASSERT_TRUE(personObj["age"].is<Json::Number>());
+	ASSERT_EQ(personObj["age"].get<Json::Number>(), 30);
 }
 
 TEST(JsonSerializer, SerializeComplexObject) {
@@ -226,26 +275,26 @@ TEST(JsonSerializer, SerializeComplexObject) {
 	ASSERT_TRUE(json.is<Json::Object>());
 
 	auto obj = json.get<Json::Object>();
-	ASSERT_TRUE(obj["name"].is<std::string>());
-	ASSERT_EQ(obj["name"].get<std::string>(), "John");
+	ASSERT_TRUE(obj["name"].is<Json::String>());
+	ASSERT_EQ(obj["name"].get<Json::String>(), "John");
 
-	ASSERT_TRUE(obj["age"].is<double>());
-	ASSERT_EQ(obj["age"].get<double>(), 30);
+	ASSERT_TRUE(obj["age"].is<Json::Number>());
+	ASSERT_EQ(obj["age"].get<Json::Number>(), 30);
 
-	ASSERT_TRUE(obj["isStudent"].is<bool>());
-	ASSERT_EQ(obj["isStudent"].get<bool>(), false);
+	ASSERT_TRUE(obj["isStudent"].is<Json::Boolean>());
+	ASSERT_EQ(obj["isStudent"].get<Json::Boolean>(), false);
 
 	ASSERT_TRUE(obj["scores"].is<Json::Array>());
 	auto scores = obj["scores"].get<Json::Array>();
 	ASSERT_EQ(scores.size(), 3);
-	ASSERT_EQ(scores[0].get<double>(), 85.5);
-	ASSERT_EQ(scores[1].get<double>(), 92);
-	ASSERT_EQ(scores[2].get<double>(), 78.5);
+	ASSERT_EQ(scores[0].get<Json::Number>(), 85.5);
+	ASSERT_EQ(scores[1].get<Json::Number>(), 92);
+	ASSERT_EQ(scores[2].get<Json::Number>(), 78.5);
 
 	ASSERT_TRUE(obj["address"].is<Json::Object>());
 	auto address = obj["address"].get<Json::Object>();
-	ASSERT_EQ(address["city"].get<std::string>(), "New York");
-	ASSERT_EQ(address["zip"].get<std::string>(), "10001");
+	ASSERT_EQ(address["city"].get<Json::String>(), "New York");
+	ASSERT_EQ(address["zip"].get<Json::String>(), "10001");
 }
 
 TEST(JsonSerializer, SerializeStringWithSpecialCharacters) {
@@ -268,14 +317,14 @@ TEST(JsonSerializer, SerializeStringWithSpecialCharacters) {
 	ASSERT_TRUE(json.is<Json::Object>());
 
 	auto obj = json.get<Json::Object>();
-	ASSERT_TRUE(obj["name"].is<std::string>());
-	ASSERT_EQ(obj["name"].get<std::string>(), "John \"Doe\"");
+	ASSERT_TRUE(obj["name"].is<Json::String>());
+	ASSERT_EQ(obj["name"].get<Json::String>(), "John \"Doe\"");
 
-	ASSERT_TRUE(obj["city"].is<std::string>());
-	ASSERT_EQ(obj["city"].get<std::string>(), "New\nYork");
+	ASSERT_TRUE(obj["city"].is<Json::String>());
+	ASSERT_EQ(obj["city"].get<Json::String>(), "New\nYork");
 
-	ASSERT_TRUE(obj["zip"].is<std::string>());
-	ASSERT_EQ(obj["zip"].get<std::string>(), "1000\b1");
+	ASSERT_TRUE(obj["zip"].is<Json::String>());
+	ASSERT_EQ(obj["zip"].get<Json::String>(), "1000\b1");
 }
 
 TEST(JsonLexer, NextToken) {
@@ -382,8 +431,8 @@ TEST(JsonParser, ParseJsonFromStream) {
 		EXPECT_TRUE(json.is<Json::Object>());
 
 		Json::Object &obj = json.get<Json::Object>();
-		EXPECT_TRUE(obj["name"].is<std::string>());
-		EXPECT_EQ(obj["name"].get<std::string>(), "John");
+		EXPECT_TRUE(obj["name"].is<Json::String>());
+		EXPECT_EQ(obj["name"].get<Json::String>(), "John");
 	}
 
 	{
@@ -406,9 +455,9 @@ TEST(JsonParser, ParseJsonFromStream) {
 
 		Json::Array &arr = json.get<Json::Array>();
 		ASSERT_EQ(arr.size(), 3);
-		ASSERT_EQ(arr[0].get<double>(), 1);
-		ASSERT_EQ(arr[1].get<double>(), 2);
-		ASSERT_EQ(arr[2].get<double>(), 3);
+		ASSERT_EQ(arr[0].get<Json::Number>(), 1);
+		ASSERT_EQ(arr[1].get<Json::Number>(), 2);
+		ASSERT_EQ(arr[2].get<Json::Number>(), 3);
 	}
 
 	{
@@ -418,7 +467,7 @@ TEST(JsonParser, ParseJsonFromStream) {
 		EXPECT_TRUE(json.is<Json::Object>());
 
 		Json::Object obj = json.get<Json::Object>();
-		EXPECT_TRUE(obj["name"].is<std::string>());
-		EXPECT_EQ(obj["name"].get<std::string>(), "Eric");
+		EXPECT_TRUE(obj["name"].is<Json::String>());
+		EXPECT_EQ(obj["name"].get<Json::String>(), "Eric");
 	}
 }

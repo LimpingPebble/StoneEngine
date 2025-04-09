@@ -152,6 +152,15 @@ struct Signal {
 		}
 	}
 
+	/**
+	 * @brief Checks if a slot is bound to this Signal.
+	 *
+	 * @return True if a slot is bound to this Signal, false otherwise.
+	 */
+	bool isBound() const {
+		return !_slots.empty();
+	}
+
 private:
 	std::unordered_set<Slot<Args...> *> _slots; ///< The set of slots bound to this Signal.
 };
