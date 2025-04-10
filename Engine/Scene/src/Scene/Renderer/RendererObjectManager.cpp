@@ -84,12 +84,15 @@ void RendererObjectManager::updateStaticSkinMesh(const std::shared_ptr<StaticSki
 }
 
 void RendererObjectManager::updateWireframeShape(const std::shared_ptr<WireframeShape> &shape) {
+	(void)shape;
 }
 
 void RendererObjectManager::updateTexture(const std::shared_ptr<Texture> &texture) {
+	(void)texture;
 }
 
 void RendererObjectManager::updateFragmentShader(const std::shared_ptr<FragmentShader> &shader) {
+	(void)shader;
 }
 
 void RendererObjectManager::updateRendererObject(IRenderable &element,
