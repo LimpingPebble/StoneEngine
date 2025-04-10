@@ -16,7 +16,7 @@ env:
   CMAKE_BUILD_PRESET: generate-doxygen
 
   DOXYGEN_VERSION: "1.10.0"
-  GRAPHVIZ_VERSION: '2.42.2-6'
+  GRAPHVIZ_VERSION: '2.42.2-9ubuntu0.1'
   DEPS_PATH: deps
 
   home: /home/runner
