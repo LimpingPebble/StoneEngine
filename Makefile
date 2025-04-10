@@ -50,4 +50,7 @@ ${ALL_EXAMPLES}: examples
 setup-tidy:
 	@${CMAKE} --preset=setup-tidy
 
-.PHONY:	clean all test examples libs setup-tidy
+format:
+	find Engine examples -name '*.cpp' -or -name '*.h' -or -name '*.hpp' | xargs clang-format -i -style=file
+
+.PHONY:	clean all test examples libs setup-tidy format
