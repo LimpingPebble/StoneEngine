@@ -12,7 +12,7 @@ class OpenGLRenderer;
 
 class OpenGLResources : std::enable_shared_from_this<OpenGLResources> {
 public:
-	OpenGLResources() = default;
+	OpenGLResources() = delete;
 
 	OpenGLResources(const std::shared_ptr<OpenGLRenderer> &renderer);
 

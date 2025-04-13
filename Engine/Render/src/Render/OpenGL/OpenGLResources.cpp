@@ -7,7 +7,8 @@
 
 namespace Stone::Render::OpenGL {
 
-OpenGLResources::OpenGLResources(const std::shared_ptr<OpenGLRenderer> &renderer) : _renderer(renderer) {
+OpenGLResources::OpenGLResources(const std::shared_ptr<OpenGLRenderer> &renderer)
+	: std::enable_shared_from_this<OpenGLResources>(), _renderer(renderer) {
 }
 
 const std::unique_ptr<GlVertexShader> &OpenGLResources::getMeshVertexShader() {
