@@ -37,6 +37,14 @@ void MeshNode::setMaterial(std::shared_ptr<Material> material) {
 	markDirty();
 }
 
+std::shared_ptr<Material> MeshNode::getUsedMaterial() const {
+	if (_material)
+		return _material;
+	if (_mesh)
+		return _mesh->getDefaultMaterial();
+	return nullptr;
+}
+
 const char *MeshNode::_termClassColor() const {
 	return TERM_COLOR_BOLD TERM_COLOR_GREEN;
 }

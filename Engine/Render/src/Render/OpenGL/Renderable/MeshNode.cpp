@@ -15,12 +15,10 @@ namespace Stone::Render::OpenGL {
 MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
 	: _meshNode(meshNode), _material(nullptr), _shaderCollection(nullptr) {
 
-	if (_meshNode.getMaterial() != nullptr) {
-		assert(_meshNode.getMaterial()->isDirty() == false);
-		_material = _meshNode.getMaterial()->getRendererObject<Material>().get();
-	} else if (_meshNode.getMesh() != nullptr && _meshNode.getMesh()->getDefaultMaterial() != nullptr) {
-		assert(_meshNode.getMesh()->getDefaultMaterial()->isDirty() == false);
-		_material = _meshNode.getMesh()->getDefaultMaterial()->getRendererObject<Material>().get();
+	auto usedMaterial = _meshNode.getUsedMaterial();
+	if (usedMaterial) {
+		assert(usedMaterial->isDirty() == false);
+		_material = usedMaterial->getRendererObject<Material>().get();
 	}
 
 	if (_material != nullptr) {
