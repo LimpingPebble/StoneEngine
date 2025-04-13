@@ -159,7 +159,7 @@ std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardForwardShader(co
 	std::stringstream source;
 
 	Scene::ShaderGenerator generator;
-	generator.generateOpenGlForwardFragmentShader(params, source);
+	generator.generateOpenGlForwardFragmentShader(params, nullptr, source);
 
 	return std::make_unique<GlFragmentShader>(source.str().c_str());
 }

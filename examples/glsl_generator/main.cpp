@@ -1,4 +1,5 @@
 #include "config.h"
+#include "Scene/Renderable/Shader.hpp"
 #include "Scene/Shader/ShaderGenerator.hpp"
 #include "Utils/FileSystem.hpp"
 #include "Utils/Json.hpp"
@@ -66,18 +67,27 @@ void generateShaderOutput(const char *input_file, const char *output_file) {
 
 	Json::Value input_json;
 	Json::parseFile(input_file, input_json);
+	Json::Object &input_json_obj(input_json.get<Json::Object>());
 
 	std::ofstream output_stream(output_file, std::ios::out | std::ios::trunc);
+
+	std::shared_ptr<Stone::Scene::FragmentShader> shader = nullptr;
+	if (input_json_obj.find("shader") != input_json_obj.end()) {
+		shader = std::make_shared<Stone::Scene::FragmentShader>();
+		shader->setContent(Stone::Scene::AShader::ContentType::SourceCode,
+						   input_json_obj["shader"].get<Json::String>());
+		input_json_obj.erase("shader");
+	}
 
 	Stone::Scene::ShaderParameters params = parseShaderParameters(input_json);
 
 	Stone::Scene::ShaderGenerator generator;
 	std::cout << "Generating shader: {" << std::endl;
-#define __PRINT_SHADER_PARAM(param) std::cout << " -" << #param << " " << to_string(params.param) << std::endl;
+#define __PRINT_SHADER_PARAM(param) std::cout << "    " << #param << " " << to_string(params.param) << std::endl;
 	FOR_EACH_SHADER_PARAMETERS(__PRINT_SHADER_PARAM)
 	std::cout << "}" << std::endl;
 
-	generator.generateOpenGlForwardFragmentShader(params, output_stream);
+	generator.generateOpenGlForwardFragmentShader(params, shader.get(), output_stream);
 }
 
 std::string input;
