@@ -7,6 +7,9 @@
 #include "RenderPass.hpp"
 #include "SwapChain.hpp"
 
+#include <iostream>
+#include <cassert>
+
 namespace Stone::Render::Vulkan {
 
 VulkanRenderer::VulkanRenderer(RendererSettings &settings) : Renderer() {

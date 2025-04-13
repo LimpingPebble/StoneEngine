@@ -5,9 +5,6 @@
 #include "Render/OpenGL/RendererSettings.hpp"
 #include "Render/Renderer.hpp"
 
-namespace Stone::Scene {
-class WorldNode;
-}
 
 namespace Stone::Render::OpenGL {
 

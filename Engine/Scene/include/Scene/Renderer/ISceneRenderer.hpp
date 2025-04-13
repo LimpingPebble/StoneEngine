@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "SceneTypes.hpp"
-
 #include <memory>
 
 namespace Stone::Scene {
+
+class Node;
+class WorldNode;
 
 /**
  * @brief Interface for a scene renderer.
