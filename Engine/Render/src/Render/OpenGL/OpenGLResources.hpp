@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "GlShaders.hpp"
+#include "GlElements/GlShaders.hpp"
+#include "GlElements/ShaderPrograms.hpp"
 #include "Scene/Shader/ShaderParameters.hpp"
-#include "ShaderCollection.hpp"
 
 namespace Stone::Render::OpenGL {
 
@@ -18,16 +18,22 @@ public:
 
 	virtual ~OpenGLResources() = default;
 
+	const std::weak_ptr<OpenGLRenderer> getRenderer() const;
+
+	// MARK: Vertex Shaders
+
 	const std::unique_ptr<GlVertexShader> &getMeshVertexShader();
 	const std::unique_ptr<GlVertexShader> &getSkinMeshVertexShader();
 	const std::unique_ptr<GlVertexShader> &getInstancedMeshVertexShader();
-	GlVertexShader *getVertexShader(Scene::MeshType meshType);
+	const std::unique_ptr<GlVertexShader> &getVertexShader(Scene::MeshType meshType);
+
+	// MARK: Fragment Shaders
 
 	const std::unique_ptr<GlFragmentShader> &getFragmentShader(Scene::ShaderParameters params);
 
-	const std::unique_ptr<ShaderCollection> &getDefaultShaderCollection();
+	// MARK: Shader Programs
 
-	const std::weak_ptr<OpenGLRenderer> getRenderer() const;
+	const std::unique_ptr<ShaderPrograms> &getDefaultShaderPrograms();
 
 private:
 	std::weak_ptr<OpenGLRenderer> _renderer;
@@ -38,7 +44,7 @@ private:
 
 	std::unordered_map<Scene::ShaderParameters, std::unique_ptr<GlFragmentShader>> _fragmentShaders;
 
-	std::unique_ptr<ShaderCollection> _defaultShaderCollection;
+	std::unique_ptr<ShaderPrograms> _defaultShaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

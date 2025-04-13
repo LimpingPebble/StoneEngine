@@ -1,14 +1,14 @@
 // Copyright 2024 Stone-Engine
 
-#include "ShaderCollection.hpp"
+#include "ShaderPrograms.hpp"
 
+#include "../OpenGLResources.hpp"
 #include "GlShaders.hpp"
-#include "OpenGLResources.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 
 namespace Stone::Render::OpenGL {
 
-ShaderCollection::ShaderCollection(const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
+ShaderPrograms::ShaderPrograms(const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
 	Scene::ShaderParameters params;
 	switch (resources->getRenderer().lock()->getRenderingMethod()) {
 	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
@@ -16,12 +16,12 @@ ShaderCollection::ShaderCollection(const std::shared_ptr<OpenGLResources> &resou
 	}
 }
 
-ShaderCollection::ShaderCollection(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources)
+ShaderPrograms::ShaderPrograms(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources)
 	: _resources(resources) {
 	_glFragmentShader = std::make_unique<GlFragmentShader>(shader);
 }
 
-ShaderCollection::ShaderCollection(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources)
+ShaderPrograms::ShaderPrograms(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources)
 	: _resources(resources) {
 	Scene::ShaderParameters params;
 	params.setFromMaterial(material);
@@ -31,7 +31,7 @@ ShaderCollection::ShaderCollection(Scene::Material &material, const std::shared_
 	}
 }
 
-void ShaderCollection::makeMeshProgram() {
+void ShaderPrograms::makeMeshProgram() {
 	if (_meshProgram != nullptr)
 		return;
 
@@ -43,7 +43,7 @@ void ShaderCollection::makeMeshProgram() {
 	_meshProgram = std::make_unique<GlShaderProgram>(*vertexShader, *_glFragmentShader);
 }
 
-void ShaderCollection::makeSkinMeshProgram() {
+void ShaderPrograms::makeSkinMeshProgram() {
 	if (_skinMeshProgram != nullptr)
 		return;
 
@@ -55,7 +55,7 @@ void ShaderCollection::makeSkinMeshProgram() {
 	_skinMeshProgram = std::make_unique<GlShaderProgram>(*vertexShader, *_glFragmentShader);
 }
 
-void ShaderCollection::makeInstancedMeshProgram() {
+void ShaderPrograms::makeInstancedMeshProgram() {
 	if (_instancedMeshProgram != nullptr)
 		return;
 
@@ -67,7 +67,7 @@ void ShaderCollection::makeInstancedMeshProgram() {
 	_instancedMeshProgram = std::make_unique<GlShaderProgram>(*vertexShader, *_glFragmentShader);
 }
 
-void ShaderCollection::makeProgram(Scene::MeshType meshType) {
+void ShaderPrograms::makeProgram(Scene::MeshType meshType) {
 	switch (meshType) {
 	case Scene::MeshType::Standard: makeMeshProgram(); break;
 	case Scene::MeshType::Skin: makeSkinMeshProgram(); break;
@@ -75,19 +75,19 @@ void ShaderCollection::makeProgram(Scene::MeshType meshType) {
 	}
 }
 
-const std::unique_ptr<GlShaderProgram> &ShaderCollection::getMeshProgram() const {
+const std::unique_ptr<GlShaderProgram> &ShaderPrograms::getMeshProgram() const {
 	return _meshProgram;
 }
 
-const std::unique_ptr<GlShaderProgram> &ShaderCollection::getSkinMeshProgram() const {
+const std::unique_ptr<GlShaderProgram> &ShaderPrograms::getSkinMeshProgram() const {
 	return _skinMeshProgram;
 }
 
-const std::unique_ptr<GlShaderProgram> &ShaderCollection::getInstancedMeshProgram() const {
+const std::unique_ptr<GlShaderProgram> &ShaderPrograms::getInstancedMeshProgram() const {
 	return _instancedMeshProgram;
 }
 
-GlShaderProgram *ShaderCollection::getProgram(Scene::MeshType meshType) const {
+GlShaderProgram *ShaderPrograms::getProgram(Scene::MeshType meshType) const {
 	switch (meshType) {
 	case Scene::MeshType::Standard: return _meshProgram.get();
 	case Scene::MeshType::Skin: return _skinMeshProgram.get();

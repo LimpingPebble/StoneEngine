@@ -2,14 +2,20 @@
 
 #include "OpenGLResources.hpp"
 
+#include "GlElements/ShaderPrograms.hpp"
 #include "Scene/Renderable/Material.hpp"
-#include "ShaderCollection.hpp"
 
 namespace Stone::Render::OpenGL {
 
 OpenGLResources::OpenGLResources(const std::shared_ptr<OpenGLRenderer> &renderer)
 	: std::enable_shared_from_this<OpenGLResources>(), _renderer(renderer) {
 }
+
+const std::weak_ptr<OpenGLRenderer> OpenGLResources::getRenderer() const {
+	return _renderer;
+}
+
+// MARK: Vertex Shaders
 
 const std::unique_ptr<GlVertexShader> &OpenGLResources::getMeshVertexShader() {
 	if (_meshVertexShader == nullptr) {
@@ -32,15 +38,14 @@ const std::unique_ptr<GlVertexShader> &OpenGLResources::getInstancedMeshVertexSh
 	return _instancedMeshVertexShader;
 }
 
-GlVertexShader *OpenGLResources::getVertexShader(Scene::MeshType meshType) {
+const std::unique_ptr<GlVertexShader> &OpenGLResources::getVertexShader(Scene::MeshType meshType) {
 	switch (meshType) {
-	case Scene::MeshType::Standard: return getMeshVertexShader().get();
-	case Scene::MeshType::Skin: return getSkinMeshVertexShader().get();
-	case Scene::MeshType::Instanced: return getInstancedMeshVertexShader().get();
-	default: return nullptr;
+	case Scene::MeshType::Standard: return getMeshVertexShader();
+	case Scene::MeshType::Skin: return getSkinMeshVertexShader();
+	case Scene::MeshType::Instanced: return getInstancedMeshVertexShader();
 	}
+	assert(false);
 }
-
 
 const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scene::ShaderParameters params) {
 	auto renderer = getRenderer().lock();
@@ -58,15 +63,11 @@ const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scen
 	}
 }
 
-const std::unique_ptr<ShaderCollection> &OpenGLResources::getDefaultShaderCollection() {
-	if (_defaultShaderCollection == nullptr) {
-		_defaultShaderCollection = std::make_unique<ShaderCollection>(shared_from_this());
+const std::unique_ptr<ShaderPrograms> &OpenGLResources::getDefaultShaderPrograms() {
+	if (_defaultShaderPrograms == nullptr) {
+		_defaultShaderPrograms = std::make_unique<ShaderPrograms>(shared_from_this());
 	}
-	return _defaultShaderCollection;
-}
-
-const std::weak_ptr<OpenGLRenderer> OpenGLResources::getRenderer() const {
-	return _renderer;
+	return _defaultShaderPrograms;
 }
 
 } // namespace Stone::Render::OpenGL

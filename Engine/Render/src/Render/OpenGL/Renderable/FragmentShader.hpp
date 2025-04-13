@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "../ShaderCollection.hpp"
+#include "../GlElements/ShaderPrograms.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Shader.hpp"
 
@@ -11,19 +11,19 @@ namespace Stone::Render::OpenGL {
 class FragmentShader : public Scene::IRendererObject {
 public:
 	FragmentShader(Scene::FragmentShader &fragmentShader, const std::shared_ptr<OpenGLRenderer> &renderer) {
-		_shaderCollection = std::make_shared<ShaderCollection>(fragmentShader, renderer->getOpenGLResources());
+		_shaderPrograms = std::make_shared<ShaderPrograms>(fragmentShader, renderer->getOpenGLResources());
 	}
 
 	void render(Scene::RenderContext &context) override {
 		(void)context;
 	}
 
-	const std::shared_ptr<ShaderCollection> &getShaderCollection() const {
-		return _shaderCollection;
+	const std::shared_ptr<ShaderPrograms> &getShaderPrograms() const {
+		return _shaderPrograms;
 	}
 
 private:
-	std::shared_ptr<ShaderCollection> _shaderCollection;
+	std::shared_ptr<ShaderPrograms> _shaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

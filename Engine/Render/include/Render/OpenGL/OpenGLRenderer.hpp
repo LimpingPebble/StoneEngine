@@ -12,7 +12,7 @@ class WorldNode;
 namespace Stone::Render::OpenGL {
 
 class OpenGLResources;
-struct GBuffer;
+struct GlGBuffer;
 
 class OpenGLRenderer : public Renderer {
 public:
@@ -37,7 +37,7 @@ private:
 	std::pair<uint32_t, uint32_t> _frameSize;
 	const RenderingMethod _method;
 	std::shared_ptr<OpenGLResources> _resources;
-	std::unique_ptr<GBuffer> _gBuffer;
+	std::unique_ptr<GlGBuffer> _gBuffer;
 };
 
 } // namespace Stone::Render::OpenGL

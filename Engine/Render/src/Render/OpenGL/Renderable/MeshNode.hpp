@@ -8,7 +8,7 @@ namespace Stone::Render::OpenGL {
 
 class Material;
 class OpenGLRenderer;
-class ShaderCollection;
+class ShaderPrograms;
 
 class MeshNode : public Scene::IRendererObject {
 public:
@@ -21,7 +21,7 @@ public:
 private:
 	Scene::MeshNode &_meshNode;
 	Material *_material;
-	ShaderCollection *_shaderCollection;
+	ShaderPrograms *_shaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

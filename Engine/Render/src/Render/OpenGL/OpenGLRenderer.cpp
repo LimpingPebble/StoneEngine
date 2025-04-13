@@ -3,6 +3,7 @@
 
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 
+#include "GlElements/GlGBuffer.hpp"
 #include "OpenGLResources.hpp"
 #include "RenderContext.hpp"
 #include "RendererObjectManager.hpp"
@@ -89,7 +90,7 @@ void OpenGLRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
 	if (_method == RenderingMethod::Deferred) {
 		if (_gBuffer)
 			_gBuffer.reset();
-		_gBuffer = std::make_unique<GBuffer>(_frameSize.first, _frameSize.second);
+		_gBuffer = std::make_unique<GlGBuffer>(_frameSize.first, _frameSize.second);
 	}
 }
 

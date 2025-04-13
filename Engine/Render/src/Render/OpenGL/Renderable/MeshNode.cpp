@@ -13,7 +13,7 @@
 namespace Stone::Render::OpenGL {
 
 MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
-	: _meshNode(meshNode), _material(nullptr), _shaderCollection(nullptr) {
+	: _meshNode(meshNode), _material(nullptr), _shaderPrograms(nullptr) {
 
 	auto usedMaterial = _meshNode.getUsedMaterial();
 	if (usedMaterial) {
@@ -22,13 +22,13 @@ MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRender
 	}
 
 	if (_material != nullptr) {
-		_shaderCollection = _material->getShaderCollection().get();
+		_shaderPrograms = _material->getShaderPrograms().get();
 	} else {
-		_shaderCollection = renderer->getOpenGLResources()->getDefaultShaderCollection().get();
+		_shaderPrograms = renderer->getOpenGLResources()->getDefaultShaderPrograms().get();
 	}
-	assert(_shaderCollection != nullptr);
+	assert(_shaderPrograms != nullptr);
 
-	_shaderCollection->makeMeshProgram();
+	_shaderPrograms->makeMeshProgram();
 }
 
 void MeshNode::render(Scene::RenderContext &context) {
@@ -42,7 +42,7 @@ void MeshNode::render(Scene::RenderContext &context) {
 	}
 	const VRAMMesh &vramMesh = rendererMesh->getVRAMMesh();
 
-	GlShaderProgram *program = _shaderCollection->getMeshProgram().get();
+	GlShaderProgram *program = _shaderPrograms->getMeshProgram().get();
 	program->use();
 
 	if (_material != nullptr) {

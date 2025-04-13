@@ -8,11 +8,11 @@
 
 namespace Stone::Render::OpenGL {
 
-class ShaderCollection {
+class ShaderPrograms {
 public:
-	ShaderCollection(const std::shared_ptr<OpenGLResources> &resources);
-	ShaderCollection(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources);
-	ShaderCollection(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources);
+	ShaderPrograms(const std::shared_ptr<OpenGLResources> &resources);
+	ShaderPrograms(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources);
+	ShaderPrograms(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources);
 
 	void makeMeshProgram();
 	void makeSkinMeshProgram();

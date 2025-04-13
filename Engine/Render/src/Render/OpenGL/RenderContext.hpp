@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include "GBuffer.hpp"
 #include "Scene/Renderer/RenderContext.hpp"
 
 #include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
-class OpenGLRenderer;
+struct GlGBuffer;
 
 struct RenderContext : public Scene::RenderContext {
-	GBuffer *gBuffer;
+	GlGBuffer *gBuffer;
 };
 
 } // namespace Stone::Render::OpenGL

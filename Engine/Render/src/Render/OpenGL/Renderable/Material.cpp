@@ -8,9 +8,9 @@ namespace Stone::Render::OpenGL {
 
 Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer) : _material(material) {
 	if (_material.getFragmentShader() == nullptr) {
-		_shaderCollection = std::make_shared<ShaderCollection>(material, renderer->getOpenGLResources());
+		_shaderPrograms = std::make_shared<ShaderPrograms>(material, renderer->getOpenGLResources());
 	} else {
-		_shaderCollection = _material.getFragmentShader()->getRendererObject<FragmentShader>()->getShaderCollection();
+		_shaderPrograms = _material.getFragmentShader()->getRendererObject<FragmentShader>()->getShaderPrograms();
 	}
 
 #ifndef NDEBUG
@@ -28,7 +28,7 @@ void Material::render(Scene::RenderContext &context) {
 }
 
 void Material::setUniforms(Scene::MeshType meshType) {
-	GlShaderProgram *program = _shaderCollection->getProgram(meshType);
+	GlShaderProgram *program = _shaderPrograms->getProgram(meshType);
 	assert(program != nullptr);
 	program->use();
 
@@ -48,8 +48,8 @@ void Material::setUniforms(Scene::MeshType meshType) {
 		});
 }
 
-const std::shared_ptr<ShaderCollection> &Material::getShaderCollection() const {
-	return _shaderCollection;
+const std::shared_ptr<ShaderPrograms> &Material::getShaderPrograms() const {
+	return _shaderPrograms;
 }
 
 

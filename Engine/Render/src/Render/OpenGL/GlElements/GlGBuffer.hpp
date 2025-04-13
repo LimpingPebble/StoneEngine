@@ -2,17 +2,17 @@
 
 #pragma once
 
+#include "../Renderable/Texture.hpp"
 #include "GlFramebuffer.hpp"
 #include "GlShaders.hpp"
-#include "Renderable/Texture.hpp"
 
 #include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
-struct GBuffer {
+struct GlGBuffer {
 
-	GBuffer(unsigned int width, unsigned int height) : width(width), height(height) {
+	GlGBuffer(unsigned int width, unsigned int height) : width(width), height(height) {
 		glGenFramebuffers(1, &gBuffer);
 		glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 
@@ -66,7 +66,7 @@ void main() {
 		frameMesh = std::make_shared<GlFramebufferMesh>();
 	}
 
-	virtual ~GBuffer() {
+	virtual ~GlGBuffer() {
 		glDeleteFramebuffers(1, &gBuffer);
 	}
 

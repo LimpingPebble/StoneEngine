@@ -10,7 +10,7 @@
 
 namespace Stone::Render::OpenGL {
 
-class ShaderCollection;
+class ShaderPrograms;
 
 class Material : public Scene::IRendererObject {
 public:
@@ -22,11 +22,11 @@ public:
 
 	void setUniforms(Scene::MeshType meshType);
 
-	const std::shared_ptr<ShaderCollection> &getShaderCollection() const;
+	const std::shared_ptr<ShaderPrograms> &getShaderPrograms() const;
 
 private:
 	Scene::Material &_material;
-	std::shared_ptr<ShaderCollection> _shaderCollection;
+	std::shared_ptr<ShaderPrograms> _shaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Renderable/Texture.hpp"
+#include "../Renderable/Texture.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Shader.hpp"
 #include "Scene/Shader/ShaderParameters.hpp"
