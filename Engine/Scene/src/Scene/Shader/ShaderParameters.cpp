@@ -20,7 +20,7 @@ void ShaderParameters::setParamWithName(const std::string &name, Type value) {
 		}                                                                                                              \
 	}                                                                                                                  \
 	,
- 
+
 	const static std::unordered_map<std::string, ParamSetter> paramSetters = {
 		FOR_EACH_SHADER_PARAMETERS(__MAP_NAME_TO_PARAM) //
 	};
