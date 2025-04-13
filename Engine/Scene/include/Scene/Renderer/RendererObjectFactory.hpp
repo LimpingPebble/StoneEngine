@@ -26,7 +26,7 @@ public:
 
 	/**
 	 * @brief Recursively updates the renderables in the given node.
-	 * 
+	 *
 	 * @param rootNode The root of the node graph that requires a renderable update
 	 */
 	virtual void updateRenderablesInNode(const std::shared_ptr<Node> &rootNode);
