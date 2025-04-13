@@ -31,7 +31,7 @@ public:
 	virtual void render(RenderContext &context) = 0;
 };
 
-class RendererObjectManager;
+class RendererObjectFactory;
 
 /**
  * @brief Interface for renderable elements
@@ -82,7 +82,7 @@ public:
 	}
 
 protected:
-	friend class RendererObjectManager;
+	friend class RendererObjectFactory;
 
 	/**
 	 * @brief Set the renderer object

@@ -1,17 +1,17 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/Renderer/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectFactory.hpp"
 
 #include "Scene.hpp"
 
 namespace Stone::Scene {
 
-using CastFunction = std::function<void(RendererObjectManager &, const std::shared_ptr<Core::Object> &)>;
+using CastFunction = std::function<void(RendererObjectFactory &, const std::shared_ptr<Core::Object> &)>;
 
 #define CASTED_FUNCTION_MAP_ENTRY(ClassName)                                                                           \
 	{ClassName::StaticHashCode(),                                                                                      \
-	 [](RendererObjectManager &manager, const std::shared_ptr<Core::Object> &renderable) {                             \
-		 manager.update##ClassName(std::static_pointer_cast<ClassName>(renderable));                                   \
+	 [](RendererObjectFactory &factory, const std::shared_ptr<Core::Object> &renderable) {                             \
+		 factory.update##ClassName(std::static_pointer_cast<ClassName>(renderable));                                   \
 	 }}
 
 const std::unordered_map<std::intptr_t, CastFunction> updateCastedFunctions = {
@@ -23,35 +23,35 @@ const std::unordered_map<std::intptr_t, CastFunction> updateCastedFunctions = {
 	CASTED_FUNCTION_MAP_ENTRY(FragmentShader),
 };
 
-void RendererObjectManager::updateRenderable(const std::shared_ptr<Core::Object> &renderable) {
+void RendererObjectFactory::updateRenderable(const std::shared_ptr<Core::Object> &renderable) {
 	auto it = updateCastedFunctions.find(renderable->getClassHashCode());
 	if (it != updateCastedFunctions.end()) {
 		it->second(*this, renderable);
 	}
 }
 
-void RendererObjectManager::updateMeshNode(const std::shared_ptr<MeshNode> &meshNode) {
+void RendererObjectFactory::updateMeshNode(const std::shared_ptr<MeshNode> &meshNode) {
 	if (meshNode->getMaterial() && meshNode->getMaterial()->isDirty())
 		updateMaterial(meshNode->getMaterial());
 	if (meshNode->getMesh() && meshNode->getMesh()->isDirty())
 		updateRenderable(meshNode->getMesh());
 }
 
-void RendererObjectManager::updateInstancedMeshNode(const std::shared_ptr<InstancedMeshNode> &instancedMeshNode) {
+void RendererObjectFactory::updateInstancedMeshNode(const std::shared_ptr<InstancedMeshNode> &instancedMeshNode) {
 	if (instancedMeshNode->getMaterial() && instancedMeshNode->getMaterial()->isDirty())
 		updateMaterial(instancedMeshNode->getMaterial());
 	if (instancedMeshNode->getMesh() && instancedMeshNode->getMesh()->isDirty())
 		updateRenderable(instancedMeshNode->getMesh());
 }
 
-void RendererObjectManager::updateSkinMeshNode(const std::shared_ptr<SkinMeshNode> &skinMeshNode) {
+void RendererObjectFactory::updateSkinMeshNode(const std::shared_ptr<SkinMeshNode> &skinMeshNode) {
 	if (skinMeshNode->getMaterial() && skinMeshNode->getMaterial()->isDirty())
 		updateMaterial(skinMeshNode->getMaterial());
 	if (skinMeshNode->getSkinMesh() && skinMeshNode->getSkinMesh()->isDirty())
 		updateRenderable(skinMeshNode->getSkinMesh());
 }
 
-void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &material) {
+void RendererObjectFactory::updateMaterial(const std::shared_ptr<Material> &material) {
 	auto fragmentShader = material->getFragmentShader();
 	if (fragmentShader && fragmentShader->isDirty()) {
 		updateFragmentShader(fragmentShader);
@@ -63,39 +63,39 @@ void RendererObjectManager::updateMaterial(const std::shared_ptr<Material> &mate
 	});
 }
 
-void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<DynamicMesh> &mesh) {
+void RendererObjectFactory::updateDynamicMesh(const std::shared_ptr<DynamicMesh> &mesh) {
 	if (mesh->getDefaultMaterial() && mesh->getDefaultMaterial()->isDirty())
 		updateMaterial(mesh->getDefaultMaterial());
 }
 
-void RendererObjectManager::updateStaticMesh(const std::shared_ptr<StaticMesh> &mesh) {
+void RendererObjectFactory::updateStaticMesh(const std::shared_ptr<StaticMesh> &mesh) {
 	if (mesh->getDefaultMaterial() && mesh->getDefaultMaterial()->isDirty())
 		updateMaterial(mesh->getDefaultMaterial());
 }
 
-void RendererObjectManager::updateDynamicSkinMesh(const std::shared_ptr<DynamicSkinMesh> &skinmesh) {
+void RendererObjectFactory::updateDynamicSkinMesh(const std::shared_ptr<DynamicSkinMesh> &skinmesh) {
 	if (skinmesh->getDefaultMaterial() && skinmesh->getDefaultMaterial()->isDirty())
 		updateMaterial(skinmesh->getDefaultMaterial());
 }
 
-void RendererObjectManager::updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh) {
+void RendererObjectFactory::updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh) {
 	if (skinmesh->getDefaultMaterial() && skinmesh->getDefaultMaterial()->isDirty())
 		updateMaterial(skinmesh->getDefaultMaterial());
 }
 
-void RendererObjectManager::updateWireframeShape(const std::shared_ptr<WireframeShape> &shape) {
+void RendererObjectFactory::updateWireframeShape(const std::shared_ptr<WireframeShape> &shape) {
 	(void)shape;
 }
 
-void RendererObjectManager::updateTexture(const std::shared_ptr<Texture> &texture) {
+void RendererObjectFactory::updateTexture(const std::shared_ptr<Texture> &texture) {
 	(void)texture;
 }
 
-void RendererObjectManager::updateFragmentShader(const std::shared_ptr<FragmentShader> &shader) {
+void RendererObjectFactory::updateFragmentShader(const std::shared_ptr<FragmentShader> &shader) {
 	(void)shader;
 }
 
-void RendererObjectManager::updateRendererObject(IRenderable &element,
+void RendererObjectFactory::updateRendererObject(IRenderable &element,
 												 const std::shared_ptr<IRendererObject> &rendererObject) {
 	element.setRendererObject(rendererObject);
 	element.markUndirty();

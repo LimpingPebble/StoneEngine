@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/Renderer/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectFactory.hpp"
 
 #include <vulkan/vulkan.h>
 
@@ -10,12 +10,12 @@ namespace Stone::Render::Vulkan {
 
 class VulkanRenderer;
 
-class RendererObjectManager : public Scene::RendererObjectManager {
+class RendererObjectFactory : public Scene::RendererObjectFactory {
 
 public:
-	RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer);
-	RendererObjectManager(const RendererObjectManager &other) = default;
-	~RendererObjectManager() override = default;
+	RendererObjectFactory(const std::shared_ptr<VulkanRenderer> &renderer);
+	RendererObjectFactory(const RendererObjectFactory &other) = default;
+	~RendererObjectFactory() override = default;
 
 
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;

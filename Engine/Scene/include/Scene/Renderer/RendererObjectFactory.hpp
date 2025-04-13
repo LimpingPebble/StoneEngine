@@ -12,17 +12,17 @@ class Object;
 namespace Stone::Scene {
 
 /**
- * @class RendererObjectManager
+ * @class RendererObjectFactory
  * @brief Provide basic overridable methods to manage the renderables objects elements in the scene.
  *
  * This class provides basic methods to update the renderer data of classes implementing the IRenderable interface.
  * It will store an instance of IRendererObject in the IRenderable::_rendererObject proprety.
  * Each IRenderable objects will use the appropriate method in this interface to update itself.
  */
-class RendererObjectManager {
+class RendererObjectFactory {
 public:
-	RendererObjectManager() = default;
-	virtual ~RendererObjectManager() = default;
+	RendererObjectFactory() = default;
+	virtual ~RendererObjectFactory() = default;
 
 	/**
 	 * Updates the renderable object with the given node.

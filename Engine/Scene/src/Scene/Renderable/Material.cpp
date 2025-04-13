@@ -3,7 +3,7 @@
 #include "Scene/Renderable/Material.hpp"
 
 #include "Scene/Renderable/Texture.hpp"
-#include "Scene/Renderer/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectFactory.hpp"
 #include "Utils/Glm.hpp"
 
 namespace Stone::Scene {

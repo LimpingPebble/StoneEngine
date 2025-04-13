@@ -2,19 +2,18 @@
 
 #pragma once
 
-#include "Scene/Renderer/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectFactory.hpp"
 
 namespace Stone::Render::OpenGL {
 
 class OpenGLRenderer;
 
-class RendererObjectManager : public Scene::RendererObjectManager {
+class RendererObjectFactory : public Scene::RendererObjectFactory {
 
 public:
-	explicit RendererObjectManager(std::shared_ptr<OpenGLRenderer> renderer);
-	RendererObjectManager(const RendererObjectManager &other) = default;
+	explicit RendererObjectFactory(std::shared_ptr<OpenGLRenderer> renderer);
 
-	~RendererObjectManager() override = default;
+	~RendererObjectFactory() override = default;
 
 	void updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) override;
 	void updateInstancedMeshNode(const std::shared_ptr<Scene::InstancedMeshNode> &instancedMeshNode) override;

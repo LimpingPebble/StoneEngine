@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "RendererObjectManager.hpp"
+#include "RendererObjectFactory.hpp"
 
 #include "Device.hpp"
 #include "Render/Vulkan/VulkanRenderer.hpp"
@@ -17,12 +17,12 @@
 
 namespace Stone::Render::Vulkan {
 
-RendererObjectManager::RendererObjectManager(const std::shared_ptr<VulkanRenderer> &renderer)
-	: Scene::RendererObjectManager(), _renderer(renderer) {
+RendererObjectFactory::RendererObjectFactory(const std::shared_ptr<VulkanRenderer> &renderer)
+	: Scene::RendererObjectFactory(), _renderer(renderer) {
 }
 
-void RendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) {
-	Scene::RendererObjectManager::updateMeshNode(meshNode);
+void RendererObjectFactory::updateMeshNode(const std::shared_ptr<Scene::MeshNode> &meshNode) {
+	Scene::RendererObjectFactory::updateMeshNode(meshNode);
 
 	if (meshNode->getRendererObject<Vulkan::MeshNode>()) {
 		return;
@@ -32,8 +32,8 @@ void RendererObjectManager::updateMeshNode(const std::shared_ptr<Scene::MeshNode
 	updateRendererObject(*meshNode, newMeshNode);
 }
 
-void RendererObjectManager::updateMaterial(const std::shared_ptr<Scene::Material> &material) {
-	Scene::RendererObjectManager::updateMaterial(material);
+void RendererObjectFactory::updateMaterial(const std::shared_ptr<Scene::Material> &material) {
+	Scene::RendererObjectFactory::updateMaterial(material);
 
 	if (material->getRendererObject<Vulkan::Material>()) {
 		return;
@@ -43,8 +43,8 @@ void RendererObjectManager::updateMaterial(const std::shared_ptr<Scene::Material
 	updateRendererObject(*material, newMaterial);
 }
 
-void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh) {
-	Scene::RendererObjectManager::updateDynamicMesh(mesh);
+void RendererObjectFactory::updateDynamicMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh) {
+	Scene::RendererObjectFactory::updateDynamicMesh(mesh);
 
 	if (mesh->getRendererObject<Vulkan::Mesh>()) {
 		return;
@@ -54,8 +54,8 @@ void RendererObjectManager::updateDynamicMesh(const std::shared_ptr<Scene::Dynam
 	updateRendererObject(*mesh, newMesh);
 }
 
-void RendererObjectManager::updateTexture(const std::shared_ptr<Scene::Texture> &texture) {
-	Scene::RendererObjectManager::updateTexture(texture);
+void RendererObjectFactory::updateTexture(const std::shared_ptr<Scene::Texture> &texture) {
+	Scene::RendererObjectFactory::updateTexture(texture);
 
 	if (texture->getRendererObject<Vulkan::Texture>()) {
 		return;
@@ -65,8 +65,8 @@ void RendererObjectManager::updateTexture(const std::shared_ptr<Scene::Texture> 
 	updateRendererObject(*texture, newTexture);
 }
 
-void RendererObjectManager::updateFragmentShader(const std::shared_ptr<Scene::FragmentShader> &shader) {
-	Scene::RendererObjectManager::updateFragmentShader(shader);
+void RendererObjectFactory::updateFragmentShader(const std::shared_ptr<Scene::FragmentShader> &shader) {
+	Scene::RendererObjectFactory::updateFragmentShader(shader);
 
 	if (shader->getRendererObject<Vulkan::Shader>()) {
 		return;

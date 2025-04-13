@@ -6,7 +6,7 @@
 #include "GlElements/GlGBuffer.hpp"
 #include "OpenGLResources.hpp"
 #include "RenderContext.hpp"
-#include "RendererObjectManager.hpp"
+#include "RendererObjectFactory.hpp"
 #include "Scene/Node/WorldNode.hpp"
 
 #include <GL/glew.h>
@@ -35,11 +35,11 @@ OpenGLRenderer::~OpenGLRenderer() {
 }
 
 void OpenGLRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) {
-	OpenGL::RendererObjectManager manager(std::static_pointer_cast<OpenGLRenderer>(shared_from_this()));
-	world->traverseTopDown([&manager](const std::shared_ptr<Scene::Node> &node) {
+	OpenGL::RendererObjectFactory factory(std::static_pointer_cast<OpenGLRenderer>(shared_from_this()));
+	world->traverseTopDown([&factory](const std::shared_ptr<Scene::Node> &node) {
 		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderable>(node);
 		if (renderElement && renderElement->isDirty()) {
-			manager.updateRenderable(node);
+			factory.updateRenderable(node);
 		}
 	});
 }

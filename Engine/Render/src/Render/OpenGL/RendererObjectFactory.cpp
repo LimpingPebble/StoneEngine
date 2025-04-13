@@ -1,6 +1,6 @@
 // Copyright 2024 Stone-Engine
 
-#include "RendererObjectManager.hpp"
+#include "RendererObjectFactory.hpp"
 
 #include "Renderable/FragmentShader.hpp"
 #include "Renderable/InstancedMeshNode.hpp"
@@ -13,8 +13,8 @@
 
 
 #define UPDATE_RENDERER_OBJECT(RenderableClass, object)                                                                \
-	void RendererObjectManager::update##RenderableClass(const std::shared_ptr<Scene::RenderableClass> &(object)) {     \
-		Scene::RendererObjectManager::update##RenderableClass((object));                                               \
+	void RendererObjectFactory::update##RenderableClass(const std::shared_ptr<Scene::RenderableClass> &(object)) {     \
+		Scene::RendererObjectFactory::update##RenderableClass((object));                                               \
                                                                                                                        \
 		auto new##RenderableClass = std::make_shared<OpenGL::RenderableClass>(*(object), _renderer);                   \
 		updateRendererObject(*(object), new##RenderableClass);                                                         \
@@ -23,7 +23,7 @@
 
 namespace Stone::Render::OpenGL {
 
-RendererObjectManager::RendererObjectManager(std::shared_ptr<OpenGLRenderer> renderer)
+RendererObjectFactory::RendererObjectFactory(std::shared_ptr<OpenGLRenderer> renderer)
 	: _renderer(std::move(renderer)) {
 }
 
