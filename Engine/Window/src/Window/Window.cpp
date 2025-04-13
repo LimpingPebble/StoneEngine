@@ -25,7 +25,7 @@ void Window::loopOnce() {
 		[this](const std::shared_ptr<Scene::Node> &node) { node->update(static_cast<float>(_deltaTime)); });
 
 	if (_renderer) {
-		_renderer->updateDataForWorld(_world);
+		_renderer->updateRenderablesInNode(_world);
 		_renderer->renderWorld(_world);
 	}
 }

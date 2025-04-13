@@ -25,6 +25,13 @@ public:
 	virtual ~RendererObjectFactory() = default;
 
 	/**
+	 * @brief Recursively updates the renderables in the given node.
+	 * 
+	 * @param rootNode The root of the node graph that requires a renderable update
+	 */
+	virtual void updateRenderablesInNode(const std::shared_ptr<Node> &rootNode);
+
+	/**
 	 * Updates the renderable object with the given node.
 	 *
 	 * @param node The shared pointer to the renderable object.

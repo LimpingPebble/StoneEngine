@@ -34,14 +34,9 @@ OpenGLRenderer::~OpenGLRenderer() {
 	std::cout << "OpenGLRenderer destroyed" << std::endl;
 }
 
-void OpenGLRenderer::updateDataForWorld(const std::shared_ptr<Scene::WorldNode> &world) {
+void OpenGLRenderer::updateRenderablesInNode(const std::shared_ptr<Scene::Node> &rootNode) {
 	OpenGL::RendererObjectFactory factory(std::static_pointer_cast<OpenGLRenderer>(shared_from_this()));
-	world->traverseTopDown([&factory](const std::shared_ptr<Scene::Node> &node) {
-		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderable>(node);
-		if (renderElement && renderElement->isDirty()) {
-			factory.updateRenderable(node);
-		}
-	});
+	factory.updateRenderablesInNode(rootNode);
 }
 
 void OpenGLRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world) {

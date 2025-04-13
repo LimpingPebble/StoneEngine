@@ -23,6 +23,15 @@ const std::unordered_map<std::intptr_t, CastFunction> updateCastedFunctions = {
 	CASTED_FUNCTION_MAP_ENTRY(FragmentShader),
 };
 
+void RendererObjectFactory::updateRenderablesInNode(const std::shared_ptr<Node> &rootNode) {
+	rootNode->traverseTopDown([this](const std::shared_ptr<Scene::Node> &node) {
+		auto renderElement = std::dynamic_pointer_cast<Scene::IRenderable>(node);
+		if (renderElement && renderElement->isDirty()) {
+			updateRenderable(node);
+		}
+	});
+}
+
 void RendererObjectFactory::updateRenderable(const std::shared_ptr<Core::Object> &renderable) {
 	auto it = updateCastedFunctions.find(renderable->getClassHashCode());
 	if (it != updateCastedFunctions.end()) {
