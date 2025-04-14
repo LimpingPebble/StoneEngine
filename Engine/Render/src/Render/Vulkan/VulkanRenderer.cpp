@@ -7,8 +7,8 @@
 #include "RenderPass.hpp"
 #include "SwapChain.hpp"
 
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 namespace Stone::Render::Vulkan {
 
@@ -38,7 +38,7 @@ VulkanRenderer::~VulkanRenderer() {
 	std::cout << "VulkanRenderer destroyed" << std::endl;
 }
 
-void VulkanRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
+void VulkanRenderer::updateFrameSize(const std::pair<uint32_t, uint32_t> &size) {
 	_recreateSwapChain(size);
 }
 

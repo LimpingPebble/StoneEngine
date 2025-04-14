@@ -30,7 +30,7 @@ public:
 	void updateRenderablesInNode(const std::shared_ptr<Scene::Node> &rootNode) override;
 	void renderWorld(const std::shared_ptr<Scene::WorldNode> &world) override;
 
-	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
+	void updateFrameSize(const std::pair<uint32_t, uint32_t> &size) override;
 
 	/** VulkanRenderer */
 

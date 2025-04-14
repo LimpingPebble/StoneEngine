@@ -26,7 +26,7 @@ void OpenGLRenderer::renderWorld(const std::shared_ptr<Scene::WorldNode> &world)
 	_director->renderWorld(world);
 }
 
-void OpenGLRenderer::updateFrameSize(std::pair<uint32_t, uint32_t> size) {
+void OpenGLRenderer::updateFrameSize(const std::pair<uint32_t, uint32_t> &size) {
 	_director->updateFrameSize(size);
 }
 
