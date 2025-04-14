@@ -82,8 +82,8 @@ GlfwWindow::GlfwWindow(const std::shared_ptr<App> &app, const WindowSettings &se
 			static_cast<uint32_t>(frameBufferHeight),
 		};
 		rendererSettings.rendering_method = Render::OpenGL::RenderingMethod::Forward;
-		auto renderer = std::make_shared<Render::OpenGL::OpenGLRenderer>(rendererSettings);
-		renderer->initialize();
+		auto renderer = std::make_shared<Render::OpenGL::OpenGLRenderer>();
+		renderer->initialize(rendererSettings);
 		_renderer = renderer;
 #endif
 	}

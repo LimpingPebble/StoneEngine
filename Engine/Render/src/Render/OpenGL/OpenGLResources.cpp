@@ -3,6 +3,7 @@
 #include "OpenGLResources.hpp"
 
 #include "GlElements/ShaderPrograms.hpp"
+#include "OpenGLDirector.hpp"
 #include "Scene/Renderable/Material.hpp"
 
 namespace Stone::Render::OpenGL {
@@ -52,7 +53,7 @@ const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scen
 	assert(renderer != nullptr);
 	auto it = _fragmentShaders.find(params);
 	if (it == _fragmentShaders.end()) {
-		switch (renderer->getRenderingMethod()) {
+		switch (renderer->getDirector()->getRenderingMethod()) {
 		case RenderingMethod::Forward:
 			return (_fragmentShaders[params] = GlFragmentShader::makeStandardForwardShader(params));
 		case RenderingMethod::Deferred:

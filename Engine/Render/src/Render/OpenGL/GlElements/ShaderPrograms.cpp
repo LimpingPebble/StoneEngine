@@ -2,6 +2,7 @@
 
 #include "ShaderPrograms.hpp"
 
+#include "../OpenGLDirector.hpp"
 #include "../OpenGLResources.hpp"
 #include "GlShaders.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
@@ -10,7 +11,7 @@ namespace Stone::Render::OpenGL {
 
 ShaderPrograms::ShaderPrograms(const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
 	Scene::ShaderParameters params;
-	switch (resources->getRenderer().lock()->getRenderingMethod()) {
+	switch (resources->getRenderer().lock()->getDirector()->getRenderingMethod()) {
 	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
 	case RenderingMethod::Deferred: _glFragmentShader = GlFragmentShader::makeStandardDeferredShader(params); break;
 	}
@@ -25,7 +26,7 @@ ShaderPrograms::ShaderPrograms(Scene::Material &material, const std::shared_ptr<
 	: _resources(resources) {
 	Scene::ShaderParameters params;
 	params.setFromMaterial(material);
-	switch (resources->getRenderer().lock()->getRenderingMethod()) {
+	switch (resources->getRenderer().lock()->getDirector()->getRenderingMethod()) {
 	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
 	case RenderingMethod::Deferred: _glFragmentShader = GlFragmentShader::makeStandardDeferredShader(params); break;
 	}

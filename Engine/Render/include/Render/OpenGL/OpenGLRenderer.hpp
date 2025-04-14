@@ -8,16 +8,16 @@
 
 namespace Stone::Render::OpenGL {
 
+class OpenGLDirector;
 class OpenGLResources;
-struct GlGBuffer;
 
 class OpenGLRenderer : public Renderer {
 public:
-	OpenGLRenderer() = delete;
-	explicit OpenGLRenderer(RendererSettings &settings);
-	OpenGLRenderer(const OpenGLRenderer &) = delete;
+	OpenGLRenderer() = default;
 
-	~OpenGLRenderer() override;
+	~OpenGLRenderer() override = default;
+
+	void initialize(RendererSettings &settings);
 
 	/** Renderer */
 
@@ -26,15 +26,12 @@ public:
 
 	void updateFrameSize(std::pair<uint32_t, uint32_t> size) override;
 
-	void initialize();
-	RenderingMethod getRenderingMethod() const;
-	const std::shared_ptr<OpenGLResources> &getOpenGLResources() const;
+	const std::shared_ptr<OpenGLDirector> &getDirector() const;
+	const std::shared_ptr<OpenGLResources> &getResources() const;
 
 private:
-	std::pair<uint32_t, uint32_t> _frameSize;
-	const RenderingMethod _method;
+	std::shared_ptr<OpenGLDirector> _director;
 	std::shared_ptr<OpenGLResources> _resources;
-	std::unique_ptr<GlGBuffer> _gBuffer;
 };
 
 } // namespace Stone::Render::OpenGL

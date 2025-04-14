@@ -74,6 +74,10 @@ void main() {
 		glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
 	}
 
+	void unbind() {
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
 	void render() {
 		program->use();
 

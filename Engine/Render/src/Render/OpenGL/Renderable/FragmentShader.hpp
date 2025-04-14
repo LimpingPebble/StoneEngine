@@ -11,7 +11,7 @@ namespace Stone::Render::OpenGL {
 class FragmentShader : public Scene::IRendererObject {
 public:
 	FragmentShader(Scene::FragmentShader &fragmentShader, const std::shared_ptr<OpenGLRenderer> &renderer) {
-		_shaderPrograms = std::make_shared<ShaderPrograms>(fragmentShader, renderer->getOpenGLResources());
+		_shaderPrograms = std::make_shared<ShaderPrograms>(fragmentShader, renderer->getResources());
 	}
 
 	void render(Scene::RenderContext &context) override {

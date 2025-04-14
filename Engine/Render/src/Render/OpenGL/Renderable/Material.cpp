@@ -8,7 +8,7 @@ namespace Stone::Render::OpenGL {
 
 Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer) : _material(material) {
 	if (_material.getFragmentShader() == nullptr) {
-		_shaderPrograms = std::make_shared<ShaderPrograms>(material, renderer->getOpenGLResources());
+		_shaderPrograms = std::make_shared<ShaderPrograms>(material, renderer->getResources());
 	} else {
 		_shaderPrograms = _material.getFragmentShader()->getRendererObject<FragmentShader>()->getShaderPrograms();
 	}

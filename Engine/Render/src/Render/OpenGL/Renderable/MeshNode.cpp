@@ -24,7 +24,7 @@ MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRender
 	if (_material != nullptr) {
 		_shaderPrograms = _material->getShaderPrograms().get();
 	} else {
-		_shaderPrograms = renderer->getOpenGLResources()->getDefaultShaderPrograms().get();
+		_shaderPrograms = renderer->getResources()->getDefaultShaderPrograms().get();
 	}
 	assert(_shaderPrograms != nullptr);
 
