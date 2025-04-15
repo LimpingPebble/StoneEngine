@@ -5,7 +5,6 @@
 #include "../Renderable/Texture.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Shader.hpp"
-#include "Scene/Shader/ShaderInputSignature.hpp"
 #include "Utils/FileSystem.hpp"
 
 #include <GL/glew.h>
@@ -69,8 +68,8 @@ public:
 	GlFragmentShader(const char *source) : GlShaderBase(source, GL_FRAGMENT_SHADER) {
 	}
 
-	static std::unique_ptr<GlFragmentShader> makeStandardDeferredShader(const Scene::ShaderInputSignature &params);
-	static std::unique_ptr<GlFragmentShader> makeStandardForwardShader(const Scene::ShaderInputSignature &params);
+	static std::unique_ptr<GlFragmentShader> makeStandardDeferredShader(const Scene::MaterialInputSignature &params);
+	static std::unique_ptr<GlFragmentShader> makeStandardForwardShader(const Scene::MaterialInputSignature &params);
 };
 
 class GlShaderProgram {

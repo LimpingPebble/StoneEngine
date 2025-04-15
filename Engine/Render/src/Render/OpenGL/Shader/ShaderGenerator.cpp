@@ -1,30 +1,31 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/Shader/ShaderGenerator.hpp"
+#include "Render/OpenGL/Shader/ShaderGenerator.hpp"
 
 #include "Scene/Renderable/Shader.hpp"
 #include "Utils/FileSystem.hpp"
 
-namespace Stone::Scene {
+namespace Stone::Render::OpenGL {
 
-void ShaderGenerator::generateFragmentShaderTemplate(const ShaderInputSignature &params, std::ostream &output) {
+void ShaderGenerator::generateFragmentShaderTemplate(const Scene::MaterialInputSignature &params,
+													 std::ostream &output) {
 
 	output << "// Stone shader template" << std::endl;
 
-	auto to_glsl = [](ShaderInputSignature::Type type) {
+	auto to_glsl = [](Scene::MaterialInputSignature::Type type) {
 		switch (type) {
-		case ShaderInputSignature::Type::None: return "void";
-		case ShaderInputSignature::Type::Scalar: return "float";
-		case ShaderInputSignature::Type::Vector2: return "vec2";
-		case ShaderInputSignature::Type::Vector3: return "vec3";
-		case ShaderInputSignature::Type::Vector4: return "vec4";
-		case ShaderInputSignature::Type::Texture: return "sampler2D";
+		case Scene::MaterialInputSignature::Type::None: return "void";
+		case Scene::MaterialInputSignature::Type::Scalar: return "float";
+		case Scene::MaterialInputSignature::Type::Vector2: return "vec2";
+		case Scene::MaterialInputSignature::Type::Vector3: return "vec3";
+		case Scene::MaterialInputSignature::Type::Vector4: return "vec4";
+		case Scene::MaterialInputSignature::Type::Texture: return "sampler2D";
 		default: return "";
 		}
 	};
 
-	auto add_uniform_param = [&output, &to_glsl](const char *name, ShaderInputSignature::Type type) {
-		if (type != ShaderInputSignature::Type::None)
+	auto add_uniform_param = [&output, &to_glsl](const char *name, Scene::MaterialInputSignature::Type type) {
+		if (type != Scene::MaterialInputSignature::Type::None)
 			output << "// " << name << ": " << to_glsl(type) << std::endl;
 	};
 
@@ -39,8 +40,10 @@ void ShaderGenerator::generateFragmentShaderTemplate(const ShaderInputSignature 
 	output << "}" << std::endl;
 }
 
-void ShaderGenerator::generateOpenGlForwardFragmentShader(const ShaderInputSignature &params, FragmentShader *shader,
+void ShaderGenerator::generateOpenGlForwardFragmentShader(const Scene::MaterialInputSignature& params,
+														  const std::shared_ptr<Scene::FragmentShader> &shader,
 														  std::ostream &output) {
+
 	std::ostream &source(output);
 
 	source << "#version 400 core" << std::endl;
@@ -104,20 +107,20 @@ uniform vec3 u_camera_position;
 
 )";
 
-	auto to_glsl = [](ShaderInputSignature::Type type) {
+	auto to_glsl = [](Scene::MaterialInputSignature::Type type) {
 		switch (type) {
-		case ShaderInputSignature::Type::None: return "void";
-		case ShaderInputSignature::Type::Scalar: return "float";
-		case ShaderInputSignature::Type::Vector2: return "vec2";
-		case ShaderInputSignature::Type::Vector3: return "vec3";
-		case ShaderInputSignature::Type::Vector4: return "vec4";
-		case ShaderInputSignature::Type::Texture: return "sampler2D";
+		case Scene::MaterialInputSignature::Type::None: return "void";
+		case Scene::MaterialInputSignature::Type::Scalar: return "float";
+		case Scene::MaterialInputSignature::Type::Vector2: return "vec2";
+		case Scene::MaterialInputSignature::Type::Vector3: return "vec3";
+		case Scene::MaterialInputSignature::Type::Vector4: return "vec4";
+		case Scene::MaterialInputSignature::Type::Texture: return "sampler2D";
 		default: return "";
 		}
 	};
 
-	auto add_uniform_param = [&source, &to_glsl](const char *name, ShaderInputSignature::Type type) {
-		if (type != ShaderInputSignature::Type::None)
+	auto add_uniform_param = [&source, &to_glsl](const char *name, Scene::MaterialInputSignature::Type type) {
+		if (type != Scene::MaterialInputSignature::Type::None)
 			source << "uniform " << to_glsl(type) << ' ' << name << ";" << std::endl;
 	};
 
@@ -251,7 +254,7 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 
 )";
 
-	if (shader != nullptr) {
+	if (shader) {
 		auto [contentType, content] = shader->getContent();
 
 		using ContentType = Scene::AShader::ContentType;
@@ -271,39 +274,39 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 	source << "	Material fragMat;" << std::endl;
 
 	// TODO: Handle default values
-	const auto assign_to_vec = [&source](ShaderInputSignature::Type type, const std::string &name) {
+	const auto assign_to_vec = [&source](Scene::MaterialInputSignature::Type type, const std::string &name) {
 		switch (type) {
-		case ShaderInputSignature::Type::None: break;
-		case ShaderInputSignature::Type::Scalar:
+		case Scene::MaterialInputSignature::Type::None: break;
+		case Scene::MaterialInputSignature::Type::Scalar:
 			source << "	fragMat." << name << " = vec3(" << name << ", 0, 0);" << std::endl;
 			break;
-		case ShaderInputSignature::Type::Vector2:
+		case Scene::MaterialInputSignature::Type::Vector2:
 			source << "	fragMat." << name << " = vec3(" << name << ", 0);" << std::endl;
 			break;
-		case ShaderInputSignature::Type::Vector3:
+		case Scene::MaterialInputSignature::Type::Vector3:
 			source << "	fragMat." << name << " = " << name << ";" << std::endl; //
 			break;
-		case ShaderInputSignature::Type::Vector4:
+		case Scene::MaterialInputSignature::Type::Vector4:
 			source << "	fragMat." << name << " = " << name << ".xyz;" << std::endl;
 			break;
-		case ShaderInputSignature::Type::Texture:
+		case Scene::MaterialInputSignature::Type::Texture:
 			source << "	fragMat." << name << " = texture(" << name << ", fs_in.uv).xyz;" << std::endl;
 			break;
 		}
 	};
 
-	const auto assign_to_float = [&source](ShaderInputSignature::Type type, const std::string &name, char x) {
+	const auto assign_to_float = [&source](Scene::MaterialInputSignature::Type type, const std::string &name, char x) {
 		switch (type) {
-		case ShaderInputSignature::Type::None: break;
-		case ShaderInputSignature::Type::Scalar:
+		case Scene::MaterialInputSignature::Type::None: break;
+		case Scene::MaterialInputSignature::Type::Scalar:
 			source << "	fragMat." << name << " = " << name << ";" << std::endl; //
 			break;
-		case ShaderInputSignature::Type::Vector2:
-		case ShaderInputSignature::Type::Vector3:
-		case ShaderInputSignature::Type::Vector4:
+		case Scene::MaterialInputSignature::Type::Vector2:
+		case Scene::MaterialInputSignature::Type::Vector3:
+		case Scene::MaterialInputSignature::Type::Vector4:
 			source << "	fragMat." << name << " = " << name << "." << x << ";" << std::endl;
 			break;
-		case ShaderInputSignature::Type::Texture:
+		case Scene::MaterialInputSignature::Type::Texture:
 			source << "	fragMat." << name << " = texture(" << name << ", fs_in.uv)." << x << ";" << std::endl;
 			break;
 		}
@@ -320,7 +323,7 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 		source << "	" << shader->getFunction() << "(fragMat);" << std::endl;
 	}
 
-	if (params.normal == ShaderInputSignature::Type::Texture) {
+	if (params.normal == Scene::MaterialInputSignature::Type::Texture) {
 		source << "	vec3 normal_value = normalize(texture(normal, fs_in.uv).xyz * 2 - 1);" << std::endl;
 	} else {
 		source << "	vec3 normal_value = vec3(0, 0, 1);" << std::endl;
@@ -345,4 +348,4 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 )";
 }
 
-} // namespace Stone::Scene
+} // namespace Stone::Render::OpenGL

@@ -5,12 +5,13 @@
 #include "GlShaders.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Shader.hpp"
+#include "Scene/Renderable/IMeshObject.hpp"
 
 namespace Stone::Render::OpenGL {
 
 class ShaderPrograms {
 public:
-	ShaderPrograms(Scene::ShaderInputSignature params, const std::shared_ptr<OpenGLResources> &resources);
+	ShaderPrograms(Scene::MaterialInputSignature params, const std::shared_ptr<OpenGLResources> &resources);
 	ShaderPrograms(Scene::FragmentShader &shader, const std::shared_ptr<OpenGLResources> &resources);
 	ShaderPrograms(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources);
 

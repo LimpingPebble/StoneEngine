@@ -134,4 +134,56 @@ protected:
 std::string location_to_string(const Material::Location &location);
 Material::Location string_to_location(const std::string &str);
 
+
+#define FOR_EACH_SHADER_PARAMETERS(__WithParam)                                                                        \
+	__WithParam(diffuse) __WithParam(specular) __WithParam(ambient) __WithParam(emissive) __WithParam(shininess)       \
+		__WithParam(opacity) __WithParam(roughness) __WithParam(metallic) __WithParam(normal) __WithParam(occlusion)   \
+			__WithParam(height)
+
+struct MaterialInputSignature {
+
+	enum class Type : uint8_t {
+		None = 0,
+		Scalar,
+		Vector2,
+		Vector3,
+		Vector4,
+		Texture,
+	};
+
+	union {
+		struct {
+#define __DECLARE_PARAM(param) Type param : 3;
+			FOR_EACH_SHADER_PARAMETERS(__DECLARE_PARAM)
+#undef __DECLARE_PARAM
+		};
+		uint64_t data; // sizeof() should be greater or equal to the struct size
+	};
+	bool _;
+
+	MaterialInputSignature();
+	MaterialInputSignature(const MaterialInputSignature &other) = default;
+	MaterialInputSignature &operator=(const MaterialInputSignature &other) = default;
+
+	MaterialInputSignature(const std::shared_ptr<Material> &material);
+
+	void setParamWithName(const std::string &name, Type value);
+
+	void setFromMaterial(const std::shared_ptr<Material> &material);
+
+	bool operator==(const MaterialInputSignature &other) const {
+		return data == other.data;
+	}
+};
+
+
 } // namespace Stone::Scene
+
+namespace std {
+template <>
+struct hash<Stone::Scene::MaterialInputSignature> {
+	std::size_t operator()(const Stone::Scene::MaterialInputSignature &params) const noexcept {
+		return std::hash<uint32_t>()(params.data);
+	}
+};
+} // namespace std

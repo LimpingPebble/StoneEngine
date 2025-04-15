@@ -1,6 +1,6 @@
 #include "config.h"
 #include "Scene/Renderable/Shader.hpp"
-#include "Scene/Shader/ShaderGenerator.hpp"
+#include "Render/OpenGL/Shader/ShaderGenerator.hpp"
 #include "Utils/FileSystem.hpp"
 #include "Utils/Json.hpp"
 
@@ -20,28 +20,28 @@ static time_t getLastmodifiedTimeOfFile(const char *filename) {
 		throw std::runtime_error("File does not exist");
 }
 
-Stone::Scene::ShaderInputSignature parseShaderInputSignature(const Json::Value &json) {
-	Stone::Scene::ShaderInputSignature params;
+Stone::Scene::MaterialInputSignature parseMaterialInputSignature(const Json::Value &json) {
+	Stone::Scene::MaterialInputSignature params;
 
 	auto &params_obj = json.get<Json::Object>();
 
 	for (auto [key, value] : params_obj) {
-		Stone::Scene::ShaderInputSignature::Type type;
+		Stone::Scene::MaterialInputSignature::Type type;
 
 		if (!value.is<std::string>())
 			throw std::runtime_error("Invalid type for key " + key);
 
 		const std::string &type_str = value.get<std::string>();
 		if (type_str == "scalar")
-			type = Stone::Scene::ShaderInputSignature::Type::Scalar;
+			type = Stone::Scene::MaterialInputSignature::Type::Scalar;
 		else if (type_str == "vector2")
-			type = Stone::Scene::ShaderInputSignature::Type::Vector2;
+			type = Stone::Scene::MaterialInputSignature::Type::Vector2;
 		else if (type_str == "vector3")
-			type = Stone::Scene::ShaderInputSignature::Type::Vector3;
+			type = Stone::Scene::MaterialInputSignature::Type::Vector3;
 		else if (type_str == "vector4")
-			type = Stone::Scene::ShaderInputSignature::Type::Vector4;
+			type = Stone::Scene::MaterialInputSignature::Type::Vector4;
 		else if (type_str == "texture")
-			type = Stone::Scene::ShaderInputSignature::Type::Texture;
+			type = Stone::Scene::MaterialInputSignature::Type::Texture;
 		else
 			throw std::runtime_error("Invalid type " + type_str);
 
@@ -51,14 +51,14 @@ Stone::Scene::ShaderInputSignature parseShaderInputSignature(const Json::Value &
 	return params;
 }
 
-std::string to_string(Stone::Scene::ShaderInputSignature::Type type) {
+std::string to_string(Stone::Scene::MaterialInputSignature::Type type) {
 	switch (type) {
-	case Stone::Scene::ShaderInputSignature::Type::None: return "none";
-	case Stone::Scene::ShaderInputSignature::Type::Scalar: return "scalar";
-	case Stone::Scene::ShaderInputSignature::Type::Vector2: return "vector2";
-	case Stone::Scene::ShaderInputSignature::Type::Vector3: return "vector3";
-	case Stone::Scene::ShaderInputSignature::Type::Vector4: return "vector4";
-	case Stone::Scene::ShaderInputSignature::Type::Texture: return "texture";
+	case Stone::Scene::MaterialInputSignature::Type::None: return "none";
+	case Stone::Scene::MaterialInputSignature::Type::Scalar: return "scalar";
+	case Stone::Scene::MaterialInputSignature::Type::Vector2: return "vector2";
+	case Stone::Scene::MaterialInputSignature::Type::Vector3: return "vector3";
+	case Stone::Scene::MaterialInputSignature::Type::Vector4: return "vector4";
+	case Stone::Scene::MaterialInputSignature::Type::Texture: return "texture";
 	}
 	return "";
 }
@@ -79,15 +79,15 @@ void generateShaderOutput(const char *input_file, const char *output_file) {
 		input_json_obj.erase("shader");
 	}
 
-	Stone::Scene::ShaderInputSignature params = parseShaderInputSignature(input_json);
+	Stone::Scene::MaterialInputSignature params = parseMaterialInputSignature(input_json);
 
-	Stone::Scene::ShaderGenerator generator;
+	Stone::Render::OpenGL::ShaderGenerator generator;
 	std::cout << "Generating shader: {" << std::endl;
 #define __PRINT_SHADER_PARAM(param) std::cout << "    " << #param << " " << to_string(params.param) << std::endl;
 	FOR_EACH_SHADER_PARAMETERS(__PRINT_SHADER_PARAM)
 	std::cout << "}" << std::endl;
 
-	generator.generateOpenGlForwardFragmentShader(params, shader.get(), output_stream);
+	generator.generateOpenGlForwardFragmentShader(params, shader, output_stream);
 }
 
 std::string input;
