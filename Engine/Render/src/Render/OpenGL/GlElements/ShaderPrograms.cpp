@@ -9,8 +9,7 @@
 
 namespace Stone::Render::OpenGL {
 
-ShaderPrograms::ShaderPrograms(const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
-	Scene::ShaderParameters params;
+ShaderPrograms::ShaderPrograms(Scene::ShaderInputSignature params, const std::shared_ptr<OpenGLResources> &resources) : _resources(resources) {
 	switch (resources->getRenderer().lock()->getDirector()->getRenderingMethod()) {
 	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;
 	case RenderingMethod::Deferred: _glFragmentShader = GlFragmentShader::makeStandardDeferredShader(params); break;
@@ -24,7 +23,7 @@ ShaderPrograms::ShaderPrograms(Scene::FragmentShader &shader, const std::shared_
 
 ShaderPrograms::ShaderPrograms(Scene::Material &material, const std::shared_ptr<OpenGLResources> &resources)
 	: _resources(resources) {
-	Scene::ShaderParameters params;
+	Scene::ShaderInputSignature params;
 	params.setFromMaterial(material);
 	switch (resources->getRenderer().lock()->getDirector()->getRenderingMethod()) {
 	case RenderingMethod::Forward: _glFragmentShader = GlFragmentShader::makeStandardForwardShader(params); break;

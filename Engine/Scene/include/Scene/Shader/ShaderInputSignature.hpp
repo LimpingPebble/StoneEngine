@@ -11,7 +11,7 @@ namespace Stone::Scene {
 		__WithParam(opacity) __WithParam(roughness) __WithParam(metallic) __WithParam(normal) __WithParam(occlusion)   \
 			__WithParam(height)
 
-struct ShaderParameters {
+struct ShaderInputSignature {
 
 	enum class Type : uint8_t {
 		None = 0,
@@ -32,13 +32,13 @@ struct ShaderParameters {
 	bool _;
 
 #define __INITIALIZE_PARAM(param) param(Type::None),
-	ShaderParameters();
+	ShaderInputSignature();
 
 	void setParamWithName(const std::string &name, Type value);
 
 	void setFromMaterial(const Scene::Material &material);
 
-	bool operator==(const ShaderParameters &other) const {
+	bool operator==(const ShaderInputSignature &other) const {
 		return data == other.data;
 	}
 };
@@ -47,8 +47,8 @@ struct ShaderParameters {
 
 namespace std {
 template <>
-struct hash<Stone::Scene::ShaderParameters> {
-	std::size_t operator()(const Stone::Scene::ShaderParameters &params) const noexcept {
+struct hash<Stone::Scene::ShaderInputSignature> {
+	std::size_t operator()(const Stone::Scene::ShaderInputSignature &params) const noexcept {
 		return std::hash<uint32_t>()(params.data);
 	}
 };

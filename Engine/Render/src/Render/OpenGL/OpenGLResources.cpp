@@ -48,7 +48,7 @@ const std::unique_ptr<GlVertexShader> &OpenGLResources::getVertexShader(Scene::M
 	assert(false);
 }
 
-const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scene::ShaderParameters params) {
+const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scene::ShaderInputSignature params) {
 	auto renderer = getRenderer().lock();
 	assert(renderer != nullptr);
 	auto it = _fragmentShaders.find(params);
@@ -66,9 +66,18 @@ const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scen
 
 const std::unique_ptr<ShaderPrograms> &OpenGLResources::getDefaultShaderPrograms() {
 	if (_defaultShaderPrograms == nullptr) {
-		_defaultShaderPrograms = std::make_unique<ShaderPrograms>(shared_from_this());
+		_defaultShaderPrograms = std::make_unique<ShaderPrograms>(Scene::ShaderInputSignature(), shared_from_this());
 	}
 	return _defaultShaderPrograms;
+}
+
+const std::unique_ptr<ShaderPrograms> &OpenGLResources::getStandardShaderPrograms(Scene::ShaderInputSignature params) {
+	auto it = _standardsShaderPrograms.find(params);
+	if (it == _standardsShaderPrograms.end()) {
+		return (_standardsShaderPrograms[params] = std::make_unique<ShaderPrograms>(params, shared_from_this()));
+	} else {
+		return it->second;
+	}
 }
 
 } // namespace Stone::Render::OpenGL

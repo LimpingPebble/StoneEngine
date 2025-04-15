@@ -4,7 +4,7 @@
 
 #include "GlElements/GlShaders.hpp"
 #include "GlElements/ShaderPrograms.hpp"
-#include "Scene/Shader/ShaderParameters.hpp"
+#include "Scene/Shader/ShaderInputSignature.hpp"
 
 namespace Stone::Render::OpenGL {
 
@@ -29,11 +29,12 @@ public:
 
 	// MARK: Fragment Shaders
 
-	const std::unique_ptr<GlFragmentShader> &getFragmentShader(Scene::ShaderParameters params);
+	const std::unique_ptr<GlFragmentShader> &getFragmentShader(Scene::ShaderInputSignature params);
 
 	// MARK: Shader Programs
 
 	const std::unique_ptr<ShaderPrograms> &getDefaultShaderPrograms();
+	const std::unique_ptr<ShaderPrograms> &getStandardShaderPrograms(Scene::ShaderInputSignature params);
 
 private:
 	std::weak_ptr<OpenGLRenderer> _renderer;
@@ -42,9 +43,10 @@ private:
 	std::unique_ptr<GlVertexShader> _skinMeshVertexShader;
 	std::unique_ptr<GlVertexShader> _instancedMeshVertexShader;
 
-	std::unordered_map<Scene::ShaderParameters, std::unique_ptr<GlFragmentShader>> _fragmentShaders;
+	std::unordered_map<Scene::ShaderInputSignature, std::unique_ptr<GlFragmentShader>> _fragmentShaders;
 
 	std::unique_ptr<ShaderPrograms> _defaultShaderPrograms;
+	std::unordered_map<Scene::ShaderInputSignature, std::unique_ptr<ShaderPrograms>> _standardsShaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

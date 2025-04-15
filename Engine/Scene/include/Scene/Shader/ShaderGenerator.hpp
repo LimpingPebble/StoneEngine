@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/Shader/ShaderParameters.hpp"
+#include "Scene/Shader/ShaderInputSignature.hpp"
 
 namespace Stone::Scene {
 
@@ -14,9 +14,9 @@ public:
 
 	~ShaderGenerator() = default;
 
-	void generateFragmentShaderTemplate(const ShaderParameters &params, std::ostream &output);
+	void generateFragmentShaderTemplate(const ShaderInputSignature &params, std::ostream &output);
 
-	void generateOpenGlForwardFragmentShader(const ShaderParameters &params, class FragmentShader *shader,
+	void generateOpenGlForwardFragmentShader(const ShaderInputSignature &params, class FragmentShader *shader,
 											 std::ostream &output);
 };
 

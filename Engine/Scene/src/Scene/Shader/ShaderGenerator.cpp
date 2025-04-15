@@ -7,24 +7,24 @@
 
 namespace Stone::Scene {
 
-void ShaderGenerator::generateFragmentShaderTemplate(const ShaderParameters &params, std::ostream &output) {
+void ShaderGenerator::generateFragmentShaderTemplate(const ShaderInputSignature &params, std::ostream &output) {
 
 	output << "// Stone shader template" << std::endl;
 
-	auto to_glsl = [](ShaderParameters::Type type) {
+	auto to_glsl = [](ShaderInputSignature::Type type) {
 		switch (type) {
-		case ShaderParameters::Type::None: return "void";
-		case ShaderParameters::Type::Scalar: return "float";
-		case ShaderParameters::Type::Vector2: return "vec2";
-		case ShaderParameters::Type::Vector3: return "vec3";
-		case ShaderParameters::Type::Vector4: return "vec4";
-		case ShaderParameters::Type::Texture: return "sampler2D";
+		case ShaderInputSignature::Type::None: return "void";
+		case ShaderInputSignature::Type::Scalar: return "float";
+		case ShaderInputSignature::Type::Vector2: return "vec2";
+		case ShaderInputSignature::Type::Vector3: return "vec3";
+		case ShaderInputSignature::Type::Vector4: return "vec4";
+		case ShaderInputSignature::Type::Texture: return "sampler2D";
 		default: return "";
 		}
 	};
 
-	auto add_uniform_param = [&output, &to_glsl](const char *name, ShaderParameters::Type type) {
-		if (type != ShaderParameters::Type::None)
+	auto add_uniform_param = [&output, &to_glsl](const char *name, ShaderInputSignature::Type type) {
+		if (type != ShaderInputSignature::Type::None)
 			output << "// " << name << ": " << to_glsl(type) << std::endl;
 	};
 
@@ -39,7 +39,7 @@ void ShaderGenerator::generateFragmentShaderTemplate(const ShaderParameters &par
 	output << "}" << std::endl;
 }
 
-void ShaderGenerator::generateOpenGlForwardFragmentShader(const ShaderParameters &params, FragmentShader *shader,
+void ShaderGenerator::generateOpenGlForwardFragmentShader(const ShaderInputSignature &params, FragmentShader *shader,
 														  std::ostream &output) {
 	std::ostream &source(output);
 
@@ -104,20 +104,20 @@ uniform vec3 u_camera_position;
 
 )";
 
-	auto to_glsl = [](ShaderParameters::Type type) {
+	auto to_glsl = [](ShaderInputSignature::Type type) {
 		switch (type) {
-		case ShaderParameters::Type::None: return "void";
-		case ShaderParameters::Type::Scalar: return "float";
-		case ShaderParameters::Type::Vector2: return "vec2";
-		case ShaderParameters::Type::Vector3: return "vec3";
-		case ShaderParameters::Type::Vector4: return "vec4";
-		case ShaderParameters::Type::Texture: return "sampler2D";
+		case ShaderInputSignature::Type::None: return "void";
+		case ShaderInputSignature::Type::Scalar: return "float";
+		case ShaderInputSignature::Type::Vector2: return "vec2";
+		case ShaderInputSignature::Type::Vector3: return "vec3";
+		case ShaderInputSignature::Type::Vector4: return "vec4";
+		case ShaderInputSignature::Type::Texture: return "sampler2D";
 		default: return "";
 		}
 	};
 
-	auto add_uniform_param = [&source, &to_glsl](const char *name, ShaderParameters::Type type) {
-		if (type != ShaderParameters::Type::None)
+	auto add_uniform_param = [&source, &to_glsl](const char *name, ShaderInputSignature::Type type) {
+		if (type != ShaderInputSignature::Type::None)
 			source << "uniform " << to_glsl(type) << ' ' << name << ";" << std::endl;
 	};
 
@@ -271,39 +271,39 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 	source << "	Material fragMat;" << std::endl;
 
 	// TODO: Handle default values
-	const auto assign_to_vec = [&source](ShaderParameters::Type type, const std::string &name) {
+	const auto assign_to_vec = [&source](ShaderInputSignature::Type type, const std::string &name) {
 		switch (type) {
-		case ShaderParameters::Type::None: break;
-		case ShaderParameters::Type::Scalar:
+		case ShaderInputSignature::Type::None: break;
+		case ShaderInputSignature::Type::Scalar:
 			source << "	fragMat." << name << " = vec3(" << name << ", 0, 0);" << std::endl;
 			break;
-		case ShaderParameters::Type::Vector2:
+		case ShaderInputSignature::Type::Vector2:
 			source << "	fragMat." << name << " = vec3(" << name << ", 0);" << std::endl;
 			break;
-		case ShaderParameters::Type::Vector3:
+		case ShaderInputSignature::Type::Vector3:
 			source << "	fragMat." << name << " = " << name << ";" << std::endl; //
 			break;
-		case ShaderParameters::Type::Vector4:
+		case ShaderInputSignature::Type::Vector4:
 			source << "	fragMat." << name << " = " << name << ".xyz;" << std::endl;
 			break;
-		case ShaderParameters::Type::Texture:
+		case ShaderInputSignature::Type::Texture:
 			source << "	fragMat." << name << " = texture(" << name << ", fs_in.uv).xyz;" << std::endl;
 			break;
 		}
 	};
 
-	const auto assign_to_float = [&source](ShaderParameters::Type type, const std::string &name, char x) {
+	const auto assign_to_float = [&source](ShaderInputSignature::Type type, const std::string &name, char x) {
 		switch (type) {
-		case ShaderParameters::Type::None: break;
-		case ShaderParameters::Type::Scalar:
+		case ShaderInputSignature::Type::None: break;
+		case ShaderInputSignature::Type::Scalar:
 			source << "	fragMat." << name << " = " << name << ";" << std::endl; //
 			break;
-		case ShaderParameters::Type::Vector2:
-		case ShaderParameters::Type::Vector3:
-		case ShaderParameters::Type::Vector4:
+		case ShaderInputSignature::Type::Vector2:
+		case ShaderInputSignature::Type::Vector3:
+		case ShaderInputSignature::Type::Vector4:
 			source << "	fragMat." << name << " = " << name << "." << x << ";" << std::endl;
 			break;
-		case ShaderParameters::Type::Texture:
+		case ShaderInputSignature::Type::Texture:
 			source << "	fragMat." << name << " = texture(" << name << ", fs_in.uv)." << x << ";" << std::endl;
 			break;
 		}
@@ -320,7 +320,7 @@ vec3 calculLight(Light light, Material fragMat, vec3 normal_direction, vec3 fcam
 		source << "	" << shader->getFunction() << "(fragMat);" << std::endl;
 	}
 
-	if (params.normal == ShaderParameters::Type::Texture) {
+	if (params.normal == ShaderInputSignature::Type::Texture) {
 		source << "	vec3 normal_value = normalize(texture(normal, fs_in.uv).xyz * 2 - 1);" << std::endl;
 	} else {
 		source << "	vec3 normal_value = vec3(0, 0, 1);" << std::endl;

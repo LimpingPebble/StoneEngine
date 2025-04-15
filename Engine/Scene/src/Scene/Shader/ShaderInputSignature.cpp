@@ -1,21 +1,21 @@
 // Copyright 2024 Stone-Engine
 
-#include "Scene/Shader/ShaderParameters.hpp"
+#include "Scene/Shader/ShaderInputSignature.hpp"
 
 #include "Scene/Renderable/Material.hpp"
 
 namespace Stone::Scene {
 
 #define __INITIALIZE_PARAM(param) param(Type::None),
-ShaderParameters::ShaderParameters() : FOR_EACH_SHADER_PARAMETERS(__INITIALIZE_PARAM) _() {
+ShaderInputSignature::ShaderInputSignature() : FOR_EACH_SHADER_PARAMETERS(__INITIALIZE_PARAM) _() {
 }
 
-void ShaderParameters::setParamWithName(const std::string &name, Type value) {
-	using ParamSetter = std::function<void(ShaderParameters &, Type)>;
+void ShaderInputSignature::setParamWithName(const std::string &name, Type value) {
+	using ParamSetter = std::function<void(ShaderInputSignature &, Type)>;
 
 #define __MAP_NAME_TO_PARAM(param)                                                                                     \
 	{                                                                                                                  \
-		#param, [](ShaderParameters &matParams, Type value) {                                                          \
+		#param, [](ShaderInputSignature &matParams, Type value) {                                                          \
 			matParams.param = value;                                                                                   \
 		}                                                                                                              \
 	}                                                                                                                  \
@@ -31,7 +31,7 @@ void ShaderParameters::setParamWithName(const std::string &name, Type value) {
 	}
 }
 
-void ShaderParameters::setFromMaterial(const Material &material) {
+void ShaderInputSignature::setFromMaterial(const Material &material) {
 	material.forEachScalars([this](const Material::Location &location, float value) {
 		(void)value;
 		if (std::holds_alternative<std::string>(location)) {
