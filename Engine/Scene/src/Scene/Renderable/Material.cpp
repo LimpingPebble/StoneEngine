@@ -121,9 +121,12 @@ void MaterialInputSignature::setParamWithName(const std::string &name, Type valu
 	using ParamSetter = std::function<void(MaterialInputSignature &, Type)>;
 
 #define __MAP_NAME_TO_PARAM(param)                                                                                     \
-	{#param, [](MaterialInputSignature &matParams, Type value) {                                                       \
-		 matParams.param = value;                                                                                      \
-	 }},
+	{                                                                                                                  \
+		#param, [](MaterialInputSignature &matParams, Type value) {                                                    \
+			matParams.param = value;                                                                                   \
+	 	}                                                                                                              \
+	}                                                                                                                  \
+	,
 
 	const static std::unordered_map<std::string, ParamSetter> paramSetters = {
 		FOR_EACH_SHADER_PARAMETERS(__MAP_NAME_TO_PARAM) //
