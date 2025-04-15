@@ -20,7 +20,9 @@ public:
 
 	void generateFragmentShaderTemplate(const Scene::MaterialInputSignature &params, std::ostream &output);
 
-	void generateOpenGlForwardFragmentShader(const Scene::MaterialInputSignature &params, const std::shared_ptr<Scene::FragmentShader> &shader, std::ostream &output);
+	void generateOpenGlForwardFragmentShader(const Scene::MaterialInputSignature &params,
+											 const std::shared_ptr<Scene::FragmentShader> &shader,
+											 std::ostream &output);
 };
 
 } // namespace Stone::Render::OpenGL

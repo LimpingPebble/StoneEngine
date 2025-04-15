@@ -71,7 +71,8 @@ const std::unique_ptr<ShaderPrograms> &OpenGLResources::getDefaultShaderPrograms
 	return _defaultShaderPrograms;
 }
 
-const std::unique_ptr<ShaderPrograms> &OpenGLResources::getStandardShaderPrograms(Scene::MaterialInputSignature params) {
+const std::unique_ptr<ShaderPrograms> &
+OpenGLResources::getStandardShaderPrograms(Scene::MaterialInputSignature params) {
 	auto it = _standardsShaderPrograms.find(params);
 	if (it == _standardsShaderPrograms.end()) {
 		return (_standardsShaderPrograms[params] = std::make_unique<ShaderPrograms>(params, shared_from_this()));

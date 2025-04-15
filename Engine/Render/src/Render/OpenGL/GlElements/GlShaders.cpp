@@ -155,7 +155,8 @@ std::unique_ptr<GlVertexShader> GlVertexShader::makeStandardInstancedMeshShader(
 
 // MARK: Fragment
 
-std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardForwardShader(const Scene::MaterialInputSignature &params) {
+std::unique_ptr<GlFragmentShader>
+GlFragmentShader::makeStandardForwardShader(const Scene::MaterialInputSignature &params) {
 	std::stringstream source;
 
 	Render::OpenGL::ShaderGenerator generator;
@@ -164,7 +165,8 @@ std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardForwardShader(co
 	return std::make_unique<GlFragmentShader>(source.str().c_str());
 }
 
-std::unique_ptr<GlFragmentShader> GlFragmentShader::makeStandardDeferredShader(const Scene::MaterialInputSignature &params) {
+std::unique_ptr<GlFragmentShader>
+GlFragmentShader::makeStandardDeferredShader(const Scene::MaterialInputSignature &params) {
 	(void)params;
 	throw std::runtime_error("deffered shader is not implemented.");
 }

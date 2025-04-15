@@ -40,7 +40,7 @@ void ShaderGenerator::generateFragmentShaderTemplate(const Scene::MaterialInputS
 	output << "}" << std::endl;
 }
 
-void ShaderGenerator::generateOpenGlForwardFragmentShader(const Scene::MaterialInputSignature& params,
+void ShaderGenerator::generateOpenGlForwardFragmentShader(const Scene::MaterialInputSignature &params,
 														  const std::shared_ptr<Scene::FragmentShader> &shader,
 														  std::ostream &output) {
 

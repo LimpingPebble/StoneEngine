@@ -3,9 +3,9 @@
 #pragma once
 
 #include "GlShaders.hpp"
+#include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Shader.hpp"
-#include "Scene/Renderable/IMeshObject.hpp"
 
 namespace Stone::Render::OpenGL {
 

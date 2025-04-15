@@ -1,6 +1,6 @@
 #include "config.h"
-#include "Scene/Renderable/Shader.hpp"
 #include "Render/OpenGL/Shader/ShaderGenerator.hpp"
+#include "Scene/Renderable/Shader.hpp"
 #include "Utils/FileSystem.hpp"
 #include "Utils/Json.hpp"
 
