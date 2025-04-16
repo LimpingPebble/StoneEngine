@@ -2,29 +2,25 @@
 
 #pragma once
 
-#include "Render/OpenGL/OpenGLRenderer.hpp"
+#include "IOpenGLRendererObject.hpp"
 #include "Scene/Node/InstancedMeshNode.hpp"
-
-#include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
-class InstancedMeshNode : public Scene::IRendererObject {
+class InstancedMeshNode : public IOpenGLRendererObject {
 public:
 	InstancedMeshNode(Scene::InstancedMeshNode &instancedMeshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: _instancedMeshNode(instancedMeshNode), _renderer(renderer) {
+		: IOpenGLRendererObject(renderer), _instancedMeshNode(instancedMeshNode) {
 	}
 
 	~InstancedMeshNode() override {
 	}
 
-	void render(Scene::RenderContext &context) override {
-		(void)context;
+	void render(Scene::RenderContext &) override {
 	}
 
 private:
 	Scene::InstancedMeshNode &_instancedMeshNode;
-	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
 } // namespace Stone::Render::OpenGL

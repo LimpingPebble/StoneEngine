@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Mesh.hpp"
 
 #include <GL/glew.h>
@@ -11,8 +10,7 @@ namespace Stone::Render::OpenGL {
 
 struct VRAMMesh {
 
-	VRAMMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh, const std::shared_ptr<OpenGLRenderer> &renderer) {
-		(void)renderer;
+	VRAMMesh(const std::shared_ptr<Scene::DynamicMesh> &mesh) {
 		if (mesh == nullptr) {
 			return;
 		}

@@ -3,19 +3,20 @@
 #pragma once
 
 #include "../GlElements/ShaderPrograms.hpp"
+#include "IOpenGLRendererObject.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Shader.hpp"
 
 namespace Stone::Render::OpenGL {
 
-class FragmentShader : public Scene::IRendererObject {
+class FragmentShader : public IOpenGLRendererObject {
 public:
-	FragmentShader(Scene::FragmentShader &fragmentShader, const std::shared_ptr<OpenGLRenderer> &renderer) {
+	FragmentShader(Scene::FragmentShader &fragmentShader, const std::shared_ptr<OpenGLRenderer> &renderer)
+		: IOpenGLRendererObject(renderer) {
 		_shaderPrograms = std::make_shared<ShaderPrograms>(fragmentShader, renderer->getResources());
 	}
 
-	void render(Scene::RenderContext &context) override {
-		(void)context;
+	void render(Scene::RenderContext &) override {
 	}
 
 	const std::shared_ptr<ShaderPrograms> &getShaderPrograms() const {

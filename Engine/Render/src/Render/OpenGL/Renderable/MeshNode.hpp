@@ -2,15 +2,15 @@
 
 #pragma once
 
+#include "IOpenGLRendererObject.hpp"
 #include "Scene/Node/MeshNode.hpp"
 
 namespace Stone::Render::OpenGL {
 
 class Material;
-class OpenGLRenderer;
 class ShaderPrograms;
 
-class MeshNode : public Scene::IRendererObject {
+class MeshNode : public IOpenGLRendererObject {
 public:
 	MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer);
 
@@ -20,7 +20,6 @@ public:
 
 private:
 	Scene::MeshNode &_meshNode;
-	std::weak_ptr<OpenGLRenderer> _renderer;
 	std::shared_ptr<Material> _material;
 	std::shared_ptr<ShaderPrograms> _shaderPrograms;
 };

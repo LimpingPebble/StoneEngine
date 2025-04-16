@@ -2,23 +2,23 @@
 
 #pragma once
 
-#include "Render/OpenGL/OpenGLRenderer.hpp"
+#include "IOpenGLRendererObject.hpp"
 #include "Scene/Renderable/IMeshObject.hpp"
 #include "Scene/Renderable/Material.hpp"
 
-#include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
 class ShaderPrograms;
 
-class Material : public Scene::IRendererObject {
+class Material : public IOpenGLRendererObject {
 public:
 	Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer);
 
 	~Material() override = default;
 
-	void render(Scene::RenderContext &context) override;
+	void render(Scene::RenderContext &) override {
+	}
 
 	void setUniforms(Scene::MeshType meshType);
 

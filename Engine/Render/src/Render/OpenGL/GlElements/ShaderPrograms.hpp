@@ -9,6 +9,8 @@
 
 namespace Stone::Render::OpenGL {
 
+class OpenGLResources;
+
 class ShaderPrograms {
 public:
 	ShaderPrograms(Scene::MaterialInputSignature params, const std::shared_ptr<OpenGLResources> &resources);

@@ -4,6 +4,7 @@
 
 #include "GlElements/ShaderPrograms.hpp"
 #include "OpenGLDirector.hpp"
+#include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Material.hpp"
 
 namespace Stone::Render::OpenGL {

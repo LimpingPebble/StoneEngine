@@ -2,21 +2,18 @@
 
 #pragma once
 
-#include "Render/OpenGL/OpenGLRenderer.hpp"
+#include "IOpenGLRendererObject.hpp"
 #include "Scene/Node/SkinMeshNode.hpp"
-
-#include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
-class SkinMeshNode : public Scene::IRendererObject {
+class SkinMeshNode : public IOpenGLRendererObject {
 public:
 	SkinMeshNode(Scene::SkinMeshNode &skinMeshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: _skinMeshNode(skinMeshNode), _renderer(renderer) {
+		: IOpenGLRendererObject(renderer), _skinMeshNode(skinMeshNode) {
 	}
 
-	~SkinMeshNode() override {
-	}
+	~SkinMeshNode() override = default;
 
 	void render(Scene::RenderContext &context) override {
 		(void)context;
@@ -24,7 +21,6 @@ public:
 
 private:
 	Scene::SkinMeshNode &_skinMeshNode;
-	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
 } // namespace Stone::Render::OpenGL

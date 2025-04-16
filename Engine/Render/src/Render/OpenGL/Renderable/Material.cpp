@@ -7,7 +7,8 @@
 
 namespace Stone::Render::OpenGL {
 
-Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer) : _material(material) {
+Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer)
+	: IOpenGLRendererObject(renderer), _material(material) {
 	assert(renderer);
 	assert(renderer->getResources());
 	if (_material.getFragmentShader() == nullptr) {
@@ -26,10 +27,6 @@ Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRender
 		std::cerr << "Material " << material.getId() << " has more than 32 textures" << std::endl;
 	}
 #endif
-}
-
-void Material::render(Scene::RenderContext &context) {
-	(void)context;
 }
 
 void Material::setUniforms(Scene::MeshType meshType) {

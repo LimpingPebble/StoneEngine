@@ -8,12 +8,11 @@
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Mesh.hpp"
 
-#include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
 MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
-	: _meshNode(meshNode), _renderer(renderer), _material(nullptr), _shaderPrograms(nullptr) {
+	: IOpenGLRendererObject(renderer), _meshNode(meshNode), _material(nullptr), _shaderPrograms(nullptr) {
 
 	auto usedMaterial = _meshNode.getUsedMaterial();
 	if (usedMaterial) {

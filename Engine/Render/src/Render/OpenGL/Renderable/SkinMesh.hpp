@@ -2,47 +2,58 @@
 
 #pragma once
 
-#include "Render/OpenGL/OpenGLRenderer.hpp"
+#include "../GlElements/VRAMSkinMesh.hpp"
+#include "IOpenGLRendererObject.hpp"
 #include "Scene/Renderable/SkinMesh.hpp"
-
-#include <GL/glew.h>
 
 namespace Stone::Render::OpenGL {
 
-class DynamicSkinMesh : public Scene::IRendererObject {
+class RendererSkinMesh : public IOpenGLRendererObject {
+public:
+	RendererSkinMesh(const std::shared_ptr<Scene::DynamicSkinMesh> &skinMesh,
+					 const std::shared_ptr<OpenGLRenderer> &renderer)
+		: IOpenGLRendererObject(renderer), _vramMesh(skinMesh) {
+	}
+
+	~RendererSkinMesh() override = default;
+
+	const VRAMSkinMesh &getVRAMSkinMesh() const {
+		return _vramMesh;
+	}
+
+private:
+	VRAMSkinMesh _vramMesh;
+};
+
+class DynamicSkinMesh : public RendererSkinMesh {
 public:
 	DynamicSkinMesh(Scene::DynamicSkinMesh &skinMesh, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: _skinMesh(skinMesh), _renderer(renderer) {
+		: RendererSkinMesh(std::static_pointer_cast<Scene::DynamicSkinMesh>(skinMesh.shared_from_this()), renderer),
+		  _skinMesh(skinMesh) {
 	}
 
-	~DynamicSkinMesh() override {
-	}
+	~DynamicSkinMesh() override = default;
 
-	void render(Scene::RenderContext &context) override {
-		(void)context;
+	void render(Scene::RenderContext &) override {
 	}
 
 private:
 	Scene::DynamicSkinMesh &_skinMesh;
-	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
-class StaticSkinMesh : public Scene::IRendererObject {
+class StaticSkinMesh : public RendererSkinMesh {
 public:
 	StaticSkinMesh(Scene::StaticSkinMesh &skinMesh, const std::shared_ptr<OpenGLRenderer> &renderer)
-		: _skinMesh(skinMesh), _renderer(renderer) {
+		: RendererSkinMesh(skinMesh.getSourceMesh(), renderer), _skinMesh(skinMesh) {
 	}
 
-	~StaticSkinMesh() override {
-	}
+	~StaticSkinMesh() override = default;
 
-	void render(Scene::RenderContext &context) override {
-		(void)context;
+	void render(Scene::RenderContext &) override {
 	}
 
 private:
 	Scene::StaticSkinMesh &_skinMesh;
-	std::weak_ptr<OpenGLRenderer> _renderer;
 };
 
 } // namespace Stone::Render::OpenGL
