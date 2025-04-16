@@ -13,7 +13,7 @@ OpenGLResources::OpenGLResources(const std::shared_ptr<OpenGLRenderer> &renderer
 	: std::enable_shared_from_this<OpenGLResources>(), _renderer(renderer) {
 }
 
-const std::weak_ptr<OpenGLRenderer> OpenGLResources::getRenderer() const {
+const std::weak_ptr<OpenGLRenderer> &OpenGLResources::getRenderer() const {
 	return _renderer;
 }
 
@@ -53,15 +53,14 @@ const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scen
 	auto renderer = getRenderer().lock();
 	assert(renderer != nullptr);
 	auto it = _fragmentShaders.find(params);
-	if (it == _fragmentShaders.end()) {
-		switch (renderer->getDirector()->getRenderingMethod()) {
-		case RenderingMethod::Forward:
-			return (_fragmentShaders[params] = GlFragmentShader::makeStandardForwardShader(params));
-		case RenderingMethod::Deferred:
-			return (_fragmentShaders[params] = GlFragmentShader::makeStandardDeferredShader(params));
-		}
-	} else {
+	if (it != _fragmentShaders.end()) {
 		return it->second;
+	}
+	switch (renderer->getDirector()->getRenderingMethod()) {
+	case RenderingMethod::Deferred:
+		return (_fragmentShaders[params] = GlFragmentShader::makeStandardDeferredShader(params));
+	case RenderingMethod::Forward:
+		return (_fragmentShaders[params] = GlFragmentShader::makeStandardForwardShader(params));
 	}
 }
 

@@ -146,21 +146,21 @@ void MaterialInputSignature::setFromMaterial(const std::shared_ptr<Material> &ma
 	material->forEachScalars([this](const Material::Location &location, float value) {
 		(void)value;
 		if (std::holds_alternative<std::string>(location)) {
-			const std::string &name(std::get<std::string>(location));
+			const auto &name(std::get<std::string>(location));
 			setParamWithName(name, Type::Scalar);
 		}
 	});
 	material->forEachVectors([this](const Material::Location &location, glm::vec3 value) {
 		(void)value;
 		if (std::holds_alternative<std::string>(location)) {
-			const std::string &name(std::get<std::string>(location));
+			const auto &name(std::get<std::string>(location));
 			setParamWithName(name, Type::Vector3);
 		}
 	});
 	material->forEachTextures([this](const Material::Location &location, auto value) {
 		(void)value;
 		if (std::holds_alternative<std::string>(location)) {
-			const std::string &name(std::get<std::string>(location));
+			const auto &name(std::get<std::string>(location));
 			setParamWithName(name, Type::Texture);
 		}
 	});

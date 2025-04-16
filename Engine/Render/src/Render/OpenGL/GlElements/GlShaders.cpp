@@ -214,7 +214,7 @@ GLint GlShaderProgram::getUniformLocation(const std::string &name) const {
 
 GLint GlShaderProgram::getUniformLocation(const Scene::Material::Location &location) const {
 	if (std::holds_alternative<std::string>(location)) {
-		const std::string &name(std::get<std::string>(location));
+		const auto &name(std::get<std::string>(location));
 		return getUniformLocation(name);
 	} else if (std::holds_alternative<int>(location)) {
 		return std::get<int>(location);
@@ -243,7 +243,7 @@ void GlShaderProgram::setUniformTexture(const Scene::Material::Location &locatio
 	assert(textureIndex >= 0 && textureIndex < 32);
 	glActiveTexture(GL_TEXTURE0 + textureIndex);
 	glBindTexture(GL_TEXTURE_2D, texture.getGlTexture());
-	glUniform1i(getUniformLocation(location), texture.getGlTexture());
+	glUniform1i(getUniformLocation(location), (GLint)texture.getGlTexture());
 }
 
 

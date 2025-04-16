@@ -18,7 +18,7 @@ public:
 
 	virtual ~OpenGLResources() = default;
 
-	const std::weak_ptr<OpenGLRenderer> getRenderer() const;
+	const std::weak_ptr<OpenGLRenderer> &getRenderer() const;
 
 	// MARK: Vertex Shaders
 
