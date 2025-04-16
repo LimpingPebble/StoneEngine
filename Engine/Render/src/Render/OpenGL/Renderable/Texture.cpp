@@ -20,7 +20,7 @@ GLint convert(Core::Image::Channel channel) {
 GLint convert(Scene::TextureFilter filter, bool mipmap) {
 	switch (filter) {
 	case Scene::TextureFilter::Nearest: return mipmap ? GL_NEAREST_MIPMAP_NEAREST : GL_NEAREST;
-	case Scene::TextureFilter::Linear: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
+	case Scene::TextureFilter::Linear:
 	case Scene::TextureFilter::Cubic: return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;
 	}
 	return mipmap ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR;

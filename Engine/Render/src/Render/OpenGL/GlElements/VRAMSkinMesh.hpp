@@ -46,23 +46,23 @@ struct VRAMSkinMesh {
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)offsetof(Scene::WeightVertex, position));
+							  (void *)offsetof(Scene::Vertex, position));
 
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)offsetof(Scene::WeightVertex, normal));
+							  (void *)offsetof(Scene::Vertex, normal));
 
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)offsetof(Scene::WeightVertex, tangent));
+							  (void *)offsetof(Scene::Vertex, tangent));
 
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)offsetof(Scene::WeightVertex, bitangent));
+							  (void *)offsetof(Scene::Vertex, bitangent));
 
 		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)offsetof(Scene::WeightVertex, uv));
+							  (void *)offsetof(Scene::Vertex, uv));
 
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(
