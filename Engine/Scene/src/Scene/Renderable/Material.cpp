@@ -124,7 +124,7 @@ void MaterialInputSignature::setParamWithName(const std::string &name, Type valu
 	{                                                                                                                  \
 		#param, [](MaterialInputSignature &matParams, Type value) {                                                    \
 			matParams.param = value;                                                                                   \
-	 	}                                                                                                              \
+		}                                                                                                              \
 	}                                                                                                                  \
 	,
 
