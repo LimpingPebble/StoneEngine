@@ -66,13 +66,13 @@ struct VRAMSkinMesh {
 							  (void *)offsetof(Scene::Vertex, uv));
 
 		glEnableVertexAttribArray(5);
-		glVertexAttribIPointer(
-			5, 4, GL_INT, sizeof(Scene::WeightVertex),
-			(void *)reinterpret_cast<std::size_t>(&reinterpret_cast<Scene::WeightVertex *>(0)->weights));
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
+							  (void *)reinterpret_cast<std::size_t>(&reinterpret_cast<Scene::WeightVertex *>(0)->weights));
 
 		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Scene::WeightVertex),
-							  (void *)reinterpret_cast<std::size_t>(&reinterpret_cast<Scene::WeightVertex *>(0)->ids));
+		glVertexAttribIPointer(
+			6, 4, GL_INT, sizeof(Scene::WeightVertex),
+			(void *)reinterpret_cast<std::size_t>(&reinterpret_cast<Scene::WeightVertex *>(0)->ids));
 	}
 
 	~VRAMSkinMesh() {
