@@ -2,10 +2,9 @@
 
 #pragma once
 
+#include "../GlElements/VramMesh.hpp"
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Mesh.hpp"
-
-#include "../GlElements/VramMesh.hpp"
 
 namespace Stone::Render::OpenGL {
 

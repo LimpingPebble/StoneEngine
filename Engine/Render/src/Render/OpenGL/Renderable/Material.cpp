@@ -2,8 +2,8 @@
 
 #include "Material.hpp"
 
-#include "FragmentShader.hpp"
 #include "../OpenGLResources.hpp"
+#include "FragmentShader.hpp"
 
 namespace Stone::Render::OpenGL {
 
