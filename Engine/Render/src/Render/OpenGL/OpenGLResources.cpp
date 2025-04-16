@@ -64,18 +64,11 @@ const std::unique_ptr<GlFragmentShader> &OpenGLResources::getFragmentShader(Scen
 	}
 }
 
-const std::unique_ptr<ShaderPrograms> &OpenGLResources::getDefaultShaderPrograms() {
-	if (_defaultShaderPrograms == nullptr) {
-		_defaultShaderPrograms = std::make_unique<ShaderPrograms>(Scene::MaterialInputSignature(), shared_from_this());
-	}
-	return _defaultShaderPrograms;
-}
-
-const std::unique_ptr<ShaderPrograms> &
+const std::shared_ptr<ShaderPrograms> &
 OpenGLResources::getStandardShaderPrograms(Scene::MaterialInputSignature params) {
 	auto it = _standardsShaderPrograms.find(params);
 	if (it == _standardsShaderPrograms.end()) {
-		return (_standardsShaderPrograms[params] = std::make_unique<ShaderPrograms>(params, shared_from_this()));
+		return (_standardsShaderPrograms[params] = std::make_shared<ShaderPrograms>(params, shared_from_this()));
 	} else {
 		return it->second;
 	}

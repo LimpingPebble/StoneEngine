@@ -3,15 +3,20 @@
 #include "Material.hpp"
 
 #include "FragmentShader.hpp"
+#include "../OpenGLResources.hpp"
 
 namespace Stone::Render::OpenGL {
 
 Material::Material(Scene::Material &material, const std::shared_ptr<OpenGLRenderer> &renderer) : _material(material) {
+	assert(renderer);
+	assert(renderer->getResources());
 	if (_material.getFragmentShader() == nullptr) {
-		_shaderPrograms = std::make_shared<ShaderPrograms>(material, renderer->getResources());
+		Scene::MaterialInputSignature inputs(std::dynamic_pointer_cast<Scene::Material>(material.shared_from_this()));
+		_shaderPrograms = renderer->getResources()->getStandardShaderPrograms(inputs);
 	} else {
 		_shaderPrograms = _material.getFragmentShader()->getRendererObject<FragmentShader>()->getShaderPrograms();
 	}
+	assert(_shaderPrograms);
 
 #ifndef NDEBUG
 	int textureCount = 0;

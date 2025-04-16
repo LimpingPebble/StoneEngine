@@ -10,7 +10,7 @@ namespace Stone::Render::OpenGL {
 
 class OpenGLRenderer;
 
-class OpenGLResources : std::enable_shared_from_this<OpenGLResources> {
+class OpenGLResources : public std::enable_shared_from_this<OpenGLResources> {
 public:
 	OpenGLResources() = delete;
 
@@ -33,8 +33,7 @@ public:
 
 	// MARK: Shader Programs
 
-	const std::unique_ptr<ShaderPrograms> &getDefaultShaderPrograms();
-	const std::unique_ptr<ShaderPrograms> &getStandardShaderPrograms(Scene::MaterialInputSignature params);
+	const std::shared_ptr<ShaderPrograms> &getStandardShaderPrograms(Scene::MaterialInputSignature params);
 
 private:
 	std::weak_ptr<OpenGLRenderer> _renderer;
@@ -45,8 +44,7 @@ private:
 
 	std::unordered_map<Scene::MaterialInputSignature, std::unique_ptr<GlFragmentShader>> _fragmentShaders;
 
-	std::unique_ptr<ShaderPrograms> _defaultShaderPrograms;
-	std::unordered_map<Scene::MaterialInputSignature, std::unique_ptr<ShaderPrograms>> _standardsShaderPrograms;
+	std::unordered_map<Scene::MaterialInputSignature, std::shared_ptr<ShaderPrograms>> _standardsShaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

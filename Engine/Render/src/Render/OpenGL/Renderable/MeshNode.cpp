@@ -13,20 +13,20 @@
 namespace Stone::Render::OpenGL {
 
 MeshNode::MeshNode(Scene::MeshNode &meshNode, const std::shared_ptr<OpenGLRenderer> &renderer)
-	: _meshNode(meshNode), _material(nullptr), _shaderPrograms(nullptr) {
+	: _meshNode(meshNode), _renderer(renderer), _material(nullptr), _shaderPrograms(nullptr) {
 
 	auto usedMaterial = _meshNode.getUsedMaterial();
 	if (usedMaterial) {
 		assert(usedMaterial->isDirty() == false);
-		_material = usedMaterial->getRendererObject<Material>().get();
+		_material = usedMaterial->getRendererObject<Material>();
 	}
 
-	if (_material != nullptr) {
-		_shaderPrograms = _material->getShaderPrograms().get();
+	if (_material) {
+		_shaderPrograms = _material->getShaderPrograms();
 	} else {
-		_shaderPrograms = renderer->getResources()->getDefaultShaderPrograms().get();
+		_shaderPrograms = renderer->getResources()->getStandardShaderPrograms(Scene::MaterialInputSignature(nullptr));
 	}
-	assert(_shaderPrograms != nullptr);
+	assert(_shaderPrograms);
 
 	_shaderPrograms->makeMeshProgram();
 }
@@ -45,7 +45,7 @@ void MeshNode::render(Scene::RenderContext &context) {
 	GlShaderProgram *program = _shaderPrograms->getMeshProgram().get();
 	program->use();
 
-	if (_material != nullptr) {
+	if (_material) {
 		_material->setUniforms(Scene::MeshType::Standard);
 	}
 
@@ -60,7 +60,7 @@ void MeshNode::render(Scene::RenderContext &context) {
 	glCullFace(GL_BACK);
 
 	glBindVertexArray(vramMesh.elementsBuffer);
-	glDrawElements(GL_TRIANGLES, vramMesh.numIndices, GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, vramMesh.numIndices, GL_UNSIGNED_INT, NULL);
 }
 
 } // namespace Stone::Render::OpenGL

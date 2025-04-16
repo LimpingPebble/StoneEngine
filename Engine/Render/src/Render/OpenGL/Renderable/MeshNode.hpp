@@ -20,8 +20,9 @@ public:
 
 private:
 	Scene::MeshNode &_meshNode;
-	Material *_material;
-	ShaderPrograms *_shaderPrograms;
+	std::weak_ptr<OpenGLRenderer> _renderer;
+	std::shared_ptr<Material> _material;
+	std::shared_ptr<ShaderPrograms> _shaderPrograms;
 };
 
 } // namespace Stone::Render::OpenGL

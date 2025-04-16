@@ -12,8 +12,8 @@ namespace Stone::Render::OpenGL {
 
 void OpenGLRenderer::initialize(RendererSettings &settings) {
 	const auto this_shared = std::static_pointer_cast<OpenGLRenderer>(shared_from_this());
-	_director = std::make_shared<OpenGLDirector>(this_shared, settings.rendering_method);
 	_resources = std::make_shared<OpenGLResources>(this_shared);
+	_director = std::make_shared<OpenGLDirector>(this_shared, settings.rendering_method);
 	_director->initialize(settings.frame_size);
 }
 
