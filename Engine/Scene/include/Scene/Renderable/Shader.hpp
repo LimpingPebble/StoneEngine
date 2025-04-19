@@ -86,9 +86,9 @@ public:
 	void setLocation(const std::string &name, int location);
 
 private:
-	ContentType _contentType = ContentType::SourceCode; /** The type of the content. */
-	std::string _content = "void customShader() {}";	/** The content of the shader. */
-	std::string _function = "customShader";				/** The function to call in the shader. */
+	ContentType _contentType = ContentType::SourceCode;					   /** The type of the content. */
+	std::string _content = "void customShader(inout Material fragMat) {}"; /** The content of the shader. */
+	std::string _function = "customShader";								   /** The function to call in the shader. */
 
 	std::unordered_map<std::string, int> _locations = {}; /** The binding locations of the variables in the shader. */
 	int _maxLocation = -1;								  /** The cached maximum value from the locations. */
