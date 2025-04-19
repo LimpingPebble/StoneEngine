@@ -8,6 +8,8 @@
 #include "Render/OpenGL/OpenGLRenderer.hpp"
 #include "Scene/Renderable/Mesh.hpp"
 
+#include <glm/gtc/matrix_inverse.hpp>
+
 
 namespace Stone::Render::OpenGL {
 
@@ -52,6 +54,7 @@ void MeshNode::render(Scene::RenderContext &context) {
 	program->setUniform("u_mat_model", context.mvp.modelMatrix);
 	program->setUniform("u_mat_view", context.mvp.viewMatrix);
 	program->setUniform("u_mat_projection", context.mvp.projMatrix);
+	program->setUniform("u_mat_normal", glm::inverseTranspose(glm::mat3(context.mvp.modelMatrix)));
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);

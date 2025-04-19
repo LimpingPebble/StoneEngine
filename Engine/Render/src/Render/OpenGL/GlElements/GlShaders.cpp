@@ -234,6 +234,10 @@ void GlShaderProgram::setUniform(const Scene::Material::Location &location, cons
 	glUniform3fv(getUniformLocation(location), 1, glm::value_ptr(vec3));
 }
 
+void GlShaderProgram::setUniform(const Scene::Material::Location &location, const glm::mat3 &mat3) const {
+	glUniformMatrix3fv(getUniformLocation(location), 1, GL_FALSE, glm::value_ptr(mat3));
+}
+
 void GlShaderProgram::setUniform(const Scene::Material::Location &location, const glm::mat4 &mat4) const {
 	glUniformMatrix4fv(getUniformLocation(location), 1, GL_FALSE, glm::value_ptr(mat4));
 }

@@ -88,6 +88,7 @@ public:
 	void setUniform(const Scene::Material::Location &location, int integer) const;
 	void setUniform(const Scene::Material::Location &location, float scalar) const;
 	void setUniform(const Scene::Material::Location &location, const glm::vec3 &vec3) const;
+	void setUniform(const Scene::Material::Location &location, const glm::mat3 &mat3) const;
 	void setUniform(const Scene::Material::Location &location, const glm::mat4 &mat4) const;
 	void setUniformTexture(const Scene::Material::Location &location, const Texture &texture, int textureIndex) const;
 
