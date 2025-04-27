@@ -72,7 +72,6 @@ public:
 	}
 
 private:
-
 	std::shared_ptr<Stone::Scene::DynamicMesh> makePlaneMesh() {
 		auto mesh = std::make_shared<Stone::Scene::DynamicMesh>();
 		mesh->withElementsRef([](auto vertices, auto indices) {
