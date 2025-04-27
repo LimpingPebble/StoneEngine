@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "SceneTypes.hpp"
-
 #include <memory>
 
 namespace Stone::Scene {
+
+class Node;
+class WorldNode;
 
 /**
  * @brief Interface for a scene renderer.
@@ -16,7 +17,7 @@ public:
 	/**
 	 * @brief Request the renderer to update all rendering data in the world.
 	 */
-	virtual void updateDataForWorld(const std::shared_ptr<WorldNode> &world) = 0;
+	virtual void updateRenderablesInNode(const std::shared_ptr<Node> &rootNode) = 0;
 
 	/**
 	 * @brief Request the renderer to render the world from the given world root node.

@@ -12,17 +12,24 @@ class Object;
 namespace Stone::Scene {
 
 /**
- * @class RendererObjectManager
+ * @class RendererObjectFactory
  * @brief Provide basic overridable methods to manage the renderables objects elements in the scene.
  *
  * This class provides basic methods to update the renderer data of classes implementing the IRenderable interface.
  * It will store an instance of IRendererObject in the IRenderable::_rendererObject proprety.
  * Each IRenderable objects will use the appropriate method in this interface to update itself.
  */
-class RendererObjectManager {
+class RendererObjectFactory {
 public:
-	RendererObjectManager() = default;
-	virtual ~RendererObjectManager() = default;
+	RendererObjectFactory() = default;
+	virtual ~RendererObjectFactory() = default;
+
+	/**
+	 * @brief Recursively updates the renderables in the given node.
+	 *
+	 * @param rootNode The root of the node graph that requires a renderable update
+	 */
+	virtual void updateRenderablesInNode(const std::shared_ptr<Node> &rootNode);
 
 	/**
 	 * Updates the renderable object with the given node.
@@ -80,6 +87,12 @@ public:
 	virtual void updateStaticSkinMesh(const std::shared_ptr<StaticSkinMesh> &skinmesh);
 
 	/**
+	 * @brief Updates the renderer data for a given wireframe shape.
+	 * @param wireframe shape The wireframe shape to be updated.
+	 */
+	virtual void updateWireframeShape(const std::shared_ptr<WireframeShape> &shape);
+
+	/**
 	 * @brief Updates the renderer data for a given texture.
 	 * @param texture The texture to be updated.
 	 */
@@ -89,7 +102,7 @@ public:
 	 * @brief Updates the renderer data for a given shader.
 	 * @param shader The shader to be updated.
 	 */
-	virtual void updateShader(const std::shared_ptr<Shader> &shader);
+	virtual void updateFragmentShader(const std::shared_ptr<FragmentShader> &shader);
 
 protected:
 	/**
@@ -101,17 +114,7 @@ protected:
 	 * @param element The render element to set the renderer object to.
 	 * @param rendererObject The renderer object to set.
 	 */
-	static void setRendererObjectTo(IRenderable *element, const std::shared_ptr<IRendererObject> &rendererObject);
-
-	/**
-	 * @brief Marks the given element as undirty.
-	 *
-	 * This class is friend with IRenderable, so it can access the protected method markUndirty but its
-	 * inheriting classes can't.
-	 *
-	 * @param element The render element to mark as undirty.
-	 */
-	static void markElementUndirty(IRenderable *element);
+	static void updateRendererObject(IRenderable &element, const std::shared_ptr<IRendererObject> &rendererObject);
 };
 
 } // namespace Stone::Scene

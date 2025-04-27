@@ -4,7 +4,6 @@
 
 #include "Scene/Renderable/Material.hpp"
 #include "Scene/Renderable/Mesh.hpp"
-#include "Scene/RendererObjectManager.hpp"
 
 namespace Stone::Scene {
 
@@ -36,6 +35,14 @@ std::shared_ptr<Material> MeshNode::getMaterial() const {
 void MeshNode::setMaterial(std::shared_ptr<Material> material) {
 	_material = std::move(material);
 	markDirty();
+}
+
+std::shared_ptr<Material> MeshNode::getUsedMaterial() const {
+	if (_material)
+		return _material;
+	if (_mesh)
+		return _mesh->getDefaultMaterial();
+	return nullptr;
 }
 
 const char *MeshNode::_termClassColor() const {

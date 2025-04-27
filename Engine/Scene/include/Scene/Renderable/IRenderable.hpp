@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/RenderContext.hpp"
+#include "Scene/Renderer/RenderContext.hpp"
 #include "Utils/SigSlot.hpp"
 
 namespace Stone::Scene {
@@ -31,7 +31,7 @@ public:
 	virtual void render(RenderContext &context) = 0;
 };
 
-class RendererObjectManager;
+class RendererObjectFactory;
 
 /**
  * @brief Interface for renderable elements
@@ -77,11 +77,12 @@ public:
 	 */
 	template <typename T>
 	[[nodiscard]] std::shared_ptr<T> getRendererObject() const {
-		return std::dynamic_pointer_cast<T>(_rendererObject);
+		assert(std::dynamic_pointer_cast<T>(_rendererObject) != nullptr);
+		return std::static_pointer_cast<T>(_rendererObject);
 	}
 
 protected:
-	friend class RendererObjectManager;
+	friend class RendererObjectFactory;
 
 	/**
 	 * @brief Set the renderer object

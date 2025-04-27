@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Scene/ISceneRenderer.hpp"
+#include "Scene/Renderer/ISceneRenderer.hpp"
 
 #include <memory>
 
@@ -15,7 +15,7 @@ public:
 
 	virtual ~Renderer() = default;
 
-	virtual void updateFrameSize(std::pair<uint32_t, uint32_t> size) = 0;
+	virtual void updateFrameSize(const std::pair<uint32_t, uint32_t> &size) = 0;
 };
 
 } // namespace Stone::Render

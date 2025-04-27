@@ -33,7 +33,7 @@ public:
 	[[nodiscard]] Size getSize() const;
 
 	void unloadData();
-	void loadData(bool force);
+	void loadData(bool force = false);
 
 	[[nodiscard]] bool isLoaded() const;
 	[[nodiscard]] std::shared_ptr<ImageData> getLoadedImage() const;

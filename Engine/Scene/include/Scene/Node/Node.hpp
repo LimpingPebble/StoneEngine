@@ -5,7 +5,7 @@
 #include "Core/Object.hpp"
 #include "Logging/TermColor.hpp"
 #include "Scene/Node/NodeMacros.hpp"
-#include "Scene/RenderContext.hpp"
+#include "Scene/Renderer/RenderContext.hpp"
 
 #include <functional>
 #include <list>
@@ -22,7 +22,7 @@ class WorldNode;
  * the node hierarchy, updating and rendering nodes, and accessing node properties.
  */
 class Node : public Core::Object {
-	STONE_NODE(Node);
+	STONE_OBJECT(Node);
 
 public:
 	explicit Node(const std::string &name = "node");
@@ -38,6 +38,9 @@ public:
 	 * @return The output stream.
 	 */
 	void writeToJson(Json::Object &json) const override;
+
+	const static std::string nodeClassName;
+	virtual const char *getNodeClassName() const;
 
 	/**
 	 * @brief Updates the node.

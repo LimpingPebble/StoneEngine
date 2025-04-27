@@ -3,7 +3,7 @@
 #include "Scene/Renderable/Material.hpp"
 
 #include "Scene/Renderable/Texture.hpp"
-#include "Scene/RendererObjectManager.hpp"
+#include "Scene/Renderer/RendererObjectFactory.hpp"
 #include "Utils/Glm.hpp"
 
 namespace Stone::Scene {
@@ -13,50 +13,50 @@ void Material::writeToJson(Json::Object &json) const {
 
 	auto &textures((json["textures"] = Json::object()).get<Json::Object>());
 	for (auto &it : _textures)
-		textures[it.first] = it.second ? Json::number(it.second->getId()) : Json::null();
+		textures[location_to_string(it.first)] = it.second ? Json::number(it.second->getId()) : Json::null();
 
 	auto &vectors((json["vectors"] = Json::object()).get<Json::Object>());
 	for (auto &it : _vectors)
-		vectors[it.first] = to_json(it.second);
+		vectors[location_to_string(it.first)] = to_json(it.second);
 
 	auto &scalars((json["scalars"] = Json::object()).get<Json::Object>());
 	for (auto &it : _scalars)
-		scalars[it.first] = Json::number(it.second);
+		scalars[location_to_string(it.first)] = Json::number(it.second);
 }
 
-void Material::setTextureParameter(const std::string &name, std::shared_ptr<Texture> texture) {
-	_textures[name] = std::move(texture);
+void Material::setTextureParameter(const Location &location, std::shared_ptr<Texture> texture) {
+	_textures[location] = std::move(texture);
 	markDirty();
 }
 
-std::shared_ptr<Texture> Material::getTextureParameter(const std::string &name) const {
-	auto it = _textures.find(name);
+std::shared_ptr<Texture> Material::getTextureParameter(const Location &location) const {
+	auto it = _textures.find(location);
 	if (it != _textures.end()) {
 		return it->second;
 	}
 	return nullptr;
 }
 
-void Material::setVectorParameter(const std::string &name, const glm::vec3 &vector) {
-	_vectors[name] = vector;
+void Material::setVectorParameter(const Location &location, const glm::vec3 &vector) {
+	_vectors[location] = vector;
 	markDirty();
 }
 
-glm::vec3 Material::getVectorParameter(const std::string &name) const {
-	auto it = _vectors.find(name);
+glm::vec3 Material::getVectorParameter(const Location &location) const {
+	auto it = _vectors.find(location);
 	if (it != _vectors.end()) {
 		return it->second;
 	}
 	return glm::vec3(0.0f);
 }
 
-void Material::setScalarParameter(const std::string &name, float scalar) {
-	_scalars[name] = scalar;
+void Material::setScalarParameter(const Location &location, float scalar) {
+	_scalars[location] = scalar;
 	markDirty();
 }
 
-float Material::getScalarParameter(const std::string &name) const {
-	auto it = _scalars.find(name);
+float Material::getScalarParameter(const Location &location) const {
+	auto it = _scalars.find(location);
 	if (it != _scalars.end()) {
 		return it->second;
 	}
@@ -64,41 +64,106 @@ float Material::getScalarParameter(const std::string &name) const {
 }
 
 void Material::forEachTextures(
-	const std::function<void(std::pair<const std::string, std::shared_ptr<Texture>> &)> &lambda) {
-	for (auto &it : _textures) {
-		lambda(it);
+	const std::function<void(const Location &, const std::shared_ptr<Texture> &)> &lambda) const {
+	for (const auto &it : _textures) {
+		lambda(it.first, it.second);
 	}
 }
 
-void Material::forEachVectors(const std::function<void(std::pair<const std::string, glm::vec3> &)> &lambda) {
-	for (auto &it : _vectors) {
-		lambda(it);
+void Material::forEachVectors(const std::function<void(const Location &, glm::vec3)> &lambda) const {
+	for (const auto &it : _vectors) {
+		lambda(it.first, it.second);
 	}
 }
 
-void Material::forEachScalars(const std::function<void(std::pair<const std::string, float> &)> &lambda) {
-	for (auto &it : _scalars) {
-		it.second += 1;
-		lambda(it);
+void Material::forEachScalars(const std::function<void(const Location &, float)> &lambda) const {
+	for (const auto &it : _scalars) {
+		lambda(it.first, it.second);
 	}
 }
 
-void Material::setVertexShader(std::shared_ptr<Shader> vertexShader) {
-	_vertexShader = std::move(vertexShader);
-	markDirty();
-}
-
-std::shared_ptr<Shader> Material::getVertexShader() const {
-	return _vertexShader;
-}
-
-void Material::setFragmentShader(std::shared_ptr<Shader> fragmentShader) {
+void Material::setFragmentShader(std::shared_ptr<FragmentShader> fragmentShader) {
 	_fragmentShader = std::move(fragmentShader);
 	markDirty();
 }
 
-std::shared_ptr<Shader> Material::getFragmentShader() const {
+const std::shared_ptr<FragmentShader> &Material::getFragmentShader() const {
 	return _fragmentShader;
+}
+
+std::string location_to_string(const Material::Location &location) {
+	if (std::holds_alternative<std::string>(location)) {
+		return std::get<std::string>(location);
+	} else {
+		return std::to_string(std::get<int>(location));
+	}
+}
+
+Material::Location string_to_location(const std::string &str) {
+	if (str.empty()) {
+		return 0;
+	}
+	if (str[0] >= '0' && str[0] <= '9') {
+		return std::stoi(str);
+	}
+	return str;
+}
+
+#define __INITIALIZE_PARAM(param) param(Type::None),
+MaterialInputSignature::MaterialInputSignature() : FOR_EACH_SHADER_PARAMETERS(__INITIALIZE_PARAM) _() {
+}
+
+MaterialInputSignature::MaterialInputSignature(const std::shared_ptr<Material> &material) : MaterialInputSignature() {
+	setFromMaterial(material);
+}
+
+void MaterialInputSignature::setParamWithName(const std::string &name, Type value) {
+	using ParamSetter = std::function<void(MaterialInputSignature &, Type)>;
+
+#define __MAP_NAME_TO_PARAM(param)                                                                                     \
+	{                                                                                                                  \
+		#param, [](MaterialInputSignature &matParams, Type value) {                                                    \
+			matParams.param = value;                                                                                   \
+		}                                                                                                              \
+	}                                                                                                                  \
+	,
+
+	const static std::unordered_map<std::string, ParamSetter> paramSetters = {
+		FOR_EACH_SHADER_PARAMETERS(__MAP_NAME_TO_PARAM) //
+	};
+
+	auto it = paramSetters.find(name);
+	if (it != paramSetters.end()) {
+		it->second(*this, value);
+	}
+}
+
+void MaterialInputSignature::setFromMaterial(const std::shared_ptr<Material> &material) {
+	if (material == nullptr) {
+		return;
+	}
+
+	material->forEachScalars([this](const Material::Location &location, float value) {
+		(void)value;
+		if (std::holds_alternative<std::string>(location)) {
+			const auto &name(std::get<std::string>(location));
+			setParamWithName(name, Type::Scalar);
+		}
+	});
+	material->forEachVectors([this](const Material::Location &location, glm::vec3 value) {
+		(void)value;
+		if (std::holds_alternative<std::string>(location)) {
+			const auto &name(std::get<std::string>(location));
+			setParamWithName(name, Type::Vector3);
+		}
+	});
+	material->forEachTextures([this](const Material::Location &location, auto value) {
+		(void)value;
+		if (std::holds_alternative<std::string>(location)) {
+			const auto &name(std::get<std::string>(location));
+			setParamWithName(name, Type::Texture);
+		}
+	});
 }
 
 } // namespace Stone::Scene

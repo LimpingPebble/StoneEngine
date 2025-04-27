@@ -23,6 +23,7 @@ struct Signal;
 template <typename... Args>
 struct Slot {
 
+	Slot() = delete;
 	Slot(const Slot &) = delete;
 	Slot &operator=(const Slot &) = delete;
 

@@ -6,7 +6,7 @@
 
 namespace Stone::Scene {
 
-Shader::Shader(const std::string &content)
+AShader::AShader(const std::string &content)
 	: Object(), IRenderable(), _contentType(ContentType::SourceFile), _content(content) {
 	if (string_ends_with(content, ".glsl")) {
 		_contentType = ContentType::SourceFile;
@@ -19,11 +19,11 @@ Shader::Shader(const std::string &content)
 	}
 }
 
-Shader::Shader(ContentType contentType, std::string content)
+AShader::AShader(ContentType contentType, std::string content)
 	: Object(), IRenderable(), _contentType(contentType), _content(std::move(content)) {
 }
 
-void Shader::writeToJson(Json::Object &json) const {
+void AShader::writeToJson(Json::Object &json) const {
 	Object::writeToJson(json);
 
 	json["function"] = Json::string(_function);
@@ -39,24 +39,24 @@ void Shader::writeToJson(Json::Object &json) const {
 	}
 }
 
-std::pair<Shader::ContentType, const std::string &> Shader::getContent() const {
+std::pair<AShader::ContentType, const std::string &> AShader::getContent() const {
 	return {_contentType, _content};
 }
 
-const std::string &Shader::getFunction() const {
+const std::string &AShader::getFunction() const {
 	return _function;
 }
 
-void Shader::setFunction(const std::string &function) {
+void AShader::setFunction(const std::string &function) {
 	_function = function;
 	markDirty();
 }
 
-int Shader::getMaxLocation() const {
+int AShader::getMaxLocation() const {
 	return _maxLocation;
 }
 
-int Shader::getLocation(const std::string &name) const {
+int AShader::getLocation(const std::string &name) const {
 	auto it = _locations.find(name);
 	if (it == _locations.end()) {
 		return -1;
@@ -64,18 +64,26 @@ int Shader::getLocation(const std::string &name) const {
 	return it->second;
 }
 
-void Shader::setContent(ContentType contentType, std::string content) {
+void AShader::setContent(ContentType contentType, std::string content) {
 	_contentType = contentType;
 	_content = std::move(content);
 	markDirty();
 }
 
-void Shader::setLocation(const std::string &name, int location) {
+void AShader::setLocation(const std::string &name, int location) {
 	_locations[name] = location;
 	if (location > _maxLocation) {
 		_maxLocation = location;
 	}
 	markDirty();
 }
+
+FragmentShader::FragmentShader(const std::string &content) : AShader(content) {
+}
+
+FragmentShader::FragmentShader(ContentType contentType, std::string content)
+	: AShader(contentType, std::move(content)) {
+}
+
 
 } // namespace Stone::Scene

@@ -2,8 +2,6 @@
 
 #include "Scene/Node/PivotNode.hpp"
 
-#include <sstream>
-
 namespace Stone::Scene {
 
 STONE_NODE_IMPLEMENTATION(PivotNode)

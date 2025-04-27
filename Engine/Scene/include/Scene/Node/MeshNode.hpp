@@ -26,6 +26,8 @@ public:
 	[[nodiscard]] std::shared_ptr<Material> getMaterial() const;
 	void setMaterial(std::shared_ptr<Material> material);
 
+	[[nodiscard]] std::shared_ptr<Material> getUsedMaterial() const;
+
 protected:
 	std::shared_ptr<IMeshInterface> _mesh;
 	std::shared_ptr<Material> _material;

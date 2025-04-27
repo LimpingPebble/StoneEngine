@@ -10,8 +10,8 @@ namespace Stone::Scene {
 /**
  * @brief The Shader class represents a shader used in rendering.
  */
-class Shader : public Core::Object, public IRenderable {
-	STONE_OBJECT(Shader);
+class AShader : public Core::Object, public IRenderable {
+	STONE_ABSTRACT_OBJECT(AShader);
 
 public:
 	enum class ContentType {
@@ -21,15 +21,15 @@ public:
 		CompiledFile, /** The content is a link to a file containing the compiled bytes. */
 	};
 
-	Shader() = default;
-	explicit Shader(const std::string &content);
-	Shader(ContentType contentType, std::string content);
-	Shader(const Shader &other) = default;
+	AShader() = default;
+	explicit AShader(const std::string &content);
+	AShader(ContentType contentType, std::string content);
+	AShader(const AShader &other) = default;
 
-	~Shader() override = default;
+	~AShader() override = default;
 
 	/**
-	 * @brief Write the Shader object to an output stream.
+	 * @brief Write the shader object to an output stream.
 	 *
 	 * @param stream The output stream to write to.
 	 * @param closing_bracer Flag indicating whether to write a closing brace after the object.
@@ -86,12 +86,24 @@ public:
 	void setLocation(const std::string &name, int location);
 
 private:
-	ContentType _contentType = ContentType::SourceCode; /** The type of the content. */
-	std::string _content = "#version 450 core\n";		/** The content of the shader. */
-	std::string _function = "main";						/** The function to call in the shader. */
+	ContentType _contentType = ContentType::SourceCode;					   /** The type of the content. */
+	std::string _content = "void customShader(inout Material fragMat) {}"; /** The content of the shader. */
+	std::string _function = "customShader";								   /** The function to call in the shader. */
 
 	std::unordered_map<std::string, int> _locations = {}; /** The binding locations of the variables in the shader. */
 	int _maxLocation = -1;								  /** The cached maximum value from the locations. */
+};
+
+class FragmentShader : public AShader {
+	STONE_OBJECT(FragmentShader);
+
+public:
+	FragmentShader() = default;
+	explicit FragmentShader(const std::string &content);
+	FragmentShader(ContentType contentType, std::string content);
+	FragmentShader(const FragmentShader &other) = default;
+
+	~FragmentShader() override = default;
 };
 
 } // namespace Stone::Scene
